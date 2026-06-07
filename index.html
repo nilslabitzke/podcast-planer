@@ -130,6 +130,14 @@
     .task-expand-btn.has-content { color: var(--accent); }
     .copy-btn { margin-top: 6px; background: none; border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 12px; padding: 4px 10px; border-radius: 6px; transition: all .15s; }
     .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .generate-btn { margin-top: 6px; margin-left: 6px; background: linear-gradient(135deg, #6c8ef7, #a78bfa); border: none; color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px; transition: opacity .15s; }
+    .generate-btn:hover { opacity: .85; }
+    .generate-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .transcript-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 28px; }
+    .transcript-box h2 { font-size: 15px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .transcript-hint { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .transcript-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 120px; outline: none; line-height: 1.6; font-family: inherit; transition: border .15s; }
+    .transcript-textarea:focus { border-color: var(--accent); }
 
     .notes-area { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 8px; font-size: 14px; resize: vertical; min-height: 100px; outline: none; line-height: 1.6; }
     .notes-area:focus { border-color: var(--accent); }
@@ -312,6 +320,7 @@ const SECTION_LABELS = {
 // ── STATE ────────────────────────────────────────────────────────
 let episodes = [];
 let editingEpId = null;
+const AI_STEPS = ['titel','shownotes','kapitel','reels_hook_ki','reels_beschr','sm1_karussell','sm2_karussell','li_beitraege'];
 let currentSlotDate = null;
 let notesTimer = null;
 
@@ -342,6 +351,7 @@ async function loadEpisodes() {
     episodes = rows.map(r => ({
       id: r.id, title: r.title, num: r.num || '', date: r.date,
       desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
+      transcript: r.transcript || '',
     }));
     setSyncState('live', 'Live');
     return true;
@@ -362,6 +372,7 @@ async function upsertEpisode(ep) {
         id: ep.id, title: ep.title, num: ep.num || null,
         date: ep.date, description: ep.desc || null,
         tasks: ep.tasks || {}, notes: ep.notes || null,
+        transcript: ep.transcript || null,
         updated_at: new Date().toISOString(),
       }),
     });
@@ -668,7 +679,10 @@ function openDetail(id) {
               placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
               oninput="scheduleContentSave('${id}','${step.id}',this.value)"
             >${content}</textarea>
-            <button class="copy-btn" onclick="copyContent('${step.id}')">Kopieren</button>
+            <div style="display:flex;gap:0;flex-wrap:wrap">
+              <button class="copy-btn" onclick="copyContent('${step.id}')">Kopieren</button>
+              ${AI_STEPS.includes(step.id) ? `<button class="generate-btn" id="gen-${step.id}" onclick="generateContent('${id}','${step.id}')">✨ Generieren</button>` : ''}
+            </div>
           </div>
         </div>`;
       }).join('')}
@@ -696,6 +710,13 @@ function openDetail(id) {
         </div>
         <button class="btn btn-ghost" onclick="openEditModal('${id}')">Bearbeiten</button>
       </div>
+    </div>
+    <div class="transcript-box">
+      <h2>📄 Transkript <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">Basis für KI-Generierung</span></h2>
+      <p class="transcript-hint">Füge das fertige Transkript der Folge hier ein — alle ✨ Generieren-Buttons nutzen diesen Text.</p>
+      <textarea class="transcript-textarea" id="ep-transcript"
+        placeholder="Transkript hier einfügen…"
+        oninput="scheduleTranscriptSave('${id}',this.value)">${ep.transcript || ''}</textarea>
     </div>
     ${sectionsHtml}
     <div class="card" style="margin-top:8px">
@@ -755,6 +776,62 @@ function copyContent(taskId) {
   const ta = document.querySelector('#content-' + taskId + ' textarea');
   if (!ta || !ta.value) return;
   navigator.clipboard.writeText(ta.value).then(() => showToast('Kopiert ✓'));
+}
+
+function scheduleTranscriptSave(epId, val) {
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(async () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (ep) { ep.transcript = val; await upsertEpisode(ep); }
+  }, 800);
+}
+
+async function generateContent(epId, taskId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const transcript = ep.transcript || '';
+  if (!transcript.trim()) {
+    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
+    document.getElementById('ep-transcript')?.focus();
+    return;
+  }
+  const btn = document.getElementById('gen-' + taskId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generiert…'; }
+
+  // open the content area
+  const area = document.getElementById('content-' + taskId);
+  if (area) area.classList.add('open');
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+      },
+      body: JSON.stringify({ taskId, transcript, epTitle: ep.title }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    // fill textarea
+    const ta = document.querySelector(`#content-${taskId} textarea`);
+    if (ta) ta.value = data.result;
+
+    // save
+    setTaskContent(ep, taskId, data.result);
+    await upsertEpisode(ep);
+
+    // update button indicator
+    const expandBtn = document.querySelector(`#row-${taskId} .task-expand-btn`);
+    if (expandBtn) { expandBtn.classList.add('has-content'); expandBtn.innerHTML = '📋 Inhalt'; }
+
+    showToast('✨ Fertig generiert!');
+  } catch(e) {
+    showToast('Fehler: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '✨ Generieren'; }
+  }
 }
 
 function scheduleNoteSave(epId, val) {
