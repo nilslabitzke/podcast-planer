@@ -330,6 +330,63 @@ const SECTION_LABELS = {
 let episodes = [];
 let editingEpId = null;
 const AI_STEPS = ['titel','shownotes','kapitel','reels_hook_ki','reels_beschr','sm1_karussell','sm2_karussell','li_beitraege'];
+
+const PROMPT_LABELS = {
+  titel: 'Titel der Folge',
+  shownotes: 'Shownotes',
+  kapitel: 'Kapitel',
+  reels_hook_ki: 'Reel Text-Hooks',
+  reels_beschr: 'Reel-Beschreibungen',
+  sm1_karussell: 'Instagram-Karussell (Woche 1)',
+  sm2_karussell: 'Instagram-Karussell (Woche 2)',
+  li_beitraege: 'LinkedIn-Beiträge',
+};
+
+let customPrompts = {};
+
+async function loadPrompts() {
+  try {
+    const rows = await apiFetch('podcast_prompts?select=task_id,prompt');
+    customPrompts = {};
+    (rows || []).forEach(r => { customPrompts[r.task_id] = r.prompt; });
+  } catch (e) { console.error('loadPrompts failed', e); }
+}
+
+async function savePrompt(taskId, value) {
+  customPrompts[taskId] = value;
+  try {
+    await apiFetch('podcast_prompts', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify({ task_id: taskId, prompt: value, updated_at: new Date().toISOString() })
+    });
+    showToast('Prompt gespeichert');
+  } catch (e) {
+    console.error(e);
+    showToast('Speichern fehlgeschlagen', 'error');
+  }
+}
+
+function renderPrompts() {
+  const c = document.getElementById('prompts-container');
+  c.innerHTML = AI_STEPS.map(id => `
+    <div class="card" style="margin-bottom:16px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <strong>${PROMPT_LABELS[id] || id}</strong>
+        <button class="btn" onclick="resetPrompt('${id}')">Zurücksetzen (Standard)</button>
+      </div>
+      <textarea id="prompt-${id}" class="prompt-textarea" style="width:100%;min-height:160px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:inherit;font-size:13px;resize:vertical"
+        placeholder="Eigenen Prompt eingeben – leer lassen für Standard-Prompt der KI-Funktion"
+        onchange="savePrompt('${id}', this.value)">${customPrompts[id] || ''}</textarea>
+    </div>
+  `).join('');
+}
+
+function resetPrompt(id) {
+  customPrompts[id] = '';
+  document.getElementById('prompt-' + id).value = '';
+  savePrompt(id, '');
+}
 let currentSlotDate = null;
 let notesTimer = null;
 
