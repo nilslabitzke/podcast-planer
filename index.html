@@ -744,7 +744,7 @@ function openDetail(id) {
           <div class="task-item ${done ? 'done' : ''}" onclick="toggleTask('${id}','${step.id}')">
             <div class="task-check"></div>
             <div class="task-label">${step.label}</div>
-            ${AI_STEPS.includes(step.id) ? `<button class="task-expand-btn" id="gen-row-${step.id}" onclick="event.stopPropagation();generateContent('${id}','${step.id}')" title="Mit KI generieren">✨</button>` : ''}
+            ${AI_STEPS.includes(step.id) ? `<button class="gen-row-btn" id="gen-row-${step.id}" onclick="event.stopPropagation();generateContent('${id}','${step.id}')" title="Mit KI generieren">✨</button>` : ''}
             <button class="task-expand-btn ${hasContent ? 'has-content' : ''}" onclick="event.stopPropagation();toggleContent('${step.id}')" title="Inhalt einfügen / anzeigen">
               ${hasContent ? '📋' : '+'} Inhalt
             </button>
