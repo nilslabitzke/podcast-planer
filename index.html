@@ -1074,6 +1074,7 @@ if ('serviceWorker' in navigator) {
   document.getElementById('planer-grid').innerHTML = '<div class="loading"><div class="spinner"></div> Lade Episoden...</div>';
   await loadEpisodes();
   renderPlaner();
+  loadPrompts();
   connectRealtime();
 })();
 </script>
