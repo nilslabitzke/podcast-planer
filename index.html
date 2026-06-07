@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podcast Planer</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f1117">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Podcast Planer">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3350;
+      --accent: #6c8ef7;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --muted: #7c85a2;
+      --radius: 12px;
+    }
+    body.light {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --surface2: #eef1f8;
+      --border: #dde2ef;
+      --accent: #4f6ef7;
+      --accent2: #7c5cfa;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --text: #1a1f36;
+      --muted: #7b85a2;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; transition: background .2s, color .2s; }
+    .theme-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1; transition: all .15s; margin-left: 8px; }
+    .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; position: sticky; top: 0; z-index: 100; }
+    nav .logo { font-weight: 700; font-size: 16px; color: var(--accent); margin-right: 16px; display: flex; align-items: center; gap: 8px; }
+    nav button { background: none; border: none; color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all .15s; }
+    nav button:hover { background: var(--surface2); color: var(--text); }
+    nav button.active { background: var(--accent); color: #fff; }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); margin-left: auto; flex-shrink: 0; transition: background .3s; }
+    .sync-dot.live { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .sync-dot.syncing { background: var(--yellow); }
+    .sync-dot.error { background: var(--red); }
+    .sync-label { font-size: 12px; color: var(--muted); margin-left: 6px; }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .page { display: none; }
+    .page.active { display: block; }
+
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    h2 { font-size: 16px; font-weight: 600; }
+    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+
+    .planer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .slot { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: all .15s; }
+    .slot:hover { border-color: var(--accent); }
+    .slot.filled { border-color: var(--accent); }
+    .slot-date { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: .5px; }
+    .slot-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; min-height: 22px; }
+    .slot-progress { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+    .slot-progress-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+    .slot-ep { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+    .badge-free { background: rgba(124,133,162,.15); color: var(--muted); }
+    .badge-wip { background: rgba(251,191,36,.12); color: var(--yellow); }
+    .badge-done { background: rgba(52,211,153,.12); color: var(--green); }
+
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; align-items: center; justify-content: center; }
+    .modal-bg.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; width: 480px; max-width: calc(100vw - 32px); }
+    .modal h2 { margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+    input[type=text], textarea {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 12px; border-radius: 8px; font-size: 14px; outline: none; transition: border .15s;
+    }
+    input[type=text]:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 72px; }
+    .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all .15s; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+    .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--border); }
+    .btn-danger:hover { border-color: var(--red); }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+    .back-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; padding: 0; }
+    .back-btn:hover { color: var(--text); }
+    .ep-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .ep-header-info h1 { font-size: 24px; margin-bottom: 6px; }
+    .ep-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .ep-meta span { font-size: 13px; color: var(--muted); }
+    .progress-circle { position: relative; width: 64px; height: 64px; }
+    .progress-circle svg { transform: rotate(-90deg); }
+    .progress-circle .pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--accent); }
+
+    .checklist-section { margin-bottom: 32px; }
+    .checklist-section h2 { margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .checklist-section h2 .section-count { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface2); padding: 2px 8px; border-radius: 99px; }
+    .task-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 8px; transition: background .1s; cursor: pointer; user-select: none; }
+    .task-item:hover { background: var(--surface2); }
+    .task-item.done .task-label { text-decoration: line-through; color: var(--muted); }
+    .task-item.done .task-check { background: var(--green); border-color: var(--green); }
+    .task-item.done .task-check::after { opacity: 1; }
+    .task-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px; position: relative; transition: all .15s; }
+    .task-check::after { content: ''; position: absolute; left: 5px; top: 2px; width: 6px; height: 10px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg); opacity: 0; transition: opacity .15s; }
+    .task-label { font-size: 14px; line-height: 1.5; }
+    .task-row { border-radius: 8px; overflow: hidden; margin-bottom: 2px; }
+    .task-row:hover .task-item { background: var(--surface2); }
+    .task-content-area { display: none; padding: 0 14px 12px 46px; }
+    .task-content-area.open { display: block; }
+    .task-content-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 80px; outline: none; line-height: 1.6; font-family: inherit; transition: border .15s; }
+    .task-content-textarea:focus { border-color: var(--accent); }
+    .task-expand-btn { margin-left: auto; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; gap: 4px; transition: color .15s; }
+    .task-expand-btn:hover { color: var(--text); }
+    .task-expand-btn.has-content { color: var(--accent); }
+    .copy-btn { margin-top: 6px; background: none; border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 12px; padding: 4px 10px; border-radius: 6px; transition: all .15s; }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .notes-area { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 8px; font-size: 14px; resize: vertical; min-height: 100px; outline: none; line-height: 1.6; }
+    .notes-area:focus { border-color: var(--accent); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+    .stat-card .stat-val { font-size: 28px; font-weight: 700; }
+    .stat-card .stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .stat-card.accent .stat-val { color: var(--accent); }
+    .stat-card.green .stat-val { color: var(--green); }
+    .stat-card.yellow .stat-val { color: var(--yellow); }
+
+    .open-tasks-list { display: flex; flex-direction: column; gap: 8px; }
+    .open-task-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: border .15s; }
+    .open-task-row:hover { border-color: var(--accent); }
+    .open-task-ep { font-size: 12px; color: var(--muted); min-width: 130px; }
+    .open-task-name { font-size: 14px; }
+    .open-task-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); flex-shrink: 0; }
+
+    .empty { text-align: center; padding: 48px 24px; color: var(--muted); }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+    /* ZEITSTRAHL */
+    .timeline { position: relative; padding: 8px 0 32px 0; }
+    .timeline::before { content: ''; position: absolute; left: 119px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+    .tl-year { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 28px 0 12px 0; padding-left: 140px; }
+    .tl-year:first-child { margin-top: 0; }
+    .tl-item { display: flex; align-items: flex-start; gap: 0; margin-bottom: 6px; position: relative; }
+    .tl-date { width: 110px; text-align: right; font-size: 12px; color: var(--muted); padding-top: 10px; flex-shrink: 0; font-weight: 500; }
+    .tl-dot-wrap { width: 20px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 13px; position: relative; z-index: 1; }
+    .tl-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); flex-shrink: 0; transition: all .15s; }
+    .tl-dot.filled { background: var(--accent); border-color: var(--accent); }
+    .tl-dot.done { background: var(--green); border-color: var(--green); }
+    .tl-dot.today { background: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+    .tl-dot.free { background: var(--bg); border-color: var(--border); }
+    .tl-card { flex: 1; margin-left: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: border .15s; }
+    .tl-card:hover { border-color: var(--accent); }
+    .tl-card.free { cursor: pointer; opacity: .6; }
+    .tl-card.free:hover { opacity: 1; border-color: var(--accent); }
+    .tl-card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .tl-card-meta { display: flex; align-items: center; gap: 8px; }
+    .tl-progress-bar-wrap { flex: 1; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+    .tl-progress-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+    .tl-today-line { display: flex; align-items: center; gap: 0; margin-bottom: 6px; }
+    .tl-today-label { width: 110px; text-align: right; font-size: 11px; font-weight: 700; color: var(--yellow); flex-shrink: 0; padding-right: 0; }
+    .tl-today-dot-wrap { width: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; z-index: 2; }
+    .tl-today-dash { flex: 1; margin-left: 16px; height: 2px; background: var(--yellow); opacity: .5; border-radius: 1px; }
+
+    .loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 48px; color: var(--muted); font-size: 14px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 18px; font-size: 14px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .2s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: var(--green); color: var(--green); }
+    .toast.error { border-color: var(--red); color: var(--red); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    Podcast Planer
+  </div>
+  <button class="active" onclick="showPage('planer')">Planer</button>
+  <button onclick="showPage('zeitstrahl')">Zeitstrahl</button>
+  <button onclick="showPage('offen')">Offene Aufgaben</button>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span class="sync-label" id="sync-label">Verbinde...</span>
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Dark / Light Mode">🌙</button>
+  </div>
+</nav>
+
+<main>
+  <div class="page active" id="page-planer">
+    <div class="section-header">
+      <div>
+        <h1>Episoden-Planer</h1>
+        <p class="subtitle">Alle 2 Wochen eine neue Folge &mdash; klick auf einen Slot zum Bearbeiten</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal(null)">+ Neue Folge</button>
+    </div>
+    <div id="planer-grid" class="planer-grid"></div>
+  </div>
+
+  <div class="page" id="page-zeitstrahl">
+    <h1>Zeitstrahl</h1>
+    <p class="subtitle">Übersicht aller geplanten und vergangenen Folgen</p>
+    <div id="zeitstrahl-container"></div>
+  </div>
+
+  <div class="page" id="page-offen">
+    <h1>Offene Aufgaben</h1>
+    <p class="subtitle">Alle noch nicht erledigten Schritte über alle Folgen</p>
+    <div class="stats-row" id="stats-row"></div>
+    <div id="open-tasks-container"></div>
+  </div>
+
+  <div class="page" id="page-detail">
+    <button class="back-btn" onclick="showPage('planer')">&#8592; Zurück zum Planer</button>
+    <div id="detail-content"></div>
+  </div>
+</main>
+
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h2 id="modal-title">Neue Folge anlegen</h2>
+    <div class="form-group">
+      <label>Titel der Folge</label>
+      <input type="text" id="modal-ep-title" placeholder="z.B. Herzrhythmusstörungen – Was steckt dahinter?">
+    </div>
+    <div class="form-group">
+      <label>Episodennummer (optional)</label>
+      <input type="text" id="modal-ep-num" placeholder="z.B. 42">
+    </div>
+    <div class="form-group">
+      <label>Veröffentlichungsdatum</label>
+      <input type="text" id="modal-ep-date" placeholder="TT.MM.JJJJ">
+    </div>
+    <div class="form-group">
+      <label>Kurzbeschreibung (optional)</label>
+      <textarea id="modal-ep-desc" placeholder="Worum geht es in dieser Folge?"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-danger" id="modal-delete-btn" onclick="deleteEpisode()" style="display:none">Löschen</button>
+      <button class="btn btn-primary" onclick="saveEpisode()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://xsxsyfaxhwrbllvvfxxm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzeHN5ZmF4aHdyYmxsdnZmeHhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MTM1NzIsImV4cCI6MjA5NTE4OTU3Mn0.y35dDJTrkCNMU7P0V4H8iSMprITdRst9kl7B5_BMvc8';
+const TABLE = 'podcast_episodes';
+
+// ── WORKFLOW ────────────────────────────────────────────────────
+const WORKFLOW_STEPS = [
+  // Produktion
+  { id: 'aufnahme',        label: 'Aufnahme über Riverside',                      section: 'Produktion' },
+  { id: 'hook',            label: 'Hook aus bestem Highlight + Musik einbauen',   section: 'Produktion' },
+  { id: 'schnitt',         label: 'Folge schneiden & exportieren',                section: 'Produktion' },
+  // Plattform-Upload
+  { id: 'titel',           label: 'Titel der Folge erstellen',                    section: 'Upload' },
+  { id: 'shownotes',       label: 'Shownotes generieren',                         section: 'Upload' },
+  { id: 'kapitel',         label: 'Kapitel einfügen',                             section: 'Upload' },
+  { id: 'upload',          label: 'Upload auf Spotify, YouTube & Apple Podcast',  section: 'Upload' },
+  { id: 'thumbnail_ai',    label: 'AI-Thumbnail / Cover erstellen',               section: 'Upload' },
+  { id: 'cover_canva',     label: 'Quadratisches Cover über Canva erstellen',     section: 'Upload' },
+  // Reels
+  { id: 'reels_download',  label: 'Hooks aus Riverside herunterladen (8 Reels)', section: 'Reels' },
+  { id: 'reels_hook_ki',   label: 'Transkript in KI → Text-Hook auswählen',      section: 'Reels' },
+  { id: 'reels_bearbeiten',label: 'Reels bearbeiten in Edits (Musik, Effekte)',   section: 'Reels' },
+  { id: 'reels_thumbnails',label: 'Thumbnail für jedes Reel erstellen',           section: 'Reels' },
+  { id: 'reels_beschr',    label: 'Reel-Beschreibungen erstellen',                section: 'Reels' },
+  { id: 'reels_planen',    label: 'Reels auf allen Plattformen planen & hochladen', section: 'Reels' },
+  // Social Media Woche 1
+  { id: 'sm1_karussell',   label: 'Woche 1 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
+  { id: 'sm1_reels',       label: 'Woche 1 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
+  // Social Media Woche 2
+  { id: 'sm2_karussell',   label: 'Woche 2 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
+  { id: 'sm2_reels',       label: 'Woche 2 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
+  // LinkedIn
+  { id: 'li_beitraege',    label: '5 LinkedIn-Beiträge erstellen & hochladen',   section: 'LinkedIn' },
+];
+const SECTIONS = ['Produktion','Upload','Reels','SocialMedia','LinkedIn'];
+const SECTION_LABELS = {
+  Produktion:  'Produktion',
+  Upload:      'Plattform-Upload',
+  Reels:       'Reels (8 gesamt)',
+  SocialMedia: 'Social Media',
+  LinkedIn:    'LinkedIn',
+};
+
+// ── STATE ────────────────────────────────────────────────────────
+let episodes = [];
+let editingEpId = null;
+let currentSlotDate = null;
+let notesTimer = null;
+
+// ── API HELPERS ─────────────────────────────────────────────────
+async function apiFetch(path, opts = {}) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...opts.headers,
+    },
+    ...opts,
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+async function loadEpisodes() {
+  setSyncState('syncing', 'Lädt...');
+  try {
+    const rows = await apiFetch(TABLE + '?order=date.asc');
+    episodes = rows.map(r => ({
+      id: r.id, title: r.title, num: r.num || '', date: r.date,
+      desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
+    }));
+    setSyncState('live', 'Live');
+    return true;
+  } catch(e) {
+    setSyncState('error', 'Fehler');
+    showToast('Verbindungsfehler: ' + e.message, 'error');
+    return false;
+  }
+}
+
+async function upsertEpisode(ep) {
+  setSyncState('syncing', 'Speichert...');
+  try {
+    await apiFetch(TABLE, {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({
+        id: ep.id, title: ep.title, num: ep.num || null,
+        date: ep.date, description: ep.desc || null,
+        tasks: ep.tasks || {}, notes: ep.notes || null,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    setSyncState('live', 'Live');
+  } catch(e) {
+    setSyncState('error', 'Fehler');
+    showToast('Speichern fehlgeschlagen', 'error');
+    throw e;
+  }
+}
+
+async function deleteEpisodeById(id) {
+  await apiFetch(TABLE + '?id=eq.' + id, { method: 'DELETE' });
+}
+
+// ── REALTIME ────────────────────────────────────────────────────
+function connectRealtime() {
+  const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0';
+  let ws;
+
+  function connect() {
+    ws = new WebSocket(wsUrl);
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ topic: 'realtime:public:podcast_episodes', event: 'phx_join', payload: {}, ref: '1' }));
+      setSyncState('live', 'Live');
+    };
+
+    ws.onmessage = async (e) => {
+      const msg = JSON.parse(e.data);
+      if (msg.event === 'phx_reply' && msg.ref === '1') {
+        // joined successfully
+      }
+      if (msg.event === 'INSERT' || msg.event === 'UPDATE' || msg.event === 'DELETE') {
+        await loadEpisodes();
+        const activePage = document.querySelector('.page.active');
+        if (activePage && activePage.id === 'page-planer') renderPlaner();
+        if (activePage && activePage.id === 'page-offen') renderOpenTasks();
+        if (activePage && activePage.id === 'page-detail' && editingEpId) {
+          await loadEpisodes();
+          const ep = episodes.find(e => e.id === editingEpId);
+          if (ep) openDetail(editingEpId);
+        }
+      }
+    };
+
+    ws.onclose = () => {
+      setSyncState('error', 'Getrennt');
+      setTimeout(connect, 3000);
+    };
+
+    ws.onerror = () => setSyncState('error', 'Fehler');
+  }
+
+  connect();
+}
+
+// ── SYNC DOT ────────────────────────────────────────────────────
+function setSyncState(state, label) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = label;
+}
+
+// ── TOAST ───────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+// ── DATE HELPERS ────────────────────────────────────────────────
+function formatDate(d) {
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+function parseDate(str) {
+  const [d, m, y] = str.split('.');
+  return new Date(y, m - 1, d);
+}
+
+// ── SLOTS ────────────────────────────────────────────────────────
+function getSlots() {
+  const today = new Date();
+  const first = new Date(today);
+  first.setDate(today.getDate() - 42);
+  const fd = first.getDay();
+  const diff = fd === 0 ? 1 : fd === 1 ? 0 : 8 - fd;
+  first.setDate(first.getDate() + diff);
+  const slots = [];
+  for (let i = 0; i < 26; i++) {
+    const d = new Date(first);
+    d.setDate(first.getDate() + i * 14);
+    slots.push(formatDate(d));
+  }
+  return slots;
+}
+
+function episodeForDate(date) {
+  return episodes.find(e => e.date === date);
+}
+
+// ── TASK HELPERS (supports both legacy bool and {done,content} format) ──
+function taskDone(ep, id) {
+  const v = ep.tasks && ep.tasks[id];
+  if (!v) return false;
+  return typeof v === 'object' ? !!v.done : !!v;
+}
+function taskContent(ep, id) {
+  const v = ep.tasks && ep.tasks[id];
+  if (!v || typeof v !== 'object') return '';
+  return v.content || '';
+}
+function setTaskDone(ep, id, done) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks[id];
+  const content = (v && typeof v === 'object') ? (v.content || '') : '';
+  ep.tasks[id] = { done, content };
+}
+function setTaskContent(ep, id, content) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks[id];
+  const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
+  ep.tasks[id] = { done, content };
+}
+
+// ── PROGRESS ────────────────────────────────────────────────────
+function progress(ep) {
+  const done = WORKFLOW_STEPS.filter(s => taskDone(ep, s.id)).length;
+  return { done, total: WORKFLOW_STEPS.length, pct: Math.round(done / WORKFLOW_STEPS.length * 100) };
+}
+
+// ── RENDER PLANER ────────────────────────────────────────────────
+function renderPlaner() {
+  const grid = document.getElementById('planer-grid');
+  const slots = getSlots();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  grid.innerHTML = slots.map(date => {
+    const ep = episodeForDate(date);
+    const slotDate = parseDate(date);
+    const isToday = slotDate.toDateString() === today.toDateString();
+    const isPast = slotDate < today;
+
+    if (ep) {
+      const p = progress(ep);
+      const statusLabel = p.pct === 100 ? 'Fertig' : p.done === 0 ? 'Geplant' : `${p.done}/${p.total} Schritte`;
+      const badgeClass = p.pct === 100 ? 'badge-done' : p.done > 0 ? 'badge-wip' : 'badge-free';
+      return `<div class="slot filled" onclick="openDetail('${ep.id}')">
+        <div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
+        <div class="slot-title">${ep.title}</div>
+        <span class="badge ${badgeClass}">${statusLabel}</span>
+        <div class="slot-progress"><div class="slot-progress-bar" style="width:${p.pct}%"></div></div>
+      </div>`;
+    } else {
+      return `<div class="slot free" onclick="openAddModal('${date}')">
+        <div class="slot-date">${isToday ? '📅 Heute · ' : isPast ? '⬤ ' : ''}${date}</div>
+        <div class="slot-title" style="color:var(--muted);font-weight:400">Frei</div>
+        <span class="badge badge-free">+ Folge planen</span>
+      </div>`;
+    }
+  }).join('');
+}
+
+// ── RENDER ZEITSTRAHL ────────────────────────────────────────────
+function renderZeitstrahl() {
+  const container = document.getElementById('zeitstrahl-container');
+  const slots = getSlots();
+  const today = new Date(); today.setHours(0,0,0,0);
+  let todayInserted = false;
+  let currentYear = null;
+  let html = '<div class="timeline">';
+
+  slots.forEach(date => {
+    const ep = episodeForDate(date);
+    const slotDate = parseDate(date);
+    const isToday = slotDate.toDateString() === today.toDateString();
+    const isPast = slotDate < today;
+    const year = slotDate.getFullYear();
+
+    // today line (before the first future slot)
+    if (!todayInserted && slotDate >= today && !isToday) {
+      todayInserted = true;
+      html += `<div class="tl-today-line">
+        <div class="tl-today-label">Heute</div>
+        <div class="tl-today-dot-wrap"><div style="width:12px;height:12px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow)"></div></div>
+        <div class="tl-today-dash"></div>
+      </div>`;
+    }
+
+    // year separator
+    if (year !== currentYear) {
+      currentYear = year;
+      html += `<div class="tl-year">${year}</div>`;
+    }
+
+    const shortDate = slotDate.toLocaleDateString('de-DE', { day: '2-digit', month: 'short' });
+
+    if (ep) {
+      const p = progress(ep);
+      const dotClass = p.pct === 100 ? 'done' : isToday ? 'today' : 'filled';
+      const badge = p.pct === 100 ? `<span class="badge badge-done" style="font-size:11px">Fertig</span>` :
+                    p.done > 0 ? `<span class="badge badge-wip" style="font-size:11px">${p.done}/${p.total}</span>` :
+                    `<span class="badge badge-free" style="font-size:11px">Geplant</span>`;
+      html += `<div class="tl-item">
+        <div class="tl-date">${shortDate}</div>
+        <div class="tl-dot-wrap"><div class="tl-dot ${dotClass}"></div></div>
+        <div class="tl-card" onclick="openDetail('${ep.id}')">
+          <div class="tl-card-title">${ep.num ? '#' + ep.num + ' · ' : ''}${ep.title}</div>
+          <div class="tl-card-meta">
+            ${badge}
+            <div class="tl-progress-bar-wrap"><div class="tl-progress-bar-fill" style="width:${p.pct}%"></div></div>
+            <span style="font-size:11px;color:var(--muted);flex-shrink:0">${p.pct}%</span>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="tl-item">
+        <div class="tl-date" style="opacity:.45">${shortDate}</div>
+        <div class="tl-dot-wrap"><div class="tl-dot free"></div></div>
+        <div class="tl-card free" onclick="openAddModal('${date}')">
+          <div class="tl-card-title" style="color:var(--muted);font-weight:400">Frei — + Folge planen</div>
+        </div>
+      </div>`;
+    }
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ── RENDER OPEN TASKS ────────────────────────────────────────────
+function renderOpenTasks() {
+  const container = document.getElementById('open-tasks-container');
+  const statsRow = document.getElementById('stats-row');
+  const allEps = episodes;
+  const doneTasks = allEps.reduce((s, ep) => s + WORKFLOW_STEPS.filter(t => ep.tasks && ep.tasks[t.id]).length, 0);
+  const totalTasks = allEps.length * WORKFLOW_STEPS.length;
+  const doneEps = allEps.filter(ep => progress(ep).pct === 100).length;
+
+  statsRow.innerHTML = `
+    <div class="stat-card accent"><div class="stat-val">${allEps.length}</div><div class="stat-label">Folgen gesamt</div></div>
+    <div class="stat-card green"><div class="stat-val">${doneEps}</div><div class="stat-label">Fertig</div></div>
+    <div class="stat-card yellow"><div class="stat-val">${totalTasks - doneTasks}</div><div class="stat-label">Offene Aufgaben</div></div>
+  `;
+
+  if (!allEps.length) {
+    container.innerHTML = `<div class="empty">Noch keine Folgen angelegt.</div>`;
+    return;
+  }
+
+  const rows = [];
+  allEps.forEach(ep => {
+    WORKFLOW_STEPS.forEach(step => {
+      if (!(ep.tasks && ep.tasks[step.id])) rows.push({ ep, step });
+    });
+  });
+
+  if (!rows.length) {
+    container.innerHTML = `<div class="empty" style="color:var(--green)">🎉 Alle Aufgaben erledigt!</div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="open-tasks-list">${rows.map(r =>
+    `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
+      <div class="open-task-dot"></div>
+      <div class="open-task-ep">${r.ep.num ? '#' + r.ep.num + ' · ' : ''}${r.ep.date}</div>
+      <div class="open-task-name">${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.step.label}</span></div>
+    </div>`
+  ).join('')}</div>`;
+}
+
+// ── RENDER DETAIL ────────────────────────────────────────────────
+function openDetail(id) {
+  const ep = episodes.find(e => e.id === id);
+  if (!ep) return;
+  editingEpId = id;
+
+  const p = progress(ep);
+  const circumference = 2 * Math.PI * 26;
+  const offset = circumference - (p.pct / 100) * circumference;
+
+  let sectionsHtml = '';
+  SECTIONS.forEach(sec => {
+    const steps = WORKFLOW_STEPS.filter(s => s.section === sec);
+    const doneCount = steps.filter(s => taskDone(ep, s.id)).length;
+    sectionsHtml += `<div class="checklist-section">
+      <h2>${SECTION_LABELS[sec]} <span class="section-count">${doneCount}/${steps.length}</span></h2>
+      ${steps.map(step => {
+        const done = taskDone(ep, step.id);
+        const content = taskContent(ep, step.id);
+        const hasContent = content.trim().length > 0;
+        return `<div class="task-row" id="row-${step.id}">
+          <div class="task-item ${done ? 'done' : ''}" onclick="toggleTask('${id}','${step.id}')">
+            <div class="task-check"></div>
+            <div class="task-label">${step.label}</div>
+            <button class="task-expand-btn ${hasContent ? 'has-content' : ''}" onclick="event.stopPropagation();toggleContent('${step.id}')" title="Inhalt einfügen / anzeigen">
+              ${hasContent ? '📋' : '+'} Inhalt
+            </button>
+          </div>
+          <div class="task-content-area" id="content-${step.id}">
+            <textarea class="task-content-textarea"
+              placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
+              oninput="scheduleContentSave('${id}','${step.id}',this.value)"
+            >${content}</textarea>
+            <button class="copy-btn" onclick="copyContent('${step.id}')">Kopieren</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  });
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="ep-header">
+      <div class="ep-header-info">
+        <h1>${ep.title}</h1>
+        <div class="ep-meta">
+          ${ep.num ? `<span>#${ep.num}</span>` : ''}
+          <span>📅 ${ep.date}</span>
+          ${ep.desc ? `<span>${ep.desc}</span>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="progress-circle">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="5"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="5"
+              stroke-dasharray="${circumference.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" stroke-linecap="round"/>
+          </svg>
+          <div class="pct">${p.pct}%</div>
+        </div>
+        <button class="btn btn-ghost" onclick="openEditModal('${id}')">Bearbeiten</button>
+      </div>
+    </div>
+    ${sectionsHtml}
+    <div class="card" style="margin-top:8px">
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500">Notizen</label>
+      <textarea class="notes-area" id="ep-notes" placeholder="Notizen zu dieser Folge..."
+        oninput="scheduleNoteSave('${id}',this.value)">${ep.notes || ''}</textarea>
+    </div>
+  `;
+  showPage('detail');
+}
+
+async function toggleTask(epId, taskId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const wasDone = taskDone(ep, taskId);
+  setTaskDone(ep, taskId, !wasDone);
+  openDetail(epId);
+  // re-open content panel if it was open
+  if (document.getElementById('content-' + taskId + '')?.classList.contains('open')) {
+    document.getElementById('content-' + taskId)?.classList.add('open');
+  }
+  try {
+    await upsertEpisode(ep);
+  } catch(e) {
+    setTaskDone(ep, taskId, wasDone);
+    openDetail(epId);
+  }
+}
+
+function toggleContent(taskId) {
+  const area = document.getElementById('content-' + taskId);
+  if (!area) return;
+  area.classList.toggle('open');
+  if (area.classList.contains('open')) {
+    area.querySelector('textarea')?.focus();
+  }
+}
+
+let contentTimers = {};
+function scheduleContentSave(epId, taskId, val) {
+  clearTimeout(contentTimers[taskId]);
+  contentTimers[taskId] = setTimeout(async () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    setTaskContent(ep, taskId, val);
+    // update button indicator without re-rendering whole page
+    const btn = document.querySelector(`#row-${taskId} .task-expand-btn`);
+    if (btn) {
+      btn.classList.toggle('has-content', val.trim().length > 0);
+      btn.innerHTML = (val.trim().length > 0 ? '📋' : '+') + ' Inhalt';
+    }
+    await upsertEpisode(ep);
+  }, 700);
+}
+
+function copyContent(taskId) {
+  const ta = document.querySelector('#content-' + taskId + ' textarea');
+  if (!ta || !ta.value) return;
+  navigator.clipboard.writeText(ta.value).then(() => showToast('Kopiert ✓'));
+}
+
+function scheduleNoteSave(epId, val) {
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(async () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (ep) { ep.notes = val; await upsertEpisode(ep); }
+  }, 800);
+}
+
+// ── MODAL ────────────────────────────────────────────────────────
+function openAddModal(date) {
+  editingEpId = null;
+  currentSlotDate = date;
+  document.getElementById('modal-title').textContent = 'Neue Folge anlegen';
+  document.getElementById('modal-ep-title').value = '';
+  document.getElementById('modal-ep-num').value = '';
+  document.getElementById('modal-ep-date').value = date || '';
+  document.getElementById('modal-ep-desc').value = '';
+  document.getElementById('modal-delete-btn').style.display = 'none';
+  document.getElementById('modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('modal-ep-title').focus(), 50);
+}
+
+function openEditModal(id) {
+  const ep = episodes.find(e => e.id === id);
+  if (!ep) return;
+  editingEpId = id;
+  document.getElementById('modal-title').textContent = 'Folge bearbeiten';
+  document.getElementById('modal-ep-title').value = ep.title;
+  document.getElementById('modal-ep-num').value = ep.num || '';
+  document.getElementById('modal-ep-date').value = ep.date;
+  document.getElementById('modal-ep-desc').value = ep.desc || '';
+  document.getElementById('modal-delete-btn').style.display = 'inline-block';
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+}
+
+async function saveEpisode() {
+  const title = document.getElementById('modal-ep-title').value.trim();
+  const num = document.getElementById('modal-ep-num').value.trim();
+  const date = document.getElementById('modal-ep-date').value.trim();
+  const desc = document.getElementById('modal-ep-desc').value.trim();
+  if (!title) { document.getElementById('modal-ep-title').focus(); return; }
+  if (!date) { document.getElementById('modal-ep-date').focus(); return; }
+
+  let ep;
+  if (editingEpId) {
+    ep = episodes.find(e => e.id === editingEpId);
+    Object.assign(ep, { title, num, date, desc });
+  } else {
+    ep = { id: Date.now().toString(), title, num, date, desc, tasks: {}, notes: '' };
+    episodes.push(ep);
+  }
+
+  closeModal();
+  try {
+    await upsertEpisode(ep);
+    showToast('Gespeichert ✓');
+    if (editingEpId) { openDetail(ep.id); } else { renderPlaner(); showPage('planer'); }
+  } catch(e) {
+    if (!editingEpId) episodes.pop();
+  }
+}
+
+async function deleteEpisode() {
+  if (!editingEpId) return;
+  if (!confirm('Folge wirklich löschen?')) return;
+  const id = editingEpId;
+  closeModal();
+  episodes = episodes.filter(e => e.id !== id);
+  renderPlaner();
+  showPage('planer');
+  try {
+    await deleteEpisodeById(id);
+    showToast('Gelöscht');
+  } catch(e) {
+    showToast('Löschen fehlgeschlagen', 'error');
+    await loadEpisodes();
+    renderPlaner();
+  }
+}
+
+// ── NAV ──────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'planer')      { renderPlaner();      document.querySelectorAll('nav button')[0].classList.add('active'); }
+  if (name === 'zeitstrahl')  { renderZeitstrahl();  document.querySelectorAll('nav button')[1].classList.add('active'); }
+  if (name === 'offen')       { renderOpenTasks();   document.querySelectorAll('nav button')[2].classList.add('active'); }
+}
+
+document.getElementById('modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-bg')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── THEME ────────────────────────────────────────────────────────
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('theme-btn').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('podcast_theme', isLight ? 'light' : 'dark');
+}
+function initTheme() {
+  const saved = localStorage.getItem('podcast_theme');
+  if (saved === 'light') {
+    document.body.classList.add('light');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+}
+
+// ── SERVICE WORKER ───────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+(async () => {
+  initTheme();
+  document.getElementById('planer-grid').innerHTML = '<div class="loading"><div class="spinner"></div> Lade Episoden...</div>';
+  await loadEpisodes();
+  renderPlaner();
+  connectRealtime();
+})();
+</script>
+</body>
+</html>
