@@ -788,6 +788,47 @@ function copyContent(taskId) {
   navigator.clipboard.writeText(ta.value).then(() => showToast('Kopiert ✓'));
 }
 
+async function loadTranscriptFile(event, epId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const label = document.getElementById('transcript-filename-' + epId);
+  if (label) label.textContent = '⏳ ' + file.name;
+
+  let text = '';
+  // .docx needs special handling — fall back to raw text
+  if (file.name.endsWith('.docx')) {
+    try {
+      const ab = await file.arrayBuffer();
+      // Extract raw text from docx XML (simple approach)
+      const decoder = new TextDecoder('utf-8');
+      const zip = await new Response(ab).text();
+      // Use DOMParser on the XML inside docx
+      const uint = new Uint8Array(ab);
+      // find word/document.xml by scanning for its content
+      const str = String.fromCharCode(...uint.slice(0, Math.min(uint.length, 500000)));
+      const xmlMatch = str.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g);
+      if (xmlMatch) {
+        text = xmlMatch.map(m => m.replace(/<[^>]+>/g, '')).join(' ');
+      } else {
+        text = await file.text();
+      }
+    } catch {
+      text = await file.text();
+    }
+  } else {
+    text = await file.text();
+  }
+
+  const ta = document.getElementById('ep-transcript');
+  if (ta) ta.value = text;
+  if (label) label.textContent = '✓ ' + file.name;
+
+  // save
+  const ep = episodes.find(e => e.id === epId);
+  if (ep) { ep.transcript = text; await upsertEpisode(ep); }
+  showToast('Transkript geladen ✓');
+}
+
 function scheduleTranscriptSave(epId, val) {
   clearTimeout(notesTimer);
   notesTimer = setTimeout(async () => {
