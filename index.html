@@ -913,8 +913,11 @@ async function generateContent(epId, taskId) {
     document.getElementById('ep-transcript')?.focus();
     return;
   }
-  const btns = [document.getElementById('gen-' + taskId), document.getElementById('gen-row-' + taskId)].filter(Boolean);
-  btns.forEach(b => { b.disabled = true; b.textContent = '⏳ Generiert…'; });
+  const btn = document.getElementById('gen-' + taskId);
+  const rowBtn = document.getElementById('gen-row-' + taskId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generiert…'; }
+  if (rowBtn) { rowBtn.disabled = true; rowBtn.textContent = '⏳'; }
+  const btns = [btn, rowBtn].filter(Boolean);
 
   // open the content area
   const area = document.getElementById('content-' + taskId);
