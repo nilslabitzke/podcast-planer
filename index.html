@@ -984,6 +984,7 @@ function showPage(name) {
   if (name === 'planer')      { renderPlaner();      document.querySelectorAll('nav button')[0].classList.add('active'); }
   if (name === 'zeitstrahl')  { renderZeitstrahl();  document.querySelectorAll('nav button')[1].classList.add('active'); }
   if (name === 'offen')       { renderOpenTasks();   document.querySelectorAll('nav button')[2].classList.add('active'); }
+  if (name === 'prompts')     { renderPrompts();     document.querySelectorAll('nav button')[3].classList.add('active'); }
 }
 
 document.getElementById('modal-bg').addEventListener('click', e => {
