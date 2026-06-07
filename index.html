@@ -739,6 +739,7 @@ function openDetail(id) {
             <button class="task-expand-btn ${hasContent ? 'has-content' : ''}" onclick="event.stopPropagation();toggleContent('${step.id}')" title="Inhalt einfügen / anzeigen">
               ${hasContent ? '📋' : '+'} Inhalt
             </button>
+            ${AI_STEPS.includes(step.id) ? `<button class="generate-btn" id="gen-row-${step.id}" onclick="event.stopPropagation();generateContent('${id}','${step.id}')">✨ Generieren</button>` : ''}
           </div>
           <div class="task-content-area" id="content-${step.id}">
             <textarea class="task-content-textarea"
