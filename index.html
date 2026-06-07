@@ -924,7 +924,7 @@ async function generateContent(epId, taskId) {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + SUPABASE_KEY,
       },
-      body: JSON.stringify({ taskId, transcript, epTitle: ep.title }),
+      body: JSON.stringify({ taskId, transcript, epTitle: ep.title, customPrompt: customPrompts[taskId] || '' }),
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
