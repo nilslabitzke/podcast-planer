@@ -357,7 +357,7 @@ async function savePrompt(taskId, value) {
   try {
     await apiFetch('podcast_prompts', {
       method: 'POST',
-      headers: { 'Prefer': 'resolution=merge-duplicates' },
+      prefer: 'resolution=merge-duplicates',
       body: JSON.stringify({ task_id: taskId, prompt: value, updated_at: new Date().toISOString() })
     });
     showToast('Prompt gespeichert');
