@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/nilslabitzke/Desktop/Podcast/PodcastCheck && git add -A && git diff --cached --quiet || git commit -m 'Auto-update: $(date +\"%d.%m.%Y %H:%M\")' && git push origin main 2>&1 || true"
+          }
+        ]
+      }
+    ]
+  }
+}
