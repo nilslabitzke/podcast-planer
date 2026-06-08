@@ -945,7 +945,7 @@ async function generateContent(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const transcript = ep.transcript || '';
-  if (!transcript.trim()) {
+  if (taskId !== 'fragenerstellung' && !transcript.trim()) {
     showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
     document.getElementById('ep-transcript')?.focus();
     return;
