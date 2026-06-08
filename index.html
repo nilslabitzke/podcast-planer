@@ -879,6 +879,15 @@ function openDetail(id) {
   showPage('detail');
 }
 
+async function markAllDone(epId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  WORKFLOW_STEPS.forEach(s => setTaskDone(ep, s.id, true));
+  await upsertEpisode(ep);
+  showToast('✅ Alle Aufgaben abgehakt!');
+  openDetail(epId);
+}
+
 async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
