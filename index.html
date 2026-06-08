@@ -621,10 +621,22 @@ function progress(ep) {
 }
 
 // ── RENDER PLANER ────────────────────────────────────────────────
+function changePlannerYear(delta) {
+  plannerYear += delta;
+  const label = document.getElementById('planner-year-label');
+  if (label) label.textContent = plannerYear;
+  renderPlaner();
+}
+
 function renderPlaner() {
   const grid = document.getElementById('planer-grid');
-  const slots = getSlots();
+  const slots = getSlotsForYear(plannerYear);
   const today = new Date(); today.setHours(0,0,0,0);
+
+  if (!slots.length) {
+    grid.innerHTML = `<div class="empty">Keine Slots für ${plannerYear}.</div>`;
+    return;
+  }
 
   grid.innerHTML = slots.map(date => {
     const ep = episodeForDate(date);
