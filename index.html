@@ -872,6 +872,9 @@ function openDetail(id) {
       <textarea class="notes-area" id="ep-notes" placeholder="Notizen zu dieser Folge..."
         oninput="scheduleNoteSave('${id}',this.value)">${ep.notes || ''}</textarea>
     </div>
+    <div style="display:flex;justify-content:center;margin-top:18px">
+      <button class="btn btn-primary" onclick="markAllDone('${id}')">✅ Alles erledigt</button>
+    </div>
   `;
   showPage('detail');
 }
