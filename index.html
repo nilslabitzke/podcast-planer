@@ -548,6 +548,30 @@ function getSlots() {
   return slots;
 }
 
+// Fixed bi-weekly cadence anchor (a Monday), so the rhythm stays consistent across years
+const SLOT_ANCHOR = (() => {
+  const a = new Date(2024, 0, 1); // 2024-01-01 is a Monday
+  return a;
+})();
+
+let plannerYear = new Date().getFullYear();
+
+function getSlotsForYear(year) {
+  const yearStart = new Date(year, 0, 1);
+  const yearEnd = new Date(year, 11, 31);
+  // find first slot date >= yearStart that aligns with the 14-day cadence from SLOT_ANCHOR
+  const msPerDay = 86400000;
+  const daysSinceAnchor = Math.round((yearStart - SLOT_ANCHOR) / msPerDay);
+  const offset = ((daysSinceAnchor % 14) + 14) % 14;
+  const start = new Date(yearStart);
+  start.setDate(start.getDate() + (offset === 0 ? 0 : 14 - offset));
+  const slots = [];
+  for (let d = new Date(start); d <= yearEnd; d.setDate(d.getDate() + 14)) {
+    slots.push(formatDate(d));
+  }
+  return slots;
+}
+
 function episodeForDate(date) {
   return episodes.find(e => e.date === date);
 }
