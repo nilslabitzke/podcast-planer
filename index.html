@@ -770,7 +770,7 @@ function openDetail(id) {
                 placeholder="Google-Drive-Link zur Fragensammlung einfügen…"
                 id="link-${step.id}"
                 value="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}"
-                oninput="scheduleLinkSave('${id}','${step.id}',this.value); const a=document.getElementById('linkopen-${step.id}'); a.href=this.value; a.style.display=this.value.trim()?'':'none';">
+                oninput="scheduleLinkSave('${id}','${step.id}',this.value); [document.getElementById('linkopen-${step.id}'),document.getElementById('linkopen-row-${step.id}')].forEach(a=>{if(a){a.href=this.value;a.style.display=this.value.trim()?'':'none';}});">
               <a id="linkopen-${step.id}" href="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer"
                 class="task-expand-btn" style="${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>
             </div>` : ''}
