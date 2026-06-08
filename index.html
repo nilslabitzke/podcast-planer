@@ -870,6 +870,17 @@ function scheduleContentSave(epId, taskId, val) {
   }, 700);
 }
 
+let linkTimers = {};
+function scheduleLinkSave(epId, taskId, val) {
+  clearTimeout(linkTimers[taskId]);
+  linkTimers[taskId] = setTimeout(async () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    setTaskLink(ep, taskId, val);
+    await upsertEpisode(ep);
+  }, 700);
+}
+
 function copyContent(taskId) {
   const ta = document.querySelector('#content-' + taskId + ' textarea');
   if (!ta || !ta.value) return;
