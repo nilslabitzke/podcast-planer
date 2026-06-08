@@ -554,10 +554,8 @@ function getSlots() {
 }
 
 // Fixed bi-weekly cadence anchor (a Monday), so the rhythm stays consistent across years
-const SLOT_ANCHOR = (() => {
-  const a = new Date(2024, 0, 1); // 2024-01-01 is a Monday
-  return a;
-})();
+// Anchored to a real episode date so generated slots line up with existing episodes
+const SLOT_ANCHOR = new Date(2026, 5, 8); // 08.06.2026 — CED episode
 
 let plannerYear = new Date().getFullYear();
 
