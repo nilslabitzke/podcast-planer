@@ -632,6 +632,8 @@ function changePlannerYear(delta) {
 }
 
 function renderPlaner() {
+  const yearLabel = document.getElementById('planner-year-label');
+  if (yearLabel) yearLabel.textContent = plannerYear;
   const grid = document.getElementById('planer-grid');
   const slots = getSlotsForYear(plannerYear);
   const today = new Date(); today.setHours(0,0,0,0);
