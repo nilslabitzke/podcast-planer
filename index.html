@@ -566,7 +566,8 @@ function setTaskDone(ep, id, done) {
   if (!ep.tasks) ep.tasks = {};
   const v = ep.tasks[id];
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
-  ep.tasks[id] = { done, content };
+  const link = (v && typeof v === 'object') ? (v.link || '') : '';
+  ep.tasks[id] = { done, content, link };
 }
 function taskLink(ep, id) {
   const v = ep.tasks && ep.tasks[id];
