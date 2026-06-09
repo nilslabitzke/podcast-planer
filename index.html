@@ -672,7 +672,15 @@ function renderPlaner() {
 // ── RENDER ZEITSTRAHL ────────────────────────────────────────────
 function renderZeitstrahl() {
   const container = document.getElementById('zeitstrahl-container');
-  const slots = getSlots();
+  // Collect all years that have episodes, plus current year, ±1 year around today
+  const today = new Date(); today.setHours(0,0,0,0);
+  const epYears = episodes.map(e => parseDate(e.date).getFullYear());
+  const minYear = Math.min(today.getFullYear() - 1, ...epYears);
+  const maxYear = Math.max(today.getFullYear() + 1, ...epYears);
+  const slots = [];
+  for (let y = minYear; y <= maxYear; y++) slots.push(...getSlotsForYear(y));
+  // deduplicate just in case
+  const uniqueSlots = [...new Set(slots)];
   const today = new Date(); today.setHours(0,0,0,0);
   let todayInserted = false;
   let currentYear = null;
