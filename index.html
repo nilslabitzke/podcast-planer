@@ -1119,6 +1119,9 @@ function closeModal() {
 async function saveEpisode() {
   const title = document.getElementById('modal-ep-title').value.trim();
   const num = document.getElementById('modal-ep-num').value.trim();
+  const recDate = document.getElementById('modal-ep-rec-date').value.trim();
+  const recTime = document.getElementById('modal-ep-rec-time').value.trim();
+  const recordingDate = recDate ? (recTime ? recDate + ' ' + recTime : recDate) : '';
   const date = document.getElementById('modal-ep-date').value.trim();
   const desc = document.getElementById('modal-ep-desc').value.trim();
   if (!title) { document.getElementById('modal-ep-title').focus(); return; }
