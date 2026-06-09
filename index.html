@@ -460,7 +460,7 @@ async function upsertEpisode(ep) {
         id: ep.id, title: ep.title, num: ep.num || null,
         date: ep.date, description: ep.desc || null,
         tasks: ep.tasks || {}, notes: ep.notes || null,
-        transcript: ep.transcript || null,
+        transcript: ep.transcript || null, recording_date: ep.recordingDate || null,
         updated_at: new Date().toISOString(),
       }),
     });
