@@ -672,16 +672,15 @@ function renderPlaner() {
 // ── RENDER ZEITSTRAHL ────────────────────────────────────────────
 function renderZeitstrahl() {
   const container = document.getElementById('zeitstrahl-container');
-  // Collect all years that have episodes, plus current year, ±1 year around today
+  // Collect all years that have episodes, plus current year ±1
   const today = new Date(); today.setHours(0,0,0,0);
-  const epYears = episodes.map(e => parseDate(e.date).getFullYear());
-  const minYear = Math.min(today.getFullYear() - 1, ...epYears);
-  const maxYear = Math.max(today.getFullYear() + 1, ...epYears);
-  const slots = [];
-  for (let y = minYear; y <= maxYear; y++) slots.push(...getSlotsForYear(y));
-  // deduplicate just in case
-  const uniqueSlots = [...new Set(slots)];
-  const today = new Date(); today.setHours(0,0,0,0);
+  const thisYear = today.getFullYear();
+  const epYears = episodes.map(e => parseDate(e.date).getFullYear()).filter(y => !isNaN(y));
+  const minYear = epYears.length ? Math.min(thisYear - 1, ...epYears) : thisYear - 1;
+  const maxYear = epYears.length ? Math.max(thisYear + 1, ...epYears) : thisYear + 1;
+  const allSlots = [];
+  for (let y = minYear; y <= maxYear; y++) allSlots.push(...getSlotsForYear(y));
+  const uniqueSlots = [...new Set(allSlots)].sort((a, b) => parseDate(a) - parseDate(b));
   let todayInserted = false;
   let currentYear = null;
   let html = '<div class="timeline">';
