@@ -857,7 +857,8 @@ function openDetail(id) {
         <h1>${ep.title}</h1>
         <div class="ep-meta">
           ${ep.num ? `<span>#${ep.num}</span>` : ''}
-          <span>📅 ${ep.date}</span>
+          ${ep.recordingDate ? `<span>🎙️ Aufnahme: ${ep.recordingDate}</span>` : ''}
+          <span>📅 Veröffentlichung: ${ep.date}, 05:30 Uhr</span>
           ${ep.desc ? `<span>${ep.desc}</span>` : ''}
         </div>
       </div>
