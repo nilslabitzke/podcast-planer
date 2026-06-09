@@ -686,7 +686,7 @@ function renderZeitstrahl() {
   let currentYear = null;
   let html = '<div class="timeline">';
 
-  slots.forEach(date => {
+  uniqueSlots.forEach(date => {
     const ep = episodeForDate(date);
     const slotDate = parseDate(date);
     const isToday = slotDate.toDateString() === today.toDateString();
