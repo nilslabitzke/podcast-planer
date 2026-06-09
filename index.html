@@ -741,6 +741,14 @@ function renderZeitstrahl() {
 
   html += '</div>';
   container.innerHTML = html;
+
+  // Scroll to today marker (or first upcoming slot)
+  requestAnimationFrame(() => {
+    const todayLine = container.querySelector('.tl-today-line');
+    const firstFuture = container.querySelector('.tl-dot.today, .tl-dot.filled');
+    const target = todayLine || firstFuture;
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
 }
 
 // ── RENDER OPEN TASKS ────────────────────────────────────────────
