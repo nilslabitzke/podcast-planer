@@ -688,18 +688,30 @@ function renderZeitstrahl() {
   const allSlots = [];
   for (let y = minYear; y <= maxYear; y++) allSlots.push(...getSlotsForYear(y));
   const uniqueSlots = [...new Set(allSlots)].sort((a, b) => parseDate(a) - parseDate(b));
+  // Build merged item list: slot entries + recording entries
+  const tlItems = [];
+  uniqueSlots.forEach(date => {
+    tlItems.push({ type: 'slot', date, sortDate: parseDate(date) });
+  });
+  episodes.forEach(ep => {
+    if (ep.recordingDate) {
+      const recDateStr = ep.recordingDate.split(' ')[0]; // date part only
+      const recTime = ep.recordingDate.split(' ')[1] || '';
+      tlItems.push({ type: 'recording', date: recDateStr, time: recTime, ep, sortDate: parseDate(recDateStr) });
+    }
+  });
+  tlItems.sort((a, b) => a.sortDate - b.sortDate);
+
   let todayInserted = false;
   let currentYear = null;
   let html = '<div class="timeline">';
 
-  uniqueSlots.forEach(date => {
-    const ep = episodeForDate(date);
-    const slotDate = parseDate(date);
+  tlItems.forEach(item => {
+    const slotDate = item.sortDate;
     const isToday = slotDate.toDateString() === today.toDateString();
-    const isPast = slotDate < today;
     const year = slotDate.getFullYear();
 
-    // today line (before the first future slot)
+    // today line (before the first future item)
     if (!todayInserted && slotDate >= today && !isToday) {
       todayInserted = true;
       html += `<div class="tl-today-line">
@@ -717,6 +729,21 @@ function renderZeitstrahl() {
 
     const shortDate = slotDate.toLocaleDateString('de-DE', { day: '2-digit', month: 'short' });
 
+    // Recording entry
+    if (item.type === 'recording') {
+      const ep = item.ep;
+      html += `<div class="tl-item">
+        <div class="tl-date">${shortDate}</div>
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--accent2);border-color:var(--accent2)"></div></div>
+        <div class="tl-card" onclick="openDetail('${ep.id}')" style="border-color:var(--accent2)">
+          <div class="tl-card-title" style="color:var(--accent2)">🎙️ Aufnahme${item.time ? ' · ' + item.time + ' Uhr' : ''} — ${ep.title}</div>
+        </div>
+      </div>`;
+      return;
+    }
+
+    // Slot entry
+    const ep = episodeForDate(item.date);
     if (ep) {
       const p = progress(ep);
       const dotClass = p.pct === 100 ? 'done' : isToday ? 'today' : 'filled';
