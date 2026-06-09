@@ -1130,9 +1130,9 @@ async function saveEpisode() {
   let ep;
   if (editingEpId) {
     ep = episodes.find(e => e.id === editingEpId);
-    Object.assign(ep, { title, num, date, desc });
+    Object.assign(ep, { title, num, date, desc, recordingDate });
   } else {
-    ep = { id: Date.now().toString(), title, num, date, desc, tasks: {}, notes: '' };
+    ep = { id: Date.now().toString(), title, num, date, desc, recordingDate, tasks: {}, notes: '' };
     episodes.push(ep);
   }
 
