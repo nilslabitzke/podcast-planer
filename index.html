@@ -1103,6 +1103,9 @@ function openEditModal(id) {
   document.getElementById('modal-title').textContent = 'Folge bearbeiten';
   document.getElementById('modal-ep-title').value = ep.title;
   document.getElementById('modal-ep-num').value = ep.num || '';
+  const recParts = (ep.recordingDate || '').split(' ');
+  document.getElementById('modal-ep-rec-date').value = recParts[0] || '';
+  document.getElementById('modal-ep-rec-time').value = recParts[1] || '';
   document.getElementById('modal-ep-date').value = ep.date;
   document.getElementById('modal-ep-desc').value = ep.desc || '';
   document.getElementById('modal-delete-btn').style.display = 'inline-block';
