@@ -922,14 +922,19 @@ function openDetail(id) {
               <a id="linkopen-${step.id}" href="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer"
                 class="task-expand-btn" style="${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>
             </div>` : ''}
-            ${step.id === 'reels_planen' ? `<div class="reel-list">
-              ${getReels(ep).map((r, idx) => `<div class="reel-item">
-                <div class="task-check ${r.done ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReel('${id}','${idx}')"></div>
+            ${step.id === 'reels_download' ? `<div class="reel-list">
+              ${getReels(ep, step.id).map((r, idx) => `<div class="reel-item">
+                <div class="task-check ${r.done ? 'done' : ''}" id="reel-check-${step.id}-${idx}" onclick="toggleReel('${id}','${step.id}','${idx}')"></div>
                 <div class="reel-label">Reel ${idx + 1}</div>
                 <input type="text" class="task-content-textarea reel-input" style="margin-bottom:0"
                   placeholder="Notiz / Status für Reel ${idx + 1}…"
                   value="${(r.text || '').replace(/"/g, '&quot;')}"
-                  oninput="scheduleReelSave('${id}','${idx}',this.value)">
+                  oninput="scheduleReelSave('${id}','${step.id}','${idx}',this.value)">
+              </div>`).join('')}
+            </div>` : step.id === 'reels_planen' ? `<div class="reel-list">
+              ${getReels(ep, step.id).map((r, idx) => `<div class="reel-item">
+                <div class="task-check ${r.done ? 'done' : ''}" id="reel-check-${step.id}-${idx}" onclick="toggleReel('${id}','${step.id}','${idx}')"></div>
+                <div class="reel-label">Reel ${idx + 1}</div>
               </div>`).join('')}
             </div>` : `<textarea class="task-content-textarea"
               placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
