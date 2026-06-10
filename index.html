@@ -936,6 +936,13 @@ function openDetail(id) {
   showPage('detail');
 }
 
+function toggleTranscriptBox() {
+  const box = document.querySelector('.transcript-box');
+  const icon = document.getElementById('transcript-toggle-icon');
+  box.classList.toggle('collapsed');
+  icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
+}
+
 async function markAllDone(epId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
