@@ -632,44 +632,45 @@ function setTaskLink(ep, id, link) {
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
   ep.tasks[id] = { done, content, link };
 }
-function getReels(ep) {
-  const v = ep.tasks && ep.tasks['reels_planen'];
+function getReels(ep, stepId) {
+  const v = ep.tasks && ep.tasks[stepId];
   const reels = (v && typeof v === 'object' && Array.isArray(v.reels)) ? v.reels : [];
   const out = [];
   for (let i = 0; i < 8; i++) out.push(reels[i] || { done: false, text: '' });
   return out;
 }
-function setReelDone(ep, idx, done) {
+function setReelDone(ep, stepId, idx, done) {
   if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks['reels_planen'];
+  const v = ep.tasks[stepId];
   const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
-  const reels = getReels(ep);
+  const reels = getReels(ep, stepId);
   reels[idx] = { ...reels[idx], done };
-  ep.tasks['reels_planen'] = { ...base, reels };
+  ep.tasks[stepId] = { ...base, reels };
 }
-function setReelText(ep, idx, text) {
+function setReelText(ep, stepId, idx, text) {
   if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks['reels_planen'];
+  const v = ep.tasks[stepId];
   const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
-  const reels = getReels(ep);
+  const reels = getReels(ep, stepId);
   reels[idx] = { ...reels[idx], text };
-  ep.tasks['reels_planen'] = { ...base, reels };
+  ep.tasks[stepId] = { ...base, reels };
 }
 let reelTimers = {};
-function toggleReel(epId, idx) {
+function toggleReel(epId, stepId, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  const reels = getReels(ep);
-  setReelDone(ep, idx, !reels[idx].done);
-  document.getElementById(`reel-check-${idx}`).classList.toggle('done');
+  const reels = getReels(ep, stepId);
+  setReelDone(ep, stepId, idx, !reels[idx].done);
+  document.getElementById(`reel-check-${stepId}-${idx}`).classList.toggle('done');
   upsertEpisode(ep);
 }
-function scheduleReelSave(epId, idx, val) {
-  clearTimeout(reelTimers[idx]);
-  reelTimers[idx] = setTimeout(() => {
+function scheduleReelSave(epId, stepId, idx, val) {
+  const key = stepId + '-' + idx;
+  clearTimeout(reelTimers[key]);
+  reelTimers[key] = setTimeout(() => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
-    setReelText(ep, idx, val);
+    setReelText(ep, stepId, idx, val);
     upsertEpisode(ep);
   }, 700);
 }
