@@ -628,6 +628,47 @@ function setTaskLink(ep, id, link) {
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
   ep.tasks[id] = { done, content, link };
 }
+function getReels(ep) {
+  const v = ep.tasks && ep.tasks['reels_planen'];
+  const reels = (v && typeof v === 'object' && Array.isArray(v.reels)) ? v.reels : [];
+  const out = [];
+  for (let i = 0; i < 8; i++) out.push(reels[i] || { done: false, text: '' });
+  return out;
+}
+function setReelDone(ep, idx, done) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks['reels_planen'];
+  const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
+  const reels = getReels(ep);
+  reels[idx] = { ...reels[idx], done };
+  ep.tasks['reels_planen'] = { ...base, reels };
+}
+function setReelText(ep, idx, text) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks['reels_planen'];
+  const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
+  const reels = getReels(ep);
+  reels[idx] = { ...reels[idx], text };
+  ep.tasks['reels_planen'] = { ...base, reels };
+}
+let reelTimers = {};
+function toggleReel(epId, idx) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const reels = getReels(ep);
+  setReelDone(ep, idx, !reels[idx].done);
+  document.getElementById(`reel-check-${idx}`).classList.toggle('done');
+  upsertEpisode(ep);
+}
+function scheduleReelSave(epId, idx, val) {
+  clearTimeout(reelTimers[idx]);
+  reelTimers[idx] = setTimeout(() => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    setReelText(ep, idx, val);
+    upsertEpisode(ep);
+  }, 700);
+}
 function setTaskContent(ep, id, content) {
   if (!ep.tasks) ep.tasks = {};
   const v = ep.tasks[id];
