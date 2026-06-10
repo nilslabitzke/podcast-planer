@@ -939,6 +939,59 @@ function openDetail(id) {
   showPage('detail');
 }
 
+// ── CONTENT CALENDAR (2 weeks starting from publish date) ────────
+function renderContentCalendar(ep) {
+  const start = parseDate(ep.date);
+  const days = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    days.push(d);
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  const plan = ep.contentPlan || {};
+
+  const cells = days.map(d => {
+    const key = formatDate(d);
+    const isToday = d.toDateString() === today.toDateString();
+    const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' });
+    const shortDate = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+    const val = plan[key] || '';
+    return `<div class="cal-cell${isToday ? ' cal-today' : ''}">
+      <div class="cal-cell-head">${weekday} ${shortDate}</div>
+      <textarea class="cal-cell-input" placeholder="z.B. LinkedIn Post 1, Reel 3…"
+        oninput="scheduleCalendarSave('${ep.id}','${key}',this.value)">${val}</textarea>
+    </div>`;
+  }).join('');
+
+  return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:28px">
+    <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0" onclick="toggleCalendarBox()">
+      📅 Content-Kalender (2 Wochen) <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">ab Veröffentlichung</span>
+      <span id="calendar-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
+    </h2>
+    <div id="calendar-body" class="cal-grid">${cells}</div>
+  </div>`;
+}
+
+function toggleCalendarBox() {
+  const box = document.getElementById('content-calendar-box');
+  const icon = document.getElementById('calendar-toggle-icon');
+  box.classList.toggle('collapsed');
+  icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
+}
+
+let calendarTimers = {};
+function scheduleCalendarSave(epId, dateKey, val) {
+  clearTimeout(calendarTimers[dateKey]);
+  calendarTimers[dateKey] = setTimeout(async () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    if (!ep.contentPlan) ep.contentPlan = {};
+    if (val.trim()) ep.contentPlan[dateKey] = val; else delete ep.contentPlan[dateKey];
+    await upsertEpisode(ep);
+  }, 700);
+}
+
 function toggleTranscriptBox() {
   const box = document.querySelector('.transcript-box');
   const icon = document.getElementById('transcript-toggle-icon');
