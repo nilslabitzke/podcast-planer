@@ -442,6 +442,7 @@ async function loadEpisodes() {
       id: r.id, title: r.title, num: r.num || '', date: r.date,
       desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
       transcript: r.transcript || '', recordingDate: r.recording_date || '',
+      contentPlan: r.content_plan || {},
     }));
     setSyncState('live', 'Live');
     return true;
