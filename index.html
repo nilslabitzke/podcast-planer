@@ -837,6 +837,86 @@ async function generateReelContent(epId, idx) {
     if (btn) { btn.disabled = false; btn.textContent = '✨ Hook & Beschreibungen generieren'; }
   }
 }
+// Canonical LinkedIn posts data lives under ep.tasks['li_beitraege'].posts
+// Each item: { done: bool, text: '' }
+function getLiPosts(ep) {
+  const v = ep.tasks && ep.tasks['li_beitraege'];
+  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : [];
+  const out = [];
+  for (let i = 0; i < LI_POST_COUNT; i++) out.push({ done: false, text: '', ...posts[i] });
+  return out;
+}
+function saveLiPosts(ep, posts) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks['li_beitraege'];
+  const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
+  ep.tasks['li_beitraege'] = { ...base, posts };
+}
+let liPostTimers = {};
+function toggleLiPostDone(epId, idx) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const posts = getLiPosts(ep);
+  posts[idx] = { ...posts[idx], done: !posts[idx].done };
+  saveLiPosts(ep, posts);
+  document.getElementById(`li-check-${idx}`).classList.toggle('done');
+  upsertEpisode(ep);
+}
+function scheduleLiPostSave(epId, idx, val) {
+  clearTimeout(liPostTimers[idx]);
+  liPostTimers[idx] = setTimeout(() => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    const posts = getLiPosts(ep);
+    posts[idx] = { ...posts[idx], text: val };
+    saveLiPosts(ep, posts);
+    upsertEpisode(ep);
+  }, 700);
+}
+function copyLiPost(idx) {
+  const el = document.getElementById(`li-text-${idx}`);
+  if (!el) return;
+  navigator.clipboard.writeText(el.value).then(() => showToast('📋 Kopiert!'));
+}
+async function generateLiSplit(epId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const transcript = ep.transcript || '';
+  if (!transcript.trim()) {
+    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
+    document.getElementById('ep-transcript')?.focus();
+    return;
+  }
+  const btn = document.getElementById('gen-row-li_beitraege');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({ taskId: 'li_split', transcript, epTitle: ep.title }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    let arr;
+    try {
+      arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
+    } catch(e) {
+      throw new Error('Antwort konnte nicht gelesen werden');
+    }
+    const posts = getLiPosts(ep);
+    for (let i = 0; i < LI_POST_COUNT; i++) {
+      posts[i] = { ...posts[i], text: arr[i] || posts[i].text };
+    }
+    saveLiPosts(ep, posts);
+    await upsertEpisode(ep);
+    openDetail(epId);
+    showToast('✨ 5 LinkedIn-Beiträge erstellt!');
+  } catch(e) {
+    showToast('Fehler: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '✨'; }
+  }
+}
 function setTaskContent(ep, id, content) {
   if (!ep.tasks) ep.tasks = {};
   const v = ep.tasks[id];
