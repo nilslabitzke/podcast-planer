@@ -1051,13 +1051,40 @@ function openDetail(id) {
                 class="task-expand-btn" style="${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>
             </div>` : ''}
             ${step.id === 'reels_download' ? `<div class="reel-list">
-              ${getReels(ep).map((r, idx) => `<div class="reel-item">
-                <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded('${id}','${idx}')"></div>
-                <div class="reel-label">Reel ${idx + 1}</div>
-                <input type="text" class="task-content-textarea reel-input" style="margin-bottom:0"
-                  placeholder="Hook-Text für Reel ${idx + 1}…"
-                  value="${(r.text || '').replace(/"/g, '&quot;')}"
-                  oninput="scheduleReelSave('${id}','${idx}',this.value)">
+              ${getReels(ep).map((r, idx) => `<div class="reel-block">
+                <div class="reel-item">
+                  <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded('${id}','${idx}')"></div>
+                  <div class="reel-label">Reel ${idx + 1}</div>
+                  <span class="reel-expand-toggle" onclick="toggleReelExpand('${idx}')">
+                    <span id="reel-expand-icon-${idx}">▸</span> Details
+                  </span>
+                </div>
+                <div class="reel-detail" id="reel-detail-${idx}" style="display:none">
+                  <textarea class="task-content-textarea" id="reel-transcript-${idx}"
+                    placeholder="Reel-Transkript (per ✨ generiert oder manuell einfügen)…"
+                    oninput="scheduleReelFieldSave('${id}','${idx}','transcript',this.value)"
+                  >${r.transcript || ''}</textarea>
+                  <button class="generate-btn" id="reel-gen-${idx}" onclick="generateReelContent('${id}','${idx}')">✨ Hook & Beschreibungen generieren</button>
+                  <label class="reel-field-label">Text-Hook</label>
+                  <input type="text" class="task-content-textarea" id="reel-hook-${idx}" style="margin-bottom:8px"
+                    value="${(r.hook || '').replace(/"/g, '&quot;')}"
+                    oninput="scheduleReelFieldSave('${id}','${idx}','hook',this.value)">
+                  <label class="reel-field-label">Instagram-Beschreibung</label>
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="reel-descIg-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descIg',this.value)">${r.descIg || ''}</textarea>
+                    <button class="copy-btn" onclick="copyReelField('${idx}','descIg')">Kopieren</button>
+                  </div>
+                  <label class="reel-field-label">YouTube-Beschreibung</label>
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="reel-descYt-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descYt',this.value)">${r.descYt || ''}</textarea>
+                    <button class="copy-btn" onclick="copyReelField('${idx}','descYt')">Kopieren</button>
+                  </div>
+                  <label class="reel-field-label">TikTok-Beschreibung</label>
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="reel-descTiktok-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descTiktok',this.value)">${r.descTiktok || ''}</textarea>
+                    <button class="copy-btn" onclick="copyReelField('${idx}','descTiktok')">Kopieren</button>
+                  </div>
+                </div>
               </div>`).join('')}
             </div>` : step.id === 'reels_planen' ? `<div class="reel-list reel-grid">
               ${getReels(ep).map((r, idx) => `<div class="reel-item">
