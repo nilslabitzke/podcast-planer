@@ -663,7 +663,8 @@ function setTaskDone(ep, id, done) {
   const v = ep.tasks[id];
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
   const link = (v && typeof v === 'object') ? (v.link || '') : '';
-  ep.tasks[id] = { done, content, link };
+  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
+  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}) };
 }
 function taskLink(ep, id) {
   const v = ep.tasks && ep.tasks[id];
@@ -924,7 +925,8 @@ function setTaskContent(ep, id, content) {
   const v = ep.tasks[id];
   const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
   const link = (v && typeof v === 'object') ? (v.link || '') : '';
-  ep.tasks[id] = { done, content, link };
+  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
+  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}) };
 }
 
 // ── PROGRESS ────────────────────────────────────────────────────
