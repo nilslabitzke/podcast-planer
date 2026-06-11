@@ -1154,6 +1154,7 @@ function openDetail(id) {
             ${step.id === 'fragenerstellung' ? `<a id="linkopen-row-${step.id}" href="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
                 class="task-expand-btn" style="margin-left:auto;${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>`
               : step.id === 'reels_download' ? `<button class="gen-row-btn" id="gen-row-reels_download" onclick="event.stopPropagation();generateReelSplit('${id}')" title="8 Reel-Transkripte aus Transkript generieren">✨</button>`
+              : step.id === 'li_beitraege' ? `<button class="gen-row-btn" id="gen-row-li_beitraege" onclick="event.stopPropagation();generateLiSplit('${id}')" title="5 LinkedIn-Beiträge aus Transkript generieren">✨</button>`
               : `${AI_STEPS.includes(step.id) ? `<button class="gen-row-btn" id="gen-row-${step.id}" onclick="event.stopPropagation();generateContent('${id}','${step.id}')" title="Mit KI generieren">✨</button>` : ''}`}
           </div>
           <div class="task-content-area" id="content-${step.id}">
