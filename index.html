@@ -1212,6 +1212,19 @@ function openDetail(id) {
                   <span class="reel-platform ${r.tiktok ? 'active' : ''}" id="reel-platform-${idx}-tiktok" onclick="toggleReelPlatform('${id}','${idx}','tiktok')" title="TikTok">TT</span>
                 </div>
               </div>`).join('')}
+            </div>` : step.id === 'li_beitraege' ? `<div class="reel-list">
+              ${getLiPosts(ep).map((p, idx) => `<div class="reel-block">
+                <div class="reel-item">
+                  <div class="task-check ${p.done ? 'done' : ''}" id="li-check-${idx}" onclick="toggleLiPostDone('${id}','${idx}')"></div>
+                  <div class="reel-label">Post ${idx + 1}</div>
+                </div>
+                <div class="reel-detail" style="margin-top:8px;padding-top:0;border-top:none">
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="li-text-${idx}" rows="6" placeholder="LinkedIn-Post-Text…" oninput="scheduleLiPostSave('${id}','${idx}',this.value)">${p.text || ''}</textarea>
+                    <button class="copy-btn" onclick="copyLiPost('${idx}')">Kopieren</button>
+                  </div>
+                </div>
+              </div>`).join('')}
             </div>` : `<textarea class="task-content-textarea"
               placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
               oninput="scheduleContentSave('${id}','${step.id}',this.value)"
