@@ -1250,7 +1250,7 @@ async function toggleCalendarItem(epId, dateKey, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   if (!ep.contentPlan) ep.contentPlan = {};
-  if (!ep.contentPlan[dateKey]) ep.contentPlan[dateKey] = {};
+  if (!ep.contentPlan[dateKey] || typeof ep.contentPlan[dateKey] !== 'object') ep.contentPlan[dateKey] = {};
   const newVal = !ep.contentPlan[dateKey][idx];
   ep.contentPlan[dateKey][idx] = newVal;
   document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
