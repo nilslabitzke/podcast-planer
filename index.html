@@ -1221,7 +1221,7 @@ function renderContentCalendar(ep) {
       const checked = !!dayPlan[idx];
       return `<div class="cal-item ${checked ? 'done' : ''}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
         <div class="task-check ${checked ? 'done' : ''}"></div>
-        <div class="cal-item-text"><span class="cal-item-time">${item.time}</span> ${item.text}</div>
+        <div class="cal-item-text"><span class="cal-item-time">${item.time}</span> ${item.text.replace(/\[([^\]]+)\]/, '<b>$1</b>')}</div>
       </div>`;
     }).join('');
     return `<div class="cal-cell${isToday ? ' cal-today' : ''}">
