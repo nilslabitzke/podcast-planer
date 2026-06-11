@@ -1402,10 +1402,6 @@ function syncCalendarTaskCompletion(ep) {
   Object.values(CONTENT_CAL_TEMPLATE).forEach(items => {
     items.forEach(item => { totals[item.type] = (totals[item.type] || 0) + 1; });
   });
-  Object.entries(CONTENT_CAL_TEMPLATE).forEach(([offset, items]) => {
-    const dateOffsets = offset; // key into plan is a date string, not offset; recompute below
-  });
-  // Recompute using actual date keys
   const start = parseDate(ep.date);
   for (let offset = 0; offset < 14; offset++) {
     const items = CONTENT_CAL_TEMPLATE[offset] || [];
