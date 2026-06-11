@@ -941,18 +941,22 @@ function openDetail(id) {
                 class="task-expand-btn" style="${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>
             </div>` : ''}
             ${step.id === 'reels_download' ? `<div class="reel-list">
-              ${getReels(ep, step.id).map((r, idx) => `<div class="reel-item">
-                <div class="task-check ${r.done ? 'done' : ''}" id="reel-check-${step.id}-${idx}" onclick="toggleReel('${id}','${step.id}','${idx}')"></div>
+              ${getReels(ep).map((r, idx) => `<div class="reel-item">
+                <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded('${id}','${idx}')"></div>
                 <div class="reel-label">Reel ${idx + 1}</div>
                 <input type="text" class="task-content-textarea reel-input" style="margin-bottom:0"
-                  placeholder="Notiz / Status für Reel ${idx + 1}…"
+                  placeholder="Hook-Text für Reel ${idx + 1}…"
                   value="${(r.text || '').replace(/"/g, '&quot;')}"
-                  oninput="scheduleReelSave('${id}','${step.id}','${idx}',this.value)">
+                  oninput="scheduleReelSave('${id}','${idx}',this.value)">
               </div>`).join('')}
             </div>` : step.id === 'reels_planen' ? `<div class="reel-list reel-grid">
-              ${getReels(ep, step.id).map((r, idx) => `<div class="reel-item">
-                <div class="task-check ${r.done ? 'done' : ''}" id="reel-check-${step.id}-${idx}" onclick="toggleReel('${id}','${step.id}','${idx}')"></div>
+              ${getReels(ep).map((r, idx) => `<div class="reel-item">
                 <div class="reel-label">R${idx + 1}</div>
+                <div class="reel-platforms">
+                  <span class="reel-platform ${r.ig ? 'active' : ''}" id="reel-platform-${idx}-ig" onclick="toggleReelPlatform('${id}','${idx}','ig')" title="Instagram">IG</span>
+                  <span class="reel-platform ${r.yt ? 'active' : ''}" id="reel-platform-${idx}-yt" onclick="toggleReelPlatform('${id}','${idx}','yt')" title="YouTube">YT</span>
+                  <span class="reel-platform ${r.tiktok ? 'active' : ''}" id="reel-platform-${idx}-tiktok" onclick="toggleReelPlatform('${id}','${idx}','tiktok')" title="TikTok">TT</span>
+                </div>
               </div>`).join('')}
             </div>` : `<textarea class="task-content-textarea"
               placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
