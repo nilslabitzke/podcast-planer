@@ -1106,9 +1106,12 @@ async function toggleTask(epId, taskId) {
   if (!ep) return;
   const wasDone = taskDone(ep, taskId);
   setTaskDone(ep, taskId, !wasDone);
-  if (taskId === 'reels_download' || taskId === 'reels_planen') {
-    const reels = getReels(ep, taskId).map(r => ({ ...r, done: !wasDone }));
-    ep.tasks[taskId] = { ...ep.tasks[taskId], reels };
+  if (taskId === 'reels_download') {
+    const reels = getReels(ep).map(r => ({ ...r, downloaded: !wasDone }));
+    saveReels(ep, reels);
+  } else if (taskId === 'reels_planen') {
+    const reels = getReels(ep).map(r => ({ ...r, ig: !wasDone, yt: !wasDone, tiktok: !wasDone }));
+    saveReels(ep, reels);
   }
   openDetail(epId);
   // re-open content panel if it was open
