@@ -1174,27 +1174,51 @@ function openDetail(id) {
 }
 
 // ── CONTENT CALENDAR (2 weeks starting from publish date) ────────
+// Fixed 2-week content schedule template (dayOffset relative to release day = 0)
+const CONTENT_CAL_TEMPLATE = {
+  0:  [{ time: '05:30', text: '[Release] Folge live — Spotify & YouTube' },
+       { time: '07:00', text: '[Karussell] Release-Karussell — Instagram' },
+       { time: '17:30', text: '[Reel 1] Stärkster Moment der Folge — Instagram, TikTok, YouTube Shorts' }],
+  1:  [{ time: '07:45', text: '[LinkedIn] Post 1 — Story-driven' },
+       { time: '17:30', text: '[Reel 2] — Instagram, TikTok, YouTube Shorts' }],
+  2:  [{ time: '17:30', text: '[Reel 3] — Instagram, TikTok, YouTube Shorts' }],
+  3:  [{ time: '07:45', text: '[LinkedIn] Post 2 — Fact-based' },
+       { time: '17:30', text: '[Reel 4] — Instagram, TikTok, YouTube Shorts' }],
+  4:  [{ time: '17:30', text: '[Reel 5] — Instagram, TikTok, YouTube Shorts' }],
+  5:  [{ time: '09:00', text: '[LinkedIn] Post 3 — Diskussion' }],
+  7:  [{ time: '17:30', text: '[Reel 6] — Instagram, TikTok, YouTube Shorts' }],
+  8:  [{ time: '07:45', text: '[LinkedIn] Post 4 — Between-Episode (Klinikalltag / Frage / Mini-Fact)' },
+       { time: '17:30', text: '[Reel 7] — Instagram, TikTok, YouTube Shorts' }],
+  9:  [{ time: '12:00', text: '[Karussell] Info-Karussell Woche 2 — Instagram' }],
+  10: [{ time: '07:45', text: '[LinkedIn] Post 5 — Expertenquote Standalone' },
+       { time: '17:30', text: '[Reel 8] — Instagram, TikTok, YouTube Shorts' }],
+  14: [{ time: '07:45', text: '[LinkedIn] Post 6 — Teaser neue Folge' }],
+};
+
 function renderContentCalendar(ep) {
   const start = parseDate(ep.date);
-  const days = [];
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(start);
-    d.setDate(start.getDate() + i);
-    days.push(d);
-  }
   const today = new Date(); today.setHours(0,0,0,0);
   const plan = ep.contentPlan || {};
 
-  const cells = days.map(d => {
+  const offsets = Object.keys(CONTENT_CAL_TEMPLATE).map(Number).sort((a, b) => a - b);
+  const cells = offsets.map(offset => {
+    const d = new Date(start);
+    d.setDate(start.getDate() + offset);
     const key = formatDate(d);
     const isToday = d.toDateString() === today.toDateString();
     const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' });
     const shortDate = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-    const val = plan[key] || '';
+    const dayPlan = plan[key] || {};
+    const items = CONTENT_CAL_TEMPLATE[offset].map((item, idx) => {
+      const checked = !!dayPlan[idx];
+      return `<div class="cal-item ${checked ? 'done' : ''}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
+        <div class="task-check ${checked ? 'done' : ''}"></div>
+        <div class="cal-item-text"><span class="cal-item-time">${item.time}</span> ${item.text}</div>
+      </div>`;
+    }).join('');
     return `<div class="cal-cell${isToday ? ' cal-today' : ''}">
       <div class="cal-cell-head">${weekday} ${shortDate}</div>
-      <textarea class="cal-cell-input" placeholder="z.B. LinkedIn Post 1, Reel 3…"
-        oninput="scheduleCalendarSave('${ep.id}','${key}',this.value)">${val}</textarea>
+      <div class="cal-cell-items">${items}</div>
     </div>`;
   }).join('');
 
@@ -1214,16 +1238,18 @@ function toggleCalendarBox() {
   icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
 }
 
-let calendarTimers = {};
-function scheduleCalendarSave(epId, dateKey, val) {
-  clearTimeout(calendarTimers[dateKey]);
-  calendarTimers[dateKey] = setTimeout(async () => {
-    const ep = episodes.find(e => e.id === epId);
-    if (!ep) return;
-    if (!ep.contentPlan) ep.contentPlan = {};
-    if (val.trim()) ep.contentPlan[dateKey] = val; else delete ep.contentPlan[dateKey];
-    await upsertEpisode(ep);
-  }, 700);
+async function toggleCalendarItem(epId, dateKey, idx) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  if (!ep.contentPlan) ep.contentPlan = {};
+  if (!ep.contentPlan[dateKey]) ep.contentPlan[dateKey] = {};
+  ep.contentPlan[dateKey][idx] = !ep.contentPlan[dateKey][idx];
+  if (!Object.values(ep.contentPlan[dateKey]).some(Boolean)) delete ep.contentPlan[dateKey];
+  openDetail(epId);
+  document.getElementById('content-calendar-box')?.classList.remove('collapsed');
+  const icon = document.getElementById('calendar-toggle-icon');
+  if (icon) icon.textContent = '▾';
+  await upsertEpisode(ep);
 }
 
 function toggleTranscriptBox() {
