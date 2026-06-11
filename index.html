@@ -893,7 +893,7 @@ async function generateLiSplit(epId) {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'li_split', transcript, epTitle: ep.title }),
+      body: JSON.stringify({ taskId: 'li_split', transcript, epTitle: ep.title, customPrompt: customPrompts['li_beitraege'] || '' }),
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
