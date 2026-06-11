@@ -450,7 +450,7 @@ async function savePrompt(taskId, value) {
 
 function renderPrompts() {
   const c = document.getElementById('prompts-container');
-  c.innerHTML = AI_STEPS.map(id => `
+  c.innerHTML = PROMPT_STEPS.map(id => `
     <div class="card" style="margin-bottom:16px;padding:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <strong>${PROMPT_LABELS[id] || id}</strong>
