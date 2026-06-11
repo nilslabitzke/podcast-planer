@@ -1182,25 +1182,34 @@ function openDetail(id) {
 
 // ── CONTENT CALENDAR (2 weeks starting from publish date) ────────
 // Fixed 2-week content schedule template (dayOffset relative to release day = 0)
-const CONTENT_CAL_TEMPLATE = {
-  0:  [{ time: '05:30', text: '[Release] Folge live — Spotify & YouTube' },
-       { time: '07:00', text: '[Karussell] Release-Karussell — Instagram' },
-       { time: '18:30', text: '[Reel 1] Stärkster Moment der Folge — Instagram, TikTok, YouTube Shorts' }],
-  1:  [{ time: '07:45', text: '[LinkedIn] Post 1 — Story-driven' },
-       { time: '18:00', text: '[Karussell] Info-Karussell Woche 1 — Instagram' }],
-  2:  [{ time: '18:30', text: '[Reel 2] — Instagram, TikTok, YouTube Shorts' }],
-  3:  [{ time: '07:45', text: '[LinkedIn] Post 2 — Fact-based' },
-       { time: '18:30', text: '[Reel 3] — Instagram, TikTok, YouTube Shorts' }],
-  4:  [{ time: '18:30', text: '[Reel 4] — Instagram, TikTok, YouTube Shorts' }],
-  5:  [{ time: '09:00', text: '[LinkedIn] Post 3 — Diskussion' }],
-  7:  [{ time: '18:30', text: '[Reel 5] — Instagram, TikTok, YouTube Shorts' }],
-  8:  [{ time: '07:45', text: '[LinkedIn] Post 4 — Between-Episode (Klinikalltag / Frage / Mini-Fact)' },
-       { time: '18:00', text: '[Karussell] Info-Karussell Woche 2 — Instagram' }],
-  9:  [{ time: '18:30', text: '[Reel 6] — Instagram, TikTok, YouTube Shorts' }],
-  10: [{ time: '07:45', text: '[LinkedIn] Post 5 — Expertenquote Standalone' },
-       { time: '18:30', text: '[Reel 7] — Instagram, TikTok, YouTube Shorts' }],
-  11: [{ time: '18:30', text: '[Reel 8] — Instagram, TikTok, YouTube Shorts' }],
+const CAL_TYPE_META = {
+  release:  { label: 'Release',  color: '#34d399', icon: '🚀' },
+  karussell:{ label: 'Karussell',color: '#f472b6', icon: '🖼️' },
+  reel:     { label: 'Reel',     color: '#60a5fa', icon: '🎬' },
+  linkedin: { label: 'LinkedIn', color: '#22d3ee', icon: '💼' },
 };
+const CAL_PLATFORM_ICONS = { ig: '📸', tiktok: '🎵', yt: '▶️' };
+
+const CONTENT_CAL_TEMPLATE = {
+  0:  [{ time: '05:30', type: 'release',  label: 'Folge live', platforms: [] },
+       { time: '07:00', type: 'karussell', label: 'Release-Karussell', platforms: ['ig'] },
+       { time: '18:30', type: 'reel',     label: 'Reel 1 — Stärkster Moment', platforms: ['ig','tiktok','yt'] }],
+  1:  [{ time: '07:45', type: 'linkedin', label: 'Post 1 — Story-driven', platforms: [] },
+       { time: '18:00', type: 'karussell', label: 'Info-Karussell Woche 1', platforms: ['ig'] }],
+  2:  [{ time: '18:30', type: 'reel',     label: 'Reel 2', platforms: ['ig','tiktok','yt'] }],
+  3:  [{ time: '07:45', type: 'linkedin', label: 'Post 2 — Fact-based', platforms: [] },
+       { time: '18:30', type: 'reel',     label: 'Reel 3', platforms: ['ig','tiktok','yt'] }],
+  4:  [{ time: '18:30', type: 'reel',     label: 'Reel 4', platforms: ['ig','tiktok','yt'] }],
+  5:  [{ time: '09:00', type: 'linkedin', label: 'Post 3 — Diskussion', platforms: [] }],
+  7:  [{ time: '18:30', type: 'reel',     label: 'Reel 5', platforms: ['ig','tiktok','yt'] }],
+  8:  [{ time: '07:45', type: 'linkedin', label: 'Post 4 — Between-Episode', platforms: [] },
+       { time: '18:00', type: 'karussell', label: 'Info-Karussell Woche 2', platforms: ['ig'] }],
+  9:  [{ time: '18:30', type: 'reel',     label: 'Reel 6', platforms: ['ig','tiktok','yt'] }],
+  10: [{ time: '07:45', type: 'linkedin', label: 'Post 5 — Expertenquote', platforms: [] },
+       { time: '18:30', type: 'reel',     label: 'Reel 7', platforms: ['ig','tiktok','yt'] }],
+  11: [{ time: '18:30', type: 'reel',     label: 'Reel 8', platforms: ['ig','tiktok','yt'] }],
+};
+const CONTENT_CAL_TOTAL = Object.values(CONTENT_CAL_TEMPLATE).reduce((n, items) => n + items.length, 0);
 
 function renderContentCalendar(ep) {
   const start = parseDate(ep.date);
