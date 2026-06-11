@@ -1427,6 +1427,9 @@ async function toggleTask(epId, taskId) {
   } else if (taskId === 'reels_planen') {
     const reels = getReels(ep).map(r => ({ ...r, ig: !wasDone, yt: !wasDone, tiktok: !wasDone }));
     saveReels(ep, reels);
+  } else if (taskId === 'li_beitraege') {
+    const posts = getLiPosts(ep).map(p => ({ ...p, done: !wasDone }));
+    saveLiPosts(ep, posts);
   }
   openDetail(epId);
   // re-open content panel if it was open
