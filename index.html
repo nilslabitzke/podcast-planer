@@ -700,6 +700,107 @@ function scheduleReelSave(epId, idx, val) {
     upsertEpisode(ep);
   }, 700);
 }
+function toggleReelExpand(idx) {
+  const detail = document.getElementById(`reel-detail-${idx}`);
+  const icon = document.getElementById(`reel-expand-icon-${idx}`);
+  if (!detail) return;
+  const open = detail.style.display !== 'none';
+  detail.style.display = open ? 'none' : 'block';
+  if (icon) icon.textContent = open ? '▸' : '▾';
+}
+function scheduleReelFieldSave(epId, idx, field, val) {
+  const key = idx + '-' + field;
+  clearTimeout(reelTimers[key]);
+  reelTimers[key] = setTimeout(() => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    setReelField(ep, idx, field, val);
+    upsertEpisode(ep);
+  }, 700);
+}
+function copyReelField(idx, field) {
+  const el = document.getElementById(`reel-${field}-${idx}`);
+  if (!el) return;
+  navigator.clipboard.writeText(el.value).then(() => showToast('📋 Kopiert!'));
+}
+async function generateReelSplit(epId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const transcript = ep.transcript || '';
+  if (!transcript.trim()) {
+    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
+    document.getElementById('ep-transcript')?.focus();
+    return;
+  }
+  const btn = document.getElementById('gen-row-reels_download');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({ taskId: 'reels_split', transcript, epTitle: ep.title, customPrompt: customPrompts['reels_download'] || '' }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    let arr;
+    try {
+      arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
+    } catch(e) {
+      throw new Error('Antwort konnte nicht gelesen werden');
+    }
+    const reels = getReels(ep);
+    for (let i = 0; i < 8; i++) {
+      reels[i] = { ...reels[i], transcript: arr[i] || reels[i].transcript };
+    }
+    saveReels(ep, reels);
+    await upsertEpisode(ep);
+    openDetail(epId);
+    showToast('✨ 8 Reel-Transkripte erstellt!');
+  } catch(e) {
+    showToast('Fehler: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '✨'; }
+  }
+}
+async function generateReelContent(epId, idx) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const reels = getReels(ep);
+  const reelTranscript = reels[idx].transcript || '';
+  if (!reelTranscript.trim()) {
+    showToast('Bitte zuerst ein Reel-Transkript einfügen', 'error');
+    return;
+  }
+  const btn = document.getElementById(`reel-gen-${idx}`);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generiert…'; }
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({ taskId: 'reel_single', transcript: reelTranscript, epTitle: `${ep.title} – Reel ${idx + 1}` }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    let obj;
+    try {
+      obj = JSON.parse(data.result.match(/\{[\s\S]*\}/)[0]);
+    } catch(e) {
+      throw new Error('Antwort konnte nicht gelesen werden');
+    }
+    const updated = getReels(ep);
+    updated[idx] = { ...updated[idx], hook: obj.hook || '', descIg: obj.ig || '', descYt: obj.yt || '', descTiktok: obj.tiktok || '' };
+    saveReels(ep, updated);
+    await upsertEpisode(ep);
+    openDetail(epId);
+    document.getElementById(`reel-detail-${idx}`).style.display = 'block';
+    document.getElementById(`reel-expand-icon-${idx}`).textContent = '▾';
+    showToast('✨ Fertig generiert!');
+  } catch(e) {
+    showToast('Fehler: ' + e.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '✨ Hook & Beschreibungen generieren'; }
+  }
+}
 function setTaskContent(ep, id, content) {
   if (!ep.tasks) ep.tasks = {};
   const v = ep.tasks[id];
