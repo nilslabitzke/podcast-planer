@@ -1257,14 +1257,12 @@ function renderContentCalendar(ep) {
       const checked = !!dayPlan[idx];
       if (checked) doneCount++;
       const meta = CAL_TYPE_META[item.type];
-      const platforms = (item.platforms || []).map(p => `<span class="cal-platform-icon" title="${p}">${CAL_PLATFORM_ICONS[p]}</span>`).join('');
       return `<div class="cal-item cal-type-${item.type} ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
         <div class="task-check ${checked ? 'done' : ''}" id="cal-check-${key}-${idx}"></div>
         <div class="cal-item-body">
           <div class="cal-item-meta">
             <span class="cal-item-time">${item.time}</span>
             <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
-            ${platforms ? `<span class="cal-platforms">${platforms}</span>` : ''}
           </div>
           ${item.label ? `<div class="cal-item-text">${item.label}</div>` : ''}
         </div>
