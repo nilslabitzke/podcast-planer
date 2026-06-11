@@ -1392,6 +1392,55 @@ function toggleCalendarBox() {
   icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
 }
 
+// Counts checked content-calendar items per type ('linkedin' / 'reel') and
+// auto-checks/-unchecks the corresponding overall workflow task once all
+// items of that type are done (and un-checks it again if one is unchecked).
+function syncCalendarTaskCompletion(ep) {
+  const plan = ep.contentPlan || {};
+  const counts = {};
+  const totals = {};
+  Object.values(CONTENT_CAL_TEMPLATE).forEach(items => {
+    items.forEach(item => { totals[item.type] = (totals[item.type] || 0) + 1; });
+  });
+  Object.entries(CONTENT_CAL_TEMPLATE).forEach(([offset, items]) => {
+    const dateOffsets = offset; // key into plan is a date string, not offset; recompute below
+  });
+  // Recompute using actual date keys
+  const start = parseDate(ep.date);
+  for (let offset = 0; offset < 14; offset++) {
+    const items = CONTENT_CAL_TEMPLATE[offset] || [];
+    if (!items.length) continue;
+    const d = new Date(start);
+    d.setDate(start.getDate() + offset);
+    const key = formatDate(d);
+    const dayPlan = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
+    items.forEach((item, idx) => {
+      if (dayPlan[idx]) counts[item.type] = (counts[item.type] || 0) + 1;
+    });
+  }
+
+  let changed = false;
+  if (totals.linkedin) {
+    const allDone = (counts.linkedin || 0) >= totals.linkedin;
+    if (taskDone(ep, 'li_beitraege') !== allDone) {
+      setTaskDone(ep, 'li_beitraege', allDone);
+      const posts = getLiPosts(ep).map(p => ({ ...p, done: allDone }));
+      saveLiPosts(ep, posts);
+      changed = true;
+    }
+  }
+  if (totals.reel) {
+    const allDone = (counts.reel || 0) >= totals.reel;
+    if (taskDone(ep, 'reels_planen') !== allDone) {
+      setTaskDone(ep, 'reels_planen', allDone);
+      const reels = getReels(ep).map(r => ({ ...r, ig: allDone, yt: allDone, tiktok: allDone }));
+      saveReels(ep, reels);
+      changed = true;
+    }
+  }
+  return changed;
+}
+
 async function toggleCalendarItem(epId, dateKey, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
@@ -1401,7 +1450,12 @@ async function toggleCalendarItem(epId, dateKey, idx) {
   ep.contentPlan[dateKey][idx] = newVal;
   document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
+  const taskChanged = syncCalendarTaskCompletion(ep);
   await upsertEpisode(ep);
+  if (taskChanged) {
+    showToast('✅ Aufgabe automatisch abgehakt!');
+    openDetail(epId);
+  }
 }
 
 function toggleTranscriptBox() {
