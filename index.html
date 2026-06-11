@@ -1218,33 +1218,52 @@ function renderContentCalendar(ep) {
 
   const offsets = [];
   for (let i = 0; i < 14; i++) offsets.push(i);
+
+  const weekdayNames = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const headerCells = weekdayNames.map(w => `<div class="cal-weekday">${w}</div>`).join('');
+
+  let doneCount = 0;
   const cells = offsets.map(offset => {
     const d = new Date(start);
     d.setDate(start.getDate() + offset);
     const key = formatDate(d);
     const isToday = d.toDateString() === today.toDateString();
-    const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' });
     const shortDate = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
     const dayPlan = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
-    const items = (CONTENT_CAL_TEMPLATE[offset] || []).map((item, idx) => {
+    const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
+    const weekStart = offset === 0 || offset === 7;
+    const items = dayItems.map((item, idx) => {
       const checked = !!dayPlan[idx];
-      return `<div class="cal-item ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
+      if (checked) doneCount++;
+      const meta = CAL_TYPE_META[item.type];
+      const platforms = (item.platforms || []).map(p => `<span class="cal-platform-icon" title="${p}">${CAL_PLATFORM_ICONS[p]}</span>`).join('');
+      return `<div class="cal-item ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')" style="--cal-type-color:${meta.color}">
         <div class="task-check ${checked ? 'done' : ''}" id="cal-check-${key}-${idx}"></div>
-        <div class="cal-item-text"><span class="cal-item-time">${item.time}</span> ${item.text.replace(/\[([^\]]+)\]/, '<b>$1</b>')}</div>
+        <div class="cal-item-body">
+          <div class="cal-item-meta">
+            <span class="cal-item-time">${item.time}</span>
+            <span class="cal-type-badge">${meta.icon} ${meta.label}</span>
+          </div>
+          <div class="cal-item-text">${item.label}${platforms ? ` <span class="cal-platforms">${platforms}</span>` : ''}</div>
+        </div>
       </div>`;
     }).join('');
-    return `<div class="cal-cell${isToday ? ' cal-today' : ''}">
-      <div class="cal-cell-head">${weekday} ${shortDate}</div>
-      <div class="cal-cell-items">${items}</div>
+    return `<div class="cal-cell${isToday ? ' cal-today' : ''}${dayItems.length === 0 ? ' cal-empty' : ''}${weekStart ? ' cal-week-start' : ''}">
+      <div class="cal-cell-head">${shortDate}</div>
+      <div class="cal-cell-items">${items || '<div class="cal-empty-hint">–</div>'}</div>
     </div>`;
   }).join('');
 
   return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:28px">
     <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0" onclick="toggleCalendarBox()">
       📅 Content-Kalender (2 Wochen) <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">ab Veröffentlichung</span>
+      <span style="font-size:11px;font-weight:600;color:var(--accent);background:var(--surface2);padding:2px 8px;border-radius:99px">${doneCount}/${CONTENT_CAL_TOTAL} erledigt</span>
       <span id="calendar-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
     </h2>
-    <div id="calendar-body" class="cal-grid">${cells}</div>
+    <div id="calendar-body">
+      <div class="cal-weekday-row">${headerCells}${headerCells}</div>
+      <div class="cal-grid">${cells}</div>
+    </div>
   </div>`;
 }
 
