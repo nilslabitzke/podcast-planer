@@ -178,8 +178,18 @@
     .cal-item-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .cal-item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .cal-item-time { font-size: 10px; font-weight: 700; color: var(--muted); }
-    .cal-type-badge { font-size: 9px; font-weight: 700; color: var(--cal-type-color); background: color-mix(in srgb, var(--cal-type-color) 16%, transparent); padding: 1px 6px; border-radius: 99px; white-space: nowrap; }
+    .cal-type-badge { font-size: 9px; font-weight: 700; color: var(--cal-type-color); background: var(--cal-type-bg); padding: 1px 6px; border-radius: 99px; white-space: nowrap; }
     .cal-item-text { font-size: 11px; line-height: 1.4; color: var(--text); }
+    /* Type colors — dark mode (default) */
+    .cal-type-release  { --cal-type-color: #34d399; --cal-type-bg: rgba(52,211,153,.16); }
+    .cal-type-karussell{ --cal-type-color: #f472b6; --cal-type-bg: rgba(244,114,182,.16); }
+    .cal-type-reel     { --cal-type-color: #60a5fa; --cal-type-bg: rgba(96,165,250,.16); }
+    .cal-type-linkedin { --cal-type-color: #22d3ee; --cal-type-bg: rgba(34,211,238,.16); }
+    /* Type colors — light mode (darker, more saturated for contrast on white) */
+    body.light .cal-type-release  { --cal-type-color: #059669; --cal-type-bg: rgba(5,150,105,.12); }
+    body.light .cal-type-karussell{ --cal-type-color: #db2777; --cal-type-bg: rgba(219,39,119,.12); }
+    body.light .cal-type-reel     { --cal-type-color: #2563eb; --cal-type-bg: rgba(37,99,235,.12); }
+    body.light .cal-type-linkedin { --cal-type-color: #0891b2; --cal-type-bg: rgba(8,145,178,.12); }
     .cal-platforms { display: inline-flex; gap: 2px; }
     .cal-platform-icon { font-size: 11px; }
     .cal-item.done .cal-item-text, .cal-item.done .cal-item-time { color: var(--muted); text-decoration: line-through; }
