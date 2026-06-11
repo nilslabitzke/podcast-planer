@@ -1216,7 +1216,7 @@ function renderContentCalendar(ep) {
     const isToday = d.toDateString() === today.toDateString();
     const weekday = d.toLocaleDateString('de-DE', { weekday: 'short' });
     const shortDate = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-    const dayPlan = plan[key] || {};
+    const dayPlan = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
     const items = (CONTENT_CAL_TEMPLATE[offset] || []).map((item, idx) => {
       const checked = !!dayPlan[idx];
       return `<div class="cal-item ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
