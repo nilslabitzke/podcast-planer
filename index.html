@@ -1251,12 +1251,10 @@ async function toggleCalendarItem(epId, dateKey, idx) {
   if (!ep) return;
   if (!ep.contentPlan) ep.contentPlan = {};
   if (!ep.contentPlan[dateKey]) ep.contentPlan[dateKey] = {};
-  ep.contentPlan[dateKey][idx] = !ep.contentPlan[dateKey][idx];
-  if (!Object.values(ep.contentPlan[dateKey]).some(Boolean)) delete ep.contentPlan[dateKey];
-  openDetail(epId);
-  document.getElementById('content-calendar-box')?.classList.remove('collapsed');
-  const icon = document.getElementById('calendar-toggle-icon');
-  if (icon) icon.textContent = '▾';
+  const newVal = !ep.contentPlan[dateKey][idx];
+  ep.contentPlan[dateKey][idx] = newVal;
+  document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
+  document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   await upsertEpisode(ep);
 }
 
