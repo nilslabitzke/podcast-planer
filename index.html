@@ -636,45 +636,59 @@ function setTaskLink(ep, id, link) {
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
   ep.tasks[id] = { done, content, link };
 }
-function getReels(ep, stepId) {
-  const v = ep.tasks && ep.tasks[stepId];
+// Canonical shared reel data lives under ep.tasks['reels_download'].reels
+// Each item: { downloaded: bool, text: '', ig: bool, yt: bool, tiktok: bool }
+function getReels(ep) {
+  const v = ep.tasks && ep.tasks['reels_download'];
   const reels = (v && typeof v === 'object' && Array.isArray(v.reels)) ? v.reels : [];
   const out = [];
-  for (let i = 0; i < 8; i++) out.push(reels[i] || { done: false, text: '' });
+  for (let i = 0; i < 8; i++) out.push({ downloaded: false, text: '', ig: false, yt: false, tiktok: false, ...reels[i] });
   return out;
 }
-function setReelDone(ep, stepId, idx, done) {
+function saveReels(ep, reels) {
   if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks[stepId];
+  const v = ep.tasks['reels_download'];
   const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
-  const reels = getReels(ep, stepId);
-  reels[idx] = { ...reels[idx], done };
-  ep.tasks[stepId] = { ...base, reels };
+  ep.tasks['reels_download'] = { ...base, reels };
 }
-function setReelText(ep, stepId, idx, text) {
-  if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks[stepId];
-  const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
-  const reels = getReels(ep, stepId);
+function setReelDownloaded(ep, idx, downloaded) {
+  const reels = getReels(ep);
+  reels[idx] = { ...reels[idx], downloaded };
+  saveReels(ep, reels);
+}
+function setReelText(ep, idx, text) {
+  const reels = getReels(ep);
   reels[idx] = { ...reels[idx], text };
-  ep.tasks[stepId] = { ...base, reels };
+  saveReels(ep, reels);
+}
+function setReelPlatform(ep, idx, platform, val) {
+  const reels = getReels(ep);
+  reels[idx] = { ...reels[idx], [platform]: val };
+  saveReels(ep, reels);
 }
 let reelTimers = {};
-function toggleReel(epId, stepId, idx) {
+function toggleReelDownloaded(epId, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  const reels = getReels(ep, stepId);
-  setReelDone(ep, stepId, idx, !reels[idx].done);
-  document.getElementById(`reel-check-${stepId}-${idx}`).classList.toggle('done');
+  const reels = getReels(ep);
+  setReelDownloaded(ep, idx, !reels[idx].downloaded);
+  document.getElementById(`reel-check-${idx}`).classList.toggle('done');
   upsertEpisode(ep);
 }
-function scheduleReelSave(epId, stepId, idx, val) {
-  const key = stepId + '-' + idx;
-  clearTimeout(reelTimers[key]);
-  reelTimers[key] = setTimeout(() => {
+function toggleReelPlatform(epId, idx, platform) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const reels = getReels(ep);
+  setReelPlatform(ep, idx, platform, !reels[idx][platform]);
+  document.getElementById(`reel-platform-${idx}-${platform}`).classList.toggle('active');
+  upsertEpisode(ep);
+}
+function scheduleReelSave(epId, idx, val) {
+  clearTimeout(reelTimers[idx]);
+  reelTimers[idx] = setTimeout(() => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
-    setReelText(ep, stepId, idx, val);
+    setReelText(ep, idx, val);
     upsertEpisode(ep);
   }, 700);
 }
