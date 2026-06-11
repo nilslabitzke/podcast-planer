@@ -165,7 +165,13 @@
     .cal-cell.cal-today { border-color: var(--accent); }
     .cal-cell-head { font-size: 11px; font-weight: 600; color: var(--muted); }
     .cal-today .cal-cell-head { color: var(--accent); }
-    .cal-cell-input { width: 100%; min-height: 60px; resize: vertical; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 12px; padding: 6px; font-family: inherit; }
+    .cal-cell-items { display: flex; flex-direction: column; gap: 6px; }
+    .cal-item { display: flex; align-items: flex-start; gap: 6px; cursor: pointer; }
+    .cal-item .task-check { width: 16px; height: 16px; margin-top: 2px; }
+    .cal-item .task-check::after { left: 4px; top: 1px; width: 4px; height: 8px; }
+    .cal-item-text { font-size: 11px; line-height: 1.4; color: var(--text); }
+    .cal-item-time { font-weight: 700; }
+    .cal-item.done .cal-item-text { color: var(--muted); text-decoration: line-through; }
     .transcript-hint { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
     .transcript-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 120px; outline: none; line-height: 1.6; font-family: inherit; transition: border .15s; }
     .transcript-textarea:focus { border-color: var(--accent); }
