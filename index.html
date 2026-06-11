@@ -645,8 +645,13 @@ function getReels(ep) {
   const v = ep.tasks && ep.tasks['reels_download'];
   const reels = (v && typeof v === 'object' && Array.isArray(v.reels)) ? v.reels : [];
   const out = [];
-  for (let i = 0; i < 8; i++) out.push({ downloaded: false, text: '', ig: false, yt: false, tiktok: false, ...reels[i] });
+  for (let i = 0; i < 8; i++) out.push({ downloaded: false, text: '', transcript: '', hook: '', descIg: '', descYt: '', descTiktok: '', ig: false, yt: false, tiktok: false, ...reels[i] });
   return out;
+}
+function setReelField(ep, idx, field, value) {
+  const reels = getReels(ep);
+  reels[idx] = { ...reels[idx], [field]: value };
+  saveReels(ep, reels);
 }
 function saveReels(ep, reels) {
   if (!ep.tasks) ep.tasks = {};
