@@ -1263,9 +1263,10 @@ function renderContentCalendar(ep) {
         <div class="cal-item-body">
           <div class="cal-item-meta">
             <span class="cal-item-time">${item.time}</span>
-            <span class="cal-type-badge">${meta.icon} ${meta.label}</span>
+            <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
+            ${platforms ? `<span class="cal-platforms">${platforms}</span>` : ''}
           </div>
-          <div class="cal-item-text">${item.label}${platforms ? ` <span class="cal-platforms">${platforms}</span>` : ''}</div>
+          ${item.label ? `<div class="cal-item-text">${item.label}</div>` : ''}
         </div>
       </div>`;
     }).join('');
