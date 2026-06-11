@@ -814,7 +814,7 @@ async function generateReelContent(epId, idx) {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'reel_single', transcript: reelTranscript, epTitle: `${ep.title} – Reel ${idx + 1}` }),
+      body: JSON.stringify({ taskId: 'reel_single', transcript: reelTranscript, epTitle: `${ep.title} – Reel ${idx + 1}`, customPrompt: customPrompts['reel_single'] || '' }),
     });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
