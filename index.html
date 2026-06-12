@@ -1000,7 +1000,7 @@ function renderPlaner() {
     return;
   }
 
-  grid.innerHTML = slots.map(date => {
+  const renderSlot = (date) => {
     const ep = episodeForDate(date);
     const slotDate = parseDate(date);
     const isToday = slotDate.toDateString() === today.toDateString();
@@ -1023,6 +1023,31 @@ function renderPlaner() {
         <span class="badge badge-free">+ Folge planen</span>
       </div>`;
     }
+  };
+
+  // Mid-cadence date (7 days after a slot, 7 days before the next) for Zusatzfolgen
+  const midDate = (date) => {
+    const d = parseDate(date);
+    d.setDate(d.getDate() + 7);
+    return formatDate(d);
+  };
+
+  const extraSlot = (date) => {
+    const ep = episodeForDate(date);
+    if (ep) return renderSlot(date);
+    const slotDate = parseDate(date);
+    const isToday = slotDate.toDateString() === today.toDateString();
+    return `<div class="slot slot-extra" onclick="openAddModal('${date}')" title="Zusatzfolge zwischen den regulären Folgen einplanen">
+      <div class="slot-date">${isToday ? '📅 Heute · ' : ''}${date}</div>
+      <div class="slot-title" style="color:var(--muted);font-weight:400">Zusatzfolge</div>
+      <span class="badge badge-free">+ einfügen</span>
+    </div>`;
+  };
+
+  grid.innerHTML = slots.map((date, i) => {
+    const slotHtml = renderSlot(date);
+    if (i === slots.length - 1) return slotHtml;
+    return slotHtml + extraSlot(midDate(date));
   }).join('');
 }
 
