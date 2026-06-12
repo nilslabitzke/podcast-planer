@@ -1900,7 +1900,7 @@ function showPage(name) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); } });
 
 // ── THEME ────────────────────────────────────────────────────────
 function toggleTheme() {
