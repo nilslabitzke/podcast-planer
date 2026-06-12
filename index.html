@@ -1779,6 +1779,112 @@ async function deleteEpisode() {
   }
 }
 
+// ── IDEENPOOL ────────────────────────────────────────────────────
+const IDEA_TABLE = 'podcast_ideas';
+const IDEA_STATUS_META = {
+  idea:      { icon: '💡', label: 'Idee' },
+  contacted: { icon: '📩', label: 'Gast angefragt' },
+  confirmed: { icon: '✅', label: 'Bereit zur Planung' },
+};
+
+async function loadIdeas() {
+  try {
+    const rows = await apiFetch(IDEA_TABLE + '?order=created_at.desc');
+    ideas = rows.map(r => ({
+      id: r.id, title: r.title, content: r.content || '',
+      guests: r.guests || '', status: r.status || 'idea',
+    }));
+    return true;
+  } catch(e) {
+    showToast('Verbindungsfehler: ' + e.message, 'error');
+    return false;
+  }
+}
+
+function renderIdeas() {
+  const c = document.getElementById('ideen-container');
+  if (!ideas.length) {
+    c.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);padding:40px">Noch keine Ideen gesammelt. Klickt auf „+ Neue Idee", um eure erste Folgenidee einzutragen.</div>`;
+    return;
+  }
+  c.innerHTML = `<div class="planer-grid">${ideas.map(idea => {
+    const meta = IDEA_STATUS_META[idea.status] || IDEA_STATUS_META.idea;
+    return `<div class="card" style="cursor:pointer" onclick="openIdeaModal('${idea.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <strong style="font-size:15px">${idea.title}</strong>
+        <span style="font-size:11px;font-weight:600;color:var(--accent);background:var(--surface2);padding:2px 8px;border-radius:99px;white-space:nowrap">${meta.icon} ${meta.label}</span>
+      </div>
+      ${idea.content ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap">${idea.content}</div>` : ''}
+      ${idea.guests ? `<div style="font-size:12px;color:var(--muted)">👤 ${idea.guests}</div>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function openIdeaModal(id) {
+  editingIdeaId = id;
+  const idea = id ? ideas.find(i => i.id === id) : null;
+  document.getElementById('idea-modal-title').textContent = idea ? 'Idee bearbeiten' : 'Neue Idee';
+  document.getElementById('idea-title').value = idea ? idea.title : '';
+  document.getElementById('idea-content').value = idea ? idea.content : '';
+  document.getElementById('idea-guests').value = idea ? idea.guests : '';
+  document.getElementById('idea-status').value = idea ? idea.status : 'idea';
+  document.getElementById('idea-delete-btn').style.display = idea ? 'inline-block' : 'none';
+  document.getElementById('idea-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('idea-title').focus(), 50);
+}
+
+function closeIdeaModal() {
+  document.getElementById('idea-modal-bg').classList.remove('open');
+  editingIdeaId = null;
+}
+
+async function saveIdea() {
+  const title = document.getElementById('idea-title').value.trim();
+  if (!title) { showToast('Bitte einen Titel eingeben', 'error'); return; }
+  const idea = {
+    id: editingIdeaId || Date.now().toString(),
+    title,
+    content: document.getElementById('idea-content').value.trim(),
+    guests: document.getElementById('idea-guests').value.trim(),
+    status: document.getElementById('idea-status').value,
+  };
+  try {
+    await apiFetch(IDEA_TABLE, {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({
+        id: idea.id, title: idea.title, content: idea.content || null,
+        guests: idea.guests || null, status: idea.status,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    closeIdeaModal();
+    await loadIdeas();
+    renderIdeas();
+    showToast('💡 Idee gespeichert');
+  } catch(e) {
+    showToast('Speichern fehlgeschlagen', 'error');
+  }
+}
+
+async function deleteIdea() {
+  if (!editingIdeaId) return;
+  if (!confirm('Diese Idee wirklich löschen?')) return;
+  try {
+    await apiFetch(IDEA_TABLE + '?id=eq.' + editingIdeaId, { method: 'DELETE' });
+    closeIdeaModal();
+    await loadIdeas();
+    renderIdeas();
+    showToast('Gelöscht');
+  } catch(e) {
+    showToast('Löschen fehlgeschlagen', 'error');
+  }
+}
+
+document.getElementById('idea-modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('idea-modal-bg')) closeIdeaModal();
+});
+
 // ── NAV ──────────────────────────────────────────────────────────
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1788,6 +1894,7 @@ function showPage(name) {
   if (name === 'zeitstrahl')  { renderZeitstrahl();  document.querySelectorAll('nav button')[1].classList.add('active'); }
   if (name === 'offen')       { renderOpenTasks();   document.querySelectorAll('nav button')[2].classList.add('active'); }
   if (name === 'prompts')     { renderPrompts();     document.querySelectorAll('nav button')[3].classList.add('active'); }
+  if (name === 'ideen')       { loadIdeas().then(renderIdeas); document.querySelectorAll('nav button')[4].classList.add('active'); }
 }
 
 document.getElementById('modal-bg').addEventListener('click', e => {
