@@ -363,6 +363,37 @@
   </div>
 </div>
 
+<div class="modal-bg" id="idea-modal-bg">
+  <div class="modal">
+    <h2 id="idea-modal-title">Neue Idee</h2>
+    <div class="form-group">
+      <label>Titel / Thema</label>
+      <input type="text" id="idea-title" placeholder="z.B. Schlafmedizin – Warum schlafen wir eigentlich?">
+    </div>
+    <div class="form-group">
+      <label>Mögliche Inhalte / Themenpunkte</label>
+      <textarea id="idea-content" placeholder="Welche Aspekte, Fragen, Unterthemen könnten interessant sein?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Mögliche Gäste</label>
+      <input type="text" id="idea-guests" placeholder="z.B. Prof. Dr. ... (Schlafmedizin, Uniklinik ...)">
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="idea-status">
+        <option value="idea">💡 Idee</option>
+        <option value="contacted">📩 Gast angefragt</option>
+        <option value="confirmed">✅ Bestätigt / bereit zur Planung</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeIdeaModal()">Abbrechen</button>
+      <button class="btn btn-danger" id="idea-delete-btn" onclick="deleteIdea()" style="display:none">Löschen</button>
+      <button class="btn btn-primary" onclick="saveIdea()">Speichern</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
