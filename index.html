@@ -1036,18 +1036,15 @@ function renderPlaner() {
     return formatDate(d);
   };
 
-  const extraSlot = (date) => {
-    const ep = episodeForDate(date);
-    if (ep) return renderSlot(date);
-    return `<div class="slot slot-extra" onclick="openAddModal('${date}')" title="Zusatzfolge am ${date} einplanen">
-      <span class="slot-extra-plus">+</span>
-    </div>`;
-  };
-
   grid.innerHTML = slots.map((date, i) => {
     const slotHtml = renderSlot(date);
     if (i === slots.length - 1) return slotHtml;
-    return slotHtml + extraSlot(midDate(date));
+    const extraDate = midDate(date);
+    const extraEp = episodeForDate(extraDate);
+    const plusBtn = extraEp
+      ? `<button class="slot-plus" onclick="event.stopPropagation();openDetail('${extraEp.id}')" title="Zusatzfolge: ${extraEp.title}">●</button>`
+      : `<button class="slot-plus" onclick="event.stopPropagation();openAddModal('${extraDate}')" title="Zusatzfolge am ${extraDate} einplanen">+</button>`;
+    return `<div class="slot-wrap">${slotHtml}${plusBtn}</div>`;
   }).join('');
 }
 
