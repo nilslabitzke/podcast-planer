@@ -1863,6 +1863,8 @@ function openIdeaModal(id) {
   document.getElementById('idea-title').value = idea ? idea.title : '';
   document.getElementById('idea-content').value = idea ? idea.content : '';
   document.getElementById('idea-guests').value = idea ? idea.guests : '';
+  document.getElementById('idea-drive-link').value = idea ? idea.driveLink : '';
+  document.getElementById('idea-questions').value = idea ? idea.questions : '';
   document.getElementById('idea-status').value = idea ? idea.status : 'idea';
   document.getElementById('idea-delete-btn').style.display = idea ? 'inline-block' : 'none';
   document.getElementById('idea-modal-bg').classList.add('open');
