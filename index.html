@@ -1901,7 +1901,7 @@ async function saveIdea() {
       prefer: 'resolution=merge-duplicates',
       body: JSON.stringify({
         id: idea.id, title: idea.title, content: idea.content || null,
-        guests: idea.guests || null, drive_link: idea.driveLink || null,
+        guests: idea.guests || null, core_message: idea.coreMessage || null, drive_link: idea.driveLink || null,
         questions: idea.questions || null, status: idea.status,
         updated_at: new Date().toISOString(),
       }),
