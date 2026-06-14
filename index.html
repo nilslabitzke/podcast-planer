@@ -1434,7 +1434,8 @@ function renderContentCalendar(ep) {
     const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
     const weekStart = offset === 0 || offset === 7;
     const items = dayItems.map((item, idx) => {
-      const checked = !!dayPlan[idx];
+      const entry = getCalEntry(plan, key, idx);
+      const checked = entry.done;
       if (checked) doneCount++;
       const meta = CAL_TYPE_META[item.type];
       return `<div class="cal-item cal-type-${item.type} ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
@@ -1445,6 +1446,10 @@ function renderContentCalendar(ep) {
             <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
           </div>
           ${item.label ? `<div class="cal-item-text">${item.label}</div>` : ''}
+        </div>
+        <div class="cal-assignee">
+          <span class="cal-assignee-pill ${entry.assignee === 'N' ? 'active' : ''}" id="cal-assignee-N-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee('${ep.id}','${key}','${idx}','N')" title="Nils zuweisen">N</span>
+          <span class="cal-assignee-pill ${entry.assignee === 'L' ? 'active' : ''}" id="cal-assignee-L-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee('${ep.id}','${key}','${idx}','L')" title="Leo zuweisen">L</span>
         </div>
       </div>`;
     }).join('');
