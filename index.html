@@ -1867,6 +1867,7 @@ function openIdeaModal(id) {
   document.getElementById('idea-modal-title').textContent = idea ? 'Idee bearbeiten' : 'Neue Idee';
   document.getElementById('idea-title').value = idea ? idea.title : '';
   document.getElementById('idea-content').value = idea ? idea.content : '';
+  document.getElementById('idea-core-message').value = idea ? idea.coreMessage : '';
   document.getElementById('idea-guests').value = idea ? idea.guests : '';
   document.getElementById('idea-drive-link').value = idea ? idea.driveLink : '';
   document.getElementById('idea-questions').value = idea ? idea.questions : '';
