@@ -1884,6 +1884,8 @@ async function saveIdea() {
     title,
     content: document.getElementById('idea-content').value.trim(),
     guests: document.getElementById('idea-guests').value.trim(),
+    driveLink: document.getElementById('idea-drive-link').value.trim(),
+    questions: document.getElementById('idea-questions').value.trim(),
     status: document.getElementById('idea-status').value,
   };
   try {
@@ -1892,7 +1894,8 @@ async function saveIdea() {
       prefer: 'resolution=merge-duplicates',
       body: JSON.stringify({
         id: idea.id, title: idea.title, content: idea.content || null,
-        guests: idea.guests || null, status: idea.status,
+        guests: idea.guests || null, drive_link: idea.driveLink || null,
+        questions: idea.questions || null, status: idea.status,
         updated_at: new Date().toISOString(),
       }),
     });
