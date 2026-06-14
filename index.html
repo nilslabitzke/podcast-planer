@@ -1826,6 +1826,7 @@ async function loadIdeas() {
     ideas = rows.map(r => ({
       id: r.id, title: r.title, content: r.content || '',
       guests: r.guests || '', status: r.status || 'idea',
+      driveLink: r.drive_link || '', questions: r.questions || '',
     }));
     return true;
   } catch(e) {
