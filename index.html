@@ -383,6 +383,17 @@
       <input type="text" id="idea-guests" placeholder="z.B. Prof. Dr. ... (Schlafmedizin, Uniklinik ...)">
     </div>
     <div class="form-group">
+      <label>Google Drive Link (z.B. Ordner mit Unterlagen des Gastes)</label>
+      <input type="text" id="idea-drive-link" placeholder="https://drive.google.com/...">
+    </div>
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <label style="margin:0">Fragen für die Folge</label>
+        <button class="btn" id="idea-gen-questions-btn" onclick="generateIdeaQuestions()">✨ Fragen generieren</button>
+      </div>
+      <textarea id="idea-questions" rows="8" placeholder="Mit ✨ generieren oder manuell eintragen..."></textarea>
+    </div>
+    <div class="form-group">
       <label>Status</label>
       <select id="idea-status">
         <option value="idea">💡 Idee</option>
