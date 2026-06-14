@@ -1850,6 +1850,8 @@ function renderIdeas() {
       </div>
       ${idea.content ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap">${idea.content}</div>` : ''}
       ${idea.guests ? `<div style="font-size:12px;color:var(--muted)">👤 ${idea.guests}</div>` : ''}
+      ${idea.driveLink ? `<div style="font-size:12px;margin-top:4px"><a href="${idea.driveLink}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--accent)">📁 Google Drive</a></div>` : ''}
+      ${idea.questions ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">❓ Fragen vorhanden</div>` : ''}
     </div>`;
   }).join('')}</div>`;
 }
