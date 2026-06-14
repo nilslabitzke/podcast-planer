@@ -184,6 +184,10 @@
     .cal-item-time { font-size: 10px; font-weight: 700; color: var(--muted); }
     .cal-type-badge { font-size: 9px; font-weight: 700; color: var(--cal-type-color); background: var(--cal-type-bg); padding: 1px 6px; border-radius: 99px; white-space: nowrap; }
     .cal-item-text { font-size: 11px; line-height: 1.4; color: var(--text); }
+    .cal-assignee { display: flex; flex-direction: column; gap: 3px; margin-left: auto; flex-shrink: 0; }
+    .cal-assignee-pill { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); color: var(--muted); font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .15s; }
+    .cal-assignee-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .cal-assignee-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
     /* Type colors — dark mode (default) */
     .cal-type-release  { --cal-type-color: #34d399; --cal-type-bg: rgba(52,211,153,.16); }
     .cal-type-karussell{ --cal-type-color: #f472b6; --cal-type-bg: rgba(244,114,182,.16); }
