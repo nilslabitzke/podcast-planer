@@ -1933,10 +1933,12 @@ async function generateIdeaQuestions() {
   const title = document.getElementById('idea-title').value.trim();
   if (!title) { showToast('Bitte zuerst einen Titel/Thema eingeben', 'error'); return; }
   const content = document.getElementById('idea-content').value.trim();
+  const coreMessage = document.getElementById('idea-core-message').value.trim();
   const guests = document.getElementById('idea-guests').value.trim();
   const epTitle = [
     `Titel/Thema: ${title}`,
     content ? `Mögliche Themenpunkte/Inhalte: ${content}` : '',
+    coreMessage ? `Kernaussage & G&G: ${coreMessage}` : '',
     guests ? `Gast: ${guests}` : '',
   ].filter(Boolean).join('\n');
   const btn = document.getElementById('idea-gen-questions-btn');
