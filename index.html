@@ -1514,9 +1514,8 @@ function syncCalendarTaskCompletion(ep) {
     const d = new Date(start);
     d.setDate(start.getDate() + offset);
     const key = formatDate(d);
-    const dayPlan = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
     items.forEach((item, idx) => {
-      if (dayPlan[idx]) counts[item.type] = (counts[item.type] || 0) + 1;
+      if (getCalEntry(plan, key, idx).done) counts[item.type] = (counts[item.type] || 0) + 1;
     });
   }
 
