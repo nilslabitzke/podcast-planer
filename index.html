@@ -1831,6 +1831,7 @@ async function loadIdeas() {
       id: r.id, title: r.title, content: r.content || '',
       guests: r.guests || '', status: r.status || 'idea',
       driveLink: r.drive_link || '', questions: r.questions || '',
+      coreMessage: r.core_message || '',
     }));
     return true;
   } catch(e) {
