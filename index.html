@@ -1922,6 +1922,31 @@ async function deleteIdea() {
   }
 }
 
+async function generateIdeaQuestions() {
+  const title = document.getElementById('idea-title').value.trim();
+  if (!title) { showToast('Bitte zuerst einen Titel/Thema eingeben', 'error'); return; }
+  const content = document.getElementById('idea-content').value.trim();
+  const guests = document.getElementById('idea-guests').value.trim();
+  const epTitle = [title, guests ? `Gast: ${guests}` : '', content].filter(Boolean).join(' — ');
+  const btn = document.getElementById('idea-gen-questions-btn');
+  btn.disabled = true; btn.textContent = '⏳';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({ taskId: 'fragenerstellung', transcript: '', epTitle, customPrompt: customPrompts['fragenerstellung'] || '' }),
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    document.getElementById('idea-questions').value = data.result;
+    showToast('✨ Fragen generiert!');
+  } catch(e) {
+    showToast('Fehler: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '✨ Fragen generieren';
+  }
+}
+
 document.getElementById('idea-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('idea-modal-bg')) closeIdeaModal();
 });
