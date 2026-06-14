@@ -1544,10 +1544,9 @@ function syncCalendarTaskCompletion(ep) {
 async function toggleCalendarItem(epId, dateKey, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  if (!ep.contentPlan) ep.contentPlan = {};
-  if (!ep.contentPlan[dateKey] || typeof ep.contentPlan[dateKey] !== 'object') ep.contentPlan[dateKey] = {};
-  const newVal = !ep.contentPlan[dateKey][idx];
-  ep.contentPlan[dateKey][idx] = newVal;
+  const entry = getCalEntry(ep.contentPlan || {}, dateKey, idx);
+  const newVal = !entry.done;
+  setCalEntry(ep, dateKey, idx, { done: newVal, assignee: entry.assignee });
   document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   const taskChanged = syncCalendarTaskCompletion(ep);
@@ -1556,6 +1555,18 @@ async function toggleCalendarItem(epId, dateKey, idx) {
     showToast('✅ Aufgabe automatisch abgehakt!');
     openDetail(epId);
   }
+}
+
+async function toggleCalendarAssignee(epId, dateKey, idx, who) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const entry = getCalEntry(ep.contentPlan || {}, dateKey, idx);
+  const newAssignee = entry.assignee === who ? null : who;
+  setCalEntry(ep, dateKey, idx, { done: entry.done, assignee: newAssignee });
+  ['N', 'L'].forEach(w => {
+    document.getElementById(`cal-assignee-${w}-${dateKey}-${idx}`)?.classList.toggle('active', w === newAssignee);
+  });
+  await upsertEpisode(ep);
 }
 
 function toggleTranscriptBox() {
