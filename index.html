@@ -1927,7 +1927,11 @@ async function generateIdeaQuestions() {
   if (!title) { showToast('Bitte zuerst einen Titel/Thema eingeben', 'error'); return; }
   const content = document.getElementById('idea-content').value.trim();
   const guests = document.getElementById('idea-guests').value.trim();
-  const epTitle = [title, guests ? `Gast: ${guests}` : '', content].filter(Boolean).join(' — ');
+  const epTitle = [
+    `Titel/Thema: ${title}`,
+    content ? `Mögliche Themenpunkte/Inhalte: ${content}` : '',
+    guests ? `Gast: ${guests}` : '',
+  ].filter(Boolean).join('\n');
   const btn = document.getElementById('idea-gen-questions-btn');
   btn.disabled = true; btn.textContent = '⏳';
   try {
