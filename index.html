@@ -1476,6 +1476,20 @@ function renderContentCalendar(ep) {
   </div>`;
 }
 
+// A calendar cell entry is either a legacy boolean (done only, no assignee)
+// or an object { done, assignee: 'N'|'L'|null }.
+function getCalEntry(plan, key, idx) {
+  const dp = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
+  const v = dp[idx];
+  if (v && typeof v === 'object') return { done: !!v.done, assignee: v.assignee || null };
+  return { done: !!v, assignee: null };
+}
+function setCalEntry(ep, key, idx, entry) {
+  if (!ep.contentPlan) ep.contentPlan = {};
+  if (!ep.contentPlan[key] || typeof ep.contentPlan[key] !== 'object') ep.contentPlan[key] = {};
+  ep.contentPlan[key][idx] = entry;
+}
+
 function toggleCalendarBox() {
   const box = document.getElementById('content-calendar-box');
   const icon = document.getElementById('calendar-toggle-icon');
