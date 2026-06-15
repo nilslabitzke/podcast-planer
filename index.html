@@ -1885,8 +1885,11 @@ async function loadIdeas() {
   }
 }
 
+const IDEA_STATUS_ORDER = { confirmed: 0, contacted: 1, idea: 2 };
+
 function renderIdeas() {
   const c = document.getElementById('ideen-container');
+  const sorted = [...ideas].sort((a, b) => (IDEA_STATUS_ORDER[a.status] ?? 99) - (IDEA_STATUS_ORDER[b.status] ?? 99));
   if (!ideas.length) {
     c.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);padding:40px">Noch keine Ideen gesammelt. Klickt auf „+ Neue Idee", um eure erste Folgenidee einzutragen.</div>`;
     return;
