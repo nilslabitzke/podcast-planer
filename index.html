@@ -887,7 +887,7 @@ async function generateReelSplit(epId) {
     try {
       arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
     } catch(e) {
-      throw new Error('Antwort konnte nicht gelesen werden');
+      throw new Error('Antwort konnte nicht gelesen werden (evtl. Limit erreicht/abgeschnitten)');
     }
     const reels = getReels(ep);
     for (let i = 0; i < 8; i++) {
@@ -896,7 +896,11 @@ async function generateReelSplit(epId) {
     saveReels(ep, reels);
     await upsertEpisode(ep);
     openDetail(epId);
-    showToast('✨ 8 Reel-Transkripte erstellt!');
+    if (arr.length < 8 || arr.some(t => isLikelyTruncated(t))) {
+      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
+    } else {
+      showToast('✨ 8 Reel-Transkripte erstellt!');
+    }
   } catch(e) {
     showToast('Fehler: ' + e.message, 'error');
   } finally {
