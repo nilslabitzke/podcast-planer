@@ -1231,8 +1231,9 @@ function openDetail(id) {
   SECTIONS.forEach(sec => {
     const steps = WORKFLOW_STEPS.filter(s => s.section === sec);
     const doneCount = steps.filter(s => taskDone(ep, s.id)).length;
-    sectionsHtml += `<div class="checklist-section">
-      <h2>${SECTION_LABELS[sec]} <span class="section-count">${doneCount}/${steps.length}</span></h2>
+    sectionsHtml += `<div class="checklist-section collapsed" id="section-${sec}">
+      <h2 onclick="toggleSection('${sec}')">${SECTION_LABELS[sec]} <span class="section-count">${doneCount}/${steps.length}</span><span class="section-toggle-icon">▸</span></h2>
+      <div class="section-body">
       ${steps.map(step => {
         const done = taskDone(ep, step.id);
         const content = taskContent(ep, step.id);
