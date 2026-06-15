@@ -1894,7 +1894,7 @@ function renderIdeas() {
     c.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);padding:40px">Noch keine Ideen gesammelt. Klickt auf „+ Neue Idee", um eure erste Folgenidee einzutragen.</div>`;
     return;
   }
-  c.innerHTML = `<div class="planer-grid">${ideas.map(idea => {
+  c.innerHTML = `<div class="planer-grid">${sorted.map(idea => {
     const meta = IDEA_STATUS_META[idea.status] || IDEA_STATUS_META.idea;
     return `<div class="card" style="cursor:pointer" onclick="openIdeaModal('${idea.id}')">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
