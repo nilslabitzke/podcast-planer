@@ -1144,9 +1144,11 @@ function renderPlaner() {
     if (i === slots.length - 1) return slotHtml;
     const extraDate = midDate(date);
     const extraEp = episodeForDate(extraDate);
-    const plusBtn = extraEp
-      ? `<button class="slot-plus" onclick="event.stopPropagation();openDetail('${extraEp.id}')" title="Zusatzfolge: ${extraEp.title}">●</button>`
-      : `<button class="slot-plus" onclick="event.stopPropagation();openAddModal('${extraDate}')" title="Zusatzfolge am ${extraDate} einplanen">+</button>`;
+    if (extraEp) {
+      // Zusatzfolge already exists for this slot: show it as a normal slot, plus button opens it
+      return `<div class="slot-wrap">${slotHtml}<button class="slot-plus" onclick="event.stopPropagation();openDetail('${extraEp.id}')" title="Zusatzfolge: ${extraEp.title}">●</button></div>${renderSlot(extraDate)}`;
+    }
+    const plusBtn = `<button class="slot-plus" onclick="event.stopPropagation();openAddModal('${extraDate}')" title="Zusatzfolge am ${extraDate} einplanen">+</button>`;
     return `<div class="slot-wrap">${slotHtml}${plusBtn}</div>`;
   }).join('');
 }
