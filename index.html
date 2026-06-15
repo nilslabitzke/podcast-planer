@@ -1273,14 +1273,49 @@ function renderOpenTasks() {
     return;
   }
 
+  // Content-calendar tasks across all episodes (with N/L assignee)
+  const calRows = [];
+  allEps.forEach(ep => {
+    const start = parseDate(ep.date);
+    for (let offset = 0; offset < 14; offset++) {
+      const d = new Date(start); d.setDate(start.getDate() + offset);
+      const key = formatDate(d);
+      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
+      dayItems.forEach((item, idx) => {
+        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
+        if (entry.done) return;
+        calRows.push({ ep, date: key, item, entry });
+      });
+    }
+  });
+  const filtered = calRows.filter(r => myTaskFilter === 'all' || r.entry.assignee === myTaskFilter);
+
   container.innerHTML = `<div class="open-tasks-list">${rows.map(r =>
     `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
       <div class="open-task-dot"></div>
       <div class="open-task-ep">${r.ep.num ? '#' + r.ep.num + ' · ' : ''}${r.ep.date}</div>
       <div class="open-task-name">${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.step.label}</span></div>
     </div>`
-  ).join('')}</div>`;
+  ).join('')}</div>
+  <h2 style="margin:24px 0 10px;font-size:15px">Content-Kalender Aufgaben</h2>
+  <div class="filter-row">
+    <button class="filter-btn ${myTaskFilter === 'all' ? 'active' : ''}" onclick="setMyTaskFilter('all')">Alle</button>
+    <button class="filter-btn ${myTaskFilter === 'N' ? 'active' : ''}" onclick="setMyTaskFilter('N')">Nils</button>
+    <button class="filter-btn ${myTaskFilter === 'L' ? 'active' : ''}" onclick="setMyTaskFilter('L')">Leo</button>
+  </div>
+  <div class="open-tasks-list">${filtered.length ? filtered.map(r => {
+    const meta = CAL_TYPE_META[r.item.type];
+    return `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
+      <div class="open-task-dot"></div>
+      <div class="open-task-ep">${r.date}</div>
+      <div class="open-task-name"><span class="cal-type-badge">${meta.icon} ${meta.label}${r.item.num ? ' ' + r.item.num : ''}</span> ${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.item.label}</span></div>
+      ${r.entry.assignee ? `<div class="open-task-assignee">${r.entry.assignee}</div>` : ''}
+    </div>`;
+  }).join('') : `<div class="empty">Keine Aufgaben für diesen Filter.</div>`}</div>`;
 }
+
+let myTaskFilter = 'all';
+function setMyTaskFilter(f) { myTaskFilter = f; renderOpenTasks(); }
 
 // ── RENDER DETAIL ────────────────────────────────────────────────
 function openDetail(id) {
