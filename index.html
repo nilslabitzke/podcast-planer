@@ -1495,6 +1495,13 @@ function setCalEntry(ep, key, idx, entry) {
   ep.contentPlan[key][idx] = entry;
 }
 
+function toggleSection(sec) {
+  const box = document.getElementById('section-' + sec);
+  const icon = box.querySelector('.section-toggle-icon');
+  box.classList.toggle('collapsed');
+  icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
+}
+
 function toggleCalendarBox() {
   const box = document.getElementById('content-calendar-box');
   const icon = document.getElementById('calendar-toggle-icon');
