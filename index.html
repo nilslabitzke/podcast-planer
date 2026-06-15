@@ -1036,7 +1036,8 @@ function renderPlaner() {
       const p = progress(ep);
       const statusLabel = p.pct === 100 ? 'Fertig' : p.done === 0 ? 'Geplant' : `${p.done}/${p.total} Schritte`;
       const badgeClass = p.pct === 100 ? 'badge-done' : p.done > 0 ? 'badge-wip' : 'badge-free';
-      return `<div class="slot filled" onclick="openDetail('${ep.id}')">
+      const isDone = (p.pct === 100 || isPast) && !isToday;
+      return `<div class="slot filled${isDone ? ' slot-done' : ''}" onclick="openDetail('${ep.id}')">
         <div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
         <div class="slot-title">${ep.title}</div>
         <span class="badge ${badgeClass}">${statusLabel}</span>
