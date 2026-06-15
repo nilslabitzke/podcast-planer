@@ -1928,6 +1928,13 @@ async function saveEpisode() {
     Object.assign(ep, { title, num, date, desc, recordingDate });
   } else {
     ep = { id: Date.now().toString(), title, num, date, desc, recordingDate, tasks: {}, notes: '' };
+    if (pendingIdeaForEpisode) {
+      const idea = pendingIdeaForEpisode;
+      if (idea.questions || idea.driveLink) {
+        ep.tasks.fragenerstellung = { done: false, content: idea.questions || '', link: idea.driveLink || '' };
+      }
+      pendingIdeaForEpisode = null;
+    }
     episodes.push(ep);
   }
 
