@@ -1006,7 +1006,7 @@ async function generateLiSplit(epId) {
     try {
       arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
     } catch(e) {
-      throw new Error('Antwort konnte nicht gelesen werden');
+      throw new Error('Antwort konnte nicht gelesen werden (evtl. Limit erreicht/abgeschnitten)');
     }
     const posts = getLiPosts(ep);
     for (let i = 0; i < LI_POST_COUNT; i++) {
@@ -1015,7 +1015,11 @@ async function generateLiSplit(epId) {
     saveLiPosts(ep, posts);
     await upsertEpisode(ep);
     openDetail(epId);
-    showToast('✨ 5 LinkedIn-Beiträge erstellt!');
+    if (arr.length < LI_POST_COUNT || arr.some(t => isLikelyTruncated(t))) {
+      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
+    } else {
+      showToast('✨ 5 LinkedIn-Beiträge erstellt!');
+    }
   } catch(e) {
     showToast('Fehler: ' + e.message, 'error');
   } finally {
