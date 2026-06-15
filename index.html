@@ -1028,7 +1028,54 @@ function changePlannerYear(delta) {
   renderPlaner();
 }
 
+// Collects all not-yet-done content-calendar items that fall on `today` or
+// `tomorrow` (relative to each episode's content plan), across all episodes.
+function getTodayWidgetItems() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  const todayStr = formatDate(today);
+  const tomorrowStr = formatDate(tomorrow);
+
+  const items = [];
+  episodes.forEach(ep => {
+    const start = parseDate(ep.date);
+    for (let offset = 0; offset < 14; offset++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + offset);
+      const key = formatDate(d);
+      if (key !== todayStr && key !== tomorrowStr) continue;
+      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
+      dayItems.forEach((item, idx) => {
+        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
+        if (entry.done) return;
+        items.push({ ep, date: key, isToday: key === todayStr, item, entry });
+      });
+    }
+  });
+  items.sort((a, b) => (a.isToday === b.isToday ? a.item.time.localeCompare(b.item.time) : a.isToday ? -1 : 1));
+  return items;
+}
+
+function renderTodayWidget() {
+  const box = document.getElementById('today-widget');
+  const items = getTodayWidgetItems();
+  if (!items.length) { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="today-widget">
+    <h3>📌 Heute &amp; morgen fällig <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">${items.length}</span></h3>
+    <div class="today-widget-list">${items.map(({ ep, isToday, item, entry }) => {
+      const meta = CAL_TYPE_META[item.type];
+      return `<div class="today-widget-item" onclick="openDetail('${ep.id}')">
+        <span class="today-widget-date">${isToday ? 'Heute' : 'Morgen'} · ${item.time}</span>
+        <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
+        <span>${ep.title}</span>
+        ${entry.assignee ? `<span class="open-task-assignee">${entry.assignee}</span>` : ''}
+      </div>`;
+    }).join('')}</div>
+  </div>`;
+}
+
 function renderPlaner() {
+  renderTodayWidget();
   const yearLabel = document.getElementById('planner-year-label');
   if (yearLabel) yearLabel.textContent = plannerYear;
   const grid = document.getElementById('planer-grid');
