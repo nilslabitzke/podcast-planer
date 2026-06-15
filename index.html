@@ -1878,13 +1878,27 @@ async function generateContent(epId, taskId) {
     const expandBtn = document.querySelector(`#row-${taskId} .task-expand-btn`);
     if (expandBtn) { expandBtn.classList.add('has-content'); expandBtn.innerHTML = '📋 Inhalt'; }
 
-    showToast('✨ Fertig generiert!');
+    if (isLikelyTruncated(data.result)) {
+      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
+    } else {
+      showToast('✨ Fertig generiert!');
+    }
   } catch(e) {
     showToast('Fehler: ' + e.message, 'error');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = '✨ Generieren'; }
     if (rowBtn) { rowBtn.disabled = false; rowBtn.textContent = '✨'; }
   }
+}
+
+// Heuristic: flags results that look like they were cut off mid-sentence
+// because the AI model hit its max-token limit.
+function isLikelyTruncated(text) {
+  if (!text) return false;
+  const t = text.trim();
+  if (t.length < 500) return false;
+  const last = t.slice(-1);
+  return !'.!?"\')]…」』。'.includes(last);
 }
 
 function scheduleNoteSave(epId, val) {
