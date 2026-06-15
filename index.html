@@ -2019,6 +2019,7 @@ function openIdeaModal(id) {
   document.getElementById('idea-questions').value = idea ? idea.questions : '';
   document.getElementById('idea-status').value = idea ? idea.status : 'idea';
   document.getElementById('idea-delete-btn').style.display = idea ? 'inline-block' : 'none';
+  document.getElementById('idea-to-planer-btn').style.display = (idea && idea.status === 'confirmed') ? 'inline-block' : 'none';
   document.getElementById('idea-modal-bg').classList.add('open');
   setTimeout(() => document.getElementById('idea-title').focus(), 50);
 }
