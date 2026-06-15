@@ -2148,7 +2148,11 @@ async function generateIdeaQuestions() {
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     document.getElementById('idea-questions').value = data.result;
-    showToast('✨ Fragen generiert!');
+    if (isLikelyTruncated(data.result)) {
+      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
+    } else {
+      showToast('✨ Fragen generiert!');
+    }
   } catch(e) {
     showToast('Fehler: ' + e.message, 'error');
   } finally {
