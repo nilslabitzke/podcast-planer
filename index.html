@@ -1114,7 +1114,9 @@ function renderPlaner() {
       const p = progress(ep);
       const statusLabel = p.pct === 100 ? 'Fertig' : p.done === 0 ? 'Geplant' : `${p.done}/${p.total} Schritte`;
       const badgeClass = p.pct === 100 ? 'badge-done' : p.done > 0 ? 'badge-wip' : 'badge-free';
-      const isDone = (p.pct === 100 || isPast) && !isToday;
+      const twoWeeksAfter = new Date(slotDate); twoWeeksAfter.setDate(twoWeeksAfter.getDate() + 14);
+      const isOldRelease = today >= twoWeeksAfter;
+      const isDone = (p.pct === 100 || isOldRelease) && !isToday;
       return `<div class="slot filled${isDone ? ' slot-done' : ''}" onclick="openDetail('${ep.id}')">
         <div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
         <div class="slot-title">${ep.title}</div>
