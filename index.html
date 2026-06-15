@@ -1900,6 +1900,25 @@ async function generateContent(epId, taskId) {
   }
 }
 
+// Exports all episodes + ideas as a single JSON file (manual backup).
+function exportAllData() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    episodes,
+    ideas,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `podcast-backup-${formatDate(new Date()).replace(/\./g, '-')}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('💾 Backup heruntergeladen');
+}
+
 // Heuristic: flags results that look like they were cut off mid-sentence
 // because the AI model hit its max-token limit.
 function isLikelyTruncated(text) {
