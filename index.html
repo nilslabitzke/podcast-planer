@@ -510,6 +510,22 @@ const PROMPT_LABELS = {
 let customPrompts = {};
 let ideas = [];
 let editingIdeaId = null;
+let pendingIdeaForEpisode = null;
+
+function ideaToEpisode() {
+  if (!editingIdeaId) return;
+  const idea = ideas.find(i => i.id === editingIdeaId);
+  if (!idea) return;
+  pendingIdeaForEpisode = idea;
+  closeIdeaModal();
+  openAddModal(null);
+  document.getElementById('modal-ep-title').value = idea.title || '';
+  let desc = idea.content || '';
+  if (idea.guests) desc += (desc ? '\n\n' : '') + 'Gast: ' + idea.guests;
+  if (idea.coreMessage) desc += (desc ? '\n\n' : '') + 'Kernaussage & G&G: ' + idea.coreMessage;
+  document.getElementById('modal-ep-desc').value = desc;
+  showToast('Idee übernommen – bitte Datum festlegen');
+}
 
 async function loadPrompts() {
   try {
