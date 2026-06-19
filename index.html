@@ -1221,6 +1221,40 @@ function renderPlaner() {
   });
 }
 
+// Drag & Drop: swap (or move) episode dates between two slots
+async function swapEpisodeDates(fromDate, toDate) {
+  const epA = episodeForDate(fromDate);
+  const epB = episodeForDate(toDate);
+  if (!epA) return; // nothing to move
+
+  if (epB) {
+    // Swap dates
+    epA.date = toDate;
+    epB.date = fromDate;
+    try {
+      await Promise.all([upsertEpisode(epA), upsertEpisode(epB)]);
+      showToast('📅 Folgen getauscht');
+    } catch(e) {
+      // rollback
+      epA.date = fromDate;
+      epB.date = toDate;
+      showToast('Fehler beim Verschieben', 'error');
+    }
+  } else {
+    // Move to free slot
+    const oldDate = epA.date;
+    epA.date = toDate;
+    try {
+      await upsertEpisode(epA);
+      showToast('📅 Folge verschoben');
+    } catch(e) {
+      epA.date = oldDate;
+      showToast('Fehler beim Verschieben', 'error');
+    }
+  }
+  renderPlaner();
+}
+
 // ── RENDER ZEITSTRAHL ────────────────────────────────────────────
 function renderZeitstrahl() {
   const container = document.getElementById('zeitstrahl-container');
