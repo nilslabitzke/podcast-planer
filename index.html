@@ -1116,11 +1116,14 @@ function renderPlaner() {
     return;
   }
 
-  const renderSlot = (date) => {
+  let dragSourceDate = null;
+
+  const makeSlotEl = (date) => {
     const ep = episodeForDate(date);
     const slotDate = parseDate(date);
     const isToday = slotDate.toDateString() === today.toDateString();
     const isPast = slotDate < today;
+    const el = document.createElement('div');
 
     if (ep) {
       const p = progress(ep);
@@ -1129,19 +1132,49 @@ function renderPlaner() {
       const twoWeeksAfter = new Date(slotDate); twoWeeksAfter.setDate(twoWeeksAfter.getDate() + 14);
       const isOldRelease = today >= twoWeeksAfter;
       const isDone = (p.pct === 100 || isOldRelease) && !isToday;
-      return `<div class="slot filled${isDone ? ' slot-done' : ''}" onclick="openDetail('${ep.id}')">
-        <div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
+      el.className = `slot filled${isDone ? ' slot-done' : ''}`;
+      el.innerHTML = `<div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
         <div class="slot-title">${ep.title}</div>
         <span class="badge ${badgeClass}">${statusLabel}</span>
-        <div class="slot-progress"><div class="slot-progress-bar" style="width:${p.pct}%"></div></div>
-      </div>`;
+        <div class="slot-progress"><div class="slot-progress-bar" style="width:${p.pct}%"></div></div>`;
+      el.setAttribute('draggable', 'true');
+      el.dataset.date = date;
+      el.addEventListener('click', () => openDetail(ep.id));
+      el.addEventListener('dragstart', e => {
+        dragSourceDate = date;
+        setTimeout(() => el.classList.add('dragging'), 0);
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+        dragSourceDate = null;
+        document.querySelectorAll('.slot.drag-over').forEach(s => s.classList.remove('drag-over'));
+      });
     } else {
-      return `<div class="slot free" onclick="openAddModal('${date}')">
-        <div class="slot-date">${isToday ? '📅 Heute · ' : isPast ? '⬤ ' : ''}${date}</div>
+      el.className = 'slot free';
+      el.innerHTML = `<div class="slot-date">${isToday ? '📅 Heute · ' : isPast ? '⬤ ' : ''}${date}</div>
         <div class="slot-title" style="color:var(--muted);font-weight:400">Frei</div>
-        <span class="badge badge-free">+ Folge planen</span>
-      </div>`;
+        <span class="badge badge-free">+ Folge planen</span>`;
+      el.dataset.date = date;
+      el.addEventListener('click', () => openAddModal(date));
     }
+
+    // Every slot is a drop target
+    el.addEventListener('dragover', e => {
+      if (!dragSourceDate || dragSourceDate === date) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+    el.addEventListener('drop', async e => {
+      e.preventDefault();
+      el.classList.remove('drag-over');
+      if (!dragSourceDate || dragSourceDate === date) return;
+      await swapEpisodeDates(dragSourceDate, date);
+    });
+
+    return el;
   };
 
   // Mid-cadence date (7 days after a slot, 7 days before the next) for Zusatzfolgen
@@ -1151,18 +1184,41 @@ function renderPlaner() {
     return formatDate(d);
   };
 
-  grid.innerHTML = slots.map((date, i) => {
-    const slotHtml = renderSlot(date);
-    if (i === slots.length - 1) return slotHtml;
-    const extraDate = midDate(date);
-    const extraEp = episodeForDate(extraDate);
-    if (extraEp) {
-      // Zusatzfolge already exists for this slot: show it as a normal slot, plus button opens it
-      return `<div class="slot-wrap">${slotHtml}<button class="slot-plus" onclick="event.stopPropagation();openDetail('${extraEp.id}')" title="Zusatzfolge: ${extraEp.title}">●</button></div>${renderSlot(extraDate)}`;
+  grid.innerHTML = '';
+  slots.forEach((date, i) => {
+    const slotEl = makeSlotEl(date);
+    const isLast = i === slots.length - 1;
+    const extraDate = isLast ? null : midDate(date);
+    const extraEp = extraDate ? episodeForDate(extraDate) : null;
+
+    if (!isLast && extraEp) {
+      // Wrap with plus-button, then show extra slot as full card
+      const wrap = document.createElement('div');
+      wrap.className = 'slot-wrap';
+      const plusBtn = document.createElement('button');
+      plusBtn.className = 'slot-plus';
+      plusBtn.title = `Zusatzfolge: ${extraEp.title}`;
+      plusBtn.textContent = '●';
+      plusBtn.onclick = e => { e.stopPropagation(); openDetail(extraEp.id); };
+      wrap.appendChild(slotEl);
+      wrap.appendChild(plusBtn);
+      grid.appendChild(wrap);
+      grid.appendChild(makeSlotEl(extraDate));
+    } else if (!isLast) {
+      const wrap = document.createElement('div');
+      wrap.className = 'slot-wrap';
+      const plusBtn = document.createElement('button');
+      plusBtn.className = 'slot-plus';
+      plusBtn.title = `Zusatzfolge am ${extraDate} einplanen`;
+      plusBtn.textContent = '+';
+      plusBtn.onclick = e => { e.stopPropagation(); openAddModal(extraDate); };
+      wrap.appendChild(slotEl);
+      wrap.appendChild(plusBtn);
+      grid.appendChild(wrap);
+    } else {
+      grid.appendChild(slotEl);
     }
-    const plusBtn = `<button class="slot-plus" onclick="event.stopPropagation();openAddModal('${extraDate}')" title="Zusatzfolge am ${extraDate} einplanen">+</button>`;
-    return `<div class="slot-wrap">${slotHtml}${plusBtn}</div>`;
-  }).join('');
+  });
 }
 
 // ── RENDER ZEITSTRAHL ────────────────────────────────────────────
