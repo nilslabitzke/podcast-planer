@@ -296,6 +296,7 @@
   <button onclick="showPage('offen')">Offene Aufgaben</button>
   <button onclick="showPage('prompts')">Prompts</button>
   <button onclick="showPage('ideen')">Ideen</button>
+  <button onclick="showPage('verbesserung')">Verbesserung</button>
   <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-label" id="sync-label">Verbinde...</span>
@@ -323,8 +324,8 @@
   </div>
 
   <div class="page" id="page-zeitstrahl">
-    <h1>Zeitstrahl</h1>
-    <p class="subtitle">Übersicht aller geplanten und vergangenen Folgen</p>
+    <h1>Nächste 4 Wochen</h1>
+    <p class="subtitle">Was in den kommenden 4 Wochen ansteht &mdash; Aufnahmen, Releases &amp; offene Content-Kalender-Termine</p>
     <div id="zeitstrahl-container"></div>
   </div>
 
@@ -344,6 +345,27 @@
       <button class="btn btn-primary" onclick="openIdeaModal(null)">+ Neue Idee</button>
     </div>
     <div id="ideen-container"></div>
+  </div>
+
+  <div class="page" id="page-verbesserung">
+    <div class="section-header">
+      <div>
+        <h1>Verbesserung</h1>
+        <p class="subtitle">Ziele für den Podcast &amp; Verbesserungsoptionen &mdash; nach Wichtigkeit sortiert</p>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h2 style="font-size:16px;margin:0">🎯 Ziele</h2>
+      <button class="btn btn-primary" onclick="openGoalModal(null)">+ Neues Ziel</button>
+    </div>
+    <div id="goals-container" style="margin-bottom:32px"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h2 style="font-size:16px;margin:0">📈 Verbesserungsoptionen</h2>
+      <button class="btn btn-primary" onclick="openImprovementModal(null)">+ Neue Option</button>
+    </div>
+    <div id="improvements-container"></div>
   </div>
 
   <div class="page" id="page-prompts">
@@ -435,6 +457,86 @@
       <button class="btn btn-ghost" id="idea-to-planer-btn" onclick="ideaToEpisode()" style="display:none">📅 In Planer übernehmen</button>
       <button class="btn btn-danger" id="idea-delete-btn" onclick="deleteIdea()" style="display:none">Löschen</button>
       <button class="btn btn-primary" onclick="saveIdea()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="goal-modal-bg">
+  <div class="modal">
+    <h2 id="goal-modal-title">Neues Ziel</h2>
+    <div class="form-group">
+      <label>Ziel</label>
+      <input type="text" id="goal-title" placeholder="z.B. 1000 Downloads pro Folge">
+    </div>
+    <div class="form-group">
+      <div style="display:flex;gap:8px">
+        <div style="flex:1">
+          <label>Zielwert</label>
+          <input type="text" id="goal-target" placeholder="z.B. 1000">
+        </div>
+        <div style="flex:1">
+          <label>Aktueller Wert</label>
+          <input type="text" id="goal-current" placeholder="z.B. 620">
+        </div>
+        <div style="flex:1">
+          <label>Einheit (optional)</label>
+          <input type="text" id="goal-unit" placeholder="z.B. Downloads">
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="goal-status">
+        <option value="open">🔵 Auf Kurs</option>
+        <option value="risk">🟡 Gefährdet</option>
+        <option value="done">✅ Erreicht</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeGoalModal()">Abbrechen</button>
+      <button class="btn btn-danger" id="goal-delete-btn" onclick="deleteGoal()" style="display:none">Löschen</button>
+      <button class="btn btn-primary" onclick="saveGoal()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="improvement-modal-bg">
+  <div class="modal">
+    <h2 id="improvement-modal-title">Neue Verbesserungsoption</h2>
+    <div class="form-group">
+      <label>Titel</label>
+      <input type="text" id="improvement-title" placeholder="z.B. Intro kürzen">
+    </div>
+    <div class="form-group">
+      <label>Beschreibung (optional)</label>
+      <textarea id="improvement-description" placeholder="Details, Hintergrund, wie umsetzen..."></textarea>
+    </div>
+    <div class="form-group">
+      <div style="display:flex;gap:8px">
+        <div style="flex:1">
+          <label>Kategorie</label>
+          <select id="improvement-category">
+            <option value="workflow">Workflow</option>
+            <option value="content">Content-Qualität</option>
+            <option value="technik">Technik/Equipment</option>
+            <option value="marketing">Marketing</option>
+            <option value="sonstiges">Sonstiges</option>
+          </select>
+        </div>
+        <div style="flex:1">
+          <label>Priorität</label>
+          <select id="improvement-priority">
+            <option value="high">🔴 Hoch</option>
+            <option value="medium" selected>🟡 Mittel</option>
+            <option value="low">🟢 Niedrig</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeImprovementModal()">Abbrechen</button>
+      <button class="btn btn-danger" id="improvement-delete-btn" onclick="deleteImprovement()" style="display:none">Löschen</button>
+      <button class="btn btn-primary" onclick="saveImprovement()">Speichern</button>
     </div>
   </div>
 </div>
@@ -770,7 +872,34 @@ function setTaskDone(ep, id, done) {
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
   const link = (v && typeof v === 'object') ? (v.link || '') : '';
   const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
-  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}) };
+  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
+  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
+}
+function taskAssignee(ep, id) {
+  const v = ep.tasks && ep.tasks[id];
+  if (!v || typeof v !== 'object') return null;
+  return v.assignee || null;
+}
+function setTaskAssignee(ep, id, assignee) {
+  if (!ep.tasks) ep.tasks = {};
+  const v = ep.tasks[id];
+  const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
+  const content = (v && typeof v === 'object') ? (v.content || '') : '';
+  const link = (v && typeof v === 'object') ? (v.link || '') : '';
+  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
+  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
+}
+async function toggleTaskAssignee(epId, taskId, assignee) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const current = taskAssignee(ep, taskId);
+  setTaskAssignee(ep, taskId, current === assignee ? null : assignee);
+  renderOpenTasks();
+  try {
+    await upsertEpisode(ep);
+  } catch(e) {
+    showToast('Fehler beim Speichern', 'error');
+  }
 }
 function taskLink(ep, id) {
   const v = ep.tasks && ep.tasks[id];
@@ -782,7 +911,8 @@ function setTaskLink(ep, id, link) {
   const v = ep.tasks[id];
   const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
   const content = (v && typeof v === 'object') ? (v.content || '') : '';
-  ep.tasks[id] = { done, content, link };
+  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
+  ep.tasks[id] = { done, content, link, ...(assignee ? { assignee } : {}) };
 }
 // Canonical shared reel data lives under ep.tasks['reels_download'].reels
 // Each item: { downloaded: bool, text: '', ig: bool, yt: bool, tiktok: bool }
@@ -1040,7 +1170,8 @@ function setTaskContent(ep, id, content) {
   const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
   const link = (v && typeof v === 'object') ? (v.link || '') : '';
   const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
-  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}) };
+  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
+  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
 }
 
 // ── PROGRESS ────────────────────────────────────────────────────
@@ -1258,61 +1389,72 @@ async function swapEpisodeDates(fromDate, toDate) {
 // ── RENDER ZEITSTRAHL ────────────────────────────────────────────
 function renderZeitstrahl() {
   const container = document.getElementById('zeitstrahl-container');
-  // Collect all years that have episodes, plus current year ±1
   const today = new Date(); today.setHours(0,0,0,0);
+  const windowEnd = new Date(today); windowEnd.setDate(windowEnd.getDate() + 28);
+
+  // Slots (release dates) + mid-cadence Zusatzfolgen within the 4-week window
   const thisYear = today.getFullYear();
-  const epYears = episodes.map(e => parseDate(e.date).getFullYear()).filter(y => !isNaN(y));
-  const minYear = epYears.length ? Math.min(thisYear - 1, ...epYears) : thisYear - 1;
-  const maxYear = epYears.length ? Math.max(thisYear + 1, ...epYears) : thisYear + 1;
+  const nextYear = windowEnd.getFullYear();
   const allSlots = [];
-  for (let y = minYear; y <= maxYear; y++) allSlots.push(...getSlotsForYear(y));
-  const uniqueSlots = [...new Set(allSlots)].sort((a, b) => parseDate(a) - parseDate(b));
-  // Build merged item list: slot entries + recording entries
+  for (let y = thisYear; y <= nextYear; y++) allSlots.push(...getSlotsForYear(y));
+  const slotsInWindow = [...new Set(allSlots)]
+    .map(d => ({ date: d, sortDate: parseDate(d) }))
+    .filter(s => s.sortDate >= today && s.sortDate <= windowEnd);
+
   const tlItems = [];
-  uniqueSlots.forEach(date => {
-    tlItems.push({ type: 'slot', date, sortDate: parseDate(date) });
-  });
+  slotsInWindow.forEach(s => tlItems.push({ type: 'slot', date: s.date, sortDate: s.sortDate }));
+
   episodes.forEach(ep => {
+    // Recording dates in window
     if (ep.recordingDate) {
-      const recDateStr = ep.recordingDate.split(' ')[0]; // date part only
+      const recDateStr = ep.recordingDate.split(' ')[0];
       const recTime = ep.recordingDate.split(' ')[1] || '';
-      tlItems.push({ type: 'recording', date: recDateStr, time: recTime, ep, sortDate: parseDate(recDateStr) });
+      const recDate = parseDate(recDateStr);
+      if (recDate >= today && recDate <= windowEnd) {
+        tlItems.push({ type: 'recording', date: recDateStr, time: recTime, ep, sortDate: recDate });
+      }
+    }
+    // Open content-calendar items (LinkedIn, Reels, Karussell) in window
+    if (!slotsInWindow.length) return; // no episode start basis needed, but still iterate
+    const start = parseDate(ep.date);
+    for (let offset = 0; offset < 14; offset++) {
+      const d = new Date(start); d.setDate(start.getDate() + offset);
+      if (d < today || d > windowEnd) continue;
+      const key = formatDate(d);
+      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
+      dayItems.forEach((item, idx) => {
+        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
+        if (entry.done) return;
+        tlItems.push({ type: 'content', date: key, sortDate: d, ep, item, entry });
+      });
     }
   });
+
   tlItems.sort((a, b) => a.sortDate - b.sortDate);
 
-  let todayInserted = false;
-  let currentYear = null;
+  if (!tlItems.length) {
+    container.innerHTML = `<div class="empty" style="color:var(--green)">🎉 In den nächsten 4 Wochen steht nichts an.</div>`;
+    return;
+  }
+
+  let currentDateKey = null;
   let html = '<div class="timeline">';
 
   tlItems.forEach(item => {
     const slotDate = item.sortDate;
     const isToday = slotDate.toDateString() === today.toDateString();
-    const year = slotDate.getFullYear();
+    const shortDate = slotDate.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' });
+    const dateKey = slotDate.toDateString();
 
-    // today line (before the first future item)
-    if (!todayInserted && slotDate >= today && !isToday) {
-      todayInserted = true;
-      html += `<div class="tl-today-line">
-        <div class="tl-today-label">Heute</div>
-        <div class="tl-today-dot-wrap"><div style="width:12px;height:12px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow)"></div></div>
-        <div class="tl-today-dash"></div>
-      </div>`;
+    if (dateKey !== currentDateKey) {
+      currentDateKey = dateKey;
+      html += `<div class="tl-year">${isToday ? '📅 Heute · ' : ''}${shortDate}</div>`;
     }
 
-    // year separator
-    if (year !== currentYear) {
-      currentYear = year;
-      html += `<div class="tl-year">${year}</div>`;
-    }
-
-    const shortDate = slotDate.toLocaleDateString('de-DE', { day: '2-digit', month: 'short' });
-
-    // Recording entry
     if (item.type === 'recording') {
       const ep = item.ep;
       html += `<div class="tl-item">
-        <div class="tl-date">${shortDate}</div>
+        <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--accent2);border-color:var(--accent2)"></div></div>
         <div class="tl-card" onclick="openDetail('${ep.id}')" style="border-color:var(--accent2)">
           <div class="tl-card-title" style="color:var(--accent2)">🎙️ Aufnahme${item.time ? ' · ' + item.time + ' Uhr' : ''} — ${ep.title}</div>
@@ -1321,7 +1463,21 @@ function renderZeitstrahl() {
       return;
     }
 
-    // Slot entry
+    if (item.type === 'content') {
+      const meta = CAL_TYPE_META[item.item.type];
+      html += `<div class="tl-item">
+        <div class="tl-date"></div>
+        <div class="tl-dot-wrap"><div class="tl-dot filled"></div></div>
+        <div class="tl-card" onclick="openDetail('${item.ep.id}')">
+          <div class="tl-card-title"><span class="cal-type-badge">${meta.icon} ${meta.label}${item.item.num ? ' ' + item.item.num : ''}</span> ${item.ep.title}
+            ${item.entry.assignee ? `<span class="open-task-assignee" style="margin-left:8px">${item.entry.assignee}</span>` : ''}
+          </div>
+        </div>
+      </div>`;
+      return;
+    }
+
+    // Slot entry (release date)
     const ep = episodeForDate(item.date);
     if (ep) {
       const p = progress(ep);
@@ -1330,10 +1486,10 @@ function renderZeitstrahl() {
                     p.done > 0 ? `<span class="badge badge-wip" style="font-size:11px">${p.done}/${p.total}</span>` :
                     `<span class="badge badge-free" style="font-size:11px">Geplant</span>`;
       html += `<div class="tl-item">
-        <div class="tl-date">${shortDate}</div>
+        <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot ${dotClass}"></div></div>
         <div class="tl-card" onclick="openDetail('${ep.id}')">
-          <div class="tl-card-title">${ep.num ? '#' + ep.num + ' · ' : ''}${ep.title}</div>
+          <div class="tl-card-title">🚀 Release — ${ep.num ? '#' + ep.num + ' · ' : ''}${ep.title}</div>
           <div class="tl-card-meta">
             ${badge}
             <div class="tl-progress-bar-wrap"><div class="tl-progress-bar-fill" style="width:${p.pct}%"></div></div>
@@ -1343,10 +1499,10 @@ function renderZeitstrahl() {
       </div>`;
     } else {
       html += `<div class="tl-item">
-        <div class="tl-date" style="opacity:.45">${shortDate}</div>
+        <div class="tl-date" style="opacity:.45"></div>
         <div class="tl-dot-wrap"><div class="tl-dot free"></div></div>
         <div class="tl-card free" onclick="openAddModal('${item.date}')">
-          <div class="tl-card-title" style="color:var(--muted);font-weight:400">Frei — + Folge planen</div>
+          <div class="tl-card-title" style="color:var(--muted);font-weight:400">🚀 Release frei — + Folge planen</div>
         </div>
       </div>`;
     }
@@ -1354,14 +1510,6 @@ function renderZeitstrahl() {
 
   html += '</div>';
   container.innerHTML = html;
-
-  // Scroll to today marker (or first upcoming slot)
-  requestAnimationFrame(() => {
-    const todayLine = container.querySelector('.tl-today-line');
-    const firstFuture = container.querySelector('.tl-dot.today, .tl-dot.filled');
-    const target = todayLine || firstFuture;
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
 }
 
 // ── RENDER OPEN TASKS ────────────────────────────────────────────
@@ -1384,17 +1532,17 @@ function renderOpenTasks() {
     return;
   }
 
+  // Only episodes that are already recorded show up — pre-recording tasks aren't actionable yet
+  const recordedEps = allEps.filter(ep => taskDone(ep, 'aufnahme'));
+
   const rows = [];
-  allEps.forEach(ep => {
+  recordedEps.forEach(ep => {
     WORKFLOW_STEPS.forEach(step => {
-      if (!(ep.tasks && ep.tasks[step.id])) rows.push({ ep, step });
+      if (step.id === 'aufnahme') return;
+      if (!(ep.tasks && taskDone(ep, step.id))) rows.push({ ep, step });
     });
   });
-
-  if (!rows.length) {
-    container.innerHTML = `<div class="empty" style="color:var(--green)">🎉 Alle Aufgaben erledigt!</div>`;
-    return;
-  }
+  rows.sort((a, b) => parseDate(a.ep.date) - parseDate(b.ep.date));
 
   // Content-calendar tasks across all episodes (with N/L assignee)
   const calRows = [];
@@ -1413,13 +1561,18 @@ function renderOpenTasks() {
   });
   const filtered = calRows.filter(r => myTaskFilter === 'all' || r.entry.assignee === myTaskFilter);
 
-  container.innerHTML = `<div class="open-tasks-list">${rows.map(r =>
-    `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
+  container.innerHTML = `${rows.length ? `<div class="open-tasks-list">${rows.map(r => {
+    const a = taskAssignee(r.ep, r.step.id);
+    return `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
       <div class="open-task-dot"></div>
       <div class="open-task-ep">${r.ep.num ? '#' + r.ep.num + ' · ' : ''}${r.ep.date}</div>
       <div class="open-task-name">${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.step.label}</span></div>
-    </div>`
-  ).join('')}</div>
+      <div class="cal-assignee" style="flex-direction:row" onclick="event.stopPropagation()">
+        <div class="cal-assignee-pill ${a === 'N' ? 'active' : ''}" onclick="toggleTaskAssignee('${r.ep.id}','${r.step.id}','N')" title="Nils">N</div>
+        <div class="cal-assignee-pill ${a === 'L' ? 'active' : ''}" onclick="toggleTaskAssignee('${r.ep.id}','${r.step.id}','L')" title="Leo">L</div>
+      </div>
+    </div>`;
+  }).join('')}</div>` : `<div class="empty" style="color:var(--green)">🎉 Alle Aufgaben aufgenommener Folgen erledigt!</div>`}
   <h2 style="margin:24px 0 10px;font-size:15px">Content-Kalender Aufgaben</h2>
   <div class="filter-row">
     <button class="filter-btn ${myTaskFilter === 'all' ? 'active' : ''}" onclick="setMyTaskFilter('all')">Alle</button>
@@ -2238,6 +2391,261 @@ async function deleteIdea() {
   }
 }
 
+// ── VERBESSERUNG: ZIELE ─────────────────────────────────────────
+const GOAL_TABLE = 'podcast_goals';
+const GOAL_STATUS_META = {
+  open: { icon: '🔵', label: 'Auf Kurs' },
+  risk: { icon: '🟡', label: 'Gefährdet' },
+  done: { icon: '✅', label: 'Erreicht' },
+};
+let goals = [];
+let editingGoalId = null;
+
+async function loadGoals() {
+  try {
+    const rows = await apiFetch(GOAL_TABLE + '?order=updated_at.desc');
+    goals = rows.map(r => ({
+      id: r.id, title: r.title,
+      targetValue: r.target_value || '', currentValue: r.current_value || '',
+      unit: r.unit || '', status: r.status || 'open',
+    }));
+    return true;
+  } catch(e) {
+    showToast('Verbindungsfehler: ' + e.message, 'error');
+    return false;
+  }
+}
+
+function goalProgressPct(goal) {
+  const target = parseFloat(goal.targetValue);
+  const current = parseFloat(goal.currentValue);
+  if (isNaN(target) || isNaN(current) || target === 0) return null;
+  return Math.max(0, Math.min(100, Math.round(current / target * 100)));
+}
+
+function renderGoals() {
+  const c = document.getElementById('goals-container');
+  if (!goals.length) {
+    c.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);padding:40px">Noch keine Ziele angelegt. Klickt auf „+ Neues Ziel".</div>`;
+    return;
+  }
+  c.innerHTML = `<div class="planer-grid">${goals.map(goal => {
+    const meta = GOAL_STATUS_META[goal.status] || GOAL_STATUS_META.open;
+    const pct = goalProgressPct(goal);
+    return `<div class="card" style="cursor:pointer" onclick="openGoalModal('${goal.id}')">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+        <strong style="font-size:15px">${goal.title}</strong>
+        <span style="font-size:11px;font-weight:600;color:var(--accent);background:var(--surface2);padding:2px 8px;border-radius:99px;white-space:nowrap">${meta.icon} ${meta.label}</span>
+      </div>
+      ${(goal.targetValue || goal.currentValue) ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px">${goal.currentValue || '0'}${goal.unit ? ' ' + goal.unit : ''} von ${goal.targetValue || '?'}${goal.unit ? ' ' + goal.unit : ''}</div>` : ''}
+      ${pct !== null ? `<div class="slot-progress"><div class="slot-progress-bar" style="width:${pct}%"></div></div>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function openGoalModal(id) {
+  editingGoalId = id;
+  const goal = id ? goals.find(g => g.id === id) : null;
+  document.getElementById('goal-modal-title').textContent = goal ? 'Ziel bearbeiten' : 'Neues Ziel';
+  document.getElementById('goal-title').value = goal ? goal.title : '';
+  document.getElementById('goal-target').value = goal ? goal.targetValue : '';
+  document.getElementById('goal-current').value = goal ? goal.currentValue : '';
+  document.getElementById('goal-unit').value = goal ? goal.unit : '';
+  document.getElementById('goal-status').value = goal ? goal.status : 'open';
+  document.getElementById('goal-delete-btn').style.display = goal ? 'inline-block' : 'none';
+  document.getElementById('goal-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('goal-title').focus(), 50);
+}
+
+function closeGoalModal() {
+  document.getElementById('goal-modal-bg').classList.remove('open');
+  editingGoalId = null;
+}
+
+async function saveGoal() {
+  const title = document.getElementById('goal-title').value.trim();
+  if (!title) { showToast('Bitte einen Titel eingeben', 'error'); return; }
+  const goal = {
+    id: editingGoalId || Date.now().toString(),
+    title,
+    targetValue: document.getElementById('goal-target').value.trim(),
+    currentValue: document.getElementById('goal-current').value.trim(),
+    unit: document.getElementById('goal-unit').value.trim(),
+    status: document.getElementById('goal-status').value,
+  };
+  try {
+    await apiFetch(GOAL_TABLE, {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({
+        id: goal.id, title: goal.title, target_value: goal.targetValue || null,
+        current_value: goal.currentValue || null, unit: goal.unit || null, status: goal.status,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    closeGoalModal();
+    await loadGoals();
+    renderGoals();
+    showToast('🎯 Ziel gespeichert');
+  } catch(e) {
+    showToast('Speichern fehlgeschlagen', 'error');
+  }
+}
+
+async function deleteGoal() {
+  if (!editingGoalId) return;
+  if (!confirm('Dieses Ziel wirklich löschen?')) return;
+  try {
+    await apiFetch(GOAL_TABLE + '?id=eq.' + editingGoalId, { method: 'DELETE' });
+    closeGoalModal();
+    await loadGoals();
+    renderGoals();
+    showToast('Gelöscht');
+  } catch(e) {
+    showToast('Löschen fehlgeschlagen', 'error');
+  }
+}
+
+document.getElementById('goal-modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('goal-modal-bg')) closeGoalModal();
+});
+
+// ── VERBESSERUNG: OPTIONEN ───────────────────────────────────────
+const IMPROVEMENT_TABLE = 'podcast_improvements';
+const IMPROVEMENT_CATEGORY_LABELS = {
+  workflow: 'Workflow', content: 'Content-Qualität', technik: 'Technik/Equipment',
+  marketing: 'Marketing', sonstiges: 'Sonstiges',
+};
+const IMPROVEMENT_PRIORITY_META = {
+  high:   { icon: '🔴', label: 'Hoch' },
+  medium: { icon: '🟡', label: 'Mittel' },
+  low:    { icon: '🟢', label: 'Niedrig' },
+};
+const IMPROVEMENT_PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
+let improvements = [];
+let editingImprovementId = null;
+
+async function loadImprovements() {
+  try {
+    const rows = await apiFetch(IMPROVEMENT_TABLE + '?order=updated_at.desc');
+    improvements = rows.map(r => ({
+      id: r.id, title: r.title, description: r.description || '',
+      category: r.category || 'sonstiges', priority: r.priority || 'medium', done: !!r.done,
+    }));
+    return true;
+  } catch(e) {
+    showToast('Verbindungsfehler: ' + e.message, 'error');
+    return false;
+  }
+}
+
+function renderImprovements() {
+  const c = document.getElementById('improvements-container');
+  if (!improvements.length) {
+    c.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);padding:40px">Noch keine Verbesserungsoptionen gesammelt. Klickt auf „+ Neue Option".</div>`;
+    return;
+  }
+  const sorted = [...improvements].sort((a, b) => {
+    if (a.done !== b.done) return a.done ? 1 : -1;
+    return (IMPROVEMENT_PRIORITY_ORDER[a.priority] ?? 99) - (IMPROVEMENT_PRIORITY_ORDER[b.priority] ?? 99);
+  });
+  c.innerHTML = `<div class="open-tasks-list">${sorted.map(item => {
+    const pMeta = IMPROVEMENT_PRIORITY_META[item.priority] || IMPROVEMENT_PRIORITY_META.medium;
+    return `<div class="open-task-row" style="${item.done ? 'opacity:.55' : ''}" onclick="openImprovementModal('${item.id}')">
+      <div class="task-check ${item.done ? 'done' : ''}" onclick="event.stopPropagation();toggleImprovementDone('${item.id}')"></div>
+      <div class="open-task-name">
+        <span style="font-size:11px;font-weight:700;margin-right:6px">${pMeta.icon} ${pMeta.label}</span>
+        ${item.title}
+        <span style="color:var(--muted);font-size:12px"> — ${IMPROVEMENT_CATEGORY_LABELS[item.category] || item.category}</span>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function openImprovementModal(id) {
+  editingImprovementId = id;
+  const item = id ? improvements.find(i => i.id === id) : null;
+  document.getElementById('improvement-modal-title').textContent = item ? 'Option bearbeiten' : 'Neue Verbesserungsoption';
+  document.getElementById('improvement-title').value = item ? item.title : '';
+  document.getElementById('improvement-description').value = item ? item.description : '';
+  document.getElementById('improvement-category').value = item ? item.category : 'workflow';
+  document.getElementById('improvement-priority').value = item ? item.priority : 'medium';
+  document.getElementById('improvement-delete-btn').style.display = item ? 'inline-block' : 'none';
+  document.getElementById('improvement-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('improvement-title').focus(), 50);
+}
+
+function closeImprovementModal() {
+  document.getElementById('improvement-modal-bg').classList.remove('open');
+  editingImprovementId = null;
+}
+
+async function saveImprovement() {
+  const title = document.getElementById('improvement-title').value.trim();
+  if (!title) { showToast('Bitte einen Titel eingeben', 'error'); return; }
+  const existing = editingImprovementId ? improvements.find(i => i.id === editingImprovementId) : null;
+  const item = {
+    id: editingImprovementId || Date.now().toString(),
+    title,
+    description: document.getElementById('improvement-description').value.trim(),
+    category: document.getElementById('improvement-category').value,
+    priority: document.getElementById('improvement-priority').value,
+    done: existing ? existing.done : false,
+  };
+  try {
+    await apiFetch(IMPROVEMENT_TABLE, {
+      method: 'POST',
+      prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({
+        id: item.id, title: item.title, description: item.description || null,
+        category: item.category, priority: item.priority, done: item.done,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+    closeImprovementModal();
+    await loadImprovements();
+    renderImprovements();
+    showToast('📈 Gespeichert');
+  } catch(e) {
+    showToast('Speichern fehlgeschlagen', 'error');
+  }
+}
+
+async function deleteImprovement() {
+  if (!editingImprovementId) return;
+  if (!confirm('Diese Option wirklich löschen?')) return;
+  try {
+    await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + editingImprovementId, { method: 'DELETE' });
+    closeImprovementModal();
+    await loadImprovements();
+    renderImprovements();
+    showToast('Gelöscht');
+  } catch(e) {
+    showToast('Löschen fehlgeschlagen', 'error');
+  }
+}
+
+async function toggleImprovementDone(id) {
+  const item = improvements.find(i => i.id === id);
+  if (!item) return;
+  item.done = !item.done;
+  renderImprovements();
+  try {
+    await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + id, {
+      method: 'PATCH',
+      body: JSON.stringify({ done: item.done, updated_at: new Date().toISOString() }),
+    });
+  } catch(e) {
+    item.done = !item.done;
+    renderImprovements();
+    showToast('Fehler beim Speichern', 'error');
+  }
+}
+
+document.getElementById('improvement-modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('improvement-modal-bg')) closeImprovementModal();
+});
+
 async function generateIdeaQuestions() {
   const title = document.getElementById('idea-title').value.trim();
   if (!title) { showToast('Bitte zuerst einen Titel/Thema eingeben', 'error'); return; }
@@ -2287,6 +2695,7 @@ function showPage(name) {
   if (name === 'offen')       { renderOpenTasks();   document.querySelectorAll('nav button')[2].classList.add('active'); }
   if (name === 'prompts')     { renderPrompts();     document.querySelectorAll('nav button')[3].classList.add('active'); }
   if (name === 'ideen')       { loadIdeas().then(renderIdeas); document.querySelectorAll('nav button')[4].classList.add('active'); }
+  if (name === 'verbesserung'){ loadGoals().then(renderGoals); loadImprovements().then(renderImprovements); document.querySelectorAll('nav button')[5].classList.add('active'); }
 }
 
 document.getElementById('modal-bg').addEventListener('click', e => {
