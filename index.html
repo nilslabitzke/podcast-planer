@@ -1926,7 +1926,7 @@ function syncCalendarTaskCompletion(ep) {
   return changed;
 }
 
-async function toggleCalendarItem(epId, dateKey, idx) {
+async function toggleCalendarItem(epId, dateKey, idx, fromWidget = false) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const entry = getCalEntry(ep.contentPlan || {}, dateKey, idx);
@@ -1936,7 +1936,10 @@ async function toggleCalendarItem(epId, dateKey, idx) {
   document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   const taskChanged = syncCalendarTaskCompletion(ep);
   await upsertEpisode(ep);
-  if (taskChanged) {
+  if (fromWidget) {
+    renderTodayWidget();
+    if (taskChanged) showToast('✅ Aufgabe automatisch abgehakt!');
+  } else if (taskChanged) {
     showToast('✅ Aufgabe automatisch abgehakt!');
     openDetail(epId);
   }
