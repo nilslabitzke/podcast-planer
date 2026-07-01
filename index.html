@@ -1208,7 +1208,7 @@ function getTodayWidgetItems() {
       dayItems.forEach((item, idx) => {
         const entry = getCalEntry(ep.contentPlan || {}, key, idx);
         if (entry.done) return;
-        items.push({ ep, date: key, isToday: key === todayStr, item, entry });
+        items.push({ ep, date: key, isToday: key === todayStr, item: { ...item, _dateKey: key, _idx: idx }, entry });
       });
     }
   });
