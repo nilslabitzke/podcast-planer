@@ -1225,6 +1225,7 @@ function renderTodayWidget() {
     <div class="today-widget-list">${items.map(({ ep, isToday, item, entry }) => {
       const meta = CAL_TYPE_META[item.type];
       return `<div class="today-widget-item" onclick="openDetail('${ep.id}')">
+        <div class="task-check" onclick="event.stopPropagation();toggleCalendarItem('${ep.id}','${item._dateKey}',${item._idx},true)" style="flex-shrink:0;width:16px;height:16px"></div>
         <span class="today-widget-date">${isToday ? 'Heute' : 'Morgen'} · ${item.time}</span>
         <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
         <span>${ep.title}</span>
