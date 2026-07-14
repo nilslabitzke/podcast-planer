@@ -1974,10 +1974,31 @@ async function markAllDone(epId) {
   openDetail(epId);
 }
 
+function getOpenSections() {
+  return SECTIONS.filter(sec => {
+    const el = document.getElementById('section-' + sec);
+    return el && !el.classList.contains('collapsed');
+  });
+}
+
+function restoreOpenSections(openSecs) {
+  openSecs.forEach(sec => {
+    const el = document.getElementById('section-' + sec);
+    if (el) {
+      el.classList.remove('collapsed');
+      const icon = el.querySelector('.section-toggle-icon');
+      if (icon) icon.textContent = '▾';
+    }
+  });
+}
+
 async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const wasDone = taskDone(ep, taskId);
+  const openSecs = getOpenSections();
+  const openContent = [...document.querySelectorAll('.task-content-area.open')].map(el => el.id.replace('content-', ''));
+
   setTaskDone(ep, taskId, !wasDone);
   if (taskId === 'reels_download') {
     const reels = getReels(ep).map(r => ({ ...r, downloaded: !wasDone }));
@@ -1990,15 +2011,35 @@ async function toggleTask(epId, taskId) {
     saveLiPosts(ep, posts);
   }
   openDetail(epId);
-  // re-open content panel if it was open
-  if (document.getElementById('content-' + taskId + '')?.classList.contains('open')) {
-    document.getElementById('content-' + taskId)?.classList.add('open');
-  }
+  restoreOpenSections(openSecs);
+  openContent.forEach(id => document.getElementById('content-' + id)?.classList.add('open'));
   try {
     await upsertEpisode(ep);
   } catch(e) {
     setTaskDone(ep, taskId, wasDone);
     openDetail(epId);
+    restoreOpenSections(openSecs);
+  }
+}
+
+async function toggleSectionTasks(epId, sec) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const steps = WORKFLOW_STEPS.filter(s => s.section === sec);
+  const allDone = steps.every(s => taskDone(ep, s.id));
+  const openSecs = getOpenSections();
+  const openContent = [...document.querySelectorAll('.task-content-area.open')].map(el => el.id.replace('content-', ''));
+
+  steps.forEach(s => setTaskDone(ep, s.id, !allDone));
+  openDetail(epId);
+  restoreOpenSections(openSecs);
+  openContent.forEach(id => document.getElementById('content-' + id)?.classList.add('open'));
+  try {
+    await upsertEpisode(ep);
+  } catch(e) {
+    steps.forEach(s => setTaskDone(ep, s.id, allDone));
+    openDetail(epId);
+    restoreOpenSections(openSecs);
   }
 }
 
