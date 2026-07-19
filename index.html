@@ -318,6 +318,7 @@
       <button class="btn" onclick="changePlannerYear(-1)" title="Vorheriges Jahr">&#8592;</button>
       <span id="planner-year-label" style="font-size:18px;font-weight:700;min-width:60px;text-align:center"></span>
       <button class="btn" onclick="changePlannerYear(1)" title="Nächstes Jahr">&#8594;</button>
+      <button class="filter-btn" id="archive-toggle-btn" onclick="toggleArchive()" style="margin-left:12px">📦 Archiv anzeigen</button>
     </div>
     <div id="today-widget"></div>
     <div id="planer-grid" class="planer-grid"></div>
@@ -834,6 +835,16 @@ function getSlots() {
 const SLOT_ANCHOR = new Date(2026, 5, 8); // 08.06.2026 — CED episode
 
 let plannerYear = new Date().getFullYear();
+let showArchive = false;
+function toggleArchive() {
+  showArchive = !showArchive;
+  const btn = document.getElementById('archive-toggle-btn');
+  if (btn) {
+    btn.textContent = showArchive ? '📦 Archiv ausblenden' : '📦 Archiv anzeigen';
+    btn.classList.toggle('active', showArchive);
+  }
+  renderPlaner();
+}
 
 function getSlotsForYear(year) {
   const yearStart = new Date(year, 0, 1);
@@ -1142,7 +1153,16 @@ async function generateLiSplit(epId) {
     if (data.error) throw new Error(data.error);
     let arr;
     try {
-      arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
+      if (data.result.includes('===LI_POST===')) {
+        arr = data.result.split('===LI_POST===').map(s => s.trim()).filter(s => s.length > 0);
+      } else if (data.result.match(/\n---\n/)) {
+        arr = data.result.split(/\n---\n/).map(s => s.trim()).filter(s => s.length > 0);
+      } else {
+        const match = data.result.match(/\[[\s\S]*\]/);
+        if (!match) throw new Error('no match');
+        arr = JSON.parse(match[0]);
+      }
+      if (!arr || arr.length === 0) throw new Error('empty');
     } catch(e) {
       throw new Error('Antwort konnte nicht gelesen werden (evtl. Limit erreicht/abgeschnitten)');
     }
@@ -1316,8 +1336,18 @@ function renderPlaner() {
     return formatDate(d);
   };
 
+  // Helper: is this slot archived (done + older than 4 weeks)?
+  const isArchived = (date) => {
+    const ep = episodeForDate(date);
+    if (!ep) return false;
+    const d = parseDate(date);
+    const fourWeeksAgo = new Date(today); fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 28);
+    return progress(ep).pct === 100 && d < fourWeeksAgo;
+  };
+
   grid.innerHTML = '';
   slots.forEach((date, i) => {
+    if (!showArchive && isArchived(date)) return;
     const slotEl = makeSlotEl(date);
     const isLast = i === slots.length - 1;
     const extraDate = isLast ? null : midDate(date);
@@ -1335,7 +1365,7 @@ function renderPlaner() {
       wrap.appendChild(slotEl);
       wrap.appendChild(plusBtn);
       grid.appendChild(wrap);
-      grid.appendChild(makeSlotEl(extraDate));
+      if (showArchive || !isArchived(extraDate)) grid.appendChild(makeSlotEl(extraDate));
     } else if (!isLast) {
       const wrap = document.createElement('div');
       wrap.className = 'slot-wrap';
