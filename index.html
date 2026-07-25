@@ -565,13 +565,6 @@ const WORKFLOW_STEPS = [
   { id: 'upload',          label: 'Upload auf Spotify, YouTube & Apple Podcast',  section: 'Upload' },
   { id: 'thumbnail_ai',    label: 'AI-Thumbnail / Cover erstellen',               section: 'Upload' },
   { id: 'cover_canva',     label: 'Quadratisches Cover über Canva erstellen',     section: 'Upload' },
-  // Reels
-  { id: 'reels_download',  label: 'Hooks aus Riverside herunterladen (8 Reels)', section: 'Reels' },
-  { id: 'reels_hook_ki',   label: 'Transkript in KI → Text-Hook auswählen',      section: 'Reels' },
-  { id: 'reels_bearbeiten',label: 'Reels bearbeiten in Edits (Musik, Effekte)',   section: 'Reels' },
-  { id: 'reels_thumbnails',label: 'Thumbnail für jedes Reel erstellen',           section: 'Reels' },
-  { id: 'reels_beschr',    label: 'Reel-Beschreibungen erstellen',                section: 'Reels' },
-  { id: 'reels_planen',    label: 'Reels auf allen Plattformen planen & hochladen', section: 'Reels' },
   // Social Media Woche 1
   { id: 'sm1_karussell',   label: 'Woche 1 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
   { id: 'sm1_reels',       label: 'Woche 1 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
@@ -581,11 +574,10 @@ const WORKFLOW_STEPS = [
   // LinkedIn
   { id: 'li_beitraege',    label: '5 LinkedIn-Beiträge erstellen & hochladen',   section: 'LinkedIn' },
 ];
-const SECTIONS = ['Produktion','Upload','Reels','SocialMedia','LinkedIn'];
+const SECTIONS = ['Produktion','Upload','SocialMedia','LinkedIn'];
 const SECTION_LABELS = {
   Produktion:  'Produktion',
   Upload:      'Plattform-Upload',
-  Reels:       'Reels (8 gesamt)',
   SocialMedia: 'Social Media',
   LinkedIn:    'LinkedIn',
 };
@@ -1921,39 +1913,46 @@ function toggleCalendarBox() {
 // items of that type are done (and un-checks it again if one is unchecked).
 function syncCalendarTaskCompletion(ep) {
   const plan = ep.contentPlan || {};
-  const counts = {};
-  const totals = {};
-  Object.values(CONTENT_CAL_TEMPLATE).forEach(items => {
-    items.forEach(item => { totals[item.type] = (totals[item.type] || 0) + 1; });
-  });
   const start = parseDate(ep.date);
+
+  // Count by type per week (week1 = offset 0-6, week2 = offset 7-13)
+  const w1 = { reel: { done: 0, total: 0 }, karussell: { done: 0, total: 0 }, linkedin: { done: 0, total: 0 } };
+  const w2 = { reel: { done: 0, total: 0 }, karussell: { done: 0, total: 0 }, linkedin: { done: 0, total: 0 } };
   for (let offset = 0; offset < 14; offset++) {
     const items = CONTENT_CAL_TEMPLATE[offset] || [];
     if (!items.length) continue;
-    const d = new Date(start);
-    d.setDate(start.getDate() + offset);
+    const d = new Date(start); d.setDate(start.getDate() + offset);
     const key = formatDate(d);
+    const week = offset < 7 ? w1 : w2;
     items.forEach((item, idx) => {
-      if (getCalEntry(plan, key, idx).done) counts[item.type] = (counts[item.type] || 0) + 1;
+      const type = item.type;
+      if (!week[type]) week[type] = { done: 0, total: 0 };
+      week[type].total++;
+      if (getCalEntry(plan, key, idx).done) week[type].done++;
     });
   }
 
   let changed = false;
-  if (totals.linkedin) {
-    const allDone = (counts.linkedin || 0) >= totals.linkedin;
+  const sync = (taskId, bucket) => {
+    if (!bucket || bucket.total === 0) return;
+    const allDone = bucket.done >= bucket.total;
+    if (taskDone(ep, taskId) !== allDone) { setTaskDone(ep, taskId, allDone); changed = true; }
+  };
+
+  sync('sm1_reels',     w1.reel);
+  sync('sm2_reels',     w2.reel);
+  sync('sm1_karussell', w1.karussell);
+  sync('sm2_karussell', w2.karussell);
+
+  // LinkedIn: all 5 posts across both weeks
+  const liTotal = w1.linkedin.total + w2.linkedin.total;
+  const liDone  = w1.linkedin.done  + w2.linkedin.done;
+  if (liTotal > 0) {
+    const allDone = liDone >= liTotal;
     if (taskDone(ep, 'li_beitraege') !== allDone) {
       setTaskDone(ep, 'li_beitraege', allDone);
       const posts = getLiPosts(ep).map(p => ({ ...p, done: allDone }));
       saveLiPosts(ep, posts);
-      changed = true;
-    }
-  }
-  if (totals.reel) {
-    const allDone = (counts.reel || 0) >= totals.reel;
-    if (taskDone(ep, 'reels_planen') !== allDone) {
-      setTaskDone(ep, 'reels_planen', allDone);
-      const reels = getReels(ep).map(r => ({ ...r, ig: allDone, yt: allDone, tiktok: allDone }));
-      saveReels(ep, reels);
       changed = true;
     }
   }
