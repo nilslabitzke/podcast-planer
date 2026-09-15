@@ -3037,10 +3037,8 @@ function renderFinanzen() {
   const currentMonth = now.getFullYear() === year ? now.getMonth() : 11;
 
   const canvas = document.getElementById('fin-chart');
-  if (finChart) { finChart.destroy(); finChart = null; }
-
-  // Simple SVG bar chart (no external lib needed)
-  const w = canvas.parentElement.offsetWidth - 48 || 600;
+  if (!canvas) return;
+  const w = (canvas.parentElement?.offsetWidth || 660) - 48;
   const h = 220;
   const barW = Math.floor((w - 60) / 12) - 4;
   const maxVal = Math.max(...incMonths, ...expMonths, 1);
@@ -3056,25 +3054,30 @@ function renderFinanzen() {
     svgBars += `
       <rect x="${x}" y="${h - 40 - incH}" width="${barW * 0.45}" height="${incH}" fill="#34d399" opacity="${opacity}" rx="2"/>
       <rect x="${x + barW * 0.5}" y="${h - 40 - expH}" width="${barW * 0.45}" height="${expH}" fill="#f87171" opacity="${opacity}" rx="2"/>
-      <text x="${x + barW * 0.45}" y="${h - 24}" text-anchor="middle" font-size="10" fill="var(--muted)">${m}</text>`;
+      <text x="${x + barW * 0.45}" y="${h - 24}" text-anchor="middle" font-size="10" fill="#7c85a2">${m}</text>`;
   });
+
+  const isLight = document.body.classList.contains('light');
+  const mutedCol  = isLight ? '#7b85a2' : '#7c85a2';
+  const borderCol = isLight ? '#dde2ef' : '#2e3350';
+  const textCol   = isLight ? '#1a1f36' : '#e2e8f0';
 
   // Y-axis labels
   let yLabels = '';
   for (let i = 0; i <= 4; i++) {
     const val = (maxVal / 4) * i;
     const y = h - 40 - scaleH(val);
-    yLabels += `<text x="52" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--muted)">${val >= 1000 ? (val/1000).toFixed(1)+'k' : val.toFixed(0)}€</text>
-    <line x1="60" y1="${y}" x2="${w}" y2="${y}" stroke="var(--border)" stroke-width="0.5"/>`;
+    yLabels += `<text x="52" y="${y + 4}" text-anchor="end" font-size="10" fill="${mutedCol}">${val >= 1000 ? (val/1000).toFixed(1)+'k' : val.toFixed(0)}€</text>
+    <line x1="60" y1="${y}" x2="${w}" y2="${y}" stroke="${borderCol}" stroke-width="0.5"/>`;
   }
 
   canvas.outerHTML = `<svg id="fin-chart" width="${w}" height="${h}" style="overflow:visible">
     ${yLabels}${svgBars}
     <rect x="${w - 110}" y="8" width="12" height="10" fill="#34d399" rx="2"/>
-    <text x="${w - 94}" y="17" font-size="11" fill="var(--text)">Einnahmen</text>
+    <text x="${w - 94}" y="17" font-size="11" fill="${textCol}">Einnahmen</text>
     <rect x="${w - 110}" y="24" width="12" height="10" fill="#f87171" rx="2"/>
-    <text x="${w - 94}" y="33" font-size="11" fill="var(--text)">Ausgaben</text>
-    <line x1="60" y1="${h - 40}" x2="${w}" y2="${h - 40}" stroke="var(--border)" stroke-width="1"/>
+    <text x="${w - 94}" y="33" font-size="11" fill="${textCol}">Ausgaben</text>
+    <line x1="60" y1="${h - 40}" x2="${w}" y2="${h - 40}" stroke="${borderCol}" stroke-width="1"/>
   </svg>`;
 
   // Lists
