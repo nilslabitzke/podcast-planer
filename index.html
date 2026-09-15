@@ -2972,7 +2972,7 @@ function finMonthlyTotals(list, year) {
   return totals;
 }
 
-function fmt€(v) { return (v || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }); }
+function fmtEur(v) { return (v || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }); }
 
 function renderFinanzen() {
   const year = getFinYear();
@@ -2994,23 +2994,23 @@ function renderFinanzen() {
   });
 
   const balanceText = Math.abs(nielsOwes) < 0.01 ? '✅ Ausgeglichen' :
-    nielsOwes > 0 ? `Nils schuldet Leo ${fmt€(nielsOwes)}` : `Leo schuldet Nils ${fmt€(-nielsOwes)}`;
+    nielsOwes > 0 ? `Nils schuldet Leo ${fmtEur(nielsOwes)}` : `Leo schuldet Nils ${fmtEur(-nielsOwes)}`;
   const balanceColor = Math.abs(nielsOwes) < 0.01 ? 'var(--green)' : 'var(--yellow)';
 
   document.getElementById('fin-kpis').innerHTML = `
     <div class="card" style="text-align:center;padding:18px 12px">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Einnahmen ${year}</div>
-      <div style="font-size:22px;font-weight:700;color:var(--green)">${fmt€(totalInc)}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--green)">${fmtEur(totalInc)}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">Jahresprognose</div>
     </div>
     <div class="card" style="text-align:center;padding:18px 12px">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Ausgaben ${year}</div>
-      <div style="font-size:22px;font-weight:700;color:var(--red)">${fmt€(totalExp)}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--red)">${fmtEur(totalExp)}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">Jahresprognose</div>
     </div>
     <div class="card" style="text-align:center;padding:18px 12px">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cashflow ${year}</div>
-      <div style="font-size:22px;font-weight:700;color:${cashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt€(cashflow)}</div>
+      <div style="font-size:22px;font-weight:700;color:${cashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtEur(cashflow)}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">${cashflow >= 0 ? 'Gewinn 🎉' : 'Verlust'}</div>
     </div>
     <div class="card" style="text-align:center;padding:18px 12px">
@@ -3076,7 +3076,7 @@ function renderFinanzen() {
     if (e.frequency === 'einmalig') return new Date(e.date).getFullYear() === year;
     return true;
   });
-  document.getElementById('fin-exp-total').textContent = fmt€(totalExp) + ' /Jahr';
+  document.getElementById('fin-exp-total').textContent = fmtEur(totalExp) + ' /Jahr';
   document.getElementById('fin-expenses-list').innerHTML = expYear.length ? expYear.map(e => `
     <div onclick="openFinModal('expense',${e.id})" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
       <span style="width:8px;height:8px;border-radius:50%;background:${catColors[e.category]||'#7c85a2'};flex-shrink:0"></span>
@@ -3085,7 +3085,7 @@ function renderFinanzen() {
         <div style="font-size:11px;color:var(--muted)">${e.category} · ${e.paid_by}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
-        <div style="font-weight:600;color:var(--red)">${fmt€(e.amount)}</div>
+        <div style="font-weight:600;color:var(--red)">${fmtEur(e.amount)}</div>
         <div style="font-size:11px;color:var(--muted)">${freqLabel(e.frequency)}</div>
       </div>
     </div>`).join('') : '<p style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Noch keine Ausgaben</p>';
@@ -3094,7 +3094,7 @@ function renderFinanzen() {
     if (i.frequency === 'einmalig') return new Date(i.date).getFullYear() === year;
     return true;
   });
-  document.getElementById('fin-inc-total').textContent = fmt€(totalInc) + ' /Jahr';
+  document.getElementById('fin-inc-total').textContent = fmtEur(totalInc) + ' /Jahr';
   document.getElementById('fin-income-list').innerHTML = incYear.length ? incYear.map(i => `
     <div onclick="openFinModal('income',${i.id})" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
       <span style="width:8px;height:8px;border-radius:50%;background:${srcColors[i.source]||'#7c85a2'};flex-shrink:0"></span>
@@ -3103,7 +3103,7 @@ function renderFinanzen() {
         <div style="font-size:11px;color:var(--muted)">${i.source}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
-        <div style="font-weight:600;color:var(--green)">${fmt€(i.amount)}</div>
+        <div style="font-weight:600;color:var(--green)">${fmtEur(i.amount)}</div>
         <div style="font-size:11px;color:var(--muted)">${freqLabel(i.frequency)}</div>
       </div>
     </div>`).join('') : '<p style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Noch keine Einnahmen</p>';
