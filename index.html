@@ -2906,8 +2906,8 @@ let finChart     = null;
 async function loadFinanzen() {
   try {
     const [expRes, incRes] = await Promise.all([
-      apiFetch('/rest/v1/podcast_expenses?order=date.desc'),
-      apiFetch('/rest/v1/podcast_income?order=date.desc'),
+      apiFetch('podcast_expenses?order=date.desc'),
+      apiFetch('podcast_income?order=date.desc'),
     ]);
     finExpenses = expRes || [];
     finIncome   = incRes || [];
@@ -3175,17 +3175,17 @@ async function saveFinEntry() {
       const category = document.getElementById('fin-category').value;
       const body = { name, category, amount, frequency, date, paid_by: finPaidBy, notes };
       if (finEditId) {
-        await apiFetch(`/rest/v1/podcast_expenses?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
+        await apiFetch(`podcast_expenses?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
       } else {
-        await apiFetch('/rest/v1/podcast_expenses', { method: 'POST', body: JSON.stringify(body) });
+        await apiFetch('podcast_expenses', { method: 'POST', body: JSON.stringify(body) });
       }
     } else {
       const source = document.getElementById('fin-source').value;
       const body = { name, source, amount, frequency, date, notes };
       if (finEditId) {
-        await apiFetch(`/rest/v1/podcast_income?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
+        await apiFetch(`podcast_income?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
       } else {
-        await apiFetch('/rest/v1/podcast_income', { method: 'POST', body: JSON.stringify(body) });
+        await apiFetch('podcast_income', { method: 'POST', body: JSON.stringify(body) });
       }
     }
     closeFinModal();
@@ -3201,8 +3201,8 @@ async function deleteFinEntry() {
   if (!confirm('Eintrag wirklich löschen?')) return;
   try {
     const path = finModalType === 'expense'
-      ? `/rest/v1/podcast_expenses?id=eq.${finEditId}`
-      : `/rest/v1/podcast_income?id=eq.${finEditId}`;
+      ? `podcast_expenses?id=eq.${finEditId}`
+      : `podcast_income?id=eq.${finEditId}`;
     await apiFetch(path, { method: 'DELETE' });
     closeFinModal();
     await loadFinanzen();
