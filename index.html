@@ -472,8 +472,9 @@
         <div id="fin-paidby-wrap">
           <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Bezahlt von</label>
           <div style="display:flex;gap:10px">
-            <button id="fin-pb-nils" onclick="finSelectPaidBy('Nils')" class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Nils</button>
-            <button id="fin-pb-leo" onclick="finSelectPaidBy('Leo')" class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Leo</button>
+            <button id="fin-pb-nils"  onclick="finSelectPaidBy('Nils')"  class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Nils</button>
+            <button id="fin-pb-leo"   onclick="finSelectPaidBy('Leo')"   class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Leo</button>
+            <button id="fin-pb-beide" onclick="finSelectPaidBy('Beide')" class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Beide</button>
           </div>
         </div>
         <div>
@@ -2896,19 +2897,21 @@ document.getElementById('modal-bg').addEventListener('click', e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); } });
 
 // ── FINANZEN ─────────────────────────────────────────────────────
-let finExpenses = [];
-let finIncome   = [];
-let finModalType = 'expense'; // 'expense' | 'income'
-let finEditId    = null;
-let finPaidBy    = 'Nils';
-let finChart     = null;
+let finExpenses   = [];
+let finIncome     = [];
+let finSettlements = [];
+let finModalType  = 'expense';
+let finEditId     = null;
+let finPaidBy     = 'Nils';
 
 async function loadFinanzen() {
   try {
-    const [expRes, incRes] = await Promise.all([
+    const [expRes, incRes, setRes] = await Promise.all([
       apiFetch('podcast_expenses?order=date.desc'),
       apiFetch('podcast_income?order=date.desc'),
+      apiFetch('podcast_settlements?order=date.desc'),
     ]);
+    finSettlements = setRes || [];
     finExpenses = expRes || [];
     finIncome   = incRes || [];
   } catch(e) { showToast('Fehler beim Laden der Finanzdaten', 'error'); }
@@ -2983,14 +2986,22 @@ function renderFinanzen() {
   const totalExp = finYearTotal(finExpenses, year);
   const cashflow = totalInc - totalExp;
 
-  // Balance: each expense is 50/50; payer is owed 50% by the other
-  let nielsOwes = 0; // positive = Nils owes Leo
+  // Balance: each expense is 50/50; "Beide" = already split, no debt
+  let nielsOwes = 0; // positive = Nils owes Leo, negative = Leo owes Nils
   finExpenses.forEach(e => {
+    if (e.paid_by === 'Beide') return; // already split, no debt
     const monthly = finMonthlyAmount(e, year);
-    const yearly  = e.frequency === 'einmalig' ? monthly : (e.frequency === 'monatlich' ? monthly * 12 : monthly * 12);
+    const yearly  = e.frequency === 'einmalig' ? monthly : monthly * 12;
     const half = yearly / 2;
-    if (e.paid_by === 'Nils') nielsOwes -= half; // Leo owes Nils → Nils is owed
-    if (e.paid_by === 'Leo')  nielsOwes += half; // Nils owes Leo
+    if (e.paid_by === 'Nils') nielsOwes -= half;
+    if (e.paid_by === 'Leo')  nielsOwes += half;
+  });
+  // Subtract settlements (reduce the raw balance)
+  finSettlements.forEach(s => {
+    const sYear = new Date(s.date).getFullYear();
+    if (sYear !== year) return;
+    if (s.paid_by === 'Nils') nielsOwes -= s.amount; // Nils paid Leo → reduces what Nils owes
+    if (s.paid_by === 'Leo')  nielsOwes += s.amount;
   });
 
   const balanceText = Math.abs(nielsOwes) < 0.01 ? '✅ Ausgeglichen' :
@@ -3013,10 +3024,10 @@ function renderFinanzen() {
       <div style="font-size:22px;font-weight:700;color:${cashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtEur(cashflow)}</div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">${cashflow >= 0 ? 'Gewinn 🎉' : 'Verlust'}</div>
     </div>
-    <div class="card" style="text-align:center;padding:18px 12px">
+    <div class="card" onclick="openSettlementModal(${nielsOwes.toFixed(2)})" style="text-align:center;padding:18px 12px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor=''">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Balance Nils ↔ Leo</div>
       <div style="font-size:14px;font-weight:700;color:${balanceColor};margin-top:6px">${balanceText}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px">50/50 Aufteilung</div>
+      <div style="font-size:11px;color:var(--accent);margin-top:6px">Ausgleich erfassen →</div>
     </div>`;
 
   // Chart
@@ -3155,10 +3166,12 @@ function closeFinModal() {
 
 function finSelectPaidBy(who) {
   finPaidBy = who;
-  document.getElementById('fin-pb-nils').style.background = who === 'Nils' ? 'var(--accent)' : 'var(--surface2)';
-  document.getElementById('fin-pb-nils').style.color      = who === 'Nils' ? '#fff' : 'var(--text)';
-  document.getElementById('fin-pb-leo').style.background  = who === 'Leo'  ? 'var(--accent)' : 'var(--surface2)';
-  document.getElementById('fin-pb-leo').style.color       = who === 'Leo'  ? '#fff' : 'var(--text)';
+  ['Nils','Leo','Beide'].forEach(w => {
+    const el = document.getElementById('fin-pb-' + w.toLowerCase());
+    if (!el) return;
+    el.style.background = who === w ? 'var(--accent)' : 'var(--surface2)';
+    el.style.color      = who === w ? '#fff' : 'var(--text)';
+  });
 }
 
 async function saveFinEntry() {
@@ -3215,6 +3228,72 @@ async function deleteFinEntry() {
 document.getElementById('fin-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('fin-modal-bg')) closeFinModal();
 });
+
+// ── SETTLEMENT ───────────────────────────────────────────────────
+function openSettlementModal(nielsOwes) {
+  const amount = Math.abs(nielsOwes);
+  const debtor  = nielsOwes > 0.01 ? 'Nils' : nielsOwes < -0.01 ? 'Leo' : null;
+  const creditor = debtor === 'Nils' ? 'Leo' : 'Nils';
+
+  const html = `
+    <div id="sett-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:center;justify-content:center">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:100%;max-width:420px">
+        <h2 style="margin-bottom:8px">Ausgleich erfassen</h2>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:18px">
+          ${debtor ? `<b>${debtor}</b> schuldet <b>${creditor}</b> aktuell <b style="color:var(--yellow)">${fmtEur(amount)}</b>` : '✅ Aktuell ausgeglichen'}
+        </p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Wer hat gezahlt?</label>
+            <div style="display:flex;gap:10px">
+              <button id="sett-pb-nils" onclick="settSelectPayer('Nils')" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:${debtor==='Nils'?'var(--accent)':'var(--surface2)'};color:${debtor==='Nils'?'#fff':'var(--text)'};cursor:pointer">Nils</button>
+              <button id="sett-pb-leo"  onclick="settSelectPayer('Leo')"  style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:${debtor==='Leo'?'var(--accent)':'var(--surface2)'};color:${debtor==='Leo'?'#fff':'var(--text)'};cursor:pointer">Leo</button>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Betrag (€)</label>
+            <input id="sett-amount" type="number" step="0.01" min="0" value="${amount.toFixed(2)}" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Datum</label>
+            <input id="sett-date" type="date" value="${new Date().toISOString().split('T')[0]}" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Notiz (optional)</label>
+            <input id="sett-notes" type="text" placeholder="z.B. Überweisung, Bar..." style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <button onclick="document.getElementById('sett-modal').remove()" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Abbrechen</button>
+          <button onclick="saveSettlement()" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--green);color:#fff;cursor:pointer;font-weight:600">✅ Beglichen</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  window._settPayer = debtor || 'Nils';
+}
+
+function settSelectPayer(who) {
+  window._settPayer = who;
+  ['Nils','Leo'].forEach(w => {
+    const el = document.getElementById('sett-pb-' + w.toLowerCase());
+    if (el) { el.style.background = who===w?'var(--accent)':'var(--surface2)'; el.style.color = who===w?'#fff':'var(--text)'; }
+  });
+}
+
+async function saveSettlement() {
+  const amount = parseFloat(document.getElementById('sett-amount').value);
+  const date   = document.getElementById('sett-date').value;
+  const notes  = document.getElementById('sett-notes').value.trim();
+  if (!amount || !date) { showToast('Bitte Betrag und Datum angeben', 'error'); return; }
+  try {
+    await apiFetch('podcast_settlements', { method: 'POST', body: JSON.stringify({ amount, paid_by: window._settPayer, date, notes }) });
+    document.getElementById('sett-modal').remove();
+    await loadFinanzen();
+    renderFinanzen();
+    showToast('✅ Ausgleich gespeichert!');
+  } catch(e) { showToast('Fehler: ' + e.message, 'error'); }
+}
 
 // ── THEME ────────────────────────────────────────────────────────
 function toggleTheme() {
