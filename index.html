@@ -297,6 +297,7 @@
   <button onclick="showPage('prompts')">Prompts</button>
   <button onclick="showPage('ideen')">Ideen</button>
   <button onclick="showPage('verbesserung')">Verbesserung</button>
+  <button onclick="showPage('finanzen')">💰 Finanzen</button>
   <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
     <div class="sync-dot" id="sync-dot"></div>
     <span class="sync-label" id="sync-label">Verbinde...</span>
@@ -373,6 +374,119 @@
     <h1>KI-Prompts</h1>
     <p class="subtitle">Hier könnt ihr für jede Generierungs-Funktion euren eigenen, detaillierten Prompt hinterlegen. Änderungen werden sofort gespeichert &amp; mit Leo synchronisiert.</p>
     <div id="prompts-container"></div>
+  </div>
+
+  <!-- FINANZEN PAGE -->
+  <div class="page" id="page-finanzen">
+    <div class="section-header" style="margin-bottom:24px">
+      <div>
+        <h1>Finanzen</h1>
+        <p class="subtitle">Einnahmen & Ausgaben – Jahresübersicht mit 50/50 Balance</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <select id="fin-year-select" onchange="renderFinanzen()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-size:14px;cursor:pointer"></select>
+        <button class="btn btn-primary" onclick="openFinModal('expense')">+ Ausgabe</button>
+        <button class="btn btn-primary" style="background:var(--green);border-color:var(--green)" onclick="openFinModal('income')">+ Einnahme</button>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div id="fin-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"></div>
+
+    <!-- Chart -->
+    <div class="card" style="margin-bottom:24px;padding:24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2>Monatlicher Verlauf</h2>
+        <span id="fin-prognose-label" style="font-size:12px;color:var(--muted);background:var(--surface2);padding:3px 10px;border-radius:20px">inkl. Jahresprognose</span>
+      </div>
+      <canvas id="fin-chart" height="220"></canvas>
+    </div>
+
+    <!-- Tables -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card" id="fin-expenses-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <h2>Ausgaben</h2>
+          <span id="fin-exp-total" style="font-weight:700;color:var(--red)"></span>
+        </div>
+        <div id="fin-expenses-list"></div>
+      </div>
+      <div class="card" id="fin-income-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <h2>Einnahmen</h2>
+          <span id="fin-inc-total" style="font-weight:700;color:var(--green)"></span>
+        </div>
+        <div id="fin-income-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCE MODAL -->
+  <div id="fin-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:100%;max-width:460px;position:relative">
+      <h2 id="fin-modal-title" style="margin-bottom:18px">Neue Ausgabe</h2>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Bezeichnung</label>
+          <input id="fin-name" type="text" placeholder="z.B. Riverside.fm" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div id="fin-category-wrap">
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Kategorie</label>
+            <select id="fin-category" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+              <option>Tools/Software</option>
+              <option>Equipment</option>
+              <option>Marketing</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div id="fin-source-wrap" style="display:none">
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Quelle</label>
+            <select id="fin-source" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+              <option>YouTube</option>
+              <option>Spotify</option>
+              <option>Sponsoring</option>
+              <option>Affiliate</option>
+              <option>Sonstiges</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Betrag (€)</label>
+            <input id="fin-amount" type="number" step="0.01" min="0" placeholder="0.00" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Häufigkeit</label>
+            <select id="fin-frequency" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+              <option value="einmalig">Einmalig</option>
+              <option value="monatlich">Monatlich</option>
+              <option value="jährlich">Jährlich</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Datum</label>
+            <input id="fin-date" type="date" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+          </div>
+        </div>
+        <div id="fin-paidby-wrap">
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px">Bezahlt von</label>
+          <div style="display:flex;gap:10px">
+            <button id="fin-pb-nils" onclick="finSelectPaidBy('Nils')" class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Nils</button>
+            <button id="fin-pb-leo" onclick="finSelectPaidBy('Leo')" class="btn" style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer">Leo</button>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Notiz (optional)</label>
+          <input id="fin-notes" type="text" placeholder="z.B. Link, Abo-Details..." style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:14px">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button onclick="closeFinModal()" style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px">Abbrechen</button>
+        <button id="fin-delete-btn" onclick="deleteFinEntry()" style="display:none;padding:10px 16px;border-radius:8px;border:1px solid var(--red);background:transparent;color:var(--red);cursor:pointer;font-size:14px">Löschen</button>
+        <button onclick="saveFinEntry()" style="flex:1;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:14px;font-weight:600">Speichern</button>
+      </div>
+    </div>
   </div>
 
   <div class="page" id="page-detail">
@@ -2773,12 +2887,334 @@ function showPage(name) {
   if (name === 'prompts')     { renderPrompts();     document.querySelectorAll('nav button')[3].classList.add('active'); }
   if (name === 'ideen')       { loadIdeas().then(renderIdeas); document.querySelectorAll('nav button')[4].classList.add('active'); }
   if (name === 'verbesserung'){ loadGoals().then(renderGoals); loadImprovements().then(renderImprovements); document.querySelectorAll('nav button')[5].classList.add('active'); }
+  if (name === 'finanzen')   { loadFinanzen().then(() => { initFinYearSelect(); renderFinanzen(); }); document.querySelectorAll('nav button')[6].classList.add('active'); }
 }
 
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); } });
+
+// ── FINANZEN ─────────────────────────────────────────────────────
+let finExpenses = [];
+let finIncome   = [];
+let finModalType = 'expense'; // 'expense' | 'income'
+let finEditId    = null;
+let finPaidBy    = 'Nils';
+let finChart     = null;
+
+async function loadFinanzen() {
+  try {
+    const [expRes, incRes] = await Promise.all([
+      apiFetch('/rest/v1/podcast_expenses?order=date.desc'),
+      apiFetch('/rest/v1/podcast_income?order=date.desc'),
+    ]);
+    finExpenses = expRes || [];
+    finIncome   = incRes || [];
+  } catch(e) { showToast('Fehler beim Laden der Finanzdaten', 'error'); }
+}
+
+function getFinYear() {
+  return parseInt(document.getElementById('fin-year-select')?.value || new Date().getFullYear());
+}
+
+function initFinYearSelect() {
+  const sel = document.getElementById('fin-year-select');
+  if (!sel) return;
+  const currentYear = new Date().getFullYear();
+  const years = new Set([currentYear]);
+  finExpenses.forEach(e => years.add(new Date(e.date).getFullYear()));
+  finIncome.forEach(i => years.add(new Date(i.date).getFullYear()));
+  const sorted = [...years].sort((a,b) => b - a);
+  sel.innerHTML = sorted.map(y => `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`).join('');
+}
+
+// Monthly amount for a given entry in the selected year
+function finMonthlyAmount(item, year) {
+  const itemYear = new Date(item.date).getFullYear();
+  if (item.frequency === 'einmalig') {
+    return itemYear === year ? item.amount : 0;
+  }
+  if (item.frequency === 'monatlich') return item.amount;
+  if (item.frequency === 'jährlich')  return item.amount / 12;
+  return 0;
+}
+
+// Total for year (projected)
+function finYearTotal(list, year) {
+  return list.reduce((sum, item) => {
+    const monthly = finMonthlyAmount(item, year);
+    if (item.frequency === 'einmalig') return sum + monthly;
+    return sum + monthly * 12;
+  }, 0);
+}
+
+// Array of 12 monthly totals for the chart
+function finMonthlyTotals(list, year) {
+  const totals = Array(12).fill(0);
+  const now = new Date();
+  list.forEach(item => {
+    const itemDate = new Date(item.date);
+    const itemYear = itemDate.getFullYear();
+    if (item.frequency === 'einmalig') {
+      if (itemYear === year) totals[itemDate.getMonth()] += item.amount;
+    } else if (item.frequency === 'monatlich') {
+      for (let m = 0; m < 12; m++) {
+        const d = new Date(year, m, 1);
+        if (d >= new Date(itemDate.getFullYear(), itemDate.getMonth(), 1) && (year < now.getFullYear() || m <= now.getMonth() + 3)) {
+          totals[m] += item.amount;
+        }
+      }
+    } else if (item.frequency === 'jährlich') {
+      for (let m = 0; m < 12; m++) totals[m] += item.amount / 12;
+    }
+  });
+  return totals;
+}
+
+function fmt€(v) { return (v || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }); }
+
+function renderFinanzen() {
+  const year = getFinYear();
+  const now  = new Date();
+
+  // KPIs
+  const totalInc = finYearTotal(finIncome, year);
+  const totalExp = finYearTotal(finExpenses, year);
+  const cashflow = totalInc - totalExp;
+
+  // Balance: each expense is 50/50; payer is owed 50% by the other
+  let nielsOwes = 0; // positive = Nils owes Leo
+  finExpenses.forEach(e => {
+    const monthly = finMonthlyAmount(e, year);
+    const yearly  = e.frequency === 'einmalig' ? monthly : (e.frequency === 'monatlich' ? monthly * 12 : monthly * 12);
+    const half = yearly / 2;
+    if (e.paid_by === 'Nils') nielsOwes -= half; // Leo owes Nils → Nils is owed
+    if (e.paid_by === 'Leo')  nielsOwes += half; // Nils owes Leo
+  });
+
+  const balanceText = Math.abs(nielsOwes) < 0.01 ? '✅ Ausgeglichen' :
+    nielsOwes > 0 ? `Nils schuldet Leo ${fmt€(nielsOwes)}` : `Leo schuldet Nils ${fmt€(-nielsOwes)}`;
+  const balanceColor = Math.abs(nielsOwes) < 0.01 ? 'var(--green)' : 'var(--yellow)';
+
+  document.getElementById('fin-kpis').innerHTML = `
+    <div class="card" style="text-align:center;padding:18px 12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Einnahmen ${year}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--green)">${fmt€(totalInc)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Jahresprognose</div>
+    </div>
+    <div class="card" style="text-align:center;padding:18px 12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Ausgaben ${year}</div>
+      <div style="font-size:22px;font-weight:700;color:var(--red)">${fmt€(totalExp)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Jahresprognose</div>
+    </div>
+    <div class="card" style="text-align:center;padding:18px 12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cashflow ${year}</div>
+      <div style="font-size:22px;font-weight:700;color:${cashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmt€(cashflow)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${cashflow >= 0 ? 'Gewinn 🎉' : 'Verlust'}</div>
+    </div>
+    <div class="card" style="text-align:center;padding:18px 12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Balance Nils ↔ Leo</div>
+      <div style="font-size:14px;font-weight:700;color:${balanceColor};margin-top:6px">${balanceText}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">50/50 Aufteilung</div>
+    </div>`;
+
+  // Chart
+  const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  const incMonths = finMonthlyTotals(finIncome, year);
+  const expMonths = finMonthlyTotals(finExpenses, year);
+  const currentMonth = now.getFullYear() === year ? now.getMonth() : 11;
+
+  const canvas = document.getElementById('fin-chart');
+  if (finChart) { finChart.destroy(); finChart = null; }
+
+  // Simple SVG bar chart (no external lib needed)
+  const w = canvas.parentElement.offsetWidth - 48 || 600;
+  const h = 220;
+  const barW = Math.floor((w - 60) / 12) - 4;
+  const maxVal = Math.max(...incMonths, ...expMonths, 1);
+  const scaleH = (v) => Math.round((v / maxVal) * (h - 50));
+
+  let svgBars = '';
+  months.forEach((m, i) => {
+    const x = 60 + i * ((w - 60) / 12);
+    const isFuture = i > currentMonth;
+    const incH = scaleH(incMonths[i]);
+    const expH = scaleH(expMonths[i]);
+    const opacity = isFuture ? '0.35' : '1';
+    svgBars += `
+      <rect x="${x}" y="${h - 40 - incH}" width="${barW * 0.45}" height="${incH}" fill="#34d399" opacity="${opacity}" rx="2"/>
+      <rect x="${x + barW * 0.5}" y="${h - 40 - expH}" width="${barW * 0.45}" height="${expH}" fill="#f87171" opacity="${opacity}" rx="2"/>
+      <text x="${x + barW * 0.45}" y="${h - 24}" text-anchor="middle" font-size="10" fill="var(--muted)">${m}</text>`;
+  });
+
+  // Y-axis labels
+  let yLabels = '';
+  for (let i = 0; i <= 4; i++) {
+    const val = (maxVal / 4) * i;
+    const y = h - 40 - scaleH(val);
+    yLabels += `<text x="52" y="${y + 4}" text-anchor="end" font-size="10" fill="var(--muted)">${val >= 1000 ? (val/1000).toFixed(1)+'k' : val.toFixed(0)}€</text>
+    <line x1="60" y1="${y}" x2="${w}" y2="${y}" stroke="var(--border)" stroke-width="0.5"/>`;
+  }
+
+  canvas.outerHTML = `<svg id="fin-chart" width="${w}" height="${h}" style="overflow:visible">
+    ${yLabels}${svgBars}
+    <rect x="${w - 110}" y="8" width="12" height="10" fill="#34d399" rx="2"/>
+    <text x="${w - 94}" y="17" font-size="11" fill="var(--text)">Einnahmen</text>
+    <rect x="${w - 110}" y="24" width="12" height="10" fill="#f87171" rx="2"/>
+    <text x="${w - 94}" y="33" font-size="11" fill="var(--text)">Ausgaben</text>
+    <line x1="60" y1="${h - 40}" x2="${w}" y2="${h - 40}" stroke="var(--border)" stroke-width="1"/>
+  </svg>`;
+
+  // Lists
+  const catColors = { 'Tools/Software': '#6c8ef7', 'Equipment': '#a78bfa', 'Marketing': '#f59e0b', 'Sonstiges': '#7c85a2' };
+  const srcColors  = { 'YouTube': '#f87171', 'Spotify': '#34d399', 'Sponsoring': '#fbbf24', 'Affiliate': '#a78bfa', 'Sonstiges': '#7c85a2' };
+
+  const freqLabel = f => f === 'monatlich' ? '/Monat' : f === 'jährlich' ? '/Jahr' : 'einmalig';
+
+  const expYear = finExpenses.filter(e => {
+    if (e.frequency === 'einmalig') return new Date(e.date).getFullYear() === year;
+    return true;
+  });
+  document.getElementById('fin-exp-total').textContent = fmt€(totalExp) + ' /Jahr';
+  document.getElementById('fin-expenses-list').innerHTML = expYear.length ? expYear.map(e => `
+    <div onclick="openFinModal('expense',${e.id})" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="width:8px;height:8px;border-radius:50%;background:${catColors[e.category]||'#7c85a2'};flex-shrink:0"></span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${e.category} · ${e.paid_by}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-weight:600;color:var(--red)">${fmt€(e.amount)}</div>
+        <div style="font-size:11px;color:var(--muted)">${freqLabel(e.frequency)}</div>
+      </div>
+    </div>`).join('') : '<p style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Noch keine Ausgaben</p>';
+
+  const incYear = finIncome.filter(i => {
+    if (i.frequency === 'einmalig') return new Date(i.date).getFullYear() === year;
+    return true;
+  });
+  document.getElementById('fin-inc-total').textContent = fmt€(totalInc) + ' /Jahr';
+  document.getElementById('fin-income-list').innerHTML = incYear.length ? incYear.map(i => `
+    <div onclick="openFinModal('income',${i.id})" style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <span style="width:8px;height:8px;border-radius:50%;background:${srcColors[i.source]||'#7c85a2'};flex-shrink:0"></span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${i.source}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-weight:600;color:var(--green)">${fmt€(i.amount)}</div>
+        <div style="font-size:11px;color:var(--muted)">${freqLabel(i.frequency)}</div>
+      </div>
+    </div>`).join('') : '<p style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">Noch keine Einnahmen</p>';
+}
+
+function openFinModal(type, id = null) {
+  finModalType = type;
+  finEditId    = id;
+  finPaidBy    = 'Nils';
+
+  document.getElementById('fin-modal-title').textContent = id
+    ? (type === 'expense' ? 'Ausgabe bearbeiten' : 'Einnahme bearbeiten')
+    : (type === 'expense' ? 'Neue Ausgabe' : 'Neue Einnahme');
+
+  document.getElementById('fin-category-wrap').style.display = type === 'expense' ? '' : 'none';
+  document.getElementById('fin-source-wrap').style.display   = type === 'income'  ? '' : 'none';
+  document.getElementById('fin-paidby-wrap').style.display   = type === 'expense' ? '' : 'none';
+  document.getElementById('fin-delete-btn').style.display    = id ? '' : 'none';
+
+  const today = new Date().toISOString().split('T')[0];
+  if (id) {
+    const item = type === 'expense' ? finExpenses.find(e => e.id === id) : finIncome.find(i => i.id === id);
+    if (item) {
+      document.getElementById('fin-name').value      = item.name;
+      document.getElementById('fin-amount').value    = item.amount;
+      document.getElementById('fin-frequency').value = item.frequency;
+      document.getElementById('fin-date').value      = item.date;
+      document.getElementById('fin-notes').value     = item.notes || '';
+      if (type === 'expense') { document.getElementById('fin-category').value = item.category; finSelectPaidBy(item.paid_by); }
+      else                    { document.getElementById('fin-source').value   = item.source; }
+    }
+  } else {
+    document.getElementById('fin-name').value      = '';
+    document.getElementById('fin-amount').value    = '';
+    document.getElementById('fin-frequency').value = type === 'income' ? 'monatlich' : 'einmalig';
+    document.getElementById('fin-date').value      = today;
+    document.getElementById('fin-notes').value     = '';
+    finSelectPaidBy('Nils');
+  }
+
+  const bg = document.getElementById('fin-modal-bg');
+  bg.style.display = 'flex';
+  document.getElementById('fin-name').focus();
+}
+
+function closeFinModal() {
+  document.getElementById('fin-modal-bg').style.display = 'none';
+}
+
+function finSelectPaidBy(who) {
+  finPaidBy = who;
+  document.getElementById('fin-pb-nils').style.background = who === 'Nils' ? 'var(--accent)' : 'var(--surface2)';
+  document.getElementById('fin-pb-nils').style.color      = who === 'Nils' ? '#fff' : 'var(--text)';
+  document.getElementById('fin-pb-leo').style.background  = who === 'Leo'  ? 'var(--accent)' : 'var(--surface2)';
+  document.getElementById('fin-pb-leo').style.color       = who === 'Leo'  ? '#fff' : 'var(--text)';
+}
+
+async function saveFinEntry() {
+  const name      = document.getElementById('fin-name').value.trim();
+  const amount    = parseFloat(document.getElementById('fin-amount').value);
+  const frequency = document.getElementById('fin-frequency').value;
+  const date      = document.getElementById('fin-date').value;
+  const notes     = document.getElementById('fin-notes').value.trim();
+
+  if (!name || !amount || !date) { showToast('Bitte alle Pflichtfelder ausfüllen', 'error'); return; }
+
+  try {
+    if (finModalType === 'expense') {
+      const category = document.getElementById('fin-category').value;
+      const body = { name, category, amount, frequency, date, paid_by: finPaidBy, notes };
+      if (finEditId) {
+        await apiFetch(`/rest/v1/podcast_expenses?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } else {
+        await apiFetch('/rest/v1/podcast_expenses', { method: 'POST', body: JSON.stringify(body) });
+      }
+    } else {
+      const source = document.getElementById('fin-source').value;
+      const body = { name, source, amount, frequency, date, notes };
+      if (finEditId) {
+        await apiFetch(`/rest/v1/podcast_income?id=eq.${finEditId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } else {
+        await apiFetch('/rest/v1/podcast_income', { method: 'POST', body: JSON.stringify(body) });
+      }
+    }
+    closeFinModal();
+    await loadFinanzen();
+    initFinYearSelect();
+    renderFinanzen();
+    showToast('✅ Gespeichert!');
+  } catch(e) { showToast('Fehler beim Speichern: ' + e.message, 'error'); }
+}
+
+async function deleteFinEntry() {
+  if (!finEditId) return;
+  if (!confirm('Eintrag wirklich löschen?')) return;
+  try {
+    const path = finModalType === 'expense'
+      ? `/rest/v1/podcast_expenses?id=eq.${finEditId}`
+      : `/rest/v1/podcast_income?id=eq.${finEditId}`;
+    await apiFetch(path, { method: 'DELETE' });
+    closeFinModal();
+    await loadFinanzen();
+    initFinYearSelect();
+    renderFinanzen();
+    showToast('🗑️ Gelöscht');
+  } catch(e) { showToast('Fehler beim Löschen', 'error'); }
+}
+
+document.getElementById('fin-modal-bg').addEventListener('click', e => {
+  if (e.target === document.getElementById('fin-modal-bg')) closeFinModal();
+});
 
 // ── THEME ────────────────────────────────────────────────────────
 function toggleTheme() {
