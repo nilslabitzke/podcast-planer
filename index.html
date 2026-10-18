@@ -565,6 +565,8 @@ const WORKFLOW_STEPS = [
   { id: 'upload',          label: 'Upload auf Spotify, YouTube & Apple Podcast',  section: 'Upload' },
   { id: 'thumbnail_ai',    label: 'AI-Thumbnail / Cover erstellen',               section: 'Upload' },
   { id: 'cover_canva',     label: 'Quadratisches Cover über Canva erstellen',     section: 'Upload' },
+  // Social Media: 8 Reels
+  { id: 'reels_download',  label: '8 Reels vorbereiten (Transkript, Hook, Beschreibung)', section: 'SocialMedia' },
   // Social Media Woche 1
   { id: 'sm1_karussell',   label: 'Woche 1 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
   { id: 'sm1_reels',       label: 'Woche 1 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
@@ -923,7 +925,7 @@ function getReels(ep) {
   const v = ep.tasks && ep.tasks['reels_download'];
   const reels = (v && typeof v === 'object' && Array.isArray(v.reels)) ? v.reels : [];
   const out = [];
-  for (let i = 0; i < 8; i++) out.push({ downloaded: false, text: '', transcript: '', hook: '', descIg: '', descYt: '', descTiktok: '', ig: false, yt: false, tiktok: false, ...reels[i] });
+  for (let i = 0; i < 8; i++) out.push({ downloaded: false, text: '', transcript: '', hook: '', desc: '', descIg: '', descYt: '', descTiktok: '', ig: false, yt: false, tiktok: false, ...reels[i] });
   return out;
 }
 function setReelField(ep, idx, field, value) {
@@ -1679,6 +1681,11 @@ function openDetail(id) {
                   <input type="text" class="task-content-textarea" id="reel-hook-${idx}" style="margin-bottom:8px"
                     value="${(r.hook || '').replace(/"/g, '&quot;')}"
                     oninput="scheduleReelFieldSave('${id}','${idx}','hook',this.value)">
+                  <label class="reel-field-label">Folgenbeschreibung (allgemein)</label>
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="reel-desc-${idx}" placeholder="Gemeinsame Beschreibung / Folgenbeschreibung für dieses Reel…" oninput="scheduleReelFieldSave('${id}','${idx}','desc',this.value)">${r.desc || ''}</textarea>
+                    <button class="copy-btn" onclick="copyReelField('${idx}','desc')">Kopieren</button>
+                  </div>
                   <label class="reel-field-label">Instagram-Beschreibung</label>
                   <div class="reel-field-row">
                     <textarea class="task-content-textarea" id="reel-descIg-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descIg',this.value)">${r.descIg || ''}</textarea>
