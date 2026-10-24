@@ -219,15 +219,6 @@
     .notes-area { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 8px; font-size: 14px; resize: vertical; min-height: 100px; outline: none; line-height: 1.6; }
     .notes-area:focus { border-color: var(--accent); }
 
-    .stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
-    .stat-card .stat-val { font-size: 28px; font-weight: 700; }
-    .stat-card .stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
-    .stat-card.accent .stat-val { color: var(--accent); }
-    .stat-card.green .stat-val { color: var(--green); }
-    .stat-card.yellow .stat-val { color: var(--yellow); }
-
-    .open-tasks-list { display: flex; flex-direction: column; gap: 8px; }
     .open-task-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: border .15s; }
     .open-task-row:hover { border-color: var(--accent); }
     .open-task-ep { font-size: 12px; color: var(--muted); min-width: 130px; }
@@ -245,6 +236,37 @@
     .filter-btn:hover { border-color: var(--accent); }
     .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+    .todo-input-row { display: flex; gap: 10px; margin-bottom: 24px; }
+    .todo-input { flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 8px; font-size: 14px; font-family: inherit; }
+    .todo-input:focus { outline: none; border-color: var(--accent); }
+    .todo-h2 { font-size: 15px; margin: 0 0 10px; }
+    .todo-list { display: flex; flex-direction: column; gap: 6px; }
+    .todo-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; min-width: 0; }
+    .todo-row .task-check { cursor: pointer; margin-top: 0; }
+    .todo-text { flex: 1; min-width: 0; font-size: 14px; overflow-wrap: anywhere; cursor: text; }
+    .todo-row.done .todo-text { text-decoration: line-through; color: var(--muted); }
+    .todo-meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .todo-edit { flex: 1; min-width: 0; background: var(--surface2); border: 1px solid var(--accent); color: var(--text); padding: 4px 8px; border-radius: 6px; font-size: 14px; font-family: inherit; }
+    .todo-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 3px 9px; border-radius: 99px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all .15s; }
+    .todo-btn:hover { color: var(--text); border-color: var(--muted); }
+    .todo-btn.leo { color: var(--accent2); border-color: var(--accent2); }
+    .todo-btn.leo:hover { background: var(--accent2); color: #fff; }
+    .todo-btn.nils { color: var(--accent); border-color: var(--accent); }
+    .todo-btn.nils:hover { background: var(--accent); color: #fff; }
+    .todo-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 4px; line-height: 1; }
+    .todo-del:hover { color: var(--red); }
+    .todo-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    .todo-col { min-width: 0; }
+    .todo-col-head { font-weight: 700; font-size: 15px; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; color: #fff; }
+    .todo-c-leo { background: var(--accent2); }
+    .todo-c-nils { background: var(--accent); }
+    .todo-empty { color: var(--muted); font-size: 13px; padding: 10px 2px; }
+    .todo-done-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    @media (max-width: 640px) {
+      .todo-columns { grid-template-columns: 1fr; }
+      .todo-row { flex-wrap: wrap; }
+      .todo-text { flex-basis: calc(100% - 70px); }
+    }
     .empty { text-align: center; padding: 48px 24px; color: var(--muted); }
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 
@@ -293,8 +315,7 @@
   </div>
   <button class="active" onclick="showPage('planer')">Planer</button>
   <button onclick="showPage('zeitstrahl')">Zeitstrahl</button>
-  <button onclick="showPage('offen')">Offene Aufgaben</button>
-  <button onclick="showPage('prompts')">Prompts</button>
+  <button onclick="showPage('todos')">To-Dos</button>
   <button onclick="showPage('ideen')">Ideen</button>
   <button onclick="showPage('verbesserung')">Verbesserung</button>
   <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
@@ -330,11 +351,24 @@
     <div id="zeitstrahl-container"></div>
   </div>
 
-  <div class="page" id="page-offen">
-    <h1>Offene Aufgaben</h1>
-    <p class="subtitle">Alle noch nicht erledigten Schritte über alle Folgen</p>
-    <div class="stats-row" id="stats-row"></div>
-    <div id="open-tasks-container"></div>
+  <div class="page" id="page-todos">
+    <h1>To-Dos</h1>
+    <p class="subtitle">Kleine Aufgaben sammeln &amp; verteilen &mdash; Doppelklick auf einen Text zum Bearbeiten</p>
+    <div class="todo-input-row">
+      <input type="text" id="todo-input" class="todo-input" placeholder="Neues To-Do…" onkeydown="if(event.key==='Enter')addTodo()">
+      <button class="btn btn-primary" onclick="addTodo()">Hinzufügen</button>
+    </div>
+    <h2 class="todo-h2">Offen</h2>
+    <div id="todos-open" class="todo-list"></div>
+    <div class="todo-columns">
+      <div class="todo-col"><div class="todo-col-head todo-c-leo" id="todo-head-leo">Leo (0)</div><div id="todos-leo" class="todo-list"></div></div>
+      <div class="todo-col"><div class="todo-col-head todo-c-nils" id="todo-head-nils">Nils (0)</div><div id="todos-nils" class="todo-list"></div></div>
+    </div>
+    <div class="todo-done-head">
+      <h2 class="todo-h2" style="margin:0;cursor:pointer" onclick="toggleTodoDoneSection()"><span id="todo-done-icon">▾</span> Erledigt <span id="todo-done-count" style="color:var(--muted);font-weight:500"></span></h2>
+      <button class="filter-btn" id="todo-clear-btn" onclick="clearDoneTodos()">Erledigte leeren</button>
+    </div>
+    <div id="todos-done" class="todo-list"></div>
   </div>
 
   <div class="page" id="page-ideen">
@@ -367,12 +401,6 @@
       <button class="btn btn-primary" onclick="openImprovementModal(null)">+ Neue Option</button>
     </div>
     <div id="improvements-container"></div>
-  </div>
-
-  <div class="page" id="page-prompts">
-    <h1>KI-Prompts</h1>
-    <p class="subtitle">Hier könnt ihr für jede Generierungs-Funktion euren eigenen, detaillierten Prompt hinterlegen. Änderungen werden sofort gespeichert &amp; mit Leo synchronisiert.</p>
-    <div id="prompts-container"></div>
   </div>
 
   <div class="page" id="page-detail">
@@ -588,25 +616,7 @@ const SECTION_LABELS = {
 let episodes = [];
 let editingEpId = null;
 const AI_STEPS = ['titel_spotify','titel_youtube','shownotes','kapitel','thumbnail_ai','reels_download','reel_single','reels_hook_ki','reels_thumbnails','reels_beschr','sm1_karussell','sm2_karussell'];
-const PROMPT_STEPS = [...AI_STEPS, 'li_beitraege', 'fragenerstellung'];
 const LI_POST_COUNT = 5;
-
-const PROMPT_LABELS = {
-  fragenerstellung: 'Fragenerstellung',
-  titel_spotify: 'Spotify-Titel',
-  titel_youtube: 'YouTube-Titel',
-  shownotes: 'Shownotes',
-  kapitel: 'Kapitel',
-  thumbnail_ai: 'AI-Thumbnail / Cover (Prompt-Idee)',
-  reels_download: 'Reels: Transkripte aufteilen (8)',
-  reel_single: 'Reel: Hook & Beschreibungen (pro Reel)',
-  reels_thumbnails: 'Reel-Thumbnails (Prompt-Idee)',
-  reels_hook_ki: 'Reel Text-Hooks',
-  reels_beschr: 'Reel-Beschreibungen',
-  sm1_karussell: 'Instagram-Karussell (Woche 1)',
-  sm2_karussell: 'Instagram-Karussell (Woche 2)',
-  li_beitraege: 'LinkedIn-Beiträge',
-};
 
 let customPrompts = {};
 let ideas = [];
@@ -636,41 +646,6 @@ async function loadPrompts() {
   } catch (e) { console.error('loadPrompts failed', e); }
 }
 
-async function savePrompt(taskId, value) {
-  customPrompts[taskId] = value;
-  try {
-    await apiFetch('podcast_prompts', {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates',
-      body: JSON.stringify({ task_id: taskId, prompt: value, updated_at: new Date().toISOString() })
-    });
-    showToast('Prompt gespeichert');
-  } catch (e) {
-    console.error(e);
-    showToast('Speichern fehlgeschlagen', 'error');
-  }
-}
-
-function renderPrompts() {
-  const c = document.getElementById('prompts-container');
-  c.innerHTML = PROMPT_STEPS.map(id => `
-    <div class="card" style="margin-bottom:16px;padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <strong>${PROMPT_LABELS[id] || id}</strong>
-        <button class="btn" onclick="resetPrompt('${id}')">Zurücksetzen (Standard)</button>
-      </div>
-      <textarea id="prompt-${id}" class="prompt-textarea" style="width:100%;min-height:160px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:inherit;font-size:13px;resize:vertical"
-        placeholder="Eigenen Prompt eingeben – leer lassen für Standard-Prompt der KI-Funktion"
-        onchange="savePrompt('${id}', this.value)">${customPrompts[id] || ''}</textarea>
-    </div>
-  `).join('');
-}
-
-function resetPrompt(id) {
-  customPrompts[id] = '';
-  document.getElementById('prompt-' + id).value = '';
-  savePrompt(id, '');
-}
 let currentSlotDate = null;
 let notesTimer = null;
 
@@ -750,6 +725,7 @@ function connectRealtime() {
 
     ws.onopen = () => {
       ws.send(JSON.stringify({ topic: 'realtime:public:podcast_episodes', event: 'phx_join', payload: {}, ref: '1' }));
+      ws.send(JSON.stringify({ topic: 'realtime:public:podcast_todos', event: 'phx_join', payload: {}, ref: '2' }));
       setSyncState('live', 'Live');
     };
 
@@ -758,11 +734,14 @@ function connectRealtime() {
       if (msg.event === 'phx_reply' && msg.ref === '1') {
         // joined successfully
       }
+      if ((msg.event === 'INSERT' || msg.event === 'UPDATE' || msg.event === 'DELETE') && msg.topic === 'realtime:public:podcast_todos') {
+        if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId) { await loadTodos(); renderTodos(); }
+        return;
+      }
       if (msg.event === 'INSERT' || msg.event === 'UPDATE' || msg.event === 'DELETE') {
         await loadEpisodes();
         const activePage = document.querySelector('.page.active');
         if (activePage && activePage.id === 'page-planer') renderPlaner();
-        if (activePage && activePage.id === 'page-offen') renderOpenTasks();
         if (activePage && activePage.id === 'page-detail' && editingEpId) {
           await loadEpisodes();
           const ep = episodes.find(e => e.id === editingEpId);
@@ -893,18 +872,6 @@ function setTaskAssignee(ep, id, assignee) {
   const link = (v && typeof v === 'object') ? (v.link || '') : '';
   const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
   ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
-}
-async function toggleTaskAssignee(epId, taskId, assignee) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const current = taskAssignee(ep, taskId);
-  setTaskAssignee(ep, taskId, current === assignee ? null : assignee);
-  renderOpenTasks();
-  try {
-    await upsertEpisode(ep);
-  } catch(e) {
-    showToast('Fehler beim Speichern', 'error');
-  }
 }
 function taskLink(ep, id) {
   const v = ep.tasks && ep.tasks[id];
@@ -1538,86 +1505,6 @@ function renderZeitstrahl() {
 }
 
 // ── RENDER OPEN TASKS ────────────────────────────────────────────
-function renderOpenTasks() {
-  const container = document.getElementById('open-tasks-container');
-  const statsRow = document.getElementById('stats-row');
-  const allEps = episodes;
-  const doneTasks = allEps.reduce((s, ep) => s + WORKFLOW_STEPS.filter(t => ep.tasks && ep.tasks[t.id]).length, 0);
-  const totalTasks = allEps.length * WORKFLOW_STEPS.length;
-  const doneEps = allEps.filter(ep => progress(ep).pct === 100).length;
-
-  statsRow.innerHTML = `
-    <div class="stat-card accent"><div class="stat-val">${allEps.length}</div><div class="stat-label">Folgen gesamt</div></div>
-    <div class="stat-card green"><div class="stat-val">${doneEps}</div><div class="stat-label">Fertig</div></div>
-    <div class="stat-card yellow"><div class="stat-val">${totalTasks - doneTasks}</div><div class="stat-label">Offene Aufgaben</div></div>
-  `;
-
-  if (!allEps.length) {
-    container.innerHTML = `<div class="empty">Noch keine Folgen angelegt.</div>`;
-    return;
-  }
-
-  // Only episodes that are already recorded show up — pre-recording tasks aren't actionable yet
-  const recordedEps = allEps.filter(ep => taskDone(ep, 'aufnahme'));
-
-  const rows = [];
-  recordedEps.forEach(ep => {
-    WORKFLOW_STEPS.forEach(step => {
-      if (step.id === 'aufnahme') return;
-      if (!(ep.tasks && taskDone(ep, step.id))) rows.push({ ep, step });
-    });
-  });
-  rows.sort((a, b) => parseDate(a.ep.date) - parseDate(b.ep.date));
-
-  // Content-calendar tasks across all episodes (with N/L assignee)
-  const calRows = [];
-  allEps.forEach(ep => {
-    const start = parseDate(ep.date);
-    for (let offset = 0; offset < 14; offset++) {
-      const d = new Date(start); d.setDate(start.getDate() + offset);
-      const key = formatDate(d);
-      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
-      dayItems.forEach((item, idx) => {
-        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
-        if (entry.done) return;
-        calRows.push({ ep, date: key, item, entry });
-      });
-    }
-  });
-  const filtered = calRows.filter(r => myTaskFilter === 'all' || r.entry.assignee === myTaskFilter);
-
-  container.innerHTML = `${rows.length ? `<div class="open-tasks-list">${rows.map(r => {
-    const a = taskAssignee(r.ep, r.step.id);
-    return `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
-      <div class="open-task-dot"></div>
-      <div class="open-task-ep">${r.ep.num ? '#' + r.ep.num + ' · ' : ''}${r.ep.date}</div>
-      <div class="open-task-name">${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.step.label}</span></div>
-      <div class="cal-assignee" style="flex-direction:row" onclick="event.stopPropagation()">
-        <div class="cal-assignee-pill ${a === 'N' ? 'active' : ''}" onclick="toggleTaskAssignee('${r.ep.id}','${r.step.id}','N')" title="Nils">N</div>
-        <div class="cal-assignee-pill ${a === 'L' ? 'active' : ''}" onclick="toggleTaskAssignee('${r.ep.id}','${r.step.id}','L')" title="Leo">L</div>
-      </div>
-    </div>`;
-  }).join('')}</div>` : `<div class="empty" style="color:var(--green)">🎉 Alle Aufgaben aufgenommener Folgen erledigt!</div>`}
-  <h2 style="margin:24px 0 10px;font-size:15px">Content-Kalender Aufgaben</h2>
-  <div class="filter-row">
-    <button class="filter-btn ${myTaskFilter === 'all' ? 'active' : ''}" onclick="setMyTaskFilter('all')">Alle</button>
-    <button class="filter-btn ${myTaskFilter === 'N' ? 'active' : ''}" onclick="setMyTaskFilter('N')">Nils</button>
-    <button class="filter-btn ${myTaskFilter === 'L' ? 'active' : ''}" onclick="setMyTaskFilter('L')">Leo</button>
-  </div>
-  <div class="open-tasks-list">${filtered.length ? filtered.map(r => {
-    const meta = CAL_TYPE_META[r.item.type];
-    return `<div class="open-task-row" onclick="openDetail('${r.ep.id}')">
-      <div class="open-task-dot"></div>
-      <div class="open-task-ep">${r.date}</div>
-      <div class="open-task-name"><span class="cal-type-badge">${meta.icon} ${meta.label}${r.item.num ? ' ' + r.item.num : ''}</span> ${r.ep.title} <span style="color:var(--muted);font-size:13px">— ${r.item.label}</span></div>
-      ${r.entry.assignee ? `<div class="open-task-assignee">${r.entry.assignee}</div>` : ''}
-    </div>`;
-  }).join('') : `<div class="empty">Keine Aufgaben für diesen Filter.</div>`}</div>`;
-}
-
-let myTaskFilter = 'all';
-function setMyTaskFilter(f) { myTaskFilter = f; renderOpenTasks(); }
-
 // ── RENDER DETAIL ────────────────────────────────────────────────
 function openDetail(id) {
   const ep = episodes.find(e => e.id === id);
@@ -2769,6 +2656,162 @@ document.getElementById('idea-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('idea-modal-bg')) closeIdeaModal();
 });
 
+// ── TO-DOS ───────────────────────────────────────────────────────
+const TODO_TABLE = 'podcast_todos';
+const TODO_NAMES = { leo: 'Leo', nils: 'Nils' };
+let todos = [];
+let todoEditingId = null;
+let todoDoneOpen = true;
+
+async function loadTodos() {
+  try {
+    const rows = await apiFetch(TODO_TABLE + '?select=*');
+    todos = rows.map(r => ({ id: r.id, text: r.text, assignee: r.assignee, done: r.done, createdAt: r.created_at, doneAt: r.done_at }));
+  } catch (e) { showToast('Verbindungsfehler: ' + e.message, 'error'); }
+}
+
+// Saves per to-do are chained so rapid clicks can't reach the DB out of order;
+// at most one save waits behind the running one, and it sends the latest state.
+const todoSaveQueue = {};
+const todoSavePending = {};
+function saveTodo(t) {
+  if (todoSavePending[t.id]) return todoSaveQueue[t.id];
+  todoSavePending[t.id] = true;
+  const run = async () => {
+    todoSavePending[t.id] = false;
+    try {
+      await apiFetch(TODO_TABLE, {
+        method: 'POST',
+        prefer: 'resolution=merge-duplicates',
+        body: JSON.stringify({ id: t.id, text: t.text, assignee: t.assignee, done: t.done, created_at: t.createdAt, done_at: t.doneAt }),
+      });
+    } catch (e) { showToast('Speichern fehlgeschlagen', 'error'); }
+  };
+  todoSaveQueue[t.id] = (todoSaveQueue[t.id] || Promise.resolve()).then(run);
+  return todoSaveQueue[t.id];
+}
+
+function escTodo(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function addTodo() {
+  const input = document.getElementById('todo-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const t = { id: (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2)), text, assignee: null, done: false, createdAt: new Date().toISOString(), doneAt: null };
+  todos.push(t);
+  input.value = '';
+  input.focus();
+  renderTodos();
+  saveTodo(t);
+}
+
+function updateTodo(id, changes) {
+  const t = todos.find(x => x.id === id);
+  if (!t) return;
+  Object.assign(t, changes);
+  renderTodos();
+  saveTodo(t);
+}
+
+function setTodoAssignee(id, assignee) { updateTodo(id, { assignee }); }
+
+function toggleTodoDone(id) {
+  const t = todos.find(x => x.id === id);
+  if (!t) return;
+  updateTodo(id, t.done ? { done: false, doneAt: null } : { done: true, doneAt: new Date().toISOString() });
+}
+
+async function deleteTodo(id) {
+  todos = todos.filter(x => x.id !== id);
+  renderTodos();
+  await (todoSaveQueue[id] || Promise.resolve());
+  try { await apiFetch(TODO_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' }); }
+  catch (e) { showToast('Löschen fehlgeschlagen', 'error'); }
+}
+
+async function clearDoneTodos() {
+  const done = todos.filter(t => t.done);
+  if (!done.length) return;
+  if (!confirm(`${done.length} erledigte To-Do${done.length === 1 ? '' : 's'} endgültig löschen?`)) return;
+  todos = todos.filter(t => !t.done);
+  renderTodos();
+  await Promise.all(done.map(t => todoSaveQueue[t.id] || Promise.resolve()));
+  const ids = done.map(t => '"' + t.id + '"').join(',');
+  try { await apiFetch(TODO_TABLE + '?id=in.(' + encodeURIComponent(ids) + ')', { method: 'DELETE' }); }
+  catch (e) { showToast('Löschen fehlgeschlagen', 'error'); }
+}
+
+function toggleTodoDoneSection() {
+  todoDoneOpen = !todoDoneOpen;
+  renderTodos();
+}
+
+function startTodoEdit(id) {
+  const t = todos.find(x => x.id === id);
+  const span = document.getElementById('todo-text-' + id);
+  if (!t || !span) return;
+  todoEditingId = id;
+  const input = document.createElement('input');
+  input.className = 'todo-edit';
+  input.value = t.text;
+  let finished = false;
+  const finish = (save) => {
+    if (finished) return;
+    finished = true;
+    todoEditingId = null;
+    const val = input.value.trim();
+    if (save && val && val !== t.text) updateTodo(id, { text: val });
+    else renderTodos();
+  };
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') finish(true);
+    if (e.key === 'Escape') { e.stopPropagation(); finish(false); }
+  });
+  input.addEventListener('blur', () => finish(true));
+  span.replaceWith(input);
+  input.focus();
+  input.select();
+}
+
+function todoRowHtml(t, actions) {
+  return `<div class="todo-row ${t.done ? 'done' : ''}">
+    <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone('${t.id}')" title="${t.done ? 'Haken entfernen' : 'Erledigt'}"></div>
+    <span class="todo-text" id="todo-text-${t.id}" ondblclick="startTodoEdit('${t.id}')">${escTodo(t.text)}</span>
+    ${actions}
+    <button class="todo-del" onclick="deleteTodo('${t.id}')" title="Löschen">🗑</button>
+  </div>`;
+}
+
+function renderTodos() {
+  if (todoEditingId) return;
+  const byNewest = (a, b) => (b.createdAt || '').localeCompare(a.createdAt || '');
+  const open = todos.filter(t => !t.done && !t.assignee).sort(byNewest);
+  document.getElementById('todos-open').innerHTML = open.length
+    ? open.map(t => todoRowHtml(t, `<button class="todo-btn leo" onclick="setTodoAssignee('${t.id}','leo')">Leo</button><button class="todo-btn nils" onclick="setTodoAssignee('${t.id}','nils')">Nils</button>`)).join('')
+    : `<div class="todo-empty">Keine offenen To-Dos</div>`;
+
+  ['leo', 'nils'].forEach(who => {
+    const other = who === 'leo' ? 'nils' : 'leo';
+    const list = todos.filter(t => !t.done && t.assignee === who).sort(byNewest);
+    document.getElementById('todo-head-' + who).textContent = `${TODO_NAMES[who]} (${list.length})`;
+    document.getElementById('todos-' + who).innerHTML = list.length
+      ? list.map(t => todoRowHtml(t, `<button class="todo-btn ${other}" onclick="setTodoAssignee('${t.id}','${other}')" title="An ${TODO_NAMES[other]} geben">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee('${t.id}',null)" title="Zurück in Offen">↩ Offen</button>`)).join('')
+      : `<div class="todo-empty">Nichts zugewiesen</div>`;
+  });
+
+  const done = todos.filter(t => t.done).sort((a, b) => (b.doneAt || '').localeCompare(a.doneAt || ''));
+  document.getElementById('todo-done-icon').textContent = todoDoneOpen ? '▾' : '▸';
+  document.getElementById('todo-done-count').textContent = `(${done.length})`;
+  document.getElementById('todo-clear-btn').style.display = done.length ? '' : 'none';
+  const doneEl = document.getElementById('todos-done');
+  doneEl.style.display = todoDoneOpen ? '' : 'none';
+  doneEl.innerHTML = done.length
+    ? done.map(t => todoRowHtml(t, `<span class="todo-meta">${t.assignee ? TODO_NAMES[t.assignee] : 'ohne Zuweisung'} · ${t.doneAt ? formatDate(new Date(t.doneAt)) : ''}</span>`)).join('')
+    : `<div class="todo-empty">Noch nichts erledigt</div>`;
+}
+
 // ── NAV ──────────────────────────────────────────────────────────
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2776,10 +2819,9 @@ function showPage(name) {
   document.getElementById('page-' + name).classList.add('active');
   if (name === 'planer')      { renderPlaner();      document.querySelectorAll('nav button')[0].classList.add('active'); }
   if (name === 'zeitstrahl')  { renderZeitstrahl();  document.querySelectorAll('nav button')[1].classList.add('active'); }
-  if (name === 'offen')       { renderOpenTasks();   document.querySelectorAll('nav button')[2].classList.add('active'); }
-  if (name === 'prompts')     { renderPrompts();     document.querySelectorAll('nav button')[3].classList.add('active'); }
-  if (name === 'ideen')       { loadIdeas().then(renderIdeas); document.querySelectorAll('nav button')[4].classList.add('active'); }
-  if (name === 'verbesserung'){ loadGoals().then(renderGoals); loadImprovements().then(renderImprovements); document.querySelectorAll('nav button')[5].classList.add('active'); }
+  if (name === 'todos')       { renderTodos(); loadTodos().then(renderTodos); document.querySelectorAll('nav button')[2].classList.add('active'); setTimeout(() => document.getElementById('todo-input').focus(), 0); }
+  if (name === 'ideen')       { loadIdeas().then(renderIdeas); document.querySelectorAll('nav button')[3].classList.add('active'); }
+  if (name === 'verbesserung'){ loadGoals().then(renderGoals); loadImprovements().then(renderImprovements); document.querySelectorAll('nav button')[4].classList.add('active'); }
 }
 
 document.getElementById('modal-bg').addEventListener('click', e => {
