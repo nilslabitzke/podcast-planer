@@ -413,11 +413,51 @@
     .todo-c-leo { background: var(--leo); color: var(--on-leo); }
     .todo-c-nils { background: var(--nils); color: var(--on-nils); }
     .todo-empty { color: var(--muted); font-size: 13px; padding: 10px 2px; }
-    .todo-done-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     @media (max-width: 640px) {
       .todo-columns { grid-template-columns: 1fr; }
       .todo-row { flex-wrap: wrap; }
       .todo-text { flex-basis: calc(100% - 70px); }
+    }
+
+    .todo-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .todo-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .todo-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .chip { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 99px; background: var(--surface2); color: var(--muted); white-space: nowrap; border: none; font-family: inherit; }
+    .chip-danger { background: var(--red-soft); color: var(--red); }
+    .chip-warn { background: var(--yellow-soft); color: var(--yellow); }
+    .chip-accent { background: var(--accent-soft); color: var(--accent-text); }
+    .chip-link { cursor: pointer; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+    .chip-link:hover { color: var(--accent-text); }
+    .todo-btn.on.leo { background: var(--leo); color: var(--on-leo); }
+    .todo-btn.on.nils { background: var(--nils); color: var(--on-nils); }
+    .todo-col-head { display: flex; justify-content: space-between; align-items: baseline; }
+    .todo-col-head span { font-size: 12px; font-weight: 600; opacity: .8; }
+    .done-toggle { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; padding: 10px 2px 6px; }
+    .done-toggle:hover { color: var(--text); }
+    .done-list .todo-row { opacity: .65; }
+    .seg { display: inline-flex; gap: 2px; padding: 3px; background: var(--surface2); border-radius: 10px; margin-bottom: 12px; max-width: 100%; overflow-x: auto; }
+    .seg-btn { border: none; background: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+    .seg-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+    .filter-count { font-size: 11px; opacity: .7; margin-left: 2px; }
+    .filter-btn.filter-danger:not(.active) { border-color: var(--red); color: var(--red); }
+    .filter-select { width: auto !important; min-height: 32px !important; padding: 4px 10px !important; border-radius: 99px !important; font-size: 13px !important; }
+    .task-group { margin-bottom: 12px; padding: 14px 16px; }
+    .task-group-title { font-size: 15px; text-align: left; }
+    .subtask-list { display: flex; flex-direction: column; gap: 4px; }
+    .subtask-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; background: var(--surface2); border-radius: var(--radius-sm); }
+    .subtask-text { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+    .subtask-row.done .subtask-text { text-decoration: line-through; color: var(--muted); }
+    .projects-list { display: flex; flex-direction: column; gap: 6px; }
+    .project-row { display: flex; align-items: center; gap: 8px; }
+    input[type=date] { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; min-height: 40px; border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; }
+    input[type=date]:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+    .todo-col .todo-row { flex-wrap: wrap; align-items: flex-start; }
+    .todo-col .todo-main { flex-basis: calc(100% - 40px); }
+    .todo-col .todo-actions { width: 100%; justify-content: flex-end; }
+    @media (max-width: 640px) {
+      .todo-row { flex-wrap: wrap; align-items: flex-start; }
+      .todo-main { flex-basis: calc(100% - 40px); }
+      .todo-actions { width: 100%; justify-content: flex-end; }
     }
 
     /* ── ZEITSTRAHL ──────────────────────────────────────────────── */
@@ -510,23 +550,20 @@
   </div>
 
   <div class="page" id="page-todos">
-    <h1>Aufgaben</h1>
-    <p class="subtitle">Aufgaben sammeln &amp; verteilen &mdash; Doppelklick auf einen Text zum Bearbeiten</p>
+    <div class="section-header">
+      <div>
+        <h1>Aufgaben</h1>
+        <p class="subtitle">Sammeln, verteilen, abhaken &mdash; allgemeine To-dos und Produktionsschritte der Folgen</p>
+      </div>
+      <button class="btn btn-sm" onclick="openProjectsModal()">Kategorien bearbeiten</button>
+    </div>
     <div class="todo-input-row">
-      <input type="text" id="todo-input" class="todo-input" placeholder="Was muss erledigt werden?" onkeydown="if(event.key==='Enter')addTodo()">
-      <button class="btn btn-primary" onclick="addTodo()">Hinzufügen</button>
+      <input type="text" id="todo-input" class="todo-input" placeholder="Was muss erledigt werden?" aria-label="Neue Aufgabe" onkeydown="if(event.key==='Enter')addTodo()">
+      <button class="btn btn-primary" onclick="addTodo()">+ Aufgabe hinzufügen</button>
     </div>
-    <h2 class="todo-h2">Offen</h2>
-    <div id="todos-open" class="todo-list"></div>
-    <div class="todo-columns">
-      <div class="todo-col"><div class="todo-col-head todo-c-leo" id="todo-head-leo">Leo (0)</div><div id="todos-leo" class="todo-list"></div></div>
-      <div class="todo-col"><div class="todo-col-head todo-c-nils" id="todo-head-nils">Nils (0)</div><div id="todos-nils" class="todo-list"></div></div>
-    </div>
-    <div class="todo-done-head">
-      <h2 class="todo-h2" style="margin:0;cursor:pointer" onclick="toggleTodoDoneSection()"><span id="todo-done-icon">▾</span> Erledigt <span id="todo-done-count" class="muted" style="font-weight:500"></span></h2>
-      <button class="filter-btn" id="todo-clear-btn" onclick="clearDoneTodos()">Erledigte leeren</button>
-    </div>
-    <div id="todos-done" class="todo-list"></div>
+    <div class="seg" id="task-views" role="tablist" aria-label="Ansicht"></div>
+    <div class="filter-row" id="task-filters"></div>
+    <div id="tasks-content"></div>
   </div>
 
   <div class="page" id="page-ideen">
@@ -675,6 +712,73 @@
       <button class="btn btn-ghost" id="login-cancel-btn" onclick="closeLogin()">Abbrechen</button>
       <button class="btn btn-ghost" id="login-verify-btn" onclick="verifyLoginCode()" hidden>Code bestätigen</button>
       <button class="btn btn-primary" id="login-send-btn" onclick="sendLoginLink()">Login-Link senden</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="task-modal-bg">
+  <div class="modal">
+    <h2>Aufgabe bearbeiten</h2>
+    <div class="form-group">
+      <label for="task-title">Titel</label>
+      <input type="text" id="task-title">
+    </div>
+    <div class="form-group">
+      <label for="task-description">Beschreibung (optional)</label>
+      <textarea id="task-description" placeholder="Details, Links, Hintergrund…"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="task-assignee">Verantwortlich</label>
+        <select id="task-assignee"><option value="">Nicht zugewiesen</option><option value="leo">Leo</option><option value="nils">Nils</option></select>
+      </div>
+      <div class="form-group">
+        <label for="task-status">Status</label>
+        <select id="task-status"><option value="open">Offen</option><option value="in_progress">In Arbeit</option><option value="done">Erledigt</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="task-priority">Priorität</label>
+        <select id="task-priority"><option value="high">Hoch</option><option value="medium">Mittel</option><option value="low">Niedrig</option></select>
+      </div>
+      <div class="form-group">
+        <label for="task-due">Deadline (optional)</label>
+        <input type="date" id="task-due">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="task-project">Projekt / Kategorie (optional)</label>
+      <select id="task-project"></select>
+    </div>
+    <div class="form-group">
+      <label>Unteraufgaben</label>
+      <div id="subtask-list" class="subtask-list"></div>
+      <div class="todo-input-row" style="margin:8px 0 0">
+        <input type="text" id="subtask-input" placeholder="Unteraufgabe hinzufügen…" aria-label="Unteraufgabe" onkeydown="if(event.key==='Enter')addSubtask()">
+        <button class="btn btn-sm" onclick="addSubtask()">Hinzufügen</button>
+      </div>
+    </div>
+    <p class="muted" id="task-dates" style="font-size:12px"></p>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="deleteTaskFromModal()">Löschen</button>
+      <button class="btn btn-ghost" onclick="closeTaskModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveTaskModal()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="projects-modal-bg">
+  <div class="modal" style="width:460px">
+    <h2>Kategorien bearbeiten</h2>
+    <p class="muted" style="font-size:13px;margin:-8px 0 14px">Namen direkt ändern. Beim Löschen bleiben die Aufgaben erhalten.</p>
+    <div id="projects-list" class="projects-list"></div>
+    <div class="todo-input-row" style="margin:12px 0 0">
+      <input type="text" id="project-input" placeholder="Neue Kategorie…" aria-label="Neue Kategorie" onkeydown="if(event.key==='Enter')addProject()">
+      <button class="btn btn-sm" onclick="addProject()">Hinzufügen</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeProjectsModal()">Fertig</button>
     </div>
   </div>
 </div>
@@ -1260,7 +1364,7 @@ function flushEdits() {
   });
 }
 function hasUnsavedWork() {
-  return Object.keys(editTimers).length > 0 || savesInFlight > 0 || Object.values(todoSaveQueued).some(Boolean);
+  return Object.keys(editTimers).length > 0 || savesInFlight > 0 || todoWritesInFlight > 0;
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushEdits(); });
 window.addEventListener('pagehide', flushEdits);
@@ -1274,7 +1378,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas'];
+const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1329,10 +1433,15 @@ function onRemoteChange(table) {
     } else if (table === 'podcast_todos') {
       const todosActive = document.getElementById('page-todos').classList.contains('active');
       const dashActive = document.getElementById('page-dashboard').classList.contains('active');
-      if ((todosActive || dashActive) && !todoEditingId && !Object.values(todoSaveQueued).some(Boolean)) {
+      if (todoWritesInFlight > 0 || todoEditingId) { todoRemotePending = true; return; }
+      if (todosActive || dashActive) {
         await loadTodos();
         if (todosActive) renderTodos(); else renderDashboard();
       }
+    } else if (table === 'podcast_task_projects') {
+      await loadProjects();
+      if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId) renderTodos();
+      if (document.getElementById('projects-modal-bg').classList.contains('open')) renderProjectsList();
     } else if (table === 'podcast_ideas') {
       if (document.getElementById('page-ideen').classList.contains('active') && !document.getElementById('idea-modal-bg').classList.contains('open')) {
         await loadIdeas(); renderIdeas();
@@ -1346,6 +1455,7 @@ function onEpisodesChanged(changedIds) {
   const active = document.querySelector('.page.active');
   if (!active) return;
   if (active.id === 'page-dashboard') renderDashboard();
+  if (active.id === 'page-todos' && !todoEditingId) renderTodos();
   if (active.id === 'page-planer') renderPlaner();
   if (active.id === 'page-zeitstrahl') renderZeitstrahl();
   if (active.id === 'page-detail' && editingEpId && changedIds.has(editingEpId)) {
@@ -1370,7 +1480,7 @@ async function reloadAllData() {
   const changed = await loadEpisodes();
   const active = document.querySelector('.page.active');
   if (!active) return;
-  if (active.id === 'page-todos') { await loadTodos(); renderTodos(); }
+  if (active.id === 'page-todos') { await loadTasksData(); renderTodos(); }
   else if (active.id === 'page-dashboard') renderDashboard();
   else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
   else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements()]); renderGoals(); renderImprovements(); }
@@ -2378,16 +2488,20 @@ function restoreOpenSections(openSecs) {
   });
 }
 
+// Single place for ticking a production step (used by the episode view and the task list).
+function setEpisodeStepDone(ep, taskId, done) {
+  setTaskDone(ep, taskId, done);
+  if (taskId === 'reels_download') {
+    saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: done })));
+  } else if (taskId === 'li_beitraege') {
+    saveLiPosts(ep, getLiPosts(ep).map(p => ({ ...p, done })));
+  }
+}
+
 async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  const wasDone = taskDone(ep, taskId);
-  setTaskDone(ep, taskId, !wasDone);
-  if (taskId === 'reels_download') {
-    saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: !wasDone })));
-  } else if (taskId === 'li_beitraege') {
-    saveLiPosts(ep, getLiPosts(ep).map(p => ({ ...p, done: !wasDone })));
-  }
+  setEpisodeStepDone(ep, taskId, !taskDone(ep, taskId));
   rerenderDetail(epId);
   upsertEpisode(ep).catch(() => {});
 }
@@ -2556,7 +2670,7 @@ function scheduleTranscriptSave(epId, val) {
 // Exports all episodes + ideas as a single JSON file (manual backup).
 async function exportAllData() {
   flushEdits();
-  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_goals', 'podcast_improvements',
+  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_goals', 'podcast_improvements',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -3053,107 +3167,144 @@ document.getElementById('idea-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('idea-modal-bg')) closeIdeaModal();
 });
 
-// ── TO-DOS ───────────────────────────────────────────────────────
+// ── AUFGABEN ─────────────────────────────────────────────────────
+// General to-dos live in podcast_todos (subtasks: parent_id). Episode tasks are
+// the production steps inside each episode – shown here, never copied.
 const TODO_TABLE = 'podcast_todos';
+const PROJECT_TABLE = 'podcast_task_projects';
 const TODO_NAMES = { leo: 'Leo', nils: 'Nils' };
+const PRIORITY_META = { high: { label: 'Hoch', order: 0 }, medium: { label: 'Mittel', order: 1 }, low: { label: 'Niedrig', order: 2 } };
+const STATUS_META = { open: 'Offen', in_progress: 'In Arbeit', done: 'Erledigt' };
+const TASK_FILTERS = [['all', 'Alle'], ['nils', 'Nils'], ['leo', 'Leo'], ['none', 'Nicht zugewiesen'], ['overdue', 'Überfällig'], ['week', 'Diese Woche'], ['done', 'Erledigt']];
+const TASK_VIEWS = [['general', 'Allgemeine To-dos'], ['episode', 'Folgenaufgaben'], ['all', 'Alle Aufgaben']];
 let todos = [];
+let projects = [];
 let todoEditingId = null;
-let todoDoneOpen = true;
+let taskUi = { view: 'general', filter: 'all', project: '', doneOpen: {} };
+try { Object.assign(taskUi, JSON.parse(localStorage.getItem('gg_task_ui')) || {}); } catch {}
+function saveTaskUi() { try { localStorage.setItem('gg_task_ui', JSON.stringify(taskUi)); } catch {} }
 
+function rowToTodo(r) {
+  return {
+    id: r.id, text: r.text, assignee: r.assignee, done: r.done, status: r.status || (r.done ? 'done' : 'open'),
+    createdAt: r.created_at, doneAt: r.done_at, description: r.description || '', priority: r.priority || 'medium',
+    dueDate: r.due_date || null, projectId: r.project_id || null, parentId: r.parent_id || null,
+  };
+}
 async function loadTodos() {
   try {
-    const rows = await apiFetch(TODO_TABLE + '?select=*');
-    todos = rows.map(r => ({ id: r.id, text: r.text, assignee: r.assignee, done: r.done, createdAt: r.created_at, doneAt: r.done_at }));
+    todos = (await apiFetch(TODO_TABLE + '?select=*')).map(rowToTodo);
     todosLoaded = true;
     return true;
   } catch (e) { showToast('Aufgaben konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+async function loadProjects() {
+  try {
+    projects = await apiFetch(PROJECT_TABLE + '?select=*&order=sort.asc,name.asc');
+    return true;
+  } catch (e) { showToast('Kategorien konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+async function loadTasksData() {
+  const [a, b] = await Promise.all([loadTodos(), loadProjects()]);
+  return a && b;
 }
 
 // Writes per to-do run in order; updates send only the changed fields and are
 // coalesced while one is waiting, so edits by Nils and Leo to different fields don't clobber each other.
 const todoSaveChain = {};
-const todoSaveQueued = {};
 const todoPendingChanges = {};
+// While own writes are in flight, realtime reloads are postponed (they would show
+// the older server state for a moment) and done once all writes have finished.
+let todoWritesInFlight = 0;
+let todoRemotePending = false;
 function queueTodoWrite(id, write) {
+  todoWritesInFlight++;
   const p = (todoSaveChain[id] || Promise.resolve()).catch(() => {}).then(write);
   todoSaveChain[id] = p;
-  p.catch(e => {
+  p.then(flashSaved, e => {
     showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
-    loadTodos().then(renderTodos);
+    todoRemotePending = true;
+  }).finally(() => {
+    todoWritesInFlight--;
+    if (todoWritesInFlight === 0 && todoRemotePending) { todoRemotePending = false; onRemoteChange('podcast_todos'); }
   });
   return p;
 }
+const TODO_COLUMNS = {
+  text: 'text', assignee: 'assignee', done: 'done', status: 'status', doneAt: 'done_at', description: 'description',
+  priority: 'priority', dueDate: 'due_date', projectId: 'project_id', parentId: 'parent_id', createdAt: 'created_at',
+};
+function todoToRow(t, keys = Object.keys(TODO_COLUMNS)) {
+  const row = {};
+  keys.forEach(k => { if (k in t) row[TODO_COLUMNS[k]] = t[k] === '' ? null : t[k]; });
+  return row;
+}
 function insertTodo(t) {
-  return queueTodoWrite(t.id, () => apiFetch(TODO_TABLE, {
-    method: 'POST', prefer: 'return=minimal',
-    body: JSON.stringify({ id: t.id, text: t.text, assignee: t.assignee, done: t.done, created_at: t.createdAt, done_at: t.doneAt }),
-  }));
+  return queueTodoWrite(t.id, () => apiFetch(TODO_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ id: t.id, ...todoToRow(t) }) }));
 }
 function patchTodo(id, changes) {
   const queued = !!todoPendingChanges[id];
   todoPendingChanges[id] = { ...(todoPendingChanges[id] || {}), ...changes };
-  todoSaveQueued[id] = true;
   if (queued) return todoSaveChain[id];
   return queueTodoWrite(id, async () => {
     const body = todoPendingChanges[id];
     delete todoPendingChanges[id];
-    todoSaveQueued[id] = false;
     await apiFetch(`${TODO_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(body) });
   });
 }
-const TODO_COLUMNS = { text: 'text', assignee: 'assignee', done: 'done', doneAt: 'done_at' };
+function newId() { return crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2); }
+function newTodo(fields) {
+  return { id: newId(), text: '', assignee: null, done: false, status: 'open', createdAt: new Date().toISOString(), doneAt: null,
+           description: '', priority: 'medium', dueDate: null, projectId: null, parentId: null, ...fields };
+}
 
 function addTodo() {
   const input = document.getElementById('todo-input');
   const text = input.value.trim();
   if (!text) return;
-  const t = { id: (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2)), text, assignee: null, done: false, createdAt: new Date().toISOString(), doneAt: null };
+  const t = newTodo({ text });
   todos.push(t);
   input.value = '';
   input.focus();
+  // New tasks always land in "Nicht zugewiesen"; make sure that is visible.
+  if (taskUi.view === 'episode' || !['all', 'none'].includes(taskUi.filter)) { taskUi.view = 'general'; taskUi.filter = 'all'; saveTaskUi(); }
   renderTodos();
   insertTodo(t);
 }
-
 function updateTodo(id, changes) {
   const t = todos.find(x => x.id === id);
   if (!t) return;
+  if ('status' in changes) {
+    changes.done = changes.status === 'done';
+    changes.doneAt = changes.done ? (t.doneAt || new Date().toISOString()) : null;
+  }
   Object.assign(t, changes);
   renderTodos();
-  const row = {};
-  Object.entries(changes).forEach(([k, v]) => { row[TODO_COLUMNS[k]] = v; });
-  patchTodo(id, row);
+  if (document.getElementById('task-modal-bg').classList.contains('open') && taskModalId === (t.parentId || t.id)) renderSubtasks();
+  patchTodo(id, todoToRow(changes, Object.keys(changes)));
 }
-
 function setTodoAssignee(id, assignee) { updateTodo(id, { assignee }); }
-
 function toggleTodoDone(id) {
   const t = todos.find(x => x.id === id);
-  if (!t) return;
-  updateTodo(id, t.done ? { done: false, doneAt: null } : { done: true, doneAt: new Date().toISOString() });
+  if (t) updateTodo(id, { status: t.done ? 'open' : 'done' });
 }
-
 async function deleteTodo(id) {
-  todos = todos.filter(x => x.id !== id);
+  const ids = new Set([id, ...todos.filter(x => x.parentId === id).map(x => x.id)]);
+  todos = todos.filter(x => !ids.has(x.id));
   renderTodos();
   await queueTodoWrite(id, () => apiFetch(TODO_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' })).catch(() => {});
 }
-
 async function clearDoneTodos() {
-  const done = todos.filter(t => t.done);
+  const done = todos.filter(t => t.done && !t.parentId);
   if (!done.length) return;
-  if (!confirm(`${done.length} erledigte To-Do${done.length === 1 ? '' : 's'} endgültig löschen?`)) return;
-  todos = todos.filter(t => !t.done);
+  if (!confirm(`${done.length} erledigte Aufgabe${done.length === 1 ? '' : 'n'} endgültig löschen?`)) return;
+  const ids = new Set(done.map(t => t.id));
+  todos = todos.filter(t => !ids.has(t.id) && !ids.has(t.parentId));
   renderTodos();
   await Promise.all(done.map(t => (todoSaveChain[t.id] || Promise.resolve()).catch(() => {})));
-  const ids = done.map(t => '"' + t.id + '"').join(',');
-  try { await apiFetch(TODO_TABLE + '?id=in.(' + encodeURIComponent(ids) + ')', { method: 'DELETE' }); }
+  const list = done.map(t => '"' + t.id + '"').join(',');
+  try { await apiFetch(TODO_TABLE + '?id=in.(' + encodeURIComponent(list) + ')', { method: 'DELETE' }); }
   catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); loadTodos().then(renderTodos); }
-}
-
-function toggleTodoDoneSection() {
-  todoDoneOpen = !todoDoneOpen;
-  renderTodos();
 }
 
 function startTodoEdit(id) {
@@ -3162,6 +3313,7 @@ function startTodoEdit(id) {
   if (!t || !span) return;
   todoEditingId = id;
   const input = document.createElement('input');
+  input.type = 'text';
   input.className = 'todo-edit';
   input.value = t.text;
   let finished = false;
@@ -3183,44 +3335,374 @@ function startTodoEdit(id) {
   input.select();
 }
 
-function todoRowHtml(t, actions) {
-  return `<div class="todo-row ${t.done ? 'done' : ''}">
-    <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone(${jsArg(t.id)})" title="${t.done ? 'Haken entfernen' : 'Erledigt'}"></div>
-    <span class="todo-text" data-todo-id="${esc(t.id)}" ondblclick="startTodoEdit(${jsArg(t.id)})">${esc(t.text)}</span>
-    ${actions}
-    <button class="todo-del" onclick="deleteTodo(${jsArg(t.id)})" title="Löschen">🗑</button>
+// ── EPISODE TASKS (derived from the episodes, no copies) ─────────
+// Production/upload steps are needed by the release; social & LinkedIn steps by
+// the end of the 14-day content plan (release + 13 days).
+function stepDueDate(ep, step) {
+  const release = safeParseDate(ep.date);
+  if (!release) return null;
+  if (step.section === 'SocialMedia' || step.section === 'LinkedIn') { const d = new Date(release); d.setDate(d.getDate() + 13); return d; }
+  return release;
+}
+const ASSIGNEE_FROM_STEP = { N: 'nils', L: 'leo' };
+function episodeTaskItems() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const from = new Date(today); from.setDate(today.getDate() - 28);
+  const to = new Date(today); to.setDate(today.getDate() + 56);
+  const items = [];
+  episodes.forEach(ep => {
+    const release = safeParseDate(ep.date);
+    const inWindow = release && release >= from && release <= to;
+    WORKFLOW_STEPS.forEach(step => {
+      const assignee = ASSIGNEE_FROM_STEP[taskAssignee(ep, step.id)] || null;
+      const done = taskDone(ep, step.id);
+      // Outside the window only assigned open steps are listed (so nobody loses track of them).
+      if (!inWindow && !(assignee && !done)) return;
+      items.push({ kind: 'step', key: ep.id + ':' + step.id, ep, step, assignee, done, due: stepDueDate(ep, step), release });
+    });
+  });
+  return items;
+}
+function toggleEpisodeStep(epId, stepId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  setEpisodeStepDone(ep, stepId, !taskDone(ep, stepId));
+  renderTodos();
+  upsertEpisode(ep).catch(() => {});
+}
+function setEpisodeStepAssignee(epId, stepId, who) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const current = taskAssignee(ep, stepId);
+  const code = who === 'nils' ? 'N' : who === 'leo' ? 'L' : null;
+  setTaskAssignee(ep, stepId, current === code ? null : code);
+  renderTodos();
+  upsertEpisode(ep).catch(() => {});
+}
+
+// ── FILTERING ────────────────────────────────────────────────────
+function todoItem(t) {
+  return { kind: 'todo', key: t.id, t, assignee: t.assignee, done: t.done, due: t.dueDate ? safeParseIso(t.dueDate) : null };
+}
+function safeParseIso(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || '');
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function weekRange() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+  return { today, monday, sunday };
+}
+function matchesFilter(item, filter) {
+  const { today, monday, sunday } = weekRange();
+  if (filter === 'done') return item.done;
+  if (item.done) return false;
+  if (filter === 'nils' || filter === 'leo') return item.assignee === filter;
+  if (filter === 'none') return !item.assignee;
+  if (filter === 'overdue') return !!item.due && item.due < today;
+  if (filter === 'week') return !!item.due && item.due >= monday && item.due <= sunday;
+  return true;
+}
+function compareItems(a, b) {
+  if (a.done !== b.done) return a.done ? 1 : -1;
+  if (a.done) return ((b.t && b.t.doneAt) || '').localeCompare((a.t && a.t.doneAt) || '');
+  const pa = a.t ? PRIORITY_META[a.t.priority].order : 1, pb = b.t ? PRIORITY_META[b.t.priority].order : 1;
+  if (pa !== pb) return pa - pb;
+  const da = a.due ? a.due.getTime() : Infinity, db = b.due ? b.due.getTime() : Infinity;
+  if (da !== db) return da - db;
+  return ((b.t && b.t.createdAt) || '').localeCompare((a.t && a.t.createdAt) || '');
+}
+function generalItems() {
+  return todos.filter(t => !t.parentId && (!taskUi.project || t.projectId === taskUi.project)).map(todoItem);
+}
+
+// ── RENDERING ────────────────────────────────────────────────────
+function dueChip(due, done) {
+  if (!due) return '';
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const days = Math.round((due - today) / 86400000);
+  const cls = done ? '' : days < 0 ? ' chip-danger' : days <= 1 ? ' chip-warn' : '';
+  const label = days === 0 ? 'heute' : days === 1 ? 'morgen' : days === -1 ? 'gestern' : due.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+  return `<span class="chip${cls}" title="Fällig am ${formatDate(due)}">📅 ${label}${!done && days < 0 ? ' · überfällig' : ''}</span>`;
+}
+function whoBadge(a) {
+  return a ? `<span class="who who-${a}">${TODO_NAMES[a]}</span>` : '<span class="who who-none">Offen</span>';
+}
+function todoRowHtml(t, { showWho = false } = {}) {
+  const item = todoItem(t);
+  const subs = todos.filter(x => x.parentId === t.id);
+  const subsDone = subs.filter(x => x.done).length;
+  const project = projects.find(p => p.id === t.projectId);
+  const idArg = jsArg(t.id);
+  let actions = '';
+  if (t.done) actions = `<button class="todo-btn" onclick="toggleTodoDone(${idArg})" title="Wieder öffnen">↺ Öffnen</button>`;
+  else if (!t.assignee) actions = `<button class="todo-btn leo" onclick="setTodoAssignee(${idArg},'leo')">Leo</button><button class="todo-btn nils" onclick="setTodoAssignee(${idArg},'nils')">Nils</button>`;
+  else {
+    const other = t.assignee === 'leo' ? 'nils' : 'leo';
+    actions = `<button class="todo-btn ${other}" onclick="setTodoAssignee(${idArg},'${other}')" title="An ${TODO_NAMES[other]} übertragen">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee(${idArg},null)" title="Zuordnung aufheben">↩ Offen</button>`;
+  }
+  const meta = [
+    showWho ? whoBadge(t.assignee) : '',
+    t.priority === 'high' ? '<span class="chip chip-danger">▲ Hoch</span>' : t.priority === 'low' ? '<span class="chip">▼ Niedrig</span>' : '',
+    t.status === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : '',
+    dueChip(item.due, t.done),
+    project ? `<span class="chip">${esc(project.name)}</span>` : '',
+    subs.length ? `<span class="chip" title="Unteraufgaben">☑ ${subsDone}/${subs.length}</span>` : '',
+    t.description ? '<span class="chip" title="Hat eine Beschreibung">≡</span>' : '',
+    t.done && t.doneAt ? `<span class="chip">✓ ${formatDate(new Date(t.doneAt))}</span>` : '',
+  ].filter(Boolean).join('');
+  return `<div class="todo-row${t.done ? ' done' : ''}">
+    <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone(${idArg})" title="${t.done ? 'Wieder öffnen' : 'Erledigt'}" role="checkbox" aria-checked="${t.done}"></div>
+    <div class="todo-main">
+      <span class="todo-text" data-todo-id="${esc(t.id)}" ondblclick="startTodoEdit(${idArg})">${esc(t.text)}</span>
+      ${meta ? `<div class="todo-chips">${meta}</div>` : ''}
+    </div>
+    <div class="todo-actions">
+      ${actions}
+      <button class="todo-del" onclick="openTaskModal(${idArg})" title="Bearbeiten" aria-label="Bearbeiten">✎</button>
+      <button class="todo-del" onclick="deleteTodo(${idArg})" title="Löschen" aria-label="Löschen">🗑</button>
+    </div>
   </div>`;
+}
+function stepRowHtml(item, { showEpisode = true } = {}) {
+  const { ep, step, assignee, done, due } = item;
+  const e = jsArg(ep.id);
+  return `<div class="todo-row${done ? ' done' : ''}">
+    <div class="task-check ${done ? 'done' : ''}" onclick="toggleEpisodeStep(${e},'${step.id}')" title="${done ? 'Wieder öffnen' : 'Erledigt'}" role="checkbox" aria-checked="${done}"></div>
+    <div class="todo-main">
+      <span class="todo-text" style="cursor:default">${step.label}</span>
+      <div class="todo-chips">
+        ${showEpisode ? `<button class="chip chip-link" onclick="openDetail(${e})" title="Folge öffnen">🎙 ${ep.num ? '#' + esc(ep.num) + ' ' : ''}${esc(ep.title)}</button>` : ''}
+        <span class="chip">${SECTION_LABELS[step.section]}</span>
+        ${dueChip(due, done)}
+      </div>
+    </div>
+    <div class="todo-actions">
+      <button class="todo-btn leo${assignee === 'leo' ? ' on' : ''}" onclick="setEpisodeStepAssignee(${e},'${step.id}','leo')" title="${assignee === 'leo' ? 'Zuordnung aufheben' : 'Leo zuweisen'}">Leo</button>
+      <button class="todo-btn nils${assignee === 'nils' ? ' on' : ''}" onclick="setEpisodeStepAssignee(${e},'${step.id}','nils')" title="${assignee === 'nils' ? 'Zuordnung aufheben' : 'Nils zuweisen'}">Nils</button>
+    </div>
+  </div>`;
+}
+function doneToggle(key, count, bodyHtml) {
+  if (!count) return '';
+  const open = !!taskUi.doneOpen[key];
+  return `<button class="done-toggle" onclick="toggleDoneSection('${key}')">${open ? '▾' : '▸'} Erledigt (${count})</button>
+    ${open ? `<div class="todo-list done-list">${bodyHtml}</div>` : ''}`;
+}
+function toggleDoneSection(key) {
+  taskUi.doneOpen[key] = !taskUi.doneOpen[key];
+  saveTaskUi();
+  renderTodos();
+}
+function setTaskView(view) { taskUi.view = view; saveTaskUi(); renderTodos(); }
+function setTaskFilter(filter) { taskUi.filter = filter; saveTaskUi(); renderTodos(); }
+function setTaskProject(id) { taskUi.project = id; saveTaskUi(); renderTodos(); }
+
+function renderTaskControls() {
+  document.getElementById('task-views').innerHTML = TASK_VIEWS.map(([k, label]) =>
+    `<button class="seg-btn${taskUi.view === k ? ' active' : ''}" onclick="setTaskView('${k}')">${label}</button>`).join('');
+  const counts = {};
+  const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : [])];
+  TASK_FILTERS.forEach(([k]) => { counts[k] = pool.filter(i => matchesFilter(i, k)).length; });
+  document.getElementById('task-filters').innerHTML = TASK_FILTERS.map(([k, label]) =>
+    `<button class="filter-btn${taskUi.filter === k ? ' active' : ''}${k === 'overdue' && counts[k] ? ' filter-danger' : ''}" onclick="setTaskFilter('${k}')">${label} <span class="filter-count">${counts[k]}</span></button>`).join('') +
+    (taskUi.view !== 'episode' ? `<select class="filter-select" onchange="setTaskProject(this.value)" aria-label="Kategorie">
+      <option value="">Alle Kategorien</option>
+      ${projects.map(p => `<option value="${esc(p.id)}"${taskUi.project === p.id ? ' selected' : ''}>${esc(p.name)}</option>`).join('')}
+    </select>` : '');
 }
 
 function renderTodos() {
   if (todoEditingId) return;
-  const byNewest = (a, b) => (b.createdAt || '').localeCompare(a.createdAt || '');
-  const open = todos.filter(t => !t.done && !t.assignee).sort(byNewest);
-  document.getElementById('todos-open').innerHTML = open.length
-    ? open.map(t => todoRowHtml(t, `<button class="todo-btn leo" onclick="setTodoAssignee(${jsArg(t.id)},'leo')">Leo</button><button class="todo-btn nils" onclick="setTodoAssignee(${jsArg(t.id)},'nils')">Nils</button>`)).join('')
-    : `<div class="todo-empty">Keine offenen Aufgaben</div>`;
+  if (taskUi.project && !projects.find(p => p.id === taskUi.project)) taskUi.project = '';
+  renderTaskControls();
+  const box = document.getElementById('tasks-content');
+  const { view, filter } = taskUi;
 
-  ['leo', 'nils'].forEach(who => {
-    const other = who === 'leo' ? 'nils' : 'leo';
-    const list = todos.filter(t => !t.done && t.assignee === who).sort(byNewest);
-    document.getElementById('todo-head-' + who).textContent = `${TODO_NAMES[who]} (${list.length})`;
-    document.getElementById('todos-' + who).innerHTML = list.length
-      ? list.map(t => todoRowHtml(t, `<button class="todo-btn ${other}" onclick="setTodoAssignee(${jsArg(t.id)},'${other}')" title="An ${TODO_NAMES[other]} geben">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee(${jsArg(t.id)},null)" title="Zurück in Offen">↩ Offen</button>`)).join('')
-      : `<div class="todo-empty">Nichts zugewiesen</div>`;
-  });
+  // General view without filter: inbox + Leo (left) / Nils (right), done tasks kept per column.
+  if (view === 'general' && filter === 'all') {
+    const items = generalItems().sort(compareItems);
+    const openOf = who => items.filter(i => !i.done && (i.assignee || null) === who);
+    const doneOf = who => items.filter(i => i.done && (i.assignee || null) === who);
+    const list = arr => arr.map(i => todoRowHtml(i.t)).join('');
+    const inbox = openOf(null);
+    const column = who => {
+      const open = openOf(who), done = doneOf(who);
+      return `<div class="todo-col">
+        <div class="todo-col-head todo-c-${who}">${TODO_NAMES[who]} <span>${open.length} offen</span></div>
+        <div class="todo-list">${open.length ? list(open) : '<div class="todo-empty">Nichts zugewiesen</div>'}</div>
+        ${doneToggle('done-' + who, done.length, list(done))}
+      </div>`;
+    };
+    box.innerHTML = `
+      <div class="block-head"><h2>Nicht zugewiesen <span class="pill">${inbox.length}</span></h2></div>
+      <div class="todo-list">${inbox.length ? list(inbox) : '<div class="todo-empty">Keine offenen Aufgaben ohne Zuweisung</div>'}</div>
+      ${doneToggle('done-none', doneOf(null).length, list(doneOf(null)))}
+      <div class="todo-columns">${column('leo')}${column('nils')}</div>`;
+    return;
+  }
 
-  const done = todos.filter(t => t.done).sort((a, b) => (b.doneAt || '').localeCompare(a.doneAt || ''));
-  document.getElementById('todo-done-icon').textContent = todoDoneOpen ? '▾' : '▸';
-  document.getElementById('todo-done-count').textContent = `(${done.length})`;
-  document.getElementById('todo-clear-btn').style.display = done.length ? '' : 'none';
-  const doneEl = document.getElementById('todos-done');
-  doneEl.style.display = todoDoneOpen ? '' : 'none';
-  doneEl.innerHTML = done.length
-    ? done.map(t => todoRowHtml(t, `<span class="todo-meta">${t.assignee ? TODO_NAMES[t.assignee] : 'ohne Zuweisung'} · ${t.doneAt ? formatDate(new Date(t.doneAt)) : ''}</span>`)).join('')
-    : `<div class="todo-empty">Noch nichts erledigt</div>`;
+  // Episode view without filter: grouped by episode.
+  if (view === 'episode' && filter === 'all') {
+    const groups = new Map();
+    episodeTaskItems().forEach(i => { if (!groups.has(i.ep.id)) groups.set(i.ep.id, []); groups.get(i.ep.id).push(i); });
+    const sorted = [...groups.values()].sort((a, b) => (a[0].release || 0) - (b[0].release || 0));
+    const html = sorted.map(items => {
+      const { ep } = items[0];
+      const open = items.filter(i => !i.done), done = items.filter(i => i.done);
+      if (!open.length && !done.length) return '';
+      const p = progress(ep);
+      return `<div class="card task-group">
+        <div class="block-head">
+          <button class="link-btn task-group-title" onclick="openDetail(${jsArg(ep.id)})">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.title)}</button>
+          <span class="pill">${esc(ep.date)} · ${p.pct}%</span>
+        </div>
+        <div class="todo-list">${open.length ? open.map(i => stepRowHtml(i, { showEpisode: false })).join('') : '<div class="todo-empty">Alle Schritte erledigt 🎉</div>'}</div>
+        ${doneToggle('ep-' + ep.id, done.length, done.map(i => stepRowHtml(i, { showEpisode: false })).join(''))}
+      </div>`;
+    }).join('');
+    box.innerHTML = html || emptyState('🎙️', 'Keine Folgenaufgaben', 'Hier erscheinen die Produktionsschritte der Folgen der letzten 4 und nächsten 8 Wochen.');
+    return;
+  }
+
+  // Filtered / combined: one flat list.
+  const pool = [...(view !== 'episode' ? generalItems() : []), ...(view !== 'general' ? episodeTaskItems() : [])];
+  const items = pool.filter(i => matchesFilter(i, filter)).sort(compareItems);
+  const label = (TASK_FILTERS.find(([k]) => k === filter) || [])[1];
+  box.innerHTML = items.length
+    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : stepRowHtml(i)).join('')}</div>
+       ${filter === 'done' && view !== 'episode' && items.some(i => i.kind === 'todo') ? '<div style="margin-top:16px"><button class="btn btn-sm btn-danger" onclick="clearDoneTodos()">Erledigte allgemeine Aufgaben löschen</button></div>' : ''}`
+    : emptyState(filter === 'overdue' ? '🎉' : '✅', filter === 'all' ? 'Keine offenen Aufgaben' : `Keine Aufgaben: ${label}`, '', '', true);
 }
 
-// ── NAV ──────────────────────────────────────────────────────────
+// ── TASK DETAIL MODAL ────────────────────────────────────────────
+let taskModalId = null;
+function openTaskModal(id) {
+  const t = todos.find(x => x.id === id);
+  if (!t) return;
+  taskModalId = id;
+  document.getElementById('task-title').value = t.text;
+  document.getElementById('task-description').value = t.description || '';
+  document.getElementById('task-assignee').value = t.assignee || '';
+  document.getElementById('task-priority').value = t.priority;
+  document.getElementById('task-due').value = t.dueDate || '';
+  document.getElementById('task-status').value = t.status;
+  document.getElementById('task-project').innerHTML = '<option value="">Kein Projekt</option>' +
+    projects.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  document.getElementById('task-project').value = t.projectId || '';
+  document.getElementById('task-dates').textContent = 'Erstellt am ' + formatDate(new Date(t.createdAt)) +
+    (t.done && t.doneAt ? ' · erledigt am ' + formatDate(new Date(t.doneAt)) : '');
+  document.getElementById('subtask-input').value = '';
+  renderSubtasks();
+  document.getElementById('task-modal-bg').classList.add('open');
+}
+function closeTaskModal() {
+  document.getElementById('task-modal-bg').classList.remove('open');
+  taskModalId = null;
+}
+function saveTaskModal() {
+  const t = todos.find(x => x.id === taskModalId);
+  if (!t) { closeTaskModal(); return; }
+  const text = document.getElementById('task-title').value.trim();
+  if (!text) { document.getElementById('task-title').focus(); showToast('Bitte einen Titel eingeben', 'error'); return; }
+  const next = {
+    text,
+    description: document.getElementById('task-description').value.trim(),
+    assignee: document.getElementById('task-assignee').value || null,
+    priority: document.getElementById('task-priority').value,
+    dueDate: document.getElementById('task-due').value || null,
+    status: document.getElementById('task-status').value,
+    projectId: document.getElementById('task-project').value || null,
+  };
+  const changes = {};
+  Object.keys(next).forEach(k => { if ((next[k] || null) !== (t[k] || null)) changes[k] = next[k]; });
+  closeTaskModal();
+  if (Object.keys(changes).length) updateTodo(t.id, changes);
+}
+function deleteTaskFromModal() {
+  const id = taskModalId;
+  if (!id || !confirm('Aufgabe inklusive Unteraufgaben löschen?')) return;
+  closeTaskModal();
+  deleteTodo(id);
+}
+function renderSubtasks() {
+  const subs = todos.filter(x => x.parentId === taskModalId).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+  document.getElementById('subtask-list').innerHTML = subs.length ? subs.map(s => `<div class="subtask-row${s.done ? ' done' : ''}">
+      <div class="task-check ${s.done ? 'done' : ''}" onclick="toggleTodoDone(${jsArg(s.id)})" role="checkbox" aria-checked="${s.done}"></div>
+      <span class="subtask-text">${esc(s.text)}</span>
+      <button class="todo-del" onclick="deleteTodo(${jsArg(s.id)});renderSubtasks()" title="Unteraufgabe löschen" aria-label="Unteraufgabe löschen">✕</button>
+    </div>`).join('') : '<div class="todo-empty" style="padding:4px 0">Noch keine Unteraufgaben</div>';
+}
+function addSubtask() {
+  const input = document.getElementById('subtask-input');
+  const text = input.value.trim();
+  if (!text || !taskModalId) return;
+  const s = newTodo({ text, parentId: taskModalId });
+  todos.push(s);
+  input.value = '';
+  renderSubtasks();
+  renderTodos();
+  insertTodo(s);
+}
+
+// ── CATEGORIES (projects) ────────────────────────────────────────
+function openProjectsModal() {
+  renderProjectsList();
+  document.getElementById('projects-modal-bg').classList.add('open');
+}
+function closeProjectsModal() { document.getElementById('projects-modal-bg').classList.remove('open'); }
+function renderProjectsList() {
+  document.getElementById('projects-list').innerHTML = projects.map(p => {
+    const n = todos.filter(t => t.projectId === p.id && !t.parentId).length;
+    return `<div class="project-row">
+      <input type="text" value="${esc(p.name)}" aria-label="Kategoriename" onchange="renameProject(${jsArg(p.id)}, this.value)">
+      <span class="pill" title="Aufgaben in dieser Kategorie">${n}</span>
+      <button class="todo-del" onclick="deleteProject(${jsArg(p.id)})" title="Kategorie löschen" aria-label="Kategorie löschen">🗑</button>
+    </div>`;
+  }).join('') || '<div class="todo-empty">Keine Kategorien</div>';
+}
+async function addProject() {
+  const input = document.getElementById('project-input');
+  const name = input.value.trim();
+  if (!name) return;
+  try {
+    const rows = await apiFetch(PROJECT_TABLE, { method: 'POST', prefer: 'return=representation',
+      body: JSON.stringify({ name, sort: Math.max(0, ...projects.map(p => p.sort || 0)) + 1 }) });
+    projects.push(rows[0]);
+    input.value = '';
+    renderProjectsList();
+    renderTodos();
+    flashSaved();
+  } catch (e) { showToast('Kategorie konnte nicht angelegt werden: ' + e.message, 'error'); }
+}
+async function renameProject(id, name) {
+  const p = projects.find(x => x.id === id);
+  name = name.trim();
+  if (!p || !name || name === p.name) { renderProjectsList(); return; }
+  const old = p.name;
+  p.name = name;
+  renderTodos();
+  try {
+    await apiFetch(PROJECT_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'PATCH', body: JSON.stringify({ name }) });
+    flashSaved();
+  } catch (e) { p.name = old; renderProjectsList(); renderTodos(); showToast('Umbenennen fehlgeschlagen: ' + e.message, 'error'); }
+}
+async function deleteProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  const n = todos.filter(t => t.projectId === id).length;
+  if (!confirm(`Kategorie „${p.name}“ löschen?` + (n ? `\n${n} Aufgabe(n) bleiben erhalten, nur ohne Kategorie.` : ''))) return;
+  try {
+    await apiFetch(PROJECT_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+    projects = projects.filter(x => x.id !== id);
+    todos.forEach(t => { if (t.projectId === id) t.projectId = null; });
+    renderProjectsList();
+    renderTodos();
+    flashSaved();
+  } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+}
+
 // ── DASHBOARD ────────────────────────────────────────────────────
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 function safeParseDate(str) {
@@ -3269,7 +3751,8 @@ function renderDashboard() {
   const active = withDate.filter(x => x.d >= twoWeeksAgo && progress(x.ep).pct < 100).sort((a, b) => a.d - b.d);
   const openSteps = episodes.filter(ep => taskDone(ep, 'aufnahme'))
     .reduce((n, ep) => n + WORKFLOW_STEPS.filter(s => s.id !== 'aufnahme' && !taskDone(ep, s.id)).length, 0);
-  const openTodos = todos.filter(t => !t.done);
+  const openTodos = todos.filter(t => !t.done && !t.parentId);
+  const todayIso = today.toISOString().slice(0, 10);
   const byWho = w => openTodos.filter(t => t.assignee === w).length;
   const dueItems = getTodayWidgetItems();
   const dueToday = dueItems.filter(i => i.isToday).length;
@@ -3336,10 +3819,10 @@ function renderDashboard() {
   }).join('');
 
   const whoChip = a => a === 'nils' ? '<span class="who who-nils">N</span>' : a === 'leo' ? '<span class="who who-leo">L</span>' : '<span class="who who-none">–</span>';
-  const todoRows = [...openTodos].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).slice(0, 6).map(t => `
+  const todoRows = openTodos.map(todoItem).sort(compareItems).slice(0, 6).map(({ t }) => `
     <div class="dash-row" onclick="showPage('todos')">
       ${whoChip(t.assignee)}
-      <div class="dash-row-main"><div class="dash-row-title" style="font-weight:500">${esc(t.text)}</div></div>
+      <div class="dash-row-main"><div class="dash-row-title" style="font-weight:500">${esc(t.text)}</div>${t.dueDate ? `<div class="dash-row-sub">Fällig ${formatDate(safeParseIso(t.dueDate))}${t.dueDate < todayIso ? ' · überfällig' : ''}</div>` : ''}</div>
     </div>`).join('');
 
   const card = (title, action, body) => `<div class="card">
@@ -3381,7 +3864,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'dashboard')    renderDashboard();
   if (name === 'planer')       renderPlaner();
   if (name === 'zeitstrahl')   renderZeitstrahl();
-  if (name === 'todos')        { loadAndRender('todos-open', loadTodos, renderTodos, todos.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
+  if (name === 'todos')        { loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
   if (name === 'verbesserung') {
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
@@ -3445,7 +3928,10 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); closeLogin(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); } });
+['task-modal-bg', 'projects-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
+  if (e.target.id === bgId) { if (bgId === 'task-modal-bg') closeTaskModal(); else closeProjectsModal(); }
+}));
 
 // ── THEME ────────────────────────────────────────────────────────
 function toggleTheme() {
