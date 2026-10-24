@@ -12,6 +12,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     :root {
       --bg: #0f1117;
       --surface: #1a1d27;
@@ -43,7 +44,10 @@
     .theme-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1; transition: all .15s; margin-left: 8px; }
     .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; position: sticky; top: 0; z-index: 100; }
+    nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; position: sticky; top: 0; z-index: 100; overflow-x: auto; scrollbar-width: none; }
+    nav > * { flex-shrink: 0; }
+    nav::-webkit-scrollbar { display: none; }
+    .modal { max-height: calc(100vh - 32px); overflow-y: auto; }
     nav .logo { font-weight: 700; font-size: 16px; color: var(--accent); margin-right: 16px; display: flex; align-items: center; gap: 8px; }
     nav button { background: none; border: none; color: var(--muted); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all .15s; }
     nav button:hover { background: var(--surface2); color: var(--text); }
@@ -93,11 +97,11 @@
     .modal h2 { margin-bottom: 20px; }
     .form-group { margin-bottom: 16px; }
     label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
-    input[type=text], textarea {
+    input[type=text], input[type=email], textarea {
       width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
       padding: 10px 12px; border-radius: 8px; font-size: 14px; outline: none; transition: border .15s;
     }
-    input[type=text]:focus, textarea:focus { border-color: var(--accent); }
+    input[type=text]:focus, input[type=email]:focus, textarea:focus { border-color: var(--accent); }
     textarea { resize: vertical; min-height: 72px; }
     .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all .15s; }
     .btn-primary { background: var(--accent); color: #fff; }
@@ -155,18 +159,11 @@
     .task-content-area.open { display: block; }
     .task-content-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 80px; outline: none; line-height: 1.6; font-family: inherit; transition: border .15s; }
     .task-content-textarea:focus { border-color: var(--accent); }
-    .gen-row-btn { background: linear-gradient(135deg, #6c8ef7, #a78bfa); border: none; color: #fff; cursor: pointer; font-size: 13px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; line-height: 1; transition: opacity .15s; margin-left: auto; }
-    .gen-row-btn:hover { opacity: .85; }
-    .gen-row-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .gen-row-btn + .task-expand-btn { margin-left: 0; }
     .task-expand-btn { margin-left: auto; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; gap: 4px; transition: color .15s; }
     .task-expand-btn:hover { color: var(--text); }
     .task-expand-btn.has-content { color: var(--accent); }
     .copy-btn { margin-top: 6px; background: none; border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 12px; padding: 4px 10px; border-radius: 6px; transition: all .15s; }
     .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .generate-btn { margin-top: 6px; margin-left: 6px; background: linear-gradient(135deg, #6c8ef7, #a78bfa); border: none; color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px; transition: opacity .15s; }
-    .generate-btn:hover { opacity: .85; }
-    .generate-btn:disabled { opacity: .5; cursor: not-allowed; }
     .transcript-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 28px; }
     .transcript-box h2 { font-size: 15px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
     .transcript-box.collapsed h2 { margin-bottom: 0; }
@@ -304,6 +301,12 @@
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { border-color: var(--green); color: var(--green); }
     .toast.error { border-color: var(--red); color: var(--red); }
+    .sync-label.clickable { cursor: pointer; text-decoration: underline; }
+    .auth-btn { font-size: 13px; }
+    .login-msg { font-size: 13px; padding: 10px 12px; border-radius: 8px; margin-top: 4px; }
+    .login-msg.error { color: var(--red); border: 1px solid var(--red); }
+    .login-msg.info { color: var(--green); border: 1px solid var(--green); }
+    .remote-banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--surface2); border: 1px solid var(--yellow); color: var(--text); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -320,8 +323,9 @@
   <button onclick="showPage('verbesserung')">Verbesserung</button>
   <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
     <div class="sync-dot" id="sync-dot"></div>
-    <span class="sync-label" id="sync-label">Verbinde...</span>
+    <span class="sync-label" id="sync-label" onclick="retryFailedSaves()">Verbinde...</span>
     <button class="theme-btn" id="export-btn" onclick="exportAllData()" title="Alle Daten als JSON exportieren">💾</button>
+    <button class="theme-btn auth-btn" id="auth-btn" onclick="onAuthButton()">Anmelden</button>
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Dark / Light Mode">🌙</button>
   </div>
 </nav>
@@ -405,6 +409,10 @@
 
   <div class="page" id="page-detail">
     <button class="back-btn" onclick="showPage('planer')">&#8592; Zurück zum Planer</button>
+    <div class="remote-banner" id="remote-banner" hidden>
+      <span>Diese Folge wurde gerade auf einem anderen Gerät geändert.</span>
+      <button class="btn btn-ghost" style="padding:6px 12px" onclick="applyRemoteDetailUpdate()">Ansicht aktualisieren</button>
+    </div>
     <div id="detail-content"></div>
   </div>
 </main>
@@ -467,11 +475,8 @@
       <input type="text" id="idea-drive-link" placeholder="https://drive.google.com/...">
     </div>
     <div class="form-group">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <label style="margin:0">Fragen für die Folge</label>
-        <button class="gen-row-btn" id="idea-gen-questions-btn" onclick="generateIdeaQuestions()" title="Fragen generieren">✨</button>
-      </div>
-      <textarea id="idea-questions" rows="8" placeholder="Mit ✨ generieren oder manuell eintragen..."></textarea>
+      <label>Fragen für die Folge</label>
+      <textarea id="idea-questions" rows="8" placeholder="Fragen eintragen oder einfügen..."></textarea>
     </div>
     <div class="form-group">
       <label>Status</label>
@@ -486,6 +491,27 @@
       <button class="btn btn-ghost" id="idea-to-planer-btn" onclick="ideaToEpisode()" style="display:none">📅 In Planer übernehmen</button>
       <button class="btn btn-danger" id="idea-delete-btn" onclick="deleteIdea()" style="display:none">Löschen</button>
       <button class="btn btn-primary" onclick="saveIdea()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="login-bg">
+  <div class="modal" style="max-width:420px">
+    <h2>Anmelden</h2>
+    <p class="subtitle" style="margin-bottom:18px">Gib deine E-Mail-Adresse ein. Du bekommst einen Login-Link per E-Mail – kein Passwort nötig.</p>
+    <div class="form-group">
+      <label for="login-email">E-Mail</label>
+      <input type="email" id="login-email" autocomplete="email" placeholder="name@example.com" onkeydown="if(event.key==='Enter')sendLoginLink()">
+    </div>
+    <div class="form-group" id="login-code-group" hidden>
+      <label for="login-code">Code aus der E-Mail (falls enthalten)</label>
+      <input type="text" id="login-code" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" onkeydown="if(event.key==='Enter')verifyLoginCode()">
+    </div>
+    <div class="login-msg" id="login-msg" hidden></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="login-cancel-btn" onclick="closeLogin()">Abbrechen</button>
+      <button class="btn btn-ghost" id="login-verify-btn" onclick="verifyLoginCode()" hidden>Code bestätigen</button>
+      <button class="btn btn-primary" id="login-send-btn" onclick="sendLoginLink()">Login-Link senden</button>
     </div>
   </div>
 </div>
@@ -615,10 +641,8 @@ const SECTION_LABELS = {
 // ── STATE ────────────────────────────────────────────────────────
 let episodes = [];
 let editingEpId = null;
-const AI_STEPS = ['titel_spotify','titel_youtube','shownotes','kapitel','thumbnail_ai','reels_download','reel_single','reels_hook_ki','reels_thumbnails','reels_beschr','sm1_karussell','sm2_karussell'];
 const LI_POST_COUNT = 5;
 
-let customPrompts = {};
 let ideas = [];
 let editingIdeaId = null;
 let pendingIdeaForEpisode = null;
@@ -638,143 +662,573 @@ function ideaToEpisode() {
   showToast('Idee übernommen – bitte Datum festlegen');
 }
 
-async function loadPrompts() {
+let currentSlotDate = null;
+
+// ── HTML / URL SAFETY ───────────────────────────────────────────
+function esc(v) {
+  return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+// Quoted JS string argument for inline handlers: onclick="fn(${jsArg(id)})"
+function jsArg(v) { return esc(JSON.stringify(String(v ?? ''))); }
+// Only http(s) and mailto links may be opened; anything else (javascript:, data:) becomes inert.
+function safeUrl(v) {
+  const s = String(v ?? '').trim();
+  if (!s) return '';
   try {
-    const rows = await apiFetch('podcast_prompts?select=task_id,prompt');
-    customPrompts = {};
-    (rows || []).forEach(r => { customPrompts[r.task_id] = r.prompt; });
-  } catch (e) { console.error('loadPrompts failed', e); }
+    const u = new URL(s, location.href);
+    return ['http:', 'https:', 'mailto:'].includes(u.protocol) ? u.href : '';
+  } catch { return ''; }
 }
 
-let currentSlotDate = null;
-let notesTimer = null;
+// ── AUTH ────────────────────────────────────────────────────────
+// Rollout switch: false while anonymous access is still allowed (migration phase1a).
+// Set to true together with supabase/migrations/20261024_phase1b_drop_anon.sql.
+const AUTH_REQUIRED = false;
+const SESSION_KEY = 'gg_session';
+let session = null;
+let currentUserName = '';
+let refreshTimer = null;
+let refreshPromise = null;
+
+class ApiError extends Error {
+  constructor(message, status) { super(message); this.status = status; }
+}
+
+function loadSession() {
+  try { session = JSON.parse(localStorage.getItem(SESSION_KEY)) || null; } catch { session = null; }
+}
+function storeSession(s) {
+  session = s;
+  try { s ? localStorage.setItem(SESSION_KEY, JSON.stringify(s)) : localStorage.removeItem(SESSION_KEY); } catch {}
+  clearTimeout(refreshTimer);
+  if (s) {
+    const ms = (s.expires_at - 120) * 1000 - Date.now();
+    refreshTimer = setTimeout(refreshSession, Math.max(ms, 5000));
+  }
+  updateAuthUi();
+  realtimeUpdateToken();
+}
+function emailFromJwt(token) {
+  try { return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).email || ''; } catch { return ''; }
+}
+function sessionFromTokens(d) {
+  return {
+    access_token: d.access_token,
+    refresh_token: d.refresh_token,
+    expires_at: Number(d.expires_at) || Math.floor(Date.now() / 1000) + Number(d.expires_in || 3600),
+    email: (d.user && d.user.email) || emailFromJwt(d.access_token),
+  };
+}
+function authErrorText(data, status) {
+  const m = data.msg || data.error_description || data.message || '';
+  if (status === 429 || /rate limit|security purposes/i.test(m)) return 'Zu viele Anfragen – bitte ein paar Minuten warten und erneut versuchen.';
+  if (/expired|invalid/i.test(m)) return 'Code oder Link ist ungültig oder abgelaufen. Bitte neu anfordern.';
+  return m || ('Anmeldefehler (' + status + ')');
+}
+async function authRequest(path, body, token) {
+  let res;
+  try {
+    res = await fetch(SUPABASE_URL + '/auth/v1/' + path, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      body: JSON.stringify(body || {}),
+    });
+  } catch { throw new ApiError('Keine Verbindung zum Server – bitte Internet prüfen.', 0); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(authErrorText(data, res.status), res.status);
+  return data;
+}
+async function refreshSession() {
+  if (!session || !session.refresh_token) return false;
+  if (refreshPromise) return refreshPromise;
+  refreshPromise = (async () => {
+    try {
+      storeSession(sessionFromTokens(await authRequest('token?grant_type=refresh_token', { refresh_token: session.refresh_token })));
+      return true;
+    } catch (e) {
+      if (e.status === 0) return false; // offline: keep the session and try again later
+      storeSession(null);
+      showToast('Sitzung abgelaufen – bitte neu anmelden', 'error');
+      if (AUTH_REQUIRED) openLogin();
+      return false;
+    } finally { refreshPromise = null; }
+  })();
+  return refreshPromise;
+}
+async function getAccessToken() {
+  if (session && session.expires_at - Date.now() / 1000 < 60) await refreshSession();
+  if (session) return session.access_token;
+  return AUTH_REQUIRED ? null : SUPABASE_KEY;
+}
+// Magic-link redirect lands with #access_token=…; store it and clean the URL.
+function consumeAuthRedirect() {
+  if (!location.hash || location.hash.length < 2) return false;
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (!h.has('access_token') && !h.has('error_description')) return false;
+  history.replaceState(null, '', location.pathname + location.search);
+  if (h.get('error_description')) {
+    showToast('Login fehlgeschlagen: ' + h.get('error_description').replace(/\+/g, ' '), 'error');
+    return false;
+  }
+  storeSession(sessionFromTokens(Object.fromEntries(h)));
+  return true;
+}
+function setLoginMsg(text, type) {
+  const el = document.getElementById('login-msg');
+  el.textContent = text || '';
+  el.className = 'login-msg ' + (type || 'info');
+  el.hidden = !text;
+}
+function openLogin() {
+  document.getElementById('login-cancel-btn').hidden = AUTH_REQUIRED;
+  document.getElementById('login-bg').classList.add('open');
+  setTimeout(() => document.getElementById('login-email').focus(), 50);
+}
+function closeLogin() {
+  if (AUTH_REQUIRED && !session) return;
+  document.getElementById('login-bg').classList.remove('open');
+  setLoginMsg('');
+}
+async function sendLoginLink() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setLoginMsg('Bitte eine gültige E-Mail-Adresse eingeben.', 'error'); return; }
+  const btn = document.getElementById('login-send-btn');
+  btn.disabled = true;
+  try {
+    const redirect = encodeURIComponent(location.origin + location.pathname);
+    await authRequest('otp?redirect_to=' + redirect, { email, create_user: true });
+    setLoginMsg('Link gesendet an ' + email + '. Öffne die E-Mail auf diesem Gerät und klicke auf den Link.', 'info');
+    document.getElementById('login-code-group').hidden = false;
+    document.getElementById('login-verify-btn').hidden = false;
+  } catch (e) {
+    setLoginMsg(e.message, 'error');
+  } finally { btn.disabled = false; }
+}
+async function verifyLoginCode() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const token = document.getElementById('login-code').value.trim();
+  if (!email || !token) { setLoginMsg('E-Mail und Code eingeben.', 'error'); return; }
+  try {
+    storeSession(sessionFromTokens(await authRequest('verify', { type: 'email', email, token })));
+    await afterLogin();
+  } catch (e) { setLoginMsg(e.message, 'error'); }
+}
+async function afterLogin() {
+  let member = false;
+  try { member = await apiFetch('rpc/is_app_user', { method: 'POST', body: '{}' }); }
+  catch (e) { setLoginMsg('Zugang konnte nicht geprüft werden: ' + e.message, 'error'); openLogin(); return; }
+  if (member !== true) {
+    const email = session && session.email;
+    await logout(true);
+    openLogin();
+    setLoginMsg((email || 'Diese E-Mail') + ' ist nicht für Glans & Gloria freigeschaltet.', 'error');
+    return;
+  }
+  try {
+    const rows = await apiFetch('app_users?select=name&email=eq.' + encodeURIComponent(session.email));
+    currentUserName = (rows[0] && rows[0].name) || '';
+  } catch { currentUserName = ''; }
+  updateAuthUi();
+  document.getElementById('login-bg').classList.remove('open');
+  setLoginMsg('');
+  showToast('Angemeldet' + (currentUserName ? ' als ' + currentUserName : ''));
+  await reloadAllData();
+}
+async function logout(silent) {
+  const token = session && session.access_token;
+  storeSession(null);
+  currentUserName = '';
+  updateAuthUi();
+  if (token) authRequest('logout', {}, token).catch(() => {});
+  if (silent) return;
+  showToast('Abgemeldet');
+  if (AUTH_REQUIRED) { openLogin(); return; }
+  await reloadAllData();
+}
+function onAuthButton() {
+  if (!session) { openLogin(); return; }
+  if (confirm('Als ' + (currentUserName || session.email) + ' abmelden?')) logout();
+}
+function updateAuthUi() {
+  const btn = document.getElementById('auth-btn');
+  if (!btn) return;
+  btn.textContent = session ? '👤 ' + (currentUserName || session.email || 'Angemeldet') : 'Anmelden';
+  btn.title = session ? (session.email + ' – klicken zum Abmelden') : 'Mit E-Mail-Link anmelden';
+}
 
 // ── API HELPERS ─────────────────────────────────────────────────
-async function apiFetch(path, opts = {}) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || '',
-      ...opts.headers,
-    },
-    ...opts,
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
+function apiErrorText(status, body) {
+  let msg = '';
+  try { const j = JSON.parse(body); msg = j.message || j.msg || ''; } catch { msg = body; }
+  if (status === 401 || status === 403 || /JWT|permission denied|row-level security/i.test(msg)) return 'Keine Berechtigung – bitte (neu) anmelden.';
+  if (status >= 500) return 'Serverfehler (' + status + ') – bitte später erneut versuchen.';
+  return msg ? msg.slice(0, 200) : 'Unbekannter Fehler (' + status + ')';
+}
+async function apiFetch(path, opts = {}, retried = false) {
+  const token = await getAccessToken();
+  if (!token) { openLogin(); throw new ApiError('Bitte zuerst anmelden.', 401); }
+  const { prefer, headers, ...rest } = opts;
+  let res;
+  try {
+    res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+      ...rest,
+      keepalive: rest.keepalive || document.visibilityState === 'hidden',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        ...(prefer ? { Prefer: prefer } : {}),
+        ...headers,
+      },
+    });
+  } catch { throw new ApiError('Keine Verbindung zum Server – bitte Internet prüfen.', 0); }
+  if (res.status === 401 && session && !retried && await refreshSession()) return apiFetch(path, opts, true);
+  if (!res.ok) throw new ApiError(apiErrorText(res.status, await res.text()), res.status);
   const text = await res.text();
   return text ? JSON.parse(text) : null;
 }
 
+// ── 3-WAY MERGE ─────────────────────────────────────────────────
+// Concurrent edits by Nils and Leo: fields only one side changed are combined,
+// a field both changed keeps the local value.
+function isPlainObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
+function deepEqual(a, b) {
+  if (a === b) return true;
+  if (Array.isArray(a) && Array.isArray(b)) return a.length === b.length && a.every((v, i) => deepEqual(v, b[i]));
+  if (isPlainObj(a) && isPlainObj(b)) {
+    const ka = Object.keys(a), kb = Object.keys(b);
+    return ka.length === kb.length && ka.every(k => deepEqual(a[k], b[k]));
+  }
+  return false;
+}
+function clone(v) { return v === undefined ? undefined : JSON.parse(JSON.stringify(v)); }
+function merge3(base, local, server) {
+  if (deepEqual(local, base)) return clone(server);
+  if (deepEqual(server, base) || deepEqual(local, server)) return clone(local);
+  if (isPlainObj(local) && isPlainObj(server)) {
+    const b = isPlainObj(base) ? base : {};
+    const out = {};
+    new Set([...Object.keys(local), ...Object.keys(server), ...Object.keys(b)]).forEach(k => {
+      const v = merge3(b[k], local[k], server[k]);
+      if (v !== undefined) out[k] = v;
+    });
+    return out;
+  }
+  if (Array.isArray(local) && Array.isArray(server)) {
+    const b = Array.isArray(base) ? base : [];
+    return Array.from({ length: Math.max(local.length, server.length) }, (_, i) => merge3(b[i], local[i], server[i]));
+  }
+  return clone(local);
+}
+
+// ── EPISODES: LOAD & SAVE ───────────────────────────────────────
+const EP_DATA_KEYS = ['title', 'num', 'date', 'desc', 'tasks', 'notes', 'transcript', 'recordingDate', 'contentPlan'];
+function rowToEpisode(r) {
+  return {
+    id: r.id, title: r.title, num: r.num || '', date: r.date,
+    desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
+    transcript: r.transcript || '', recordingDate: r.recording_date || '',
+    contentPlan: r.content_plan || {},
+  };
+}
+function episodeToRow(ep) {
+  return {
+    id: ep.id, title: ep.title, num: ep.num || null,
+    date: ep.date, description: ep.desc || null,
+    tasks: ep.tasks || {}, notes: ep.notes || null,
+    transcript: ep.transcript || null, recording_date: ep.recordingDate || null,
+    content_plan: ep.contentPlan || {},
+  };
+}
+function epData(ep) {
+  const o = {};
+  EP_DATA_KEYS.forEach(k => { o[k] = ep[k]; });
+  return clone(o);
+}
+// Server version + snapshot of what the server had, kept per episode for conflict merges.
+function settleEpisode(ep, row) {
+  ep._version = row.updated_at;
+  ep._base = epData(rowToEpisode(row));
+}
+// Merges a server row into the local episode (keeping unsaved local changes).
+// Returns true if the visible data changed.
+function applyServerRow(ep, row) {
+  if (row.updated_at === ep._version) return false;
+  const before = epData(ep);
+  const server = epData(rowToEpisode(row));
+  const merged = merge3(ep._base || server, before, server);
+  Object.assign(ep, merged);
+  ep._base = server;
+  ep._version = row.updated_at;
+  if (!deepEqual(merged, server)) upsertEpisode(ep).catch(() => {});
+  return !deepEqual(before, merged);
+}
+
+// Loads all episodes; on reloads, existing objects are merged in place so
+// pending local edits and open views stay intact. Returns ids that changed.
 async function loadEpisodes() {
-  setSyncState('syncing', 'Lädt...');
+  setConnState(connState === 'live' ? 'live' : 'connecting');
   try {
     const rows = await apiFetch(TABLE + '?order=date.asc');
-    episodes = rows.map(r => ({
-      id: r.id, title: r.title, num: r.num || '', date: r.date,
-      desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
-      transcript: r.transcript || '', recordingDate: r.recording_date || '',
-      contentPlan: r.content_plan || {},
-    }));
-    setSyncState('live', 'Live');
-    return true;
-  } catch(e) {
-    setSyncState('error', 'Fehler');
-    showToast('Verbindungsfehler: ' + e.message, 'error');
-    return false;
+    const changed = new Set();
+    const byId = new Map(episodes.map(e => [e.id, e]));
+    const next = rows.map(r => {
+      const ep = byId.get(r.id);
+      if (!ep) { const fresh = rowToEpisode(r); settleEpisode(fresh, r); changed.add(r.id); return fresh; }
+      if (applyServerRow(ep, r)) changed.add(r.id);
+      return ep;
+    });
+    const serverIds = new Set(rows.map(r => r.id));
+    episodes.forEach(ep => {
+      if (serverIds.has(ep.id)) return;
+      if (!ep._version) next.push(ep); // created locally, not saved yet
+      else changed.add(ep.id);         // deleted on another device
+    });
+    episodes = next;
+    return changed;
+  } catch (e) {
+    showToast('Folgen konnten nicht geladen werden: ' + e.message, 'error');
+    return null;
   }
 }
 
-async function upsertEpisode(ep) {
-  setSyncState('syncing', 'Speichert...');
-  try {
-    await apiFetch(TABLE, {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates',
-      body: JSON.stringify({
-        id: ep.id, title: ep.title, num: ep.num || null,
-        date: ep.date, description: ep.desc || null,
-        tasks: ep.tasks || {}, notes: ep.notes || null,
-        transcript: ep.transcript || null, recording_date: ep.recordingDate || null,
-        content_plan: ep.contentPlan || {},
-        updated_at: new Date().toISOString(),
-      }),
-    });
-    setSyncState('live', 'Live');
-  } catch(e) {
-    setSyncState('error', 'Fehler');
-    showToast('Speichern fehlgeschlagen', 'error');
-    throw e;
+const epSaveChain = {};
+const epSaveQueued = {};
+let savesInFlight = 0;
+const failedSaves = new Set();
+
+// Saves are serialized per episode; at most one save waits behind the running
+// one and it always sends the latest state.
+function upsertEpisode(ep) {
+  if (epSaveQueued[ep.id]) return epSaveChain[ep.id];
+  epSaveQueued[ep.id] = true;
+  savesInFlight++;
+  renderSyncState();
+  const run = async () => {
+    epSaveQueued[ep.id] = false;
+    const merged = await persistEpisode(ep);
+    if (merged) onEpisodesChanged(new Set([ep.id]));
+  };
+  const p = (epSaveChain[ep.id] || Promise.resolve()).catch(() => {}).then(run);
+  epSaveChain[ep.id] = p;
+  p.then(() => { failedSaves.delete(ep.id); },
+         e => { failedSaves.add(ep.id); showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); })
+   .finally(() => { savesInFlight--; renderSyncState(); });
+  return p;
+}
+
+// Conditional update on updated_at; on conflict the server row is merged in and
+// the save retried. Returns true if changes from another device were merged.
+async function persistEpisode(ep) {
+  let merged = false;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const body = JSON.stringify({ ...episodeToRow(ep), updated_at: new Date().toISOString() });
+    if (!ep._version) {
+      const rows = await apiFetch(TABLE, { method: 'POST', prefer: 'return=representation', body });
+      settleEpisode(ep, rows[0]);
+      return merged;
+    }
+    const rows = await apiFetch(`${TABLE}?id=eq.${encodeURIComponent(ep.id)}&updated_at=eq.${encodeURIComponent(ep._version)}`,
+      { method: 'PATCH', prefer: 'return=representation', body });
+    if (rows && rows.length) { settleEpisode(ep, rows[0]); return merged; }
+    const server = await apiFetch(`${TABLE}?id=eq.${encodeURIComponent(ep.id)}`);
+    if (!server.length) throw new ApiError('Diese Folge wurde inzwischen auf einem anderen Gerät gelöscht.', 404);
+    const local = epData(ep);
+    Object.assign(ep, merge3(ep._base, local, epData(rowToEpisode(server[0]))));
+    settleEpisode(ep, server[0]);
+    merged = true;
   }
+  throw new ApiError('Gleichzeitige Änderungen – bitte Seite neu laden.', 409);
+}
+
+function retryFailedSaves() {
+  if (!failedSaves.size) return;
+  [...failedSaves].forEach(id => {
+    const ep = episodes.find(e => e.id === id);
+    if (ep) upsertEpisode(ep); else failedSaves.delete(id);
+  });
 }
 
 async function deleteEpisodeById(id) {
-  await apiFetch(TABLE + '?id=eq.' + id, { method: 'DELETE' });
+  await apiFetch(TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
 }
+
+// Versioned save for simple tables (ideas, goals, improvements):
+// conditional update on updated_at, 3-way merge + retry on conflict.
+async function saveRowVersioned(table, row, base, version) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const body = JSON.stringify({ ...row, updated_at: new Date().toISOString() });
+    if (!version) {
+      const rows = await apiFetch(table, { method: 'POST', prefer: 'return=representation', body });
+      return rows[0];
+    }
+    const rows = await apiFetch(`${table}?id=eq.${encodeURIComponent(row.id)}&updated_at=eq.${encodeURIComponent(version)}`,
+      { method: 'PATCH', prefer: 'return=representation', body });
+    if (rows && rows.length) return rows[0];
+    const server = await apiFetch(`${table}?id=eq.${encodeURIComponent(row.id)}`);
+    if (!server.length) throw new ApiError('Der Eintrag wurde inzwischen auf einem anderen Gerät gelöscht.', 404);
+    const { updated_at, ...serverRow } = server[0];
+    row = merge3(base, row, serverRow);
+    base = serverRow;
+    version = updated_at;
+  }
+  throw new ApiError('Gleichzeitige Änderungen – bitte neu laden.', 409);
+}
+
+// ── DEBOUNCED EDITS ─────────────────────────────────────────────
+// Typing is saved after a short pause; pending edits are flushed before the
+// page is hidden/closed and before views are re-rendered.
+const editTimers = {};
+function debounceEdit(key, fn, delay = 700) {
+  if (editTimers[key]) clearTimeout(editTimers[key].t);
+  editTimers[key] = { fn, t: setTimeout(() => { delete editTimers[key]; fn(); }, delay) };
+  renderSyncState();
+}
+function flushEdits() {
+  Object.keys(editTimers).forEach(k => {
+    const { fn, t } = editTimers[k];
+    clearTimeout(t);
+    delete editTimers[k];
+    fn();
+  });
+}
+function hasUnsavedWork() {
+  return Object.keys(editTimers).length > 0 || savesInFlight > 0 || Object.values(todoSaveQueued).some(Boolean);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushEdits(); });
+window.addEventListener('pagehide', flushEdits);
+window.addEventListener('beforeunload', e => {
+  if (!hasUnsavedWork()) return;
+  flushEdits();
+  e.preventDefault();
+  e.returnValue = '';
+});
+window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); });
 
 // ── REALTIME ────────────────────────────────────────────────────
+const RT_TOPIC = 'realtime:podcast-sync';
+const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas'];
+let rtSocket = null;
+let rtRef = 0;
+let rtHeartbeat = null;
+let rtConnectedOnce = false;
+const rtDebounce = {};
+
+function rtSend(event, payload, topic = RT_TOPIC) {
+  if (!rtSocket || rtSocket.readyState !== WebSocket.OPEN) return null;
+  const ref = String(++rtRef);
+  rtSocket.send(JSON.stringify({ topic, event, payload, ref }));
+  return ref;
+}
 function connectRealtime() {
-  const wsUrl = SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0';
-  let ws;
-
-  function connect() {
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ topic: 'realtime:public:podcast_episodes', event: 'phx_join', payload: {}, ref: '1' }));
-      ws.send(JSON.stringify({ topic: 'realtime:public:podcast_todos', event: 'phx_join', payload: {}, ref: '2' }));
-      setSyncState('live', 'Live');
-    };
-
-    ws.onmessage = async (e) => {
-      const msg = JSON.parse(e.data);
-      if (msg.event === 'phx_reply' && msg.ref === '1') {
-        // joined successfully
+  const ws = new WebSocket(SUPABASE_URL.replace('https://', 'wss://') + '/realtime/v1/websocket?apikey=' + SUPABASE_KEY + '&vsn=1.0.0');
+  rtSocket = ws;
+  ws.onopen = async () => {
+    const token = (await getAccessToken().catch(() => null)) || SUPABASE_KEY;
+    rtSend('phx_join', {
+      config: { postgres_changes: RT_TABLES.map(table => ({ event: '*', schema: 'public', table })) },
+      access_token: token,
+    });
+    clearInterval(rtHeartbeat);
+    rtHeartbeat = setInterval(() => rtSend('heartbeat', {}, 'phoenix'), 25000);
+  };
+  ws.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.topic !== RT_TOPIC) return;
+    if (m.event === 'phx_reply' && m.payload && m.payload.response && m.payload.response.postgres_changes) {
+      setConnState(m.payload.status === 'ok' ? 'live' : 'error');
+      if (m.payload.status === 'ok' && rtConnectedOnce) reloadAllData(); // catch up on missed changes
+      rtConnectedOnce = true;
+    }
+    if (m.event === 'system' && m.payload && m.payload.status === 'error') setConnState('error');
+    if (m.event === 'postgres_changes') onRemoteChange(m.payload.data.table);
+  };
+  ws.onclose = () => {
+    clearInterval(rtHeartbeat);
+    setConnState('offline');
+    setTimeout(connectRealtime, 3000);
+  };
+  ws.onerror = () => setConnState('offline');
+}
+function realtimeUpdateToken() {
+  rtSend('access_token', { access_token: (session && session.access_token) || SUPABASE_KEY });
+}
+function onRemoteChange(table) {
+  clearTimeout(rtDebounce[table]);
+  rtDebounce[table] = setTimeout(async () => {
+    if (table === 'podcast_episodes') {
+      const changed = await loadEpisodes();
+      if (changed && changed.size) onEpisodesChanged(changed);
+    } else if (table === 'podcast_todos') {
+      if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId && !Object.values(todoSaveQueued).some(Boolean)) {
+        await loadTodos(); renderTodos();
       }
-      if ((msg.event === 'INSERT' || msg.event === 'UPDATE' || msg.event === 'DELETE') && msg.topic === 'realtime:public:podcast_todos') {
-        if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId) { await loadTodos(); renderTodos(); }
-        return;
+    } else if (table === 'podcast_ideas') {
+      if (document.getElementById('page-ideen').classList.contains('active') && !document.getElementById('idea-modal-bg').classList.contains('open')) {
+        await loadIdeas(); renderIdeas();
       }
-      if (msg.event === 'INSERT' || msg.event === 'UPDATE' || msg.event === 'DELETE') {
-        await loadEpisodes();
-        const activePage = document.querySelector('.page.active');
-        if (activePage && activePage.id === 'page-planer') renderPlaner();
-        if (activePage && activePage.id === 'page-detail' && editingEpId) {
-          await loadEpisodes();
-          const ep = episodes.find(e => e.id === editingEpId);
-          if (ep) openDetail(editingEpId);
-        }
-      }
-    };
-
-    ws.onclose = () => {
-      setSyncState('error', 'Getrennt');
-      setTimeout(connect, 3000);
-    };
-
-    ws.onerror = () => setSyncState('error', 'Fehler');
-  }
-
-  connect();
+    }
+  }, 300);
 }
 
-// ── SYNC DOT ────────────────────────────────────────────────────
-function setSyncState(state, label) {
+// Re-renders views affected by changed episodes without destroying what the user is typing.
+function onEpisodesChanged(changedIds) {
+  const active = document.querySelector('.page.active');
+  if (!active) return;
+  if (active.id === 'page-planer') renderPlaner();
+  if (active.id === 'page-zeitstrahl') renderZeitstrahl();
+  if (active.id === 'page-detail' && editingEpId && changedIds.has(editingEpId)) {
+    if (!episodes.find(e => e.id === editingEpId)) {
+      showToast('Diese Folge wurde auf einem anderen Gerät gelöscht.', 'error');
+      showPage('planer');
+      return;
+    }
+    const focused = document.activeElement;
+    const typing = focused && document.getElementById('detail-content').contains(focused) && /INPUT|TEXTAREA/.test(focused.tagName);
+    if (typing) document.getElementById('remote-banner').hidden = false;
+    else rerenderDetail(editingEpId);
+  }
+}
+function applyRemoteDetailUpdate() {
+  flushEdits();
+  document.getElementById('remote-banner').hidden = true;
+  if (editingEpId) rerenderDetail(editingEpId);
+}
+
+async function reloadAllData() {
+  const changed = await loadEpisodes();
+  const active = document.querySelector('.page.active');
+  if (!active) return;
+  if (active.id === 'page-todos') { await loadTodos(); renderTodos(); }
+  else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
+  else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements()]); renderGoals(); renderImprovements(); }
+  else if (changed) onEpisodesChanged(changed);
+}
+
+// ── SYNC STATUS ─────────────────────────────────────────────────
+let connState = 'connecting';
+function setConnState(state) { connState = state; renderSyncState(); }
+function renderSyncState() {
   const dot = document.getElementById('sync-dot');
   const lbl = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + state;
-  lbl.textContent = label;
+  if (!dot || !lbl) return;
+  let cls = connState === 'live' ? 'live' : connState === 'connecting' ? 'syncing' : 'error';
+  let text = { live: 'Live', connecting: 'Verbinde…', offline: 'Offline – verbinde neu…', error: 'Sync-Fehler' }[connState];
+  if (savesInFlight > 0 || Object.keys(editTimers).length) { cls = 'syncing'; text = 'Speichert…'; }
+  else if (failedSaves.size) { cls = 'error'; text = 'Nicht gespeichert – erneut versuchen'; }
+  dot.className = 'sync-dot ' + cls;
+  lbl.textContent = text;
+  lbl.classList.toggle('clickable', failedSaves.size > 0 && savesInFlight === 0);
 }
 
 // ── TOAST ───────────────────────────────────────────────────────
+let toastTimer = null;
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 2500);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', type === 'error' ? 6000 : 2500);
 }
 
 // ── DATE HELPERS ────────────────────────────────────────────────
@@ -850,42 +1304,28 @@ function taskContent(ep, id) {
   if (!v || typeof v !== 'object') return '';
   return v.content || '';
 }
-function setTaskDone(ep, id, done) {
+// Tasks are stored as {done, content, link, assignee?, reels?, posts?};
+// older rows may hold a plain boolean. Patching keeps every other field.
+function patchTask(ep, id, changes) {
   if (!ep.tasks) ep.tasks = {};
   const v = ep.tasks[id];
-  const content = (v && typeof v === 'object') ? (v.content || '') : '';
-  const link = (v && typeof v === 'object') ? (v.link || '') : '';
-  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
-  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
-  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
+  const next = { ...((v && typeof v === 'object') ? v : { done: !!v, content: '', link: '' }), ...changes };
+  if (!next.assignee) delete next.assignee;
+  ep.tasks[id] = next;
 }
+function setTaskDone(ep, id, done) { patchTask(ep, id, { done }); }
 function taskAssignee(ep, id) {
   const v = ep.tasks && ep.tasks[id];
   if (!v || typeof v !== 'object') return null;
   return v.assignee || null;
 }
-function setTaskAssignee(ep, id, assignee) {
-  if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks[id];
-  const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
-  const content = (v && typeof v === 'object') ? (v.content || '') : '';
-  const link = (v && typeof v === 'object') ? (v.link || '') : '';
-  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
-  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
-}
+function setTaskAssignee(ep, id, assignee) { patchTask(ep, id, { assignee }); }
 function taskLink(ep, id) {
   const v = ep.tasks && ep.tasks[id];
   if (!v || typeof v !== 'object') return '';
   return v.link || '';
 }
-function setTaskLink(ep, id, link) {
-  if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks[id];
-  const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
-  const content = (v && typeof v === 'object') ? (v.content || '') : '';
-  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
-  ep.tasks[id] = { done, content, link, ...(assignee ? { assignee } : {}) };
-}
+function setTaskLink(ep, id, link) { patchTask(ep, id, { link }); }
 // Canonical shared reel data lives under ep.tasks['reels_download'].reels
 // Each item: { downloaded: bool, text: '', ig: bool, yt: bool, tiktok: bool }
 function getReels(ep) {
@@ -911,41 +1351,13 @@ function setReelDownloaded(ep, idx, downloaded) {
   reels[idx] = { ...reels[idx], downloaded };
   saveReels(ep, reels);
 }
-function setReelText(ep, idx, text) {
-  const reels = getReels(ep);
-  reels[idx] = { ...reels[idx], text };
-  saveReels(ep, reels);
-}
-function setReelPlatform(ep, idx, platform, val) {
-  const reels = getReels(ep);
-  reels[idx] = { ...reels[idx], [platform]: val };
-  saveReels(ep, reels);
-}
-let reelTimers = {};
 function toggleReelDownloaded(epId, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const reels = getReels(ep);
   setReelDownloaded(ep, idx, !reels[idx].downloaded);
-  document.getElementById(`reel-check-${idx}`).classList.toggle('done');
-  upsertEpisode(ep);
-}
-function toggleReelPlatform(epId, idx, platform) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const reels = getReels(ep);
-  setReelPlatform(ep, idx, platform, !reels[idx][platform]);
-  document.getElementById(`reel-platform-${idx}-${platform}`).classList.toggle('active');
-  upsertEpisode(ep);
-}
-function scheduleReelSave(epId, idx, val) {
-  clearTimeout(reelTimers[idx]);
-  reelTimers[idx] = setTimeout(() => {
-    const ep = episodes.find(e => e.id === epId);
-    if (!ep) return;
-    setReelText(ep, idx, val);
-    upsertEpisode(ep);
-  }, 700);
+  document.getElementById(`reel-check-${idx}`).classList.toggle('done', !reels[idx].downloaded);
+  upsertEpisode(ep).catch(() => {});
 }
 function toggleReelExpand(idx) {
   const detail = document.getElementById(`reel-detail-${idx}`);
@@ -956,101 +1368,17 @@ function toggleReelExpand(idx) {
   if (icon) icon.textContent = open ? '▸' : '▾';
 }
 function scheduleReelFieldSave(epId, idx, field, val) {
-  const key = idx + '-' + field;
-  clearTimeout(reelTimers[key]);
-  reelTimers[key] = setTimeout(() => {
+  debounceEdit(`reel:${epId}:${idx}:${field}`, () => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
     setReelField(ep, idx, field, val);
-    upsertEpisode(ep);
-  }, 700);
+    upsertEpisode(ep).catch(() => {});
+  });
 }
 function copyReelField(idx, field) {
   const el = document.getElementById(`reel-${field}-${idx}`);
   if (!el) return;
   navigator.clipboard.writeText(el.value).then(() => showToast('📋 Kopiert!'));
-}
-async function generateReelSplit(epId) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const transcript = ep.transcript || '';
-  if (!transcript.trim()) {
-    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
-    document.getElementById('ep-transcript')?.focus();
-    return;
-  }
-  const btn = document.getElementById('gen-row-reels_download');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'reels_split', transcript, epTitle: ep.title, customPrompt: customPrompts['reels_download'] || '' }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    let arr;
-    try {
-      arr = JSON.parse(data.result.match(/\[[\s\S]*\]/)[0]);
-    } catch(e) {
-      throw new Error('Antwort konnte nicht gelesen werden (evtl. Limit erreicht/abgeschnitten)');
-    }
-    const reels = getReels(ep);
-    for (let i = 0; i < 8; i++) {
-      reels[i] = { ...reels[i], transcript: arr[i] || reels[i].transcript };
-    }
-    saveReels(ep, reels);
-    await upsertEpisode(ep);
-    openDetail(epId);
-    if (arr.length < 8 || arr.some(t => isLikelyTruncated(t))) {
-      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
-    } else {
-      showToast('✨ 8 Reel-Transkripte erstellt!');
-    }
-  } catch(e) {
-    showToast('Fehler: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '✨'; }
-  }
-}
-async function generateReelContent(epId, idx) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const reels = getReels(ep);
-  const reelTranscript = reels[idx].transcript || '';
-  if (!reelTranscript.trim()) {
-    showToast('Bitte zuerst ein Reel-Transkript einfügen', 'error');
-    return;
-  }
-  const btn = document.getElementById(`reel-gen-${idx}`);
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generiert…'; }
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'reel_single', transcript: reelTranscript, epTitle: `${ep.title} – Reel ${idx + 1}`, customPrompt: customPrompts['reel_single'] || '' }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    let obj;
-    try {
-      obj = JSON.parse(data.result.match(/\{[\s\S]*\}/)[0]);
-    } catch(e) {
-      throw new Error('Antwort konnte nicht gelesen werden');
-    }
-    const updated = getReels(ep);
-    updated[idx] = { ...updated[idx], hook: obj.hook || '', descIg: obj.ig || '', descYt: obj.yt || '', descTiktok: obj.tiktok || '' };
-    saveReels(ep, updated);
-    await upsertEpisode(ep);
-    openDetail(epId);
-    document.getElementById(`reel-detail-${idx}`).style.display = 'block';
-    document.getElementById(`reel-expand-icon-${idx}`).textContent = '▾';
-    showToast('✨ Fertig generiert!');
-  } catch(e) {
-    showToast('Fehler: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '✨ Hook & Beschreibungen generieren'; }
-  }
 }
 // Canonical LinkedIn posts data lives under ep.tasks['li_beitraege'].posts
 // Each item: { done: bool, text: '' }
@@ -1067,93 +1395,31 @@ function saveLiPosts(ep, posts) {
   const base = (v && typeof v === 'object') ? v : { done: false, content: '', link: '' };
   ep.tasks['li_beitraege'] = { ...base, posts };
 }
-let liPostTimers = {};
 function toggleLiPostDone(epId, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const posts = getLiPosts(ep);
   posts[idx] = { ...posts[idx], done: !posts[idx].done };
   saveLiPosts(ep, posts);
-  document.getElementById(`li-check-${idx}`).classList.toggle('done');
-  upsertEpisode(ep);
+  document.getElementById(`li-check-${idx}`).classList.toggle('done', posts[idx].done);
+  upsertEpisode(ep).catch(() => {});
 }
 function scheduleLiPostSave(epId, idx, val) {
-  clearTimeout(liPostTimers[idx]);
-  liPostTimers[idx] = setTimeout(() => {
+  debounceEdit(`li:${epId}:${idx}`, () => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
     const posts = getLiPosts(ep);
     posts[idx] = { ...posts[idx], text: val };
     saveLiPosts(ep, posts);
-    upsertEpisode(ep);
-  }, 700);
+    upsertEpisode(ep).catch(() => {});
+  });
 }
 function copyLiPost(idx) {
   const el = document.getElementById(`li-text-${idx}`);
   if (!el) return;
   navigator.clipboard.writeText(el.value).then(() => showToast('📋 Kopiert!'));
 }
-async function generateLiSplit(epId) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const transcript = ep.transcript || '';
-  if (!transcript.trim()) {
-    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
-    document.getElementById('ep-transcript')?.focus();
-    return;
-  }
-  const btn = document.getElementById('gen-row-li_beitraege');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'li_split', transcript, epTitle: ep.title, customPrompt: customPrompts['li_beitraege'] || '' }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    let arr;
-    try {
-      if (data.result.includes('===LI_POST===')) {
-        arr = data.result.split('===LI_POST===').map(s => s.trim()).filter(s => s.length > 0);
-      } else if (data.result.match(/\n---\n/)) {
-        arr = data.result.split(/\n---\n/).map(s => s.trim()).filter(s => s.length > 0);
-      } else {
-        const match = data.result.match(/\[[\s\S]*\]/);
-        if (!match) throw new Error('no match');
-        arr = JSON.parse(match[0]);
-      }
-      if (!arr || arr.length === 0) throw new Error('empty');
-    } catch(e) {
-      throw new Error('Antwort konnte nicht gelesen werden (evtl. Limit erreicht/abgeschnitten)');
-    }
-    const posts = getLiPosts(ep);
-    for (let i = 0; i < LI_POST_COUNT; i++) {
-      posts[i] = { ...posts[i], text: arr[i] || posts[i].text };
-    }
-    saveLiPosts(ep, posts);
-    await upsertEpisode(ep);
-    openDetail(epId);
-    if (arr.length < LI_POST_COUNT || arr.some(t => isLikelyTruncated(t))) {
-      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
-    } else {
-      showToast('✨ 5 LinkedIn-Beiträge erstellt!');
-    }
-  } catch(e) {
-    showToast('Fehler: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '✨'; }
-  }
-}
-function setTaskContent(ep, id, content) {
-  if (!ep.tasks) ep.tasks = {};
-  const v = ep.tasks[id];
-  const done = v ? (typeof v === 'object' ? !!v.done : !!v) : false;
-  const link = (v && typeof v === 'object') ? (v.link || '') : '';
-  const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : undefined;
-  const assignee = (v && typeof v === 'object') ? (v.assignee || null) : null;
-  ep.tasks[id] = { done, content, link, ...(posts ? { posts } : {}), ...(assignee ? { assignee } : {}) };
-}
+function setTaskContent(ep, id, content) { patchTask(ep, id, { content }); }
 
 // ── PROGRESS ────────────────────────────────────────────────────
 function progress(ep) {
@@ -1205,12 +1471,12 @@ function renderTodayWidget() {
     <h3>📌 Heute &amp; morgen fällig <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">${items.length}</span></h3>
     <div class="today-widget-list">${items.map(({ ep, isToday, item, entry }) => {
       const meta = CAL_TYPE_META[item.type];
-      return `<div class="today-widget-item" onclick="openDetail('${ep.id}')">
-        <div class="task-check" onclick="event.stopPropagation();toggleCalendarItem('${ep.id}','${item._dateKey}',${item._idx},true)" style="flex-shrink:0;width:16px;height:16px"></div>
+      return `<div class="today-widget-item" onclick="openDetail(${jsArg(ep.id)})">
+        <div class="task-check" onclick="event.stopPropagation();toggleCalendarItem(${jsArg(ep.id)},'${item._dateKey}',${item._idx},true)" style="flex-shrink:0;width:16px;height:16px"></div>
         <span class="today-widget-date">${isToday ? 'Heute' : 'Morgen'} · ${item.time}</span>
         <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
-        <span>${ep.title}</span>
-        ${entry.assignee ? `<span class="open-task-assignee">${entry.assignee}</span>` : ''}
+        <span>${esc(ep.title)}</span>
+        ${entry.assignee ? `<span class="open-task-assignee">${esc(entry.assignee)}</span>` : ''}
       </div>`;
     }).join('')}</div>
   </div>`;
@@ -1246,8 +1512,8 @@ function renderPlaner() {
       const isOldRelease = today >= twoWeeksAfter;
       const isDone = (p.pct === 100 || isOldRelease) && !isToday;
       el.className = `slot filled${isDone ? ' slot-done' : ''}`;
-      el.innerHTML = `<div class="slot-ep">${ep.num ? '#' + ep.num + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${date}</div>
-        <div class="slot-title">${ep.title}</div>
+      el.innerHTML = `<div class="slot-ep">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${esc(date)}</div>
+        <div class="slot-title">${esc(ep.title)}</div>
         <span class="badge ${badgeClass}">${statusLabel}</span>
         <div class="slot-progress"><div class="slot-progress-bar" style="width:${p.pct}%"></div></div>`;
       el.setAttribute('draggable', 'true');
@@ -1448,8 +1714,8 @@ function renderZeitstrahl() {
       html += `<div class="tl-item">
         <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--accent2);border-color:var(--accent2)"></div></div>
-        <div class="tl-card" onclick="openDetail('${ep.id}')" style="border-color:var(--accent2)">
-          <div class="tl-card-title" style="color:var(--accent2)">🎙️ Aufnahme${item.time ? ' · ' + item.time + ' Uhr' : ''} — ${ep.title}</div>
+        <div class="tl-card" onclick="openDetail(${jsArg(ep.id)})" style="border-color:var(--accent2)">
+          <div class="tl-card-title" style="color:var(--accent2)">🎙️ Aufnahme${item.time ? ' · ' + esc(item.time) + ' Uhr' : ''} — ${esc(ep.title)}</div>
         </div>
       </div>`;
       return;
@@ -1460,9 +1726,9 @@ function renderZeitstrahl() {
       html += `<div class="tl-item">
         <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot filled"></div></div>
-        <div class="tl-card" onclick="openDetail('${item.ep.id}')">
-          <div class="tl-card-title"><span class="cal-type-badge">${meta.icon} ${meta.label}${item.item.num ? ' ' + item.item.num : ''}</span> ${item.ep.title}
-            ${item.entry.assignee ? `<span class="open-task-assignee" style="margin-left:8px">${item.entry.assignee}</span>` : ''}
+        <div class="tl-card" onclick="openDetail(${jsArg(item.ep.id)})">
+          <div class="tl-card-title"><span class="cal-type-badge">${meta.icon} ${meta.label}${item.item.num ? ' ' + item.item.num : ''}</span> ${esc(item.ep.title)}
+            ${item.entry.assignee ? `<span class="open-task-assignee" style="margin-left:8px">${esc(item.entry.assignee)}</span>` : ''}
           </div>
         </div>
       </div>`;
@@ -1480,8 +1746,8 @@ function renderZeitstrahl() {
       html += `<div class="tl-item">
         <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot ${dotClass}"></div></div>
-        <div class="tl-card" onclick="openDetail('${ep.id}')">
-          <div class="tl-card-title">🚀 Release — ${ep.num ? '#' + ep.num + ' · ' : ''}${ep.title}</div>
+        <div class="tl-card" onclick="openDetail(${jsArg(ep.id)})">
+          <div class="tl-card-title">🚀 Release — ${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.title)}</div>
           <div class="tl-card-meta">
             ${badge}
             <div class="tl-progress-bar-wrap"><div class="tl-progress-bar-fill" style="width:${p.pct}%"></div></div>
@@ -1493,7 +1759,7 @@ function renderZeitstrahl() {
       html += `<div class="tl-item">
         <div class="tl-date" style="opacity:.45"></div>
         <div class="tl-dot-wrap"><div class="tl-dot free"></div></div>
-        <div class="tl-card free" onclick="openAddModal('${item.date}')">
+        <div class="tl-card free" onclick="openAddModal(${jsArg(item.date)})">
           <div class="tl-card-title" style="color:var(--muted);font-weight:400">🚀 Release frei — + Folge planen</div>
         </div>
       </div>`;
@@ -1510,10 +1776,77 @@ function openDetail(id) {
   const ep = episodes.find(e => e.id === id);
   if (!ep) return;
   editingEpId = id;
+  document.getElementById('remote-banner').hidden = true;
+  const idArg = jsArg(id);
 
   const p = progress(ep);
   const circumference = 2 * Math.PI * 26;
   const offset = circumference - (p.pct / 100) * circumference;
+
+  const reelField = (r, idx, field, label, placeholder) => `
+                  <label class="reel-field-label">${label}</label>
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="reel-${field}-${idx}" placeholder="${placeholder}" oninput="scheduleReelFieldSave(${idArg},${idx},'${field}',this.value)">${esc(r[field])}</textarea>
+                    <button class="copy-btn" onclick="copyReelField(${idx},'${field}')">Kopieren</button>
+                  </div>`;
+
+  const stepBody = (step) => {
+    if (step.id === 'reels_download') {
+      return `<div class="reel-list">
+              ${getReels(ep).map((r, idx) => `<div class="reel-block">
+                <div class="reel-item">
+                  <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded(${idArg},${idx})"></div>
+                  <div class="reel-label">Reel ${idx + 1}</div>
+                  <span class="reel-expand-toggle" onclick="toggleReelExpand(${idx})">
+                    <span id="reel-expand-icon-${idx}">▸</span> Details
+                  </span>
+                </div>
+                <div class="reel-detail" id="reel-detail-${idx}" style="display:none">
+                  <label class="reel-field-label">Reel-Transkript</label>
+                  <textarea class="task-content-textarea" id="reel-transcript-${idx}" placeholder="Reel-Transkript einfügen…"
+                    oninput="scheduleReelFieldSave(${idArg},${idx},'transcript',this.value)">${esc(r.transcript)}</textarea>
+                  <label class="reel-field-label">Text-Hook</label>
+                  <input type="text" class="task-content-textarea" id="reel-hook-${idx}" style="margin-bottom:8px"
+                    value="${esc(r.hook)}" oninput="scheduleReelFieldSave(${idArg},${idx},'hook',this.value)">
+                  ${reelField(r, idx, 'desc', 'Folgenbeschreibung (allgemein)', 'Gemeinsame Beschreibung / Folgenbeschreibung für dieses Reel…')}
+                  ${reelField(r, idx, 'descIg', 'Instagram-Beschreibung', '')}
+                  ${reelField(r, idx, 'descYt', 'YouTube-Beschreibung', '')}
+                  ${reelField(r, idx, 'descTiktok', 'TikTok-Beschreibung', '')}
+                </div>
+              </div>`).join('')}
+            </div>`;
+    }
+    if (step.id === 'li_beitraege') {
+      return `<div class="reel-list">
+              ${getLiPosts(ep).map((post, idx) => `<div class="reel-block">
+                <div class="reel-item">
+                  <div class="task-check ${post.done ? 'done' : ''}" id="li-check-${idx}" onclick="toggleLiPostDone(${idArg},${idx})"></div>
+                  <div class="reel-label">Post ${idx + 1}</div>
+                </div>
+                <div class="reel-detail" style="margin-top:8px;padding-top:0;border-top:none">
+                  <div class="reel-field-row">
+                    <textarea class="task-content-textarea" id="li-text-${idx}" rows="6" placeholder="LinkedIn-Post-Text…" oninput="scheduleLiPostSave(${idArg},${idx},this.value)">${esc(post.text)}</textarea>
+                    <button class="copy-btn" onclick="copyLiPost(${idx})">Kopieren</button>
+                  </div>
+                </div>
+              </div>`).join('')}
+            </div>`;
+    }
+    const link = safeUrl(taskLink(ep, step.id));
+    return `${step.id === 'fragenerstellung' ? `<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+              <input type="text" class="task-content-textarea" style="margin-bottom:0;flex:1"
+                placeholder="Google-Drive-Link zur Fragensammlung einfügen…"
+                id="link-${step.id}" value="${esc(taskLink(ep, step.id))}"
+                oninput="scheduleLinkSave(${idArg},'${step.id}',this.value)">
+              <a id="linkopen-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer"
+                class="task-expand-btn" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>
+            </div>` : ''}
+            <textarea class="task-content-textarea" placeholder="Inhalt hier einfügen – z.B. Shownotes, Titel, Beschreibung …"
+              oninput="scheduleContentSave(${idArg},'${step.id}',this.value)">${esc(taskContent(ep, step.id))}</textarea>
+            <div style="display:flex;gap:0;flex-wrap:wrap">
+              <button class="copy-btn" onclick="copyContent('${step.id}')">Kopieren</button>
+            </div>`;
+  };
 
   let sectionsHtml = '';
   SECTIONS.forEach(sec => {
@@ -1522,104 +1855,21 @@ function openDetail(id) {
     const secAllDone = steps.every(s => taskDone(ep, s.id));
     sectionsHtml += `<div class="checklist-section collapsed" id="section-${sec}">
       <h2 onclick="toggleSection('${sec}')">
-        <div class="task-check ${secAllDone ? 'done' : ''}" onclick="event.stopPropagation();toggleSectionTasks('${ep.id}','${sec}')" title="Alle abhaken"></div>
+        <div class="task-check ${secAllDone ? 'done' : ''}" onclick="event.stopPropagation();toggleSectionTasks(${idArg},'${sec}')" title="Alle abhaken"></div>
         ${SECTION_LABELS[sec]} <span class="section-count">${doneCount}/${steps.length}</span><span class="section-toggle-icon">▸</span></h2>
       <div class="section-body">
       ${steps.map(step => {
         const done = taskDone(ep, step.id);
-        const content = taskContent(ep, step.id);
-        const hasContent = content.trim().length > 0;
+        const link = step.id === 'fragenerstellung' ? safeUrl(taskLink(ep, step.id)) : '';
         return `<div class="task-row" id="row-${step.id}">
           <div class="task-item ${done ? 'done' : ''}" onclick="toggleContent('${step.id}')">
-            <div class="task-check" onclick="event.stopPropagation();toggleTask('${id}','${step.id}')"></div>
+            <div class="task-check" onclick="event.stopPropagation();toggleTask(${idArg},'${step.id}')"></div>
             <div class="task-label">${step.label}</div>
-            ${step.id === 'fragenerstellung' ? `<a id="linkopen-row-${step.id}" href="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
-                class="task-expand-btn" style="margin-left:auto;${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>`
-              : step.id === 'reels_download' ? `<button class="gen-row-btn" id="gen-row-reels_download" onclick="event.stopPropagation();generateReelSplit('${id}')" title="8 Reel-Transkripte aus Transkript generieren">✨</button>`
-              : step.id === 'li_beitraege' ? `<button class="gen-row-btn" id="gen-row-li_beitraege" onclick="event.stopPropagation();generateLiSplit('${id}')" title="5 LinkedIn-Beiträge aus Transkript generieren">✨</button>`
-              : `${AI_STEPS.includes(step.id) ? `<button class="gen-row-btn" id="gen-row-${step.id}" onclick="event.stopPropagation();generateContent('${id}','${step.id}')" title="Mit KI generieren">✨</button>` : ''}`}
+            ${step.id === 'fragenerstellung' ? `<a id="linkopen-row-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                class="task-expand-btn" style="margin-left:auto" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>` : ''}
           </div>
           <div class="task-content-area" id="content-${step.id}">
-            ${step.id === 'fragenerstellung' ? `<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <input type="text" class="task-content-textarea" style="margin-bottom:0;flex:1"
-                placeholder="Google-Drive-Link zur Fragensammlung einfügen…"
-                id="link-${step.id}"
-                value="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}"
-                oninput="scheduleLinkSave('${id}','${step.id}',this.value); [document.getElementById('linkopen-${step.id}'),document.getElementById('linkopen-row-${step.id}')].forEach(a=>{if(a){a.href=this.value;a.style.display=this.value.trim()?'':'none';}});">
-              <a id="linkopen-${step.id}" href="${(taskLink(ep, step.id) || '').replace(/"/g, '&quot;')}" target="_blank" rel="noopener noreferrer"
-                class="task-expand-btn" style="${taskLink(ep, step.id) ? '' : 'display:none'}" title="Link öffnen">🔗 Öffnen</a>
-            </div>` : ''}
-            ${step.id === 'reels_download' ? `<div class="reel-list">
-              ${getReels(ep).map((r, idx) => `<div class="reel-block">
-                <div class="reel-item">
-                  <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded('${id}','${idx}')"></div>
-                  <div class="reel-label">Reel ${idx + 1}</div>
-                  <span class="reel-expand-toggle" onclick="toggleReelExpand('${idx}')">
-                    <span id="reel-expand-icon-${idx}">▸</span> Details
-                  </span>
-                </div>
-                <div class="reel-detail" id="reel-detail-${idx}" style="display:none">
-                  <textarea class="task-content-textarea" id="reel-transcript-${idx}"
-                    placeholder="Reel-Transkript (per ✨ generiert oder manuell einfügen)…"
-                    oninput="scheduleReelFieldSave('${id}','${idx}','transcript',this.value)"
-                  >${r.transcript || ''}</textarea>
-                  <button class="generate-btn" id="reel-gen-${idx}" onclick="generateReelContent('${id}','${idx}')">✨ Hook & Beschreibungen generieren</button>
-                  <label class="reel-field-label">Text-Hook</label>
-                  <input type="text" class="task-content-textarea" id="reel-hook-${idx}" style="margin-bottom:8px"
-                    value="${(r.hook || '').replace(/"/g, '&quot;')}"
-                    oninput="scheduleReelFieldSave('${id}','${idx}','hook',this.value)">
-                  <label class="reel-field-label">Folgenbeschreibung (allgemein)</label>
-                  <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="reel-desc-${idx}" placeholder="Gemeinsame Beschreibung / Folgenbeschreibung für dieses Reel…" oninput="scheduleReelFieldSave('${id}','${idx}','desc',this.value)">${r.desc || ''}</textarea>
-                    <button class="copy-btn" onclick="copyReelField('${idx}','desc')">Kopieren</button>
-                  </div>
-                  <label class="reel-field-label">Instagram-Beschreibung</label>
-                  <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="reel-descIg-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descIg',this.value)">${r.descIg || ''}</textarea>
-                    <button class="copy-btn" onclick="copyReelField('${idx}','descIg')">Kopieren</button>
-                  </div>
-                  <label class="reel-field-label">YouTube-Beschreibung</label>
-                  <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="reel-descYt-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descYt',this.value)">${r.descYt || ''}</textarea>
-                    <button class="copy-btn" onclick="copyReelField('${idx}','descYt')">Kopieren</button>
-                  </div>
-                  <label class="reel-field-label">TikTok-Beschreibung</label>
-                  <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="reel-descTiktok-${idx}" oninput="scheduleReelFieldSave('${id}','${idx}','descTiktok',this.value)">${r.descTiktok || ''}</textarea>
-                    <button class="copy-btn" onclick="copyReelField('${idx}','descTiktok')">Kopieren</button>
-                  </div>
-                </div>
-              </div>`).join('')}
-            </div>` : step.id === 'reels_planen' ? `<div class="reel-list reel-grid">
-              ${getReels(ep).map((r, idx) => `<div class="reel-item">
-                <div class="reel-label">R${idx + 1}</div>
-                <div class="reel-platforms">
-                  <span class="reel-platform ${r.ig ? 'active' : ''}" id="reel-platform-${idx}-ig" onclick="toggleReelPlatform('${id}','${idx}','ig')" title="Instagram">IG</span>
-                  <span class="reel-platform ${r.yt ? 'active' : ''}" id="reel-platform-${idx}-yt" onclick="toggleReelPlatform('${id}','${idx}','yt')" title="YouTube">YT</span>
-                  <span class="reel-platform ${r.tiktok ? 'active' : ''}" id="reel-platform-${idx}-tiktok" onclick="toggleReelPlatform('${id}','${idx}','tiktok')" title="TikTok">TT</span>
-                </div>
-              </div>`).join('')}
-            </div>` : step.id === 'li_beitraege' ? `<div class="reel-list">
-              ${getLiPosts(ep).map((p, idx) => `<div class="reel-block">
-                <div class="reel-item">
-                  <div class="task-check ${p.done ? 'done' : ''}" id="li-check-${idx}" onclick="toggleLiPostDone('${id}','${idx}')"></div>
-                  <div class="reel-label">Post ${idx + 1}</div>
-                </div>
-                <div class="reel-detail" style="margin-top:8px;padding-top:0;border-top:none">
-                  <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="li-text-${idx}" rows="6" placeholder="LinkedIn-Post-Text…" oninput="scheduleLiPostSave('${id}','${idx}',this.value)">${p.text || ''}</textarea>
-                    <button class="copy-btn" onclick="copyLiPost('${idx}')">Kopieren</button>
-                  </div>
-                </div>
-              </div>`).join('')}
-            </div>` : `<textarea class="task-content-textarea"
-              placeholder="Inhalt hier einfügen – z.B. generierte Shownotes, Titel, Beschreibung …"
-              oninput="scheduleContentSave('${id}','${step.id}',this.value)"
-            >${content}</textarea>
-            <div style="display:flex;gap:0;flex-wrap:wrap">
-              <button class="copy-btn" onclick="copyContent('${step.id}')">Kopieren</button>
-              ${AI_STEPS.includes(step.id) ? `<button class="generate-btn" id="gen-${step.id}" onclick="generateContent('${id}','${step.id}')">✨ Generieren</button>` : ''}
-            </div>`}
+            ${stepBody(step)}
           </div>
         </div>`;
       }).join('')}
@@ -1630,12 +1880,12 @@ function openDetail(id) {
   document.getElementById('detail-content').innerHTML = `
     <div class="ep-header">
       <div class="ep-header-info">
-        <h1>${ep.title}</h1>
+        <h1>${esc(ep.title)}</h1>
         <div class="ep-meta">
-          ${ep.num ? `<span>#${ep.num}</span>` : ''}
-          ${ep.recordingDate ? `<span>🎙️ Aufnahme: ${ep.recordingDate}</span>` : ''}
-          <span>📅 Veröffentlichung: ${ep.date}, 05:30 Uhr</span>
-          ${ep.desc ? `<span>${ep.desc}</span>` : ''}
+          ${ep.num ? `<span>#${esc(ep.num)}</span>` : ''}
+          ${ep.recordingDate ? `<span>🎙️ Aufnahme: ${esc(ep.recordingDate)}</span>` : ''}
+          <span>📅 Veröffentlichung: ${esc(ep.date)}, 05:30 Uhr</span>
+          ${ep.desc ? `<span>${esc(ep.desc)}</span>` : ''}
         </div>
       </div>
       <div style="display:flex;gap:10px;align-items:center">
@@ -1647,27 +1897,27 @@ function openDetail(id) {
           </svg>
           <div class="pct">${p.pct}%</div>
         </div>
-        <button class="btn btn-ghost" onclick="openEditModal('${id}')">Bearbeiten</button>
+        <button class="btn btn-ghost" onclick="openEditModal(${idArg})">Bearbeiten</button>
       </div>
     </div>
     <div class="transcript-box collapsed">
       <h2 style="cursor:pointer" onclick="toggleTranscriptBox()">
-        📄 Transkript <span style="font-size:11px;font-weight:400;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:99px">Basis für KI-Generierung</span>
+        📄 Transkript
         <span id="transcript-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
       </h2>
       <div id="transcript-body">
-        <p class="transcript-hint">Transkript einfügen oder als Datei hochladen (.txt, .md, .docx) — alle ✨ Generieren-Buttons nutzen diesen Text.</p>
+        <p class="transcript-hint">Transkript einfügen oder als Datei hochladen (.txt, .md, .docx).</p>
         <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
-          <label class="upload-file-btn" for="transcript-file-${id}" title="Datei hochladen">
+          <label class="upload-file-btn" for="transcript-file" title="Datei hochladen">
             📁 Datei hochladen
-            <input type="file" id="transcript-file-${id}" accept=".txt,.md,.text,.doc,.docx" style="display:none"
-              onchange="loadTranscriptFile(event,'${id}')">
+            <input type="file" id="transcript-file" accept=".txt,.md,.text,.docx" style="display:none"
+              onchange="loadTranscriptFile(event,${idArg})">
           </label>
-          <span id="transcript-filename-${id}" style="font-size:12px;color:var(--muted)"></span>
+          <span id="transcript-filename" style="font-size:12px;color:var(--muted)"></span>
         </div>
         <textarea class="transcript-textarea" id="ep-transcript"
           placeholder="Transkript hier einfügen…"
-          oninput="scheduleTranscriptSave('${id}',this.value)">${ep.transcript || ''}</textarea>
+          oninput="scheduleTranscriptSave(${idArg},this.value)">${esc(ep.transcript)}</textarea>
       </div>
     </div>
     ${renderContentCalendar(ep)}
@@ -1675,13 +1925,44 @@ function openDetail(id) {
     <div class="card" style="margin-top:8px">
       <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500">Notizen</label>
       <textarea class="notes-area" id="ep-notes" placeholder="Notizen zu dieser Folge..."
-        oninput="scheduleNoteSave('${id}',this.value)">${ep.notes || ''}</textarea>
+        oninput="scheduleNoteSave(${idArg},this.value)">${esc(ep.notes)}</textarea>
     </div>
     <div style="display:flex;justify-content:center;margin-top:18px">
-      <button class="btn btn-primary" onclick="markAllDone('${id}')">✅ Alles erledigt</button>
+      <button class="btn btn-primary" onclick="markAllDone(${idArg})">✅ Alles erledigt</button>
     </div>
   `;
   showPage('detail');
+}
+
+// Re-renders the detail view while keeping open sections, expanded fields and scroll position.
+function captureDetailState() {
+  return {
+    sections: getOpenSections(),
+    content: [...document.querySelectorAll('.task-content-area.open')].map(el => el.id),
+    reels: [...document.querySelectorAll('.reel-detail[id]')].filter(el => el.style.display !== 'none').map(el => el.id),
+    calendarOpen: !!document.getElementById('content-calendar-box') && !document.getElementById('content-calendar-box').classList.contains('collapsed'),
+    transcriptOpen: !!document.querySelector('.transcript-box') && !document.querySelector('.transcript-box').classList.contains('collapsed'),
+    scroll: window.scrollY,
+  };
+}
+function restoreDetailState(st) {
+  restoreOpenSections(st.sections);
+  st.content.forEach(id => document.getElementById(id)?.classList.add('open'));
+  st.reels.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = 'block';
+    const icon = document.getElementById(id.replace('reel-detail', 'reel-expand-icon'));
+    if (icon) icon.textContent = '▾';
+  });
+  if (st.calendarOpen) toggleCalendarBox();
+  if (st.transcriptOpen) toggleTranscriptBox();
+  window.scrollTo(0, st.scroll);
+}
+function rerenderDetail(epId) {
+  const st = captureDetailState();
+  openDetail(epId);
+  restoreDetailState(st);
 }
 
 // ── CONTENT CALENDAR (2 weeks starting from publish date) ────────
@@ -1740,7 +2021,7 @@ function renderContentCalendar(ep) {
       const checked = entry.done;
       if (checked) doneCount++;
       const meta = CAL_TYPE_META[item.type];
-      return `<div class="cal-item cal-type-${item.type} ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem('${ep.id}','${key}','${idx}')">
+      return `<div class="cal-item cal-type-${item.type} ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem(${jsArg(ep.id)},'${key}',${idx})">
         <div class="task-check ${checked ? 'done' : ''}" id="cal-check-${key}-${idx}"></div>
         <div class="cal-item-body">
           <div class="cal-item-meta">
@@ -1750,8 +2031,8 @@ function renderContentCalendar(ep) {
           ${item.label ? `<div class="cal-item-text">${item.label}</div>` : ''}
         </div>
         <div class="cal-assignee">
-          <span class="cal-assignee-pill ${entry.assignee === 'N' ? 'active' : ''}" id="cal-assignee-N-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee('${ep.id}','${key}','${idx}','N')" title="Nils zuweisen">N</span>
-          <span class="cal-assignee-pill ${entry.assignee === 'L' ? 'active' : ''}" id="cal-assignee-L-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee('${ep.id}','${key}','${idx}','L')" title="Leo zuweisen">L</span>
+          <span class="cal-assignee-pill ${entry.assignee === 'N' ? 'active' : ''}" id="cal-assignee-N-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee(${jsArg(ep.id)},'${key}',${idx},'N')" title="Nils zuweisen">N</span>
+          <span class="cal-assignee-pill ${entry.assignee === 'L' ? 'active' : ''}" id="cal-assignee-L-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee(${jsArg(ep.id)},'${key}',${idx},'L')" title="Leo zuweisen">L</span>
         </div>
       </div>`;
     }).join('');
@@ -1862,14 +2143,10 @@ async function toggleCalendarItem(epId, dateKey, idx, fromWidget = false) {
   document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
   const taskChanged = syncCalendarTaskCompletion(ep);
-  await upsertEpisode(ep);
-  if (fromWidget) {
-    renderTodayWidget();
-    if (taskChanged) showToast('✅ Aufgabe automatisch abgehakt!');
-  } else if (taskChanged) {
-    showToast('✅ Aufgabe automatisch abgehakt!');
-    openDetail(epId);
-  }
+  if (fromWidget) renderTodayWidget();
+  else if (taskChanged) rerenderDetail(epId);
+  try { await upsertEpisode(ep); } catch { return; }
+  if (taskChanged) showToast('✅ Aufgabe automatisch abgehakt!');
 }
 
 async function toggleCalendarAssignee(epId, dateKey, idx, who) {
@@ -1881,7 +2158,7 @@ async function toggleCalendarAssignee(epId, dateKey, idx, who) {
   ['N', 'L'].forEach(w => {
     document.getElementById(`cal-assignee-${w}-${dateKey}-${idx}`)?.classList.toggle('active', w === newAssignee);
   });
-  await upsertEpisode(ep);
+  upsertEpisode(ep).catch(() => {});
 }
 
 function toggleTranscriptBox() {
@@ -1895,9 +2172,8 @@ async function markAllDone(epId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   WORKFLOW_STEPS.forEach(s => setTaskDone(ep, s.id, true));
-  await upsertEpisode(ep);
-  showToast('✅ Alle Aufgaben abgehakt!');
-  openDetail(epId);
+  rerenderDetail(epId);
+  try { await upsertEpisode(ep); showToast('✅ Alle Aufgaben abgehakt!'); } catch {}
 }
 
 function getOpenSections() {
@@ -1922,30 +2198,14 @@ async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   const wasDone = taskDone(ep, taskId);
-  const openSecs = getOpenSections();
-  const openContent = [...document.querySelectorAll('.task-content-area.open')].map(el => el.id.replace('content-', ''));
-
   setTaskDone(ep, taskId, !wasDone);
   if (taskId === 'reels_download') {
-    const reels = getReels(ep).map(r => ({ ...r, downloaded: !wasDone }));
-    saveReels(ep, reels);
-  } else if (taskId === 'reels_planen') {
-    const reels = getReels(ep).map(r => ({ ...r, ig: !wasDone, yt: !wasDone, tiktok: !wasDone }));
-    saveReels(ep, reels);
+    saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: !wasDone })));
   } else if (taskId === 'li_beitraege') {
-    const posts = getLiPosts(ep).map(p => ({ ...p, done: !wasDone }));
-    saveLiPosts(ep, posts);
+    saveLiPosts(ep, getLiPosts(ep).map(p => ({ ...p, done: !wasDone })));
   }
-  openDetail(epId);
-  restoreOpenSections(openSecs);
-  openContent.forEach(id => document.getElementById('content-' + id)?.classList.add('open'));
-  try {
-    await upsertEpisode(ep);
-  } catch(e) {
-    setTaskDone(ep, taskId, wasDone);
-    openDetail(epId);
-    restoreOpenSections(openSecs);
-  }
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
 }
 
 async function toggleSectionTasks(epId, sec) {
@@ -1953,20 +2213,9 @@ async function toggleSectionTasks(epId, sec) {
   if (!ep) return;
   const steps = WORKFLOW_STEPS.filter(s => s.section === sec);
   const allDone = steps.every(s => taskDone(ep, s.id));
-  const openSecs = getOpenSections();
-  const openContent = [...document.querySelectorAll('.task-content-area.open')].map(el => el.id.replace('content-', ''));
-
   steps.forEach(s => setTaskDone(ep, s.id, !allDone));
-  openDetail(epId);
-  restoreOpenSections(openSecs);
-  openContent.forEach(id => document.getElementById('content-' + id)?.classList.add('open'));
-  try {
-    await upsertEpisode(ep);
-  } catch(e) {
-    steps.forEach(s => setTaskDone(ep, s.id, allDone));
-    openDetail(epId);
-    restoreOpenSections(openSecs);
-  }
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
 }
 
 function toggleContent(taskId) {
@@ -1978,32 +2227,32 @@ function toggleContent(taskId) {
   }
 }
 
-let contentTimers = {};
 function scheduleContentSave(epId, taskId, val) {
-  clearTimeout(contentTimers[taskId]);
-  contentTimers[taskId] = setTimeout(async () => {
+  debounceEdit(`content:${epId}:${taskId}`, () => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
     setTaskContent(ep, taskId, val);
-    // update button indicator without re-rendering whole page
-    const btn = document.querySelector(`#row-${taskId} .task-expand-btn`);
-    if (btn) {
-      btn.classList.toggle('has-content', val.trim().length > 0);
-      btn.innerHTML = (val.trim().length > 0 ? '📋' : '+') + ' Inhalt';
-    }
-    await upsertEpisode(ep);
-  }, 700);
+    upsertEpisode(ep).catch(() => {});
+  });
 }
 
-let linkTimers = {};
+function updateLinkOpeners(taskId, value) {
+  const href = safeUrl(value);
+  [`linkopen-${taskId}`, `linkopen-row-${taskId}`].forEach(elId => {
+    const a = document.getElementById(elId);
+    if (!a) return;
+    a.href = href || '#';
+    a.hidden = !href;
+  });
+}
 function scheduleLinkSave(epId, taskId, val) {
-  clearTimeout(linkTimers[taskId]);
-  linkTimers[taskId] = setTimeout(async () => {
+  updateLinkOpeners(taskId, val);
+  debounceEdit(`link:${epId}:${taskId}`, () => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
     setTaskLink(ep, taskId, val);
-    await upsertEpisode(ep);
-  }, 700);
+    upsertEpisode(ep).catch(() => {});
+  });
 }
 
 function copyContent(taskId) {
@@ -2012,145 +2261,142 @@ function copyContent(taskId) {
   navigator.clipboard.writeText(ta.value).then(() => showToast('Kopiert ✓'));
 }
 
-async function loadTranscriptFile(event, epId) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const label = document.getElementById('transcript-filename-' + epId);
-  if (label) label.textContent = '⏳ ' + file.name;
-
-  let text = '';
-  // .docx needs special handling — fall back to raw text
-  if (file.name.endsWith('.docx')) {
-    try {
-      const ab = await file.arrayBuffer();
-      // Extract raw text from docx XML (simple approach)
-      const decoder = new TextDecoder('utf-8');
-      const zip = await new Response(ab).text();
-      // Use DOMParser on the XML inside docx
-      const uint = new Uint8Array(ab);
-      // find word/document.xml by scanning for its content
-      const str = String.fromCharCode(...uint.slice(0, Math.min(uint.length, 500000)));
-      const xmlMatch = str.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g);
-      if (xmlMatch) {
-        text = xmlMatch.map(m => m.replace(/<[^>]+>/g, '')).join(' ');
-      } else {
-        text = await file.text();
-      }
-    } catch {
-      text = await file.text();
-    }
-  } else {
-    text = await file.text();
+// .docx is a ZIP archive: read word/document.xml via the central directory and
+// inflate it with the browser's DecompressionStream (no library needed).
+async function extractDocxText(file) {
+  const buf = new Uint8Array(await file.arrayBuffer());
+  const dv = new DataView(buf.buffer);
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
   }
+  if (eocd < 0) throw new Error('Keine gültige .docx-Datei.');
+  const count = dv.getUint16(eocd + 10, true);
+  let ptr = dv.getUint32(eocd + 16, true);
+  for (let n = 0; n < count && dv.getUint32(ptr, true) === 0x02014b50; n++) {
+    const method = dv.getUint16(ptr + 10, true);
+    const size = dv.getUint32(ptr + 20, true);
+    const nameLen = dv.getUint16(ptr + 28, true);
+    const extraLen = dv.getUint16(ptr + 30, true);
+    const commentLen = dv.getUint16(ptr + 32, true);
+    const localOffset = dv.getUint32(ptr + 42, true);
+    const name = new TextDecoder().decode(buf.subarray(ptr + 46, ptr + 46 + nameLen));
+    if (name === 'word/document.xml') {
+      const start = localOffset + 30 + dv.getUint16(localOffset + 26, true) + dv.getUint16(localOffset + 28, true);
+      const data = buf.subarray(start, start + size);
+      let xml;
+      if (method === 0) xml = data;
+      else if (method === 8) {
+        if (typeof DecompressionStream === 'undefined') throw new Error('Dieser Browser kann .docx nicht lesen – bitte als .txt speichern.');
+        xml = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+      } else throw new Error('Nicht unterstütztes .docx-Format.');
+      return docxXmlToText(new TextDecoder('utf-8').decode(xml));
+    }
+    ptr += 46 + nameLen + extraLen + commentLen;
+  }
+  throw new Error('In der .docx-Datei wurde kein Text gefunden.');
+}
+function docxXmlToText(xml) {
+  const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const doc = new DOMParser().parseFromString(xml, 'application/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('Die .docx-Datei ist beschädigt.');
+  const lines = [];
+  for (const para of doc.getElementsByTagNameNS(W, 'p')) {
+    let line = '';
+    const walk = node => {
+      for (const c of node.childNodes) {
+        if (c.namespaceURI !== W) continue;
+        if (c.localName === 't') line += c.textContent;
+        else if (c.localName === 'tab') line += '\t';
+        else if (c.localName === 'br' || c.localName === 'cr') line += '\n';
+        else if (c.localName !== 'p' && c.localName !== 'delText') walk(c);
+      }
+    };
+    walk(para);
+    lines.push(line);
+  }
+  return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
 
+async function loadTranscriptFile(event, epId) {
+  const input = event.target;
+  const file = input.files[0];
+  input.value = '';
+  if (!file) return;
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const label = document.getElementById('transcript-filename');
+  const name = file.name.toLowerCase();
+  if (!/\.(txt|md|text|docx)$/.test(name)) {
+    showToast('Nur .txt, .md oder .docx – alte .doc-Dateien bitte als .docx speichern.', 'error');
+    return;
+  }
+  if (label) label.textContent = '⏳ ' + file.name;
+  let text;
+  try {
+    text = name.endsWith('.docx') ? await extractDocxText(file) : await file.text();
+  } catch (e) {
+    if (label) label.textContent = '';
+    showToast('Datei konnte nicht gelesen werden: ' + e.message, 'error');
+    return;
+  }
+  if (!text.trim()) {
+    if (label) label.textContent = '';
+    showToast('Die Datei enthält keinen Text.', 'error');
+    return;
+  }
+  const current = document.getElementById('ep-transcript')?.value ?? ep.transcript;
+  if (current.trim() && !confirm('Vorhandenes Transkript durch den Inhalt von „' + file.name + '“ ersetzen?')) {
+    if (label) label.textContent = '';
+    return;
+  }
+  delete editTimers[`transcript:${epId}`];
   const ta = document.getElementById('ep-transcript');
   if (ta) ta.value = text;
-  if (label) label.textContent = '✓ ' + file.name;
-
-  // save
-  const ep = episodes.find(e => e.id === epId);
-  if (ep) { ep.transcript = text; await upsertEpisode(ep); }
-  showToast('Transkript geladen ✓');
+  ep.transcript = text;
+  try {
+    await upsertEpisode(ep);
+    if (label) label.textContent = '✓ ' + file.name;
+    showToast('Transkript geladen ✓');
+  } catch { if (label) label.textContent = '✗ nicht gespeichert'; }
 }
 
 function scheduleTranscriptSave(epId, val) {
-  clearTimeout(notesTimer);
-  notesTimer = setTimeout(async () => {
+  debounceEdit(`transcript:${epId}`, () => {
     const ep = episodes.find(e => e.id === epId);
-    if (ep) { ep.transcript = val; await upsertEpisode(ep); }
+    if (ep) { ep.transcript = val; upsertEpisode(ep).catch(() => {}); }
   }, 800);
 }
 
-async function generateContent(epId, taskId) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const transcript = ep.transcript || '';
-  if (taskId !== 'fragenerstellung' && !transcript.trim()) {
-    showToast('Bitte zuerst das Transkript einfügen ↑', 'error');
-    document.getElementById('ep-transcript')?.focus();
-    return;
-  }
-  const btn = document.getElementById('gen-' + taskId);
-  const rowBtn = document.getElementById('gen-row-' + taskId);
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Generiert…'; }
-  if (rowBtn) { rowBtn.disabled = true; rowBtn.textContent = '⏳'; }
-  const btns = [btn, rowBtn].filter(Boolean);
-
-  // open the content area
-  const area = document.getElementById('content-' + taskId);
-  if (area) area.classList.add('open');
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-      },
-      body: JSON.stringify({ taskId, transcript, epTitle: ep.title, customPrompt: customPrompts[taskId] || '' }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    // fill textarea
-    const ta = document.querySelector(`#content-${taskId} textarea`);
-    if (ta) ta.value = data.result;
-
-    // save
-    setTaskContent(ep, taskId, data.result);
-    await upsertEpisode(ep);
-
-    // update button indicator
-    const expandBtn = document.querySelector(`#row-${taskId} .task-expand-btn`);
-    if (expandBtn) { expandBtn.classList.add('has-content'); expandBtn.innerHTML = '📋 Inhalt'; }
-
-    if (isLikelyTruncated(data.result)) {
-      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
-    } else {
-      showToast('✨ Fertig generiert!');
-    }
-  } catch(e) {
-    showToast('Fehler: ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = '✨ Generieren'; }
-    if (rowBtn) { rowBtn.disabled = false; rowBtn.textContent = '✨'; }
-  }
-}
 
 // Exports all episodes + ideas as a single JSON file (manual backup).
-function exportAllData() {
-  const data = {
-    exportedAt: new Date().toISOString(),
-    episodes,
-    ideas,
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `podcast-backup-${formatDate(new Date()).replace(/\./g, '-')}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('💾 Backup heruntergeladen');
+async function exportAllData() {
+  flushEdits();
+  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_goals', 'podcast_improvements',
+                  'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
+  try {
+    const data = {};
+    for (const t of tables) data[t] = await apiFetch(t + '?select=*');
+    const blob = new Blob([JSON.stringify({ created_at: new Date().toISOString(), source: 'app-export', data }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `podcast-backup-${formatDate(new Date()).replace(/\./g, '-')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('💾 Backup heruntergeladen');
+  } catch (e) {
+    showToast('Export fehlgeschlagen: ' + e.message, 'error');
+  }
 }
 
-// Heuristic: flags results that look like they were cut off mid-sentence
-// because the AI model hit its max-token limit.
-function isLikelyTruncated(text) {
-  if (!text) return false;
-  const t = text.trim();
-  if (t.length < 500) return false;
-  const last = t.slice(-1);
-  return !'.!?"\')]…」』。'.includes(last);
-}
 
 function scheduleNoteSave(epId, val) {
-  clearTimeout(notesTimer);
-  notesTimer = setTimeout(async () => {
+  debounceEdit(`notes:${epId}`, () => {
     const ep = episodes.find(e => e.id === epId);
-    if (ep) { ep.notes = val; await upsertEpisode(ep); }
+    if (ep) { ep.notes = val; upsertEpisode(ep).catch(() => {}); }
   }, 800);
 }
 
@@ -2218,12 +2464,12 @@ async function saveEpisode() {
   }
 
   closeModal();
+  if (editingEpId) rerenderDetail(ep.id); else { renderPlaner(); showPage('planer'); }
   try {
     await upsertEpisode(ep);
     showToast('Gespeichert ✓');
-    if (editingEpId) { openDetail(ep.id); } else { renderPlaner(); showPage('planer'); }
-  } catch(e) {
-    if (!editingEpId) episodes.pop();
+  } catch (e) {
+    if (!editingEpId) { episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
   }
 }
 
@@ -2238,8 +2484,8 @@ async function deleteEpisode() {
   try {
     await deleteEpisodeById(id);
     showToast('Gelöscht');
-  } catch(e) {
-    showToast('Löschen fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Löschen fehlgeschlagen: ' + e.message, 'error');
     await loadEpisodes();
     renderPlaner();
   }
@@ -2260,7 +2506,7 @@ async function loadIdeas() {
       id: r.id, title: r.title, content: r.content || '',
       guests: r.guests || '', status: r.status || 'idea',
       driveLink: r.drive_link || '', questions: r.questions || '',
-      coreMessage: r.core_message || '',
+      coreMessage: r.core_message || '', updatedAt: r.updated_at,
     }));
     return true;
   } catch(e) {
@@ -2280,22 +2526,33 @@ function renderIdeas() {
   }
   c.innerHTML = `<div class="planer-grid">${sorted.map(idea => {
     const meta = IDEA_STATUS_META[idea.status] || IDEA_STATUS_META.idea;
-    return `<div class="card" style="cursor:pointer" onclick="openIdeaModal('${idea.id}')">
+    const drive = safeUrl(idea.driveLink);
+    return `<div class="card" style="cursor:pointer" onclick="openIdeaModal(${jsArg(idea.id)})">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
-        <strong style="font-size:15px">${idea.title}</strong>
+        <strong style="font-size:15px">${esc(idea.title)}</strong>
         <span style="font-size:11px;font-weight:600;color:var(--accent);background:var(--surface2);padding:2px 8px;border-radius:99px;white-space:nowrap">${meta.icon} ${meta.label}</span>
       </div>
-      ${idea.content ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap">${idea.content}</div>` : ''}
-      ${idea.guests ? `<div style="font-size:12px;color:var(--muted)">👤 ${idea.guests}</div>` : ''}
-      ${idea.driveLink ? `<div style="font-size:12px;margin-top:4px"><a href="${idea.driveLink}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--accent)">📁 Google Drive</a></div>` : ''}
+      ${idea.content ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap">${esc(idea.content)}</div>` : ''}
+      ${idea.guests ? `<div style="font-size:12px;color:var(--muted)">👤 ${esc(idea.guests)}</div>` : ''}
+      ${drive ? `<div style="font-size:12px;margin-top:4px"><a href="${esc(drive)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color:var(--accent)">📁 Google Drive</a></div>` : ''}
       ${idea.questions ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">❓ Fragen vorhanden</div>` : ''}
     </div>`;
   }).join('')}</div>`;
 }
 
+function ideaToRow(i) {
+  return {
+    id: i.id, title: i.title, content: i.content || null,
+    guests: i.guests || null, core_message: i.coreMessage || null, drive_link: i.driveLink || null,
+    questions: i.questions || null, status: i.status,
+  };
+}
+let ideaEditBase = null;
+
 function openIdeaModal(id) {
   editingIdeaId = id;
   const idea = id ? ideas.find(i => i.id === id) : null;
+  ideaEditBase = idea ? { row: ideaToRow(idea), version: idea.updatedAt } : null;
   document.getElementById('idea-modal-title').textContent = idea ? 'Idee bearbeiten' : 'Neue Idee';
   document.getElementById('idea-title').value = idea ? idea.title : '';
   document.getElementById('idea-content').value = idea ? idea.content : '';
@@ -2329,22 +2586,13 @@ async function saveIdea() {
     status: document.getElementById('idea-status').value,
   };
   try {
-    await apiFetch(IDEA_TABLE, {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates',
-      body: JSON.stringify({
-        id: idea.id, title: idea.title, content: idea.content || null,
-        guests: idea.guests || null, core_message: idea.coreMessage || null, drive_link: idea.driveLink || null,
-        questions: idea.questions || null, status: idea.status,
-        updated_at: new Date().toISOString(),
-      }),
-    });
+    await saveRowVersioned(IDEA_TABLE, ideaToRow(idea), ideaEditBase && ideaEditBase.row, ideaEditBase && ideaEditBase.version);
     closeIdeaModal();
     await loadIdeas();
     renderIdeas();
     showToast('💡 Idee gespeichert');
-  } catch(e) {
-    showToast('Speichern fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2352,13 +2600,13 @@ async function deleteIdea() {
   if (!editingIdeaId) return;
   if (!confirm('Diese Idee wirklich löschen?')) return;
   try {
-    await apiFetch(IDEA_TABLE + '?id=eq.' + editingIdeaId, { method: 'DELETE' });
+    await apiFetch(IDEA_TABLE + '?id=eq.' + encodeURIComponent(editingIdeaId), { method: 'DELETE' });
     closeIdeaModal();
     await loadIdeas();
     renderIdeas();
     showToast('Gelöscht');
-  } catch(e) {
-    showToast('Löschen fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Löschen fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2378,7 +2626,7 @@ async function loadGoals() {
     goals = rows.map(r => ({
       id: r.id, title: r.title,
       targetValue: r.target_value || '', currentValue: r.current_value || '',
-      unit: r.unit || '', status: r.status || 'open',
+      unit: r.unit || '', status: r.status || 'open', updatedAt: r.updated_at,
     }));
     return true;
   } catch(e) {
@@ -2403,20 +2651,27 @@ function renderGoals() {
   c.innerHTML = `<div class="planer-grid">${goals.map(goal => {
     const meta = GOAL_STATUS_META[goal.status] || GOAL_STATUS_META.open;
     const pct = goalProgressPct(goal);
-    return `<div class="card" style="cursor:pointer" onclick="openGoalModal('${goal.id}')">
+    const unit = goal.unit ? ' ' + esc(goal.unit) : '';
+    return `<div class="card" style="cursor:pointer" onclick="openGoalModal(${jsArg(goal.id)})">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
-        <strong style="font-size:15px">${goal.title}</strong>
+        <strong style="font-size:15px">${esc(goal.title)}</strong>
         <span style="font-size:11px;font-weight:600;color:var(--accent);background:var(--surface2);padding:2px 8px;border-radius:99px;white-space:nowrap">${meta.icon} ${meta.label}</span>
       </div>
-      ${(goal.targetValue || goal.currentValue) ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px">${goal.currentValue || '0'}${goal.unit ? ' ' + goal.unit : ''} von ${goal.targetValue || '?'}${goal.unit ? ' ' + goal.unit : ''}</div>` : ''}
+      ${(goal.targetValue || goal.currentValue) ? `<div style="font-size:13px;color:var(--text);margin-bottom:6px">${esc(goal.currentValue || '0')}${unit} von ${esc(goal.targetValue || '?')}${unit}</div>` : ''}
       ${pct !== null ? `<div class="slot-progress"><div class="slot-progress-bar" style="width:${pct}%"></div></div>` : ''}
     </div>`;
   }).join('')}</div>`;
 }
 
+function goalToRow(g) {
+  return { id: g.id, title: g.title, target_value: g.targetValue || null, current_value: g.currentValue || null, unit: g.unit || null, status: g.status };
+}
+let goalEditBase = null;
+
 function openGoalModal(id) {
   editingGoalId = id;
   const goal = id ? goals.find(g => g.id === id) : null;
+  goalEditBase = goal ? { row: goalToRow(goal), version: goal.updatedAt } : null;
   document.getElementById('goal-modal-title').textContent = goal ? 'Ziel bearbeiten' : 'Neues Ziel';
   document.getElementById('goal-title').value = goal ? goal.title : '';
   document.getElementById('goal-target').value = goal ? goal.targetValue : '';
@@ -2445,21 +2700,13 @@ async function saveGoal() {
     status: document.getElementById('goal-status').value,
   };
   try {
-    await apiFetch(GOAL_TABLE, {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates',
-      body: JSON.stringify({
-        id: goal.id, title: goal.title, target_value: goal.targetValue || null,
-        current_value: goal.currentValue || null, unit: goal.unit || null, status: goal.status,
-        updated_at: new Date().toISOString(),
-      }),
-    });
+    await saveRowVersioned(GOAL_TABLE, goalToRow(goal), goalEditBase && goalEditBase.row, goalEditBase && goalEditBase.version);
     closeGoalModal();
     await loadGoals();
     renderGoals();
     showToast('🎯 Ziel gespeichert');
-  } catch(e) {
-    showToast('Speichern fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2467,13 +2714,13 @@ async function deleteGoal() {
   if (!editingGoalId) return;
   if (!confirm('Dieses Ziel wirklich löschen?')) return;
   try {
-    await apiFetch(GOAL_TABLE + '?id=eq.' + editingGoalId, { method: 'DELETE' });
+    await apiFetch(GOAL_TABLE + '?id=eq.' + encodeURIComponent(editingGoalId), { method: 'DELETE' });
     closeGoalModal();
     await loadGoals();
     renderGoals();
     showToast('Gelöscht');
-  } catch(e) {
-    showToast('Löschen fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Löschen fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2502,6 +2749,7 @@ async function loadImprovements() {
     improvements = rows.map(r => ({
       id: r.id, title: r.title, description: r.description || '',
       category: r.category || 'sonstiges', priority: r.priority || 'medium', done: !!r.done,
+      updatedAt: r.updated_at,
     }));
     return true;
   } catch(e) {
@@ -2522,20 +2770,26 @@ function renderImprovements() {
   });
   c.innerHTML = `<div class="open-tasks-list">${sorted.map(item => {
     const pMeta = IMPROVEMENT_PRIORITY_META[item.priority] || IMPROVEMENT_PRIORITY_META.medium;
-    return `<div class="open-task-row" style="${item.done ? 'opacity:.55' : ''}" onclick="openImprovementModal('${item.id}')">
-      <div class="task-check ${item.done ? 'done' : ''}" onclick="event.stopPropagation();toggleImprovementDone('${item.id}')"></div>
+    return `<div class="open-task-row" style="${item.done ? 'opacity:.55' : ''}" onclick="openImprovementModal(${jsArg(item.id)})">
+      <div class="task-check ${item.done ? 'done' : ''}" onclick="event.stopPropagation();toggleImprovementDone(${jsArg(item.id)})"></div>
       <div class="open-task-name">
         <span style="font-size:11px;font-weight:700;margin-right:6px">${pMeta.icon} ${pMeta.label}</span>
-        ${item.title}
-        <span style="color:var(--muted);font-size:12px"> — ${IMPROVEMENT_CATEGORY_LABELS[item.category] || item.category}</span>
+        ${esc(item.title)}
+        <span style="color:var(--muted);font-size:12px"> — ${esc(IMPROVEMENT_CATEGORY_LABELS[item.category] || item.category)}</span>
       </div>
     </div>`;
   }).join('')}</div>`;
 }
 
+function improvementToRow(i) {
+  return { id: i.id, title: i.title, description: i.description || null, category: i.category, priority: i.priority, done: i.done };
+}
+let improvementEditBase = null;
+
 function openImprovementModal(id) {
   editingImprovementId = id;
   const item = id ? improvements.find(i => i.id === id) : null;
+  improvementEditBase = item ? { row: improvementToRow(item), version: item.updatedAt } : null;
   document.getElementById('improvement-modal-title').textContent = item ? 'Option bearbeiten' : 'Neue Verbesserungsoption';
   document.getElementById('improvement-title').value = item ? item.title : '';
   document.getElementById('improvement-description').value = item ? item.description : '';
@@ -2564,21 +2818,13 @@ async function saveImprovement() {
     done: existing ? existing.done : false,
   };
   try {
-    await apiFetch(IMPROVEMENT_TABLE, {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates',
-      body: JSON.stringify({
-        id: item.id, title: item.title, description: item.description || null,
-        category: item.category, priority: item.priority, done: item.done,
-        updated_at: new Date().toISOString(),
-      }),
-    });
+    await saveRowVersioned(IMPROVEMENT_TABLE, improvementToRow(item), improvementEditBase && improvementEditBase.row, improvementEditBase && improvementEditBase.version);
     closeImprovementModal();
     await loadImprovements();
     renderImprovements();
     showToast('📈 Gespeichert');
-  } catch(e) {
-    showToast('Speichern fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2586,13 +2832,13 @@ async function deleteImprovement() {
   if (!editingImprovementId) return;
   if (!confirm('Diese Option wirklich löschen?')) return;
   try {
-    await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + editingImprovementId, { method: 'DELETE' });
+    await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + encodeURIComponent(editingImprovementId), { method: 'DELETE' });
     closeImprovementModal();
     await loadImprovements();
     renderImprovements();
     showToast('Gelöscht');
-  } catch(e) {
-    showToast('Löschen fehlgeschlagen', 'error');
+  } catch (e) {
+    showToast('Löschen fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2602,14 +2848,15 @@ async function toggleImprovementDone(id) {
   item.done = !item.done;
   renderImprovements();
   try {
-    await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + id, {
-      method: 'PATCH',
+    const rows = await apiFetch(IMPROVEMENT_TABLE + '?id=eq.' + encodeURIComponent(id), {
+      method: 'PATCH', prefer: 'return=representation',
       body: JSON.stringify({ done: item.done, updated_at: new Date().toISOString() }),
     });
-  } catch(e) {
+    if (rows && rows[0]) item.updatedAt = rows[0].updated_at;
+  } catch (e) {
     item.done = !item.done;
     renderImprovements();
-    showToast('Fehler beim Speichern', 'error');
+    showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
   }
 }
 
@@ -2617,40 +2864,6 @@ document.getElementById('improvement-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('improvement-modal-bg')) closeImprovementModal();
 });
 
-async function generateIdeaQuestions() {
-  const title = document.getElementById('idea-title').value.trim();
-  if (!title) { showToast('Bitte zuerst einen Titel/Thema eingeben', 'error'); return; }
-  const content = document.getElementById('idea-content').value.trim();
-  const coreMessage = document.getElementById('idea-core-message').value.trim();
-  const guests = document.getElementById('idea-guests').value.trim();
-  const epTitle = [
-    `Titel/Thema: ${title}`,
-    content ? `Mögliche Themenpunkte/Inhalte: ${content}` : '',
-    coreMessage ? `Kernaussage & G&G: ${coreMessage}` : '',
-    guests ? `Gast: ${guests}` : '',
-  ].filter(Boolean).join('\n');
-  const btn = document.getElementById('idea-gen-questions-btn');
-  btn.disabled = true; btn.textContent = '⏳';
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/podcast-ai`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
-      body: JSON.stringify({ taskId: 'fragenerstellung', transcript: '', epTitle, customPrompt: customPrompts['fragenerstellung'] || '' }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    document.getElementById('idea-questions').value = data.result;
-    if (isLikelyTruncated(data.result)) {
-      showToast('⚠️ Ergebnis evtl. abgeschnitten (Limit erreicht) – bitte prüfen', 'error');
-    } else {
-      showToast('✨ Fragen generiert!');
-    }
-  } catch(e) {
-    showToast('Fehler: ' + e.message, 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = '✨';
-  }
-}
 
 document.getElementById('idea-modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('idea-modal-bg')) closeIdeaModal();
@@ -2667,33 +2880,42 @@ async function loadTodos() {
   try {
     const rows = await apiFetch(TODO_TABLE + '?select=*');
     todos = rows.map(r => ({ id: r.id, text: r.text, assignee: r.assignee, done: r.done, createdAt: r.created_at, doneAt: r.done_at }));
-  } catch (e) { showToast('Verbindungsfehler: ' + e.message, 'error'); }
+  } catch (e) { showToast('To-Dos konnten nicht geladen werden: ' + e.message, 'error'); }
 }
 
-// Saves per to-do are chained so rapid clicks can't reach the DB out of order;
-// at most one save waits behind the running one, and it sends the latest state.
-const todoSaveQueue = {};
-const todoSavePending = {};
-function saveTodo(t) {
-  if (todoSavePending[t.id]) return todoSaveQueue[t.id];
-  todoSavePending[t.id] = true;
-  const run = async () => {
-    todoSavePending[t.id] = false;
-    try {
-      await apiFetch(TODO_TABLE, {
-        method: 'POST',
-        prefer: 'resolution=merge-duplicates',
-        body: JSON.stringify({ id: t.id, text: t.text, assignee: t.assignee, done: t.done, created_at: t.createdAt, done_at: t.doneAt }),
-      });
-    } catch (e) { showToast('Speichern fehlgeschlagen', 'error'); }
-  };
-  todoSaveQueue[t.id] = (todoSaveQueue[t.id] || Promise.resolve()).then(run);
-  return todoSaveQueue[t.id];
+// Writes per to-do run in order; updates send only the changed fields and are
+// coalesced while one is waiting, so edits by Nils and Leo to different fields don't clobber each other.
+const todoSaveChain = {};
+const todoSaveQueued = {};
+const todoPendingChanges = {};
+function queueTodoWrite(id, write) {
+  const p = (todoSaveChain[id] || Promise.resolve()).catch(() => {}).then(write);
+  todoSaveChain[id] = p;
+  p.catch(e => {
+    showToast('Speichern fehlgeschlagen: ' + e.message, 'error');
+    loadTodos().then(renderTodos);
+  });
+  return p;
 }
-
-function escTodo(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function insertTodo(t) {
+  return queueTodoWrite(t.id, () => apiFetch(TODO_TABLE, {
+    method: 'POST', prefer: 'return=minimal',
+    body: JSON.stringify({ id: t.id, text: t.text, assignee: t.assignee, done: t.done, created_at: t.createdAt, done_at: t.doneAt }),
+  }));
 }
+function patchTodo(id, changes) {
+  const queued = !!todoPendingChanges[id];
+  todoPendingChanges[id] = { ...(todoPendingChanges[id] || {}), ...changes };
+  todoSaveQueued[id] = true;
+  if (queued) return todoSaveChain[id];
+  return queueTodoWrite(id, async () => {
+    const body = todoPendingChanges[id];
+    delete todoPendingChanges[id];
+    todoSaveQueued[id] = false;
+    await apiFetch(`${TODO_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(body) });
+  });
+}
+const TODO_COLUMNS = { text: 'text', assignee: 'assignee', done: 'done', doneAt: 'done_at' };
 
 function addTodo() {
   const input = document.getElementById('todo-input');
@@ -2704,7 +2926,7 @@ function addTodo() {
   input.value = '';
   input.focus();
   renderTodos();
-  saveTodo(t);
+  insertTodo(t);
 }
 
 function updateTodo(id, changes) {
@@ -2712,7 +2934,9 @@ function updateTodo(id, changes) {
   if (!t) return;
   Object.assign(t, changes);
   renderTodos();
-  saveTodo(t);
+  const row = {};
+  Object.entries(changes).forEach(([k, v]) => { row[TODO_COLUMNS[k]] = v; });
+  patchTodo(id, row);
 }
 
 function setTodoAssignee(id, assignee) { updateTodo(id, { assignee }); }
@@ -2726,9 +2950,7 @@ function toggleTodoDone(id) {
 async function deleteTodo(id) {
   todos = todos.filter(x => x.id !== id);
   renderTodos();
-  await (todoSaveQueue[id] || Promise.resolve());
-  try { await apiFetch(TODO_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' }); }
-  catch (e) { showToast('Löschen fehlgeschlagen', 'error'); }
+  await queueTodoWrite(id, () => apiFetch(TODO_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' })).catch(() => {});
 }
 
 async function clearDoneTodos() {
@@ -2737,10 +2959,10 @@ async function clearDoneTodos() {
   if (!confirm(`${done.length} erledigte To-Do${done.length === 1 ? '' : 's'} endgültig löschen?`)) return;
   todos = todos.filter(t => !t.done);
   renderTodos();
-  await Promise.all(done.map(t => todoSaveQueue[t.id] || Promise.resolve()));
+  await Promise.all(done.map(t => (todoSaveChain[t.id] || Promise.resolve()).catch(() => {})));
   const ids = done.map(t => '"' + t.id + '"').join(',');
   try { await apiFetch(TODO_TABLE + '?id=in.(' + encodeURIComponent(ids) + ')', { method: 'DELETE' }); }
-  catch (e) { showToast('Löschen fehlgeschlagen', 'error'); }
+  catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); loadTodos().then(renderTodos); }
 }
 
 function toggleTodoDoneSection() {
@@ -2750,7 +2972,7 @@ function toggleTodoDoneSection() {
 
 function startTodoEdit(id) {
   const t = todos.find(x => x.id === id);
-  const span = document.getElementById('todo-text-' + id);
+  const span = [...document.querySelectorAll('.todo-text')].find(el => el.dataset.todoId === id);
   if (!t || !span) return;
   todoEditingId = id;
   const input = document.createElement('input');
@@ -2777,10 +2999,10 @@ function startTodoEdit(id) {
 
 function todoRowHtml(t, actions) {
   return `<div class="todo-row ${t.done ? 'done' : ''}">
-    <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone('${t.id}')" title="${t.done ? 'Haken entfernen' : 'Erledigt'}"></div>
-    <span class="todo-text" id="todo-text-${t.id}" ondblclick="startTodoEdit('${t.id}')">${escTodo(t.text)}</span>
+    <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone(${jsArg(t.id)})" title="${t.done ? 'Haken entfernen' : 'Erledigt'}"></div>
+    <span class="todo-text" data-todo-id="${esc(t.id)}" ondblclick="startTodoEdit(${jsArg(t.id)})">${esc(t.text)}</span>
     ${actions}
-    <button class="todo-del" onclick="deleteTodo('${t.id}')" title="Löschen">🗑</button>
+    <button class="todo-del" onclick="deleteTodo(${jsArg(t.id)})" title="Löschen">🗑</button>
   </div>`;
 }
 
@@ -2789,7 +3011,7 @@ function renderTodos() {
   const byNewest = (a, b) => (b.createdAt || '').localeCompare(a.createdAt || '');
   const open = todos.filter(t => !t.done && !t.assignee).sort(byNewest);
   document.getElementById('todos-open').innerHTML = open.length
-    ? open.map(t => todoRowHtml(t, `<button class="todo-btn leo" onclick="setTodoAssignee('${t.id}','leo')">Leo</button><button class="todo-btn nils" onclick="setTodoAssignee('${t.id}','nils')">Nils</button>`)).join('')
+    ? open.map(t => todoRowHtml(t, `<button class="todo-btn leo" onclick="setTodoAssignee(${jsArg(t.id)},'leo')">Leo</button><button class="todo-btn nils" onclick="setTodoAssignee(${jsArg(t.id)},'nils')">Nils</button>`)).join('')
     : `<div class="todo-empty">Keine offenen To-Dos</div>`;
 
   ['leo', 'nils'].forEach(who => {
@@ -2797,7 +3019,7 @@ function renderTodos() {
     const list = todos.filter(t => !t.done && t.assignee === who).sort(byNewest);
     document.getElementById('todo-head-' + who).textContent = `${TODO_NAMES[who]} (${list.length})`;
     document.getElementById('todos-' + who).innerHTML = list.length
-      ? list.map(t => todoRowHtml(t, `<button class="todo-btn ${other}" onclick="setTodoAssignee('${t.id}','${other}')" title="An ${TODO_NAMES[other]} geben">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee('${t.id}',null)" title="Zurück in Offen">↩ Offen</button>`)).join('')
+      ? list.map(t => todoRowHtml(t, `<button class="todo-btn ${other}" onclick="setTodoAssignee(${jsArg(t.id)},'${other}')" title="An ${TODO_NAMES[other]} geben">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee(${jsArg(t.id)},null)" title="Zurück in Offen">↩ Offen</button>`)).join('')
       : `<div class="todo-empty">Nichts zugewiesen</div>`;
   });
 
@@ -2827,7 +3049,7 @@ function showPage(name) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeIdeaModal(); closeLogin(); } });
 
 // ── THEME ────────────────────────────────────────────────────────
 function toggleTheme() {
@@ -2849,12 +3071,35 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────────
+async function initAuth() {
+  loadSession();
+  const fromLink = consumeAuthRedirect();
+  if (session) {
+    storeSession(session);
+    if (fromLink) { await afterLogin(); return; }
+    try {
+      const rows = await apiFetch('app_users?select=name&email=eq.' + encodeURIComponent(session.email));
+      if (!session) { /* expired while checking; refreshSession already told the user */ }
+      else if (rows.length) currentUserName = rows[0].name;
+      else {
+        await logout(true);
+        showToast('Deine E-Mail ist nicht für Glans & Gloria freigeschaltet.', 'error');
+      }
+    } catch (e) {
+      if (e.status !== 0) showToast('Anmeldung konnte nicht geprüft werden: ' + e.message, 'error');
+    }
+    updateAuthUi();
+  }
+  if (!session && AUTH_REQUIRED) openLogin();
+}
+
 (async () => {
   initTheme();
+  renderSyncState();
   document.getElementById('planer-grid').innerHTML = '<div class="loading"><div class="spinner"></div> Lade Episoden...</div>';
+  await initAuth();
   await loadEpisodes();
   renderPlaner();
-  loadPrompts();
   connectRealtime();
 })();
 </script>
