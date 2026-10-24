@@ -460,6 +460,74 @@
       .todo-actions { width: 100%; justify-content: flex-end; }
     }
 
+    /* Phase 4: status, episode info, step details, guides, kanban */
+    .st-pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; white-space: nowrap; background: var(--surface2); color: var(--muted); }
+    .st-guest_requested { background: rgba(139,156,255,.16); color: var(--leo); }
+    .st-recording_scheduled { background: rgba(139,156,255,.16); color: var(--accent2); }
+    .st-recorded { background: rgba(96,165,250,.16); color: #60a5fa; }
+    .st-editing { background: var(--yellow-soft); color: var(--yellow); }
+    .st-ready { background: var(--accent-soft); color: var(--accent-text); }
+    .st-published { background: var(--green-soft); color: var(--green); }
+    body.light .st-recorded { color: #2563eb; }
+    .slot-badges { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ep-header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .status-select { width: auto !important; font-weight: 600; min-height: 38px; }
+    .ep-info { margin-bottom: 12px; padding: 14px 16px; }
+    .ep-info h2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; cursor: pointer; user-select: none; font-size: 15px; margin-bottom: 12px; }
+    .ep-info h2 .section-toggle-icon { margin-left: auto; color: var(--muted); }
+    .ep-info.collapsed h2 { margin-bottom: 0; }
+    .ep-info.collapsed .ep-info-body { display: none; }
+    .pill-warn { background: var(--yellow-soft); color: var(--yellow); }
+    .ep-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 10px; }
+    .ep-link label { margin-bottom: 4px; font-size: 12px; }
+    .ep-link-row { display: flex; gap: 6px; }
+    .ep-link-row input { flex: 1; min-width: 0; }
+    .ep-approvals { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+    .ep-approval { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--surface2); border-radius: var(--radius-sm); padding: 6px 6px 6px 12px; font-size: 13px; }
+    .ep-approval select { width: auto; min-height: 32px; padding: 4px 8px; font-size: 13px; background: var(--surface); }
+    .approval-pending { color: var(--yellow) !important; }
+    .approval-changes { color: var(--red) !important; }
+    .approval-approved { color: var(--green) !important; }
+    .step-meta { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; margin-bottom: 10px; background: var(--surface2); border-radius: var(--radius-sm); }
+    .step-meta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .step-meta-field { display: flex; flex-direction: column; min-width: 0; }
+    .step-meta-row .step-meta-field { flex: 1 1 150px; }
+    .step-meta label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; }
+    .step-meta input, .step-meta select, .step-meta textarea { background: var(--surface); min-height: 36px; }
+    .step-meta textarea { min-height: 56px; }
+    .seg-sm { margin: 0; padding: 2px; }
+    .seg-sm .seg-btn { padding: 5px 12px; }
+    .guide-panel { border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .guide-panel.guide-open { border-left-color: var(--yellow); }
+    .guide-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; }
+    .guide-instructions { white-space: pre-wrap; font-size: 13px; line-height: 1.6; background: var(--surface2); padding: 10px 12px; border-radius: var(--radius-sm); }
+    .guide-items { display: flex; flex-direction: column; gap: 4px; }
+    .guide-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); margin: 0; padding: 4px 2px; cursor: pointer; }
+    .guide-item span:not(.chip) { flex: 1; }
+    .guide-item.done span:not(.chip) { text-decoration: line-through; color: var(--muted); }
+    .guide-cat { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 22px 0 10px; }
+    .guide-cat:first-child { margin-top: 0; }
+    .guide-edit-list { display: flex; flex-direction: column; gap: 6px; }
+    .guide-edit-item { display: flex; align-items: center; gap: 6px; }
+    .guide-edit-item input[type=text] { flex: 1; min-width: 0; }
+    .guide-req { display: inline-flex; align-items: center; gap: 4px; margin: 0; font-size: 12px; white-space: nowrap; cursor: pointer; }
+    .guide-steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .guide-step-sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .guide-step { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: var(--text); margin: 0 0 4px; cursor: pointer; }
+    .guide-step.taken { opacity: .55; cursor: not-allowed; }
+    .guide-step input { margin-top: 3px; }
+    .guide-history { margin-bottom: 4px; font-size: 13px; }
+    .guide-history summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+    .guide-version { padding: 4px 0; color: var(--muted); }
+    .kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+    .kanban-col { background: var(--surface2); border-radius: var(--radius); padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .kanban-col.drag-over { outline: 2px dashed var(--accent); }
+    .kanban-head { display: flex; justify-content: space-between; align-items: center; padding: 2px 2px 4px; }
+    .kanban-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; cursor: grab; display: flex; flex-direction: column; gap: 6px; }
+    .kanban-card:hover { border-color: var(--accent); }
+    .kanban-title { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
+    .kanban-select { min-height: 30px !important; padding: 2px 8px !important; font-size: 12px !important; }
+
     /* ── ZEITSTRAHL ──────────────────────────────────────────────── */
     .timeline { position: relative; padding: 8px 0 32px 0; }
     .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); }
@@ -497,6 +565,7 @@
       <button class="nav-item" title="Zeitstrahl" data-page="zeitstrahl" onclick="showPage('zeitstrahl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg><span class="nav-label">Zeitstrahl</span></button>
       <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span></button>
       <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
+      <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
   </nav>
   <div class="sb-foot">
@@ -538,9 +607,14 @@
       <span id="planner-year-label" class="year"></span>
       <button class="btn btn-sm" onclick="changePlannerYear(1)" title="Nächstes Jahr" aria-label="Nächstes Jahr">&#8594;</button>
       <button class="filter-btn" id="archive-toggle-btn" onclick="toggleArchive()">📦 Archiv anzeigen</button>
+      <div class="seg seg-sm" id="planer-view-toggle" style="margin:0">
+        <button class="seg-btn" data-view="grid" onclick="setPlanerView('grid')">Raster</button>
+        <button class="seg-btn" data-view="kanban" onclick="setPlanerView('kanban')">Kanban</button>
+      </div>
     </div>
     <div id="today-widget"></div>
     <div id="planer-grid" class="planer-grid"></div>
+    <div id="planer-kanban" class="kanban" hidden></div>
   </div>
 
   <div class="page" id="page-zeitstrahl">
@@ -564,6 +638,17 @@
     <div class="seg" id="task-views" role="tablist" aria-label="Ansicht"></div>
     <div class="filter-row" id="task-filters"></div>
     <div id="tasks-content"></div>
+  </div>
+
+  <div class="page" id="page-guides">
+    <div class="section-header">
+      <div>
+        <h1>Leitfäden</h1>
+        <p class="subtitle">Verbindliche Arbeitsanweisungen für wiederkehrende Produktionsschritte &mdash; versioniert</p>
+      </div>
+      <button class="btn btn-primary" onclick="openGuideEditor(null)">+ Neuer Leitfaden</button>
+    </div>
+    <div id="guides-container"></div>
   </div>
 
   <div class="page" id="page-ideen">
@@ -779,6 +864,48 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeProjectsModal()">Fertig</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="guide-modal-bg">
+  <div class="modal" style="width:720px">
+    <h2 id="guide-modal-title">Leitfaden</h2>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label for="guide-title">Titel</label>
+        <input type="text" id="guide-title" placeholder="z. B. Riverside-Aufnahme durchführen">
+      </div>
+      <div class="form-group">
+        <label for="guide-category">Kategorie</label>
+        <input type="text" id="guide-category" list="guide-categories" placeholder="z. B. Aufnahme">
+        <datalist id="guide-categories"></datalist>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="guide-instructions">Arbeitsanweisung</label>
+      <textarea id="guide-instructions" rows="8" placeholder="Schritt für Schritt: Was ist zu tun, worauf ist zu achten?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Checkliste</label>
+      <div id="guide-items" class="guide-edit-list"></div>
+      <div class="todo-input-row" style="margin:8px 0 0">
+        <input type="text" id="guide-item-input" placeholder="Prüfpunkt hinzufügen…" aria-label="Prüfpunkt" onkeydown="if(event.key==='Enter')addGuideItem()">
+        <label class="guide-req"><input type="checkbox" id="guide-item-required" checked> Pflicht</label>
+        <button class="btn btn-sm" onclick="addGuideItem()">Hinzufügen</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Gilt für Produktionsschritte</label>
+      <div id="guide-steps" class="guide-steps"></div>
+    </div>
+    <p class="muted" id="guide-status" style="font-size:12px;margin-bottom:6px"></p>
+    <details class="guide-history"><summary>Versionsverlauf</summary><div id="guide-versions"></div></details>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="guide-delete-btn" onclick="deleteGuide()">Löschen</button>
+      <button class="btn btn-ghost" onclick="closeGuideEditor()">Abbrechen</button>
+      <button class="btn" onclick="saveGuideDraft(false)">Entwurf speichern</button>
+      <button class="btn btn-primary" id="guide-release-btn" onclick="saveGuideDraft(true)">Freigeben</button>
     </div>
   </div>
 </div>
@@ -1191,13 +1318,14 @@ function merge3(base, local, server) {
 }
 
 // ── EPISODES: LOAD & SAVE ───────────────────────────────────────
-const EP_DATA_KEYS = ['title', 'num', 'date', 'desc', 'tasks', 'notes', 'transcript', 'recordingDate', 'contentPlan'];
+const EP_DATA_KEYS = ['title', 'num', 'date', 'desc', 'tasks', 'notes', 'transcript', 'recordingDate', 'contentPlan', 'status', 'guest', 'links', 'approvals'];
 function rowToEpisode(r) {
   return {
     id: r.id, title: r.title, num: r.num || '', date: r.date,
     desc: r.description || '', tasks: r.tasks || {}, notes: r.notes || '',
     transcript: r.transcript || '', recordingDate: r.recording_date || '',
     contentPlan: r.content_plan || {},
+    status: r.status || 'planned', guest: r.guest || '', links: r.links || {}, approvals: r.approvals || {},
   };
 }
 function episodeToRow(ep) {
@@ -1207,6 +1335,7 @@ function episodeToRow(ep) {
     tasks: ep.tasks || {}, notes: ep.notes || null,
     transcript: ep.transcript || null, recording_date: ep.recordingDate || null,
     content_plan: ep.contentPlan || {},
+    status: ep.status || 'planned', guest: ep.guest || null, links: ep.links || {}, approvals: ep.approvals || {},
   };
 }
 function epData(ep) {
@@ -1378,7 +1507,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects'];
+const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1438,6 +1567,10 @@ function onRemoteChange(table) {
         await loadTodos();
         if (todosActive) renderTodos(); else renderDashboard();
       }
+    } else if (table === 'podcast_guides') {
+      await loadGuides();
+      if (document.getElementById('page-guides').classList.contains('active') && !document.getElementById('guide-modal-bg').classList.contains('open')) renderGuides();
+      if (document.getElementById('page-detail').classList.contains('active') && editingEpId) onEpisodesChanged(new Set([editingEpId]));
     } else if (table === 'podcast_task_projects') {
       await loadProjects();
       if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId) renderTodos();
@@ -1604,7 +1737,10 @@ function patchTask(ep, id, changes) {
   if (!next.assignee) delete next.assignee;
   ep.tasks[id] = next;
 }
-function setTaskDone(ep, id, done) { patchTask(ep, id, { done }); }
+function setTaskDone(ep, id, done) {
+  const prev = (ep.tasks && typeof ep.tasks[id] === 'object' && ep.tasks[id]) || {};
+  patchTask(ep, id, { done, status: done ? 'done' : 'open', doneAt: done ? (prev.doneAt || new Date().toISOString()) : null });
+}
 function taskAssignee(ep, id) {
   const v = ep.tasks && ep.tasks[id];
   if (!v || typeof v !== 'object') return null;
@@ -1778,6 +1914,12 @@ function renderTodayWidget() {
 
 function renderPlaner() {
   renderTodayWidget();
+  document.querySelectorAll('#planer-view-toggle .seg-btn').forEach(b => b.classList.toggle('active', b.dataset.view === planerView));
+  document.getElementById('planer-grid').hidden = planerView === 'kanban';
+  document.getElementById('planer-kanban').hidden = planerView !== 'kanban';
+  document.querySelector('.planer-toolbar .year').parentElement.querySelectorAll('[onclick^="changePlannerYear"]').forEach(b => { b.hidden = planerView === 'kanban'; });
+  document.getElementById('planner-year-label').hidden = planerView === 'kanban';
+  if (planerView === 'kanban') { renderKanban(); return; }
   const yearLabel = document.getElementById('planner-year-label');
   if (yearLabel) yearLabel.textContent = plannerYear;
   const grid = document.getElementById('planer-grid');
@@ -1808,7 +1950,7 @@ function renderPlaner() {
       el.className = `slot filled${isDone ? ' slot-done' : ''}`;
       el.innerHTML = `<div class="slot-ep">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${isToday ? '📅 Heute · ' : ''}${esc(date)}</div>
         <div class="slot-title">${esc(ep.title)}</div>
-        <span class="badge ${badgeClass}">${statusLabel}</span>
+        <div class="slot-badges">${statusPill(ep.status)}<span class="badge ${badgeClass}">${statusLabel}</span></div>
         <div class="slot-progress"><div class="slot-progress-bar" style="width:${p.pct}%"></div></div>`;
       el.setAttribute('draggable', 'true');
       el.dataset.date = date;
@@ -2126,15 +2268,7 @@ function openDetail(id) {
               </div>`).join('')}
             </div>`;
     }
-    const link = safeUrl(taskLink(ep, step.id));
-    return `${step.id === 'fragenerstellung' ? `<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <input type="text" class="task-content-textarea" style="margin-bottom:0;flex:1"
-                placeholder="Google-Drive-Link zur Fragensammlung einfügen…"
-                id="link-${step.id}" value="${esc(taskLink(ep, step.id))}"
-                oninput="scheduleLinkSave(${idArg},'${step.id}',this.value)">
-              <a id="linkopen-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer"
-                class="task-expand-btn" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>
-            </div>` : ''}
+    return `<label class="reel-field-label">Inhalt</label>
             <textarea class="task-content-textarea" placeholder="Inhalt hier einfügen – z.B. Shownotes, Titel, Beschreibung …"
               oninput="scheduleContentSave(${idArg},'${step.id}',this.value)">${esc(taskContent(ep, step.id))}</textarea>
             <div style="display:flex;gap:0;flex-wrap:wrap">
@@ -2154,15 +2288,18 @@ function openDetail(id) {
       <div class="section-body">
       ${steps.map(step => {
         const done = taskDone(ep, step.id);
-        const link = step.id === 'fragenerstellung' ? safeUrl(taskLink(ep, step.id)) : '';
+        const link = safeUrl(taskLink(ep, step.id));
+        const chips = stepChipsHtml(ep, step);
         return `<div class="task-row" id="row-${step.id}">
           <div class="task-item ${done ? 'done' : ''}" onclick="toggleContent('${step.id}')">
-            <div class="task-check" onclick="event.stopPropagation();toggleTask(${idArg},'${step.id}')"></div>
-            <div class="task-label">${step.label}</div>
-            ${step.id === 'fragenerstellung' ? `<a id="linkopen-row-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
-                class="task-expand-btn" style="margin-left:auto" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>` : ''}
+            <div class="task-check" onclick="event.stopPropagation();toggleTask(${idArg},'${step.id}')" role="checkbox" aria-checked="${done}"></div>
+            <div class="task-label">${step.label}${chips ? `<div class="todo-chips" style="margin-top:3px">${chips}</div>` : ''}</div>
+            <a id="linkopen-row-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+                class="task-expand-btn" style="margin-left:auto" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>
           </div>
           <div class="task-content-area" id="content-${step.id}">
+            ${stepMetaHtml(ep, step)}
+            ${guidePanelHtml(ep, step)}
             ${stepBody(step)}
           </div>
         </div>`;
@@ -2182,7 +2319,8 @@ function openDetail(id) {
           ${ep.desc ? `<span>${esc(ep.desc)}</span>` : ''}
         </div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center">
+      <div class="ep-header-actions">
+        <select class="status-select st-${ep.status || 'planned'}" aria-label="Produktionsstatus" onchange="setEpisodeStatus(${idArg}, this.value)">${statusOptions(ep.status)}</select>
         <div class="progress-circle">
           <svg width="64" height="64" viewBox="0 0 64 64">
             <circle cx="32" cy="32" r="26" fill="none" stroke="var(--surface2)" stroke-width="5"/>
@@ -2194,6 +2332,7 @@ function openDetail(id) {
         <button class="btn btn-ghost" onclick="openEditModal(${idArg})">Bearbeiten</button>
       </div>
     </div>
+    ${episodeInfoHtml(ep)}
     <div class="transcript-box collapsed">
       <h2 style="cursor:pointer" onclick="toggleTranscriptBox()">
         📄 Transkript
@@ -2252,6 +2391,14 @@ function restoreDetailState(st) {
   if (st.calendarOpen) toggleCalendarBox();
   if (st.transcriptOpen) toggleTranscriptBox();
   window.scrollTo(0, st.scroll);
+}
+function openStepContent(stepId) {
+  const step = WORKFLOW_STEPS.find(s => s.id === stepId);
+  if (!step) return;
+  const sec = document.getElementById('section-' + step.section);
+  if (sec && sec.classList.contains('collapsed')) toggleSection(step.section);
+  document.getElementById('content-' + stepId)?.classList.add('open');
+  document.getElementById('row-' + stepId)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 function rerenderDetail(epId) {
   const st = captureDetailState();
@@ -2405,7 +2552,7 @@ function syncCalendarTaskCompletion(ep) {
   const sync = (taskId, bucket) => {
     if (!bucket || bucket.total === 0) return;
     const allDone = bucket.done >= bucket.total;
-    if (taskDone(ep, taskId) !== allDone) { setTaskDone(ep, taskId, allDone); changed = true; }
+    if (taskDone(ep, taskId) !== allDone && setEpisodeStepDone(ep, taskId, allDone)) changed = true;
   };
 
   sync('sm1_reels',     w1.reel);
@@ -2418,12 +2565,7 @@ function syncCalendarTaskCompletion(ep) {
   const liDone  = w1.linkedin.done  + w2.linkedin.done;
   if (liTotal > 0) {
     const allDone = liDone >= liTotal;
-    if (taskDone(ep, 'li_beitraege') !== allDone) {
-      setTaskDone(ep, 'li_beitraege', allDone);
-      const posts = getLiPosts(ep).map(p => ({ ...p, done: allDone }));
-      saveLiPosts(ep, posts);
-      changed = true;
-    }
+    if (taskDone(ep, 'li_beitraege') !== allDone && setEpisodeStepDone(ep, 'li_beitraege', allDone)) changed = true;
   }
   return changed;
 }
@@ -2465,9 +2607,10 @@ function toggleTranscriptBox() {
 async function markAllDone(epId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  WORKFLOW_STEPS.forEach(s => setTaskDone(ep, s.id, true));
+  const blocked = WORKFLOW_STEPS.filter(s => !setEpisodeStepDone(ep, s.id, true)).map(s => s.id);
   rerenderDetail(epId);
-  try { await upsertEpisode(ep); showToast('✅ Alle Aufgaben abgehakt!'); } catch {}
+  if (blocked.length) blockedToast(blocked);
+  try { await upsertEpisode(ep); if (!blocked.length) showToast('✅ Alle Aufgaben abgehakt!'); } catch {}
 }
 
 function getOpenSections() {
@@ -2489,19 +2632,24 @@ function restoreOpenSections(openSecs) {
 }
 
 // Single place for ticking a production step (used by the episode view and the task list).
+// Single place for ticking a production step (episode view, task list, calendar sync).
+// Returns false if a released guide still has open required items.
 function setEpisodeStepDone(ep, taskId, done) {
+  if (done && !canCompleteStep(ep, taskId)) return false;
+  if (done) ensureGuideSnapshot(ep, taskId);
   setTaskDone(ep, taskId, done);
   if (taskId === 'reels_download') {
     saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: done })));
   } else if (taskId === 'li_beitraege') {
     saveLiPosts(ep, getLiPosts(ep).map(p => ({ ...p, done })));
   }
+  return true;
 }
 
 async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  setEpisodeStepDone(ep, taskId, !taskDone(ep, taskId));
+  if (!setEpisodeStepDone(ep, taskId, !taskDone(ep, taskId))) { openStepContent(taskId); blockedToast([taskId]); return; }
   rerenderDetail(epId);
   upsertEpisode(ep).catch(() => {});
 }
@@ -2511,8 +2659,9 @@ async function toggleSectionTasks(epId, sec) {
   if (!ep) return;
   const steps = WORKFLOW_STEPS.filter(s => s.section === sec);
   const allDone = steps.every(s => taskDone(ep, s.id));
-  steps.forEach(s => setTaskDone(ep, s.id, !allDone));
+  const blocked = steps.filter(s => !setEpisodeStepDone(ep, s.id, !allDone)).map(s => s.id);
   rerenderDetail(epId);
+  if (blocked.length) blockedToast(blocked);
   upsertEpisode(ep).catch(() => {});
 }
 
@@ -2670,7 +2819,7 @@ function scheduleTranscriptSave(epId, val) {
 // Exports all episodes + ideas as a single JSON file (manual backup).
 async function exportAllData() {
   flushEdits();
-  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_goals', 'podcast_improvements',
+  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions', 'podcast_goals', 'podcast_improvements',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -2750,7 +2899,8 @@ async function saveEpisode() {
     ep = episodes.find(e => e.id === editingEpId);
     Object.assign(ep, { title, num, date, desc, recordingDate });
   } else {
-    ep = { id: Date.now().toString(), title, num, date, desc, recordingDate, tasks: {}, notes: '' };
+    ep = { id: Date.now().toString(), title, num, date, desc, recordingDate, tasks: {}, notes: '', transcript: '', contentPlan: {},
+           status: recordingDate ? 'recording_scheduled' : 'planned', guest: '', links: {}, approvals: {} };
     if (pendingIdeaForEpisode) {
       const idea = pendingIdeaForEpisode;
       if (idea.questions || idea.driveLink) {
@@ -3339,6 +3489,8 @@ function startTodoEdit(id) {
 // Production/upload steps are needed by the release; social & LinkedIn steps by
 // the end of the 14-day content plan (release + 13 days).
 function stepDueDate(ep, step) {
+  const explicit = taskField(ep, step.id, 'due');
+  if (explicit) return safeParseIso(explicit);
   const release = safeParseDate(ep.date);
   if (!release) return null;
   if (step.section === 'SocialMedia' || step.section === 'LinkedIn') { const d = new Date(release); d.setDate(d.getDate() + 13); return d; }
@@ -3366,7 +3518,12 @@ function episodeTaskItems() {
 function toggleEpisodeStep(epId, stepId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  setEpisodeStepDone(ep, stepId, !taskDone(ep, stepId));
+  if (!setEpisodeStepDone(ep, stepId, !taskDone(ep, stepId))) {
+    blockedToast([stepId]);
+    openDetail(epId);
+    openStepContent(stepId);
+    return;
+  }
   renderTodos();
   upsertEpisode(ep).catch(() => {});
 }
@@ -3476,6 +3633,8 @@ function stepRowHtml(item, { showEpisode = true } = {}) {
         ${showEpisode ? `<button class="chip chip-link" onclick="openDetail(${e})" title="Folge öffnen">🎙 ${ep.num ? '#' + esc(ep.num) + ' ' : ''}${esc(ep.title)}</button>` : ''}
         <span class="chip">${SECTION_LABELS[step.section]}</span>
         ${dueChip(due, done)}
+        ${stepStatus(ep, step.id) === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : ''}
+        ${(() => { const g = stepGuide(ep, step.id); if (!g || g.preIntro || done) return ''; const req = g.items.filter(i => i.required).length; return req ? `<span class="chip${guideMissing(g) ? ' chip-warn' : ''}">📘 ${req - guideMissing(g)}/${req}</span>` : ''; })()}
       </div>
     </div>
     <div class="todo-actions">
@@ -3703,6 +3862,495 @@ async function deleteProject(id) {
   } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
 }
 
+// ── EPISODE STATUS, LINKS, APPROVALS ─────────────────────────────
+const EPISODE_STATUS = [
+  ['planned', 'Geplant'], ['guest_requested', 'Gast angefragt'], ['recording_scheduled', 'Aufnahme terminiert'],
+  ['recorded', 'Aufgenommen'], ['editing', 'Im Schnitt'], ['ready', 'Bereit zur Veröffentlichung'], ['published', 'Veröffentlicht'],
+];
+const EPISODE_STATUS_LABEL = Object.fromEntries(EPISODE_STATUS);
+const EPISODE_LINKS = [
+  ['riverside', 'Riverside'], ['drive', 'Google Drive'], ['spotify', 'Spotify'],
+  ['youtube', 'YouTube'], ['apple', 'Apple Podcasts'], ['website', 'Blog / Website'],
+];
+const APPROVAL_ITEMS = [['episode', 'Folge (Schnitt)'], ['reels', 'Reels'], ['cover', 'Thumbnail / Cover'], ['social', 'Social-Media-Posts']];
+const APPROVAL_STATES = [['', 'Nicht nötig'], ['pending', 'Ausstehend'], ['changes', 'Änderungen gewünscht'], ['approved', 'Freigegeben']];
+const APPROVAL_LABEL = Object.fromEntries(APPROVAL_STATES);
+
+function statusPill(status) {
+  const s = status || 'planned';
+  return `<span class="st-pill st-${s}">${EPISODE_STATUS_LABEL[s] || s}</span>`;
+}
+function statusOptions(current) {
+  return EPISODE_STATUS.map(([k, label]) => `<option value="${k}"${(current || 'planned') === k ? ' selected' : ''}>${label}</option>`).join('');
+}
+function setEpisodeStatus(epId, status) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep || ep.status === status) return;
+  ep.status = status;
+  const active = document.querySelector('.page.active').id;
+  if (active === 'page-planer') renderPlaner();
+  if (active === 'page-detail') rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+}
+function scheduleEpisodeFieldSave(epId, field, value) {
+  debounceEdit(`epfield:${epId}:${field}`, () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    ep[field] = value;
+    upsertEpisode(ep).catch(() => {});
+  });
+}
+function scheduleEpisodeLinkSave(epId, key, value) {
+  const href = safeUrl(value);
+  const a = document.getElementById('eplink-open-' + key);
+  if (a) { a.href = href || '#'; a.hidden = !href; }
+  debounceEdit(`eplink:${epId}:${key}`, () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    ep.links = { ...(ep.links || {}), [key]: value.trim() };
+    if (!ep.links[key]) delete ep.links[key];
+    upsertEpisode(ep).catch(() => {});
+  });
+}
+function setApproval(epId, key, value) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  ep.approvals = { ...(ep.approvals || {}), [key]: value };
+  if (!value) delete ep.approvals[key];
+  upsertEpisode(ep).catch(() => {});
+}
+function toggleEpInfo() {
+  const box = document.getElementById('ep-info-box');
+  box.classList.toggle('collapsed');
+  try { localStorage.setItem('gg_epinfo_open', box.classList.contains('collapsed') ? '0' : '1'); } catch {}
+}
+function episodeInfoHtml(ep) {
+  const idArg = jsArg(ep.id);
+  const links = ep.links || {};
+  const approvals = ep.approvals || {};
+  const linkCount = EPISODE_LINKS.filter(([k]) => links[k]).length;
+  const pending = APPROVAL_ITEMS.filter(([k]) => approvals[k] === 'pending' || approvals[k] === 'changes').length;
+  let open = true;
+  try { open = localStorage.getItem('gg_epinfo_open') !== '0'; } catch {}
+  return `<div class="card ep-info${open ? '' : ' collapsed'}" id="ep-info-box">
+    <h2 onclick="toggleEpInfo()">ℹ️ Folgen-Infos
+      ${ep.guest ? `<span class="pill">👤 ${esc(ep.guest)}</span>` : ''}
+      <span class="pill">${linkCount} Link${linkCount === 1 ? '' : 's'}</span>
+      ${pending ? `<span class="pill pill-warn">${pending} Freigabe${pending === 1 ? '' : 'n'} offen</span>` : ''}
+      <span class="section-toggle-icon">${open ? '▾' : '▸'}</span></h2>
+    <div class="ep-info-body">
+      <div class="form-group">
+        <label for="ep-guest">Gast</label>
+        <input type="text" id="ep-guest" value="${esc(ep.guest)}" placeholder="z. B. Prof. Dr. … (Klinik)" oninput="scheduleEpisodeFieldSave(${idArg},'guest',this.value.trim())">
+      </div>
+      <div class="ep-links">
+        ${EPISODE_LINKS.map(([k, label]) => {
+          const href = safeUrl(links[k]);
+          return `<div class="ep-link">
+            <label for="eplink-${k}">${label}</label>
+            <div class="ep-link-row">
+              <input type="text" id="eplink-${k}" value="${esc(links[k])}" placeholder="https://…" oninput="scheduleEpisodeLinkSave(${idArg},'${k}',this.value)">
+              <a class="btn btn-sm" id="eplink-open-${k}" href="${esc(href || '#')}" target="_blank" rel="noopener noreferrer" ${href ? '' : 'hidden'} title="Öffnen">↗</a>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <label style="margin-top:6px">Freigaben</label>
+      <div class="ep-approvals">
+        ${APPROVAL_ITEMS.map(([k, label]) => `<div class="ep-approval">
+          <span>${label}</span>
+          <select class="approval-${approvals[k] || 'none'}" onchange="setApproval(${idArg},'${k}',this.value);this.className='approval-'+(this.value||'none')">
+            ${APPROVAL_STATES.map(([v, l]) => `<option value="${v}"${(approvals[k] || '') === v ? ' selected' : ''}>${l}</option>`).join('')}
+          </select>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── PRODUCTION STEP DETAILS ──────────────────────────────────────
+function taskField(ep, id, field) {
+  const v = ep.tasks && ep.tasks[id];
+  return (v && typeof v === 'object') ? v[field] : undefined;
+}
+function stepStatus(ep, id) {
+  if (taskDone(ep, id)) return 'done';
+  return taskField(ep, id, 'status') === 'in_progress' ? 'in_progress' : 'open';
+}
+function setStepStatus(epId, stepId, status) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  if (status === 'done') {
+    if (!setEpisodeStepDone(ep, stepId, true)) { rerenderDetail(epId); return; }
+  } else {
+    if (taskDone(ep, stepId)) setEpisodeStepDone(ep, stepId, false);
+    patchTask(ep, stepId, { status });
+  }
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+}
+function setStepAssignee(epId, stepId, who) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const code = who === 'nils' ? 'N' : 'L';
+  setTaskAssignee(ep, stepId, taskAssignee(ep, stepId) === code ? null : code);
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+}
+function setStepDue(epId, stepId, value) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  patchTask(ep, stepId, { due: value || null });
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+}
+function scheduleStepDescriptionSave(epId, stepId, value) {
+  debounceEdit(`stepdesc:${epId}:${stepId}`, () => {
+    const ep = episodes.find(e => e.id === epId);
+    if (!ep) return;
+    patchTask(ep, stepId, { description: value });
+    upsertEpisode(ep).catch(() => {});
+  });
+}
+function stepMetaHtml(ep, step) {
+  const e = jsArg(ep.id);
+  const a = taskAssignee(ep, step.id);
+  const link = taskLink(ep, step.id);
+  const href = safeUrl(link);
+  const doneAt = taskField(ep, step.id, 'doneAt');
+  return `<div class="step-meta">
+    <div class="step-meta-row">
+      <div class="step-meta-field"><label>Zuständig</label>
+        <div class="seg seg-sm">
+          <button class="seg-btn${a === 'L' ? ' active' : ''}" onclick="setStepAssignee(${e},'${step.id}','leo')">Leo</button>
+          <button class="seg-btn${a === 'N' ? ' active' : ''}" onclick="setStepAssignee(${e},'${step.id}','nils')">Nils</button>
+        </div></div>
+      <div class="step-meta-field"><label for="stepstatus-${step.id}">Status</label>
+        <select id="stepstatus-${step.id}" onchange="setStepStatus(${e},'${step.id}',this.value)">
+          ${Object.entries(STATUS_META).map(([k, l]) => `<option value="${k}"${stepStatus(ep, step.id) === k ? ' selected' : ''}>${l}</option>`).join('')}
+        </select></div>
+      <div class="step-meta-field"><label for="stepdue-${step.id}">Deadline</label>
+        <input type="date" id="stepdue-${step.id}" value="${esc(taskField(ep, step.id, 'due') || '')}" onchange="setStepDue(${e},'${step.id}',this.value)"></div>
+    </div>
+    <div class="step-meta-field"><label for="link-${step.id}">Link</label>
+      <div class="ep-link-row">
+        <input type="text" id="link-${step.id}" value="${esc(link)}" placeholder="${step.id === 'fragenerstellung' ? 'Google-Drive-Link zur Fragensammlung…' : 'https://…'}" oninput="scheduleLinkSave(${e},'${step.id}',this.value)">
+        <a class="btn btn-sm" id="linkopen-${step.id}" href="${esc(href || '#')}" target="_blank" rel="noopener noreferrer" ${href ? '' : 'hidden'} title="Link öffnen">↗</a>
+      </div></div>
+    <div class="step-meta-field"><label for="stepdesc-${step.id}">Beschreibung</label>
+      <textarea id="stepdesc-${step.id}" rows="2" placeholder="Was genau ist zu tun? (optional)" oninput="scheduleStepDescriptionSave(${e},'${step.id}',this.value)">${esc(taskField(ep, step.id, 'description') || '')}</textarea></div>
+    ${taskDone(ep, step.id) && doneAt ? `<div class="muted" style="font-size:12px">Erledigt am ${formatDate(new Date(doneAt))}</div>` : ''}
+  </div>`;
+}
+function stepChipsHtml(ep, step) {
+  const a = taskAssignee(ep, step.id);
+  const due = stepDueDate(ep, step);
+  const g = stepGuide(ep, step.id);
+  return [
+    a ? `<span class="who ${a === 'N' ? 'who-nils' : 'who-leo'}">${a === 'N' ? 'Nils' : 'Leo'}</span>` : '',
+    stepStatus(ep, step.id) === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : '',
+    taskField(ep, step.id, 'due') ? dueChip(due, taskDone(ep, step.id)) : '',
+    g && !g.preIntro && g.items.length ? `<span class="chip${guideMissing(g) && !taskDone(ep, step.id) ? ' chip-warn' : ''}" title="Leitfaden-Pflichtpunkte">📘 ${g.items.filter(i => i.required).length - guideMissing(g)}/${g.items.filter(i => i.required).length}</span>` : '',
+  ].filter(Boolean).join('');
+}
+
+// ── GUIDES (SOPs) ────────────────────────────────────────────────
+const GUIDE_TABLE = 'podcast_guides';
+const GUIDE_VERSION_TABLE = 'podcast_guide_versions';
+let guides = [];
+let guideVersions = [];
+let guidesLoaded = false;
+async function loadGuides() {
+  try {
+    const [g, v] = await Promise.all([
+      apiFetch(GUIDE_TABLE + '?select=*&order=category.asc,title.asc'),
+      apiFetch(GUIDE_VERSION_TABLE + '?select=*&order=version.desc'),
+    ]);
+    guides = g; guideVersions = v; guidesLoaded = true;
+    return true;
+  } catch (e) { showToast('Leitfäden konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+function guideForStep(stepId) { return guides.find(g => (g.step_ids || []).includes(stepId)); }
+function latestRelease(guideId) { return guideVersions.find(v => v.guide_id === guideId) || null; }
+// The released version currently in force for a step (drafts never apply to episodes).
+function currentGuideRelease(stepId) {
+  const g = guideForStep(stepId);
+  const v = g && g.version > 0 ? latestRelease(g.id) : null;
+  return v ? { guideId: g.id, version: v.version, title: v.title, instructions: v.instructions, items: v.checklist || [] } : null;
+}
+// Guide checklist as used by this episode: its stored snapshot, or the current release.
+function stepGuide(ep, stepId) {
+  const snap = taskField(ep, stepId, 'guide');
+  const current = currentGuideRelease(stepId);
+  if (snap) {
+    const outdated = !!current && current.guideId === snap.guideId && current.version > snap.version;
+    return { ...snap, checked: snap.checked || {}, persisted: true, outdated, currentVersion: current && current.version };
+  }
+  if (!current) return null;
+  // Finished before this guide existed: stays finished, nothing is required retroactively.
+  if (taskDone(ep, stepId)) return { ...current, checked: {}, preIntro: true };
+  return { ...current, checked: {}, persisted: false };
+}
+function guideMissing(g) { return g.items.filter(i => i.required && !g.checked[i.id]).length; }
+function canCompleteStep(ep, stepId) {
+  const g = stepGuide(ep, stepId);
+  return !g || g.preIntro || guideMissing(g) === 0;
+}
+function ensureGuideSnapshot(ep, stepId) {
+  if (taskField(ep, stepId, 'guide')) return;
+  const current = currentGuideRelease(stepId);
+  if (current) patchTask(ep, stepId, { guide: { ...current, checked: {} } });
+}
+function toggleGuideItem(epId, stepId, itemId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  ensureGuideSnapshot(ep, stepId);
+  const snap = taskField(ep, stepId, 'guide');
+  if (!snap) return;
+  const checked = { ...(snap.checked || {}) };
+  if (checked[itemId]) delete checked[itemId]; else checked[itemId] = true;
+  patchTask(ep, stepId, { guide: { ...snap, checked } });
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+}
+function updateGuideToCurrent(epId, stepId) {
+  const ep = episodes.find(e => e.id === epId);
+  const current = currentGuideRelease(stepId);
+  const snap = ep && taskField(ep, stepId, 'guide');
+  if (!snap || !current) return;
+  const ids = new Set(current.items.map(i => i.id));
+  const checked = Object.fromEntries(Object.entries(snap.checked || {}).filter(([k]) => ids.has(k)));
+  patchTask(ep, stepId, { guide: { ...current, checked } });
+  rerenderDetail(epId);
+  upsertEpisode(ep).catch(() => {});
+  showToast(`Leitfaden auf v${current.version} aktualisiert`);
+}
+function toggleGuideInstructions(stepId) {
+  const el = document.getElementById('guide-instr-' + stepId);
+  if (el) el.hidden = !el.hidden;
+}
+function guidePanelHtml(ep, step) {
+  const g = stepGuide(ep, step.id);
+  if (!g) return '';
+  const e = jsArg(ep.id);
+  const required = g.items.filter(i => i.required);
+  const missing = guideMissing(g);
+  const done = taskDone(ep, step.id);
+  return `<div class="guide-panel${missing && !done && !g.preIntro ? ' guide-open' : ''}">
+    <div class="guide-head">
+      <span>📘 <b>${esc(g.title)}</b></span>
+      <span class="pill">v${g.version}</span>
+      ${g.outdated && !done ? `<button class="link-btn" onclick="updateGuideToCurrent(${e},'${step.id}')">Neue Version v${g.currentVersion} übernehmen</button>` : ''}
+      ${g.instructions ? `<button class="link-btn" style="margin-left:auto" onclick="toggleGuideInstructions('${step.id}')">Anleitung anzeigen</button>` : ''}
+    </div>
+    ${g.instructions ? `<div class="guide-instructions" id="guide-instr-${step.id}" hidden>${esc(g.instructions)}</div>` : ''}
+    ${g.preIntro ? '<div class="muted" style="font-size:12px">Vor Einführung dieses Leitfadens abgeschlossen – keine Nacharbeit nötig.</div>' : `
+    <div class="guide-items">
+      ${g.items.map(i => `<label class="guide-item${g.checked[i.id] ? ' done' : ''}">
+        <div class="task-check ${g.checked[i.id] ? 'done' : ''}" onclick="event.preventDefault();toggleGuideItem(${e},'${step.id}',${jsArg(i.id)})" role="checkbox" aria-checked="${!!g.checked[i.id]}"></div>
+        <span>${esc(i.text)}</span>
+        ${i.required ? '<span class="chip chip-danger">Pflicht</span>' : '<span class="chip">optional</span>'}
+      </label>`).join('')}
+    </div>
+    ${required.length ? `<div class="muted" style="font-size:12px">${required.length - missing} von ${required.length} Pflichtpunkten erledigt${missing && !done ? ' – erst danach kann der Schritt abgeschlossen werden' : ''}</div>` : ''}`}
+  </div>`;
+}
+function blockedToast(stepIds) {
+  const labels = stepIds.map(id => (WORKFLOW_STEPS.find(s => s.id === id) || {}).label).filter(Boolean);
+  showToast(`Erst die Leitfaden-Pflichtpunkte abhaken: ${labels.slice(0, 3).join(', ')}${labels.length > 3 ? ' …' : ''}`, 'error');
+}
+
+// ── LEITFÄDEN PAGE ───────────────────────────────────────────────
+function renderGuides() {
+  const box = document.getElementById('guides-container');
+  if (!guides.length) {
+    box.innerHTML = `<div class="card">${emptyState('📘', 'Noch keine Leitfäden', 'Legt verbindliche Arbeitsanweisungen für wiederkehrende Produktionsschritte an.', '<button class="btn btn-primary" onclick="openGuideEditor(null)">+ Neuer Leitfaden</button>')}</div>`;
+    return;
+  }
+  const byCat = new Map();
+  guides.forEach(g => { const c = g.category || 'Ohne Kategorie'; if (!byCat.has(c)) byCat.set(c, []); byCat.get(c).push(g); });
+  box.innerHTML = [...byCat.entries()].map(([cat, list]) => `
+    <h2 class="guide-cat">${esc(cat)}</h2>
+    <div class="card-grid">${list.map(g => {
+      const rel = latestRelease(g.id);
+      const draftChanged = rel && (rel.title !== g.title || rel.instructions !== g.instructions || JSON.stringify(rel.checklist) !== JSON.stringify(g.checklist));
+      const req = (g.checklist || []).filter(i => i.required).length;
+      const steps = (g.step_ids || []).map(id => (WORKFLOW_STEPS.find(s => s.id === id) || {}).label).filter(Boolean);
+      return `<div class="card card-clickable" onclick="openGuideEditor(${jsArg(g.id)})">
+        <div class="card-title-row">
+          <div class="card-title">${esc(g.title)}</div>
+          ${g.version > 0 ? `<span class="pill pill-accent">v${g.version}</span>` : '<span class="pill">Entwurf</span>'}
+        </div>
+        <div class="card-meta">${(g.checklist || []).length} Prüfpunkte · ${req} Pflicht</div>
+        <div class="card-meta">${g.version > 0 && g.released_at ? 'Freigegeben am ' + formatDate(new Date(g.released_at)) : 'Noch nicht freigegeben – gilt noch für keine Folge'}${draftChanged ? ' · <b>ungeprüfte Änderungen</b>' : ''}</div>
+        ${steps.length ? `<div class="todo-chips" style="margin-top:8px">${steps.map(l => `<span class="chip">${esc(l)}</span>`).join('')}</div>` : '<div class="card-meta">Mit keinem Produktionsschritt verknüpft</div>'}
+      </div>`;
+    }).join('')}</div>`).join('');
+}
+
+let guideEdit = null; // { id, base, version, items }
+function openGuideEditor(id) {
+  const g = id ? guides.find(x => x.id === id) : null;
+  guideEdit = {
+    id: g ? g.id : null,
+    base: g ? guideToRow(g) : null,
+    updatedAt: g ? g.updated_at : null,
+    releasedVersion: g ? g.version : 0,
+    items: clone(g ? g.checklist || [] : []),
+    stepIds: new Set(g ? g.step_ids || [] : []),
+  };
+  document.getElementById('guide-modal-title').textContent = g ? 'Leitfaden bearbeiten' : 'Neuer Leitfaden';
+  document.getElementById('guide-title').value = g ? g.title : '';
+  document.getElementById('guide-category').value = g ? g.category || '' : '';
+  document.getElementById('guide-instructions').value = g ? g.instructions : '';
+  document.getElementById('guide-categories').innerHTML = [...new Set(guides.map(x => x.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('');
+  document.getElementById('guide-delete-btn').hidden = !g;
+  document.getElementById('guide-release-btn').textContent = `Freigeben als v${(g ? g.version : 0) + 1}`;
+  document.getElementById('guide-status').textContent = g && g.version > 0
+    ? `Aktuell freigegeben: v${g.version} vom ${formatDate(new Date(g.released_at))}. Änderungen gelten erst nach erneuter Freigabe – laufende Folgen behalten ihre Version.`
+    : 'Entwurf – gilt erst nach der Freigabe für Folgen.';
+  renderGuideSteps();
+  renderGuideItems();
+  renderGuideVersions();
+  document.getElementById('guide-modal-bg').classList.add('open');
+}
+function closeGuideEditor() { document.getElementById('guide-modal-bg').classList.remove('open'); guideEdit = null; }
+function guideToRow(g) {
+  return { id: g.id, title: g.title, category: g.category || null, instructions: g.instructions || '', checklist: g.checklist || [], step_ids: g.step_ids || [] };
+}
+function renderGuideSteps() {
+  document.getElementById('guide-steps').innerHTML = SECTIONS.map(sec => `<div class="guide-step-sec">
+    <div class="guide-step-sec-title">${SECTION_LABELS[sec]}</div>
+    ${WORKFLOW_STEPS.filter(s => s.section === sec).map(s => {
+      const other = guides.find(g => g.id !== guideEdit.id && (g.step_ids || []).includes(s.id));
+      return `<label class="guide-step${other ? ' taken' : ''}" title="${other ? 'Bereits verknüpft mit „' + esc(other.title) + '“' : ''}">
+        <input type="checkbox" ${guideEdit.stepIds.has(s.id) ? 'checked' : ''} ${other ? 'disabled' : ''} onchange="toggleGuideStep('${s.id}', this.checked)">
+        <span>${s.label}${other ? ` <em class="muted">(${esc(other.title)})</em>` : ''}</span>
+      </label>`;
+    }).join('')}
+  </div>`).join('');
+}
+function toggleGuideStep(stepId, on) { if (on) guideEdit.stepIds.add(stepId); else guideEdit.stepIds.delete(stepId); }
+function renderGuideItems() {
+  document.getElementById('guide-items').innerHTML = guideEdit.items.length ? guideEdit.items.map((it, i) => `<div class="guide-edit-item">
+      <input type="text" value="${esc(it.text)}" aria-label="Prüfpunkt" oninput="guideEdit.items[${i}].text=this.value">
+      <label class="guide-req"><input type="checkbox" ${it.required ? 'checked' : ''} onchange="guideEdit.items[${i}].required=this.checked"> Pflicht</label>
+      <button class="todo-del" onclick="moveGuideItem(${i},-1)" title="Nach oben" aria-label="Nach oben" ${i === 0 ? 'disabled' : ''}>↑</button>
+      <button class="todo-del" onclick="moveGuideItem(${i},1)" title="Nach unten" aria-label="Nach unten" ${i === guideEdit.items.length - 1 ? 'disabled' : ''}>↓</button>
+      <button class="todo-del" onclick="guideEdit.items.splice(${i},1);renderGuideItems()" title="Entfernen" aria-label="Entfernen">✕</button>
+    </div>`).join('') : '<div class="todo-empty">Noch keine Prüfpunkte</div>';
+}
+function moveGuideItem(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= guideEdit.items.length) return;
+  [guideEdit.items[i], guideEdit.items[j]] = [guideEdit.items[j], guideEdit.items[i]];
+  renderGuideItems();
+}
+function addGuideItem() {
+  const input = document.getElementById('guide-item-input');
+  const text = input.value.trim();
+  if (!text) return;
+  guideEdit.items.push({ id: newId(), text, required: document.getElementById('guide-item-required').checked });
+  input.value = '';
+  renderGuideItems();
+  input.focus();
+}
+function renderGuideVersions() {
+  const list = guideEdit.id ? guideVersions.filter(v => v.guide_id === guideEdit.id) : [];
+  document.getElementById('guide-versions').innerHTML = list.length
+    ? list.map(v => `<div class="guide-version"><b>v${v.version}</b> · ${formatDate(new Date(v.created_at))} · ${(v.checklist || []).length} Prüfpunkte (${(v.checklist || []).filter(i => i.required).length} Pflicht)</div>`).join('')
+    : '<div class="todo-empty">Noch keine freigegebene Version</div>';
+}
+function readGuideForm() {
+  const title = document.getElementById('guide-title').value.trim();
+  if (!title) { document.getElementById('guide-title').focus(); throw new Error('Bitte einen Titel eingeben.'); }
+  const items = guideEdit.items.map(i => ({ ...i, text: i.text.trim() })).filter(i => i.text);
+  return {
+    id: guideEdit.id || newId(),
+    title,
+    category: document.getElementById('guide-category').value.trim() || null,
+    instructions: document.getElementById('guide-instructions').value.trim(),
+    checklist: items,
+    step_ids: WORKFLOW_STEPS.map(s => s.id).filter(id => guideEdit.stepIds.has(id)),
+  };
+}
+async function saveGuideDraft(release = false) {
+  let row;
+  try { row = readGuideForm(); } catch (e) { showToast(e.message, 'error'); return; }
+  if (release && !row.checklist.length && !row.instructions) { showToast('Bitte zuerst Anleitung oder Prüfpunkte eintragen.', 'error'); return; }
+  const btns = document.querySelectorAll('#guide-modal-bg .modal-actions button');
+  btns.forEach(b => { b.disabled = true; });
+  try {
+    const saved = await saveRowVersioned(GUIDE_TABLE, row, guideEdit.base, guideEdit.updatedAt);
+    if (release) {
+      const next = saved.version + 1;
+      // Snapshot first: the unique (guide_id, version) key stops two parallel releases.
+      await apiFetch(GUIDE_VERSION_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({
+        guide_id: saved.id, version: next, title: saved.title, instructions: saved.instructions, checklist: saved.checklist }) });
+      const bumped = await apiFetch(`${GUIDE_TABLE}?id=eq.${encodeURIComponent(saved.id)}&version=eq.${saved.version}`, {
+        method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ version: next, released_at: new Date().toISOString() }) });
+      if (!bumped || !bumped.length) throw new ApiError('Versionskonflikt', 409);
+    }
+    closeGuideEditor();
+    await loadGuides();
+    renderGuides();
+    flashSaved();
+    showToast(release ? `Leitfaden freigegeben (v${(guides.find(g => g.id === row.id) || {}).version})` : 'Entwurf gespeichert');
+  } catch (e) {
+    showToast((e.status === 409 ? 'Diese Version wurde gerade parallel freigegeben – bitte neu öffnen. ' : 'Speichern fehlgeschlagen: ') + e.message, 'error');
+  } finally { btns.forEach(b => { b.disabled = false; }); }
+}
+async function deleteGuide() {
+  if (!guideEdit || !guideEdit.id) return;
+  if (!confirm('Leitfaden löschen? Folgen, die ihn schon verwenden, behalten ihre Checkliste.')) return;
+  try {
+    await apiFetch(GUIDE_TABLE + '?id=eq.' + encodeURIComponent(guideEdit.id), { method: 'DELETE' });
+    closeGuideEditor();
+    await loadGuides();
+    renderGuides();
+    showToast('Leitfaden gelöscht');
+  } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+}
+
+// ── PLANER: KANBAN ───────────────────────────────────────────────
+let planerView = 'grid';
+try { planerView = localStorage.getItem('gg_planer_view') || 'grid'; } catch {}
+function setPlanerView(view) {
+  planerView = view;
+  try { localStorage.setItem('gg_planer_view', view); } catch {}
+  renderPlaner();
+}
+function renderKanban() {
+  const box = document.getElementById('planer-kanban');
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const cutoff = new Date(today); cutoff.setDate(today.getDate() - 28);
+  const eps = episodes.filter(ep => {
+    const d = safeParseDate(ep.date);
+    return showArchive || (ep.status || 'planned') !== 'published' || (d && d >= cutoff);
+  }).sort((a, b) => (safeParseDate(a.date) || 0) - (safeParseDate(b.date) || 0));
+  box.innerHTML = EPISODE_STATUS.map(([k, label]) => {
+    const list = eps.filter(ep => (ep.status || 'planned') === k);
+    return `<div class="kanban-col" data-status="${k}" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onKanbanDrop(event,'${k}')">
+      <div class="kanban-head">${statusPill(k)} <span class="muted">${list.length}</span></div>
+      ${list.map(ep => {
+        const p = progress(ep);
+        return `<div class="kanban-card" draggable="true" ondragstart="event.dataTransfer.setData('text/plain', ${jsArg(ep.id)})" onclick="openDetail(${jsArg(ep.id)})">
+          <div class="slot-ep">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.date)}</div>
+          <div class="kanban-title">${esc(ep.title)}</div>
+          <div class="progress${p.pct === 100 ? ' done' : ''}"><div style="width:${p.pct}%"></div></div>
+          <select class="kanban-select" aria-label="Status" onclick="event.stopPropagation()" onchange="setEpisodeStatus(${jsArg(ep.id)}, this.value)">${statusOptions(ep.status)}</select>
+        </div>`;
+      }).join('') || '<div class="todo-empty" style="padding:6px 2px">–</div>'}
+    </div>`;
+  }).join('');
+}
+function onKanbanDrop(event, status) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const id = event.dataTransfer.getData('text/plain');
+  if (id) setEpisodeStatus(id, status);
+}
+
 // ── DASHBOARD ────────────────────────────────────────────────────
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 function safeParseDate(str) {
@@ -3788,7 +4436,7 @@ function renderDashboard() {
       ${dateTile(d)}
       <div class="dash-row-main">
         <div class="dash-row-title">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.title)}</div>
-        <div class="dash-row-sub">${relativeDay(d)} · ${p.done}/${p.total} Schritte</div>
+        <div class="dash-row-sub">${statusPill(ep.status)} ${relativeDay(d)} · ${p.done}/${p.total} Schritte</div>
         <div class="progress${p.pct === 100 ? ' done' : ''}"><div style="width:${p.pct}%"></div></div>
       </div>
     </div>`;
@@ -3866,6 +4514,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'zeitstrahl')   renderZeitstrahl();
   if (name === 'todos')        { loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
+  if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
   if (name === 'verbesserung') {
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
     loadAndRender('improvements-container', loadImprovements, renderImprovements, improvements.length > 0);
@@ -3928,7 +4577,8 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); if (guideEdit) closeGuideEditor(); } });
+document.getElementById('guide-modal-bg').addEventListener('click', e => { if (e.target.id === 'guide-modal-bg') closeGuideEditor(); });
 ['task-modal-bg', 'projects-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'task-modal-bg') closeTaskModal(); else closeProjectsModal(); }
 }));
@@ -3984,7 +4634,7 @@ async function initAuth() {
   initSidebar();
   renderSyncState();
   await initAuth();
-  await loadEpisodes();
+  await Promise.all([loadEpisodes(), loadGuides()]);
   routeFromHash();
   connectRealtime();
 })();
