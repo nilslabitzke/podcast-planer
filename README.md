@@ -15,15 +15,19 @@ Single-File-App (`index.html`) ohne Build-Step – gehostet via GitHub Pages, Da
 - Vergangene/abgeschlossene Folgen werden nach 2 Wochen automatisch blasser dargestellt
 - **„Heute & morgen fällig"-Widget** oben auf der Planerseite
 
-### Workflow-Checkliste (pro Folge)
-Aufgaben in einklappbaren Abschnitten:
-- **Produktion** – Aufnahme, Schnitt, Mastering, Transkript
-- **Plattform-Upload** – Spotify, YouTube, Apple, Notizen
-- **Reels** – Download, 8× Einzel-Reels (Transkript + Hook + Thumbnail + Beschreibung + Upload), Haken auf allen Plattformen
-- **Social Media** – Karussell-Posts
-- **LinkedIn** – 5 Beiträge erstellen & hochladen
+### Folgenmanager
+- Produktionsstatus pro Folge (unabhängig von der Checkliste): Geplant · Gast angefragt · Aufnahme terminiert · Aufgenommen · Im Schnitt · Bereit zur Veröffentlichung · Veröffentlicht
+- Planer als Raster (Jahresübersicht, Drag & Drop) oder Kanban nach Status
+- Folgen-Infos: Gast, Links (Riverside, Drive, Spotify, YouTube, Apple, Website), Freigaben (Folge, Reels, Cover, Social-Posts)
 
-Jede Aufgabe: abhakbar, Freitext-Inhalt mit Kopieren-Button.
+### Workflow-Checkliste (pro Folge)
+Abschnitte Produktion, Plattform-Upload, Social Media, LinkedIn. Jeder Schritt: Zuständigkeit, Deadline, Status (Offen/In Arbeit/Erledigt), Link, Beschreibung, Inhalt, Erledigt-Datum.
+
+### Leitfäden (SOPs)
+- Pro Leitfaden: Titel, Kategorie, Arbeitsanweisung, Checkliste mit Pflicht- und optionalen Punkten, verknüpfte Produktionsschritte
+- Entwurf → „Freigeben“ erzeugt eine neue Version (`podcast_guide_versions`); nur freigegebene Versionen gelten für Folgen
+- Pro Folge wird die verwendete Version samt Prüfpunkten gespeichert; ein Schritt lässt sich erst abschließen, wenn alle Pflichtpunkte erfüllt sind
+- Bereits abgeschlossene Schritte bleiben unverändert; offene Schritte können auf eine neue Version aktualisiert werden
 
 ### Content-Kalender (pro Folge)
 - 14-Tage-Plan nach Release mit allen geplanten Posts/Reels/Karussells
