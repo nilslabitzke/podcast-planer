@@ -1,11 +1,11 @@
 {
-  "name": "Podcast Planer",
-  "short_name": "Podcast",
-  "description": "Workflow & Planer für den Medizinpodcast",
+  "name": "Glans & Gloria",
+  "short_name": "G&G",
+  "description": "Podcast-Manager für Glans & Gloria",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0f1117",
-  "theme_color": "#0f1117",
+  "background_color": "#111217",
+  "theme_color": "#111217",
   "icons": [
     {
       "src": "icon-192.png",
