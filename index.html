@@ -185,7 +185,10 @@
     .modal-actions .btn-danger { margin-right: auto; }
     .form-row { display: flex; gap: 10px; }
     .form-row > * { flex: 1; min-width: 0; }
-    @media (max-width: 520px) { .form-row { flex-direction: column; gap: 0; } .modal { padding: 20px; } }
+    @media (max-width: 520px) {
+      .form-row { flex-direction: column; gap: 0; } .modal { padding: 20px; }
+      .todo-input-row { flex-wrap: wrap; } .todo-input-row > input[type=text] { flex-basis: 100%; }
+    }
 
     /* ── STATES: EMPTY / LOADING / ERROR / TOAST ─────────────────── */
     .state { text-align: center; padding: 40px 20px; color: var(--muted); }
@@ -528,6 +531,47 @@
     .kanban-title { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
     .kanban-select { min-height: 30px !important; padding: 2px 8px !important; font-size: 12px !important; }
 
+    /* Phase 5: experts */
+    .expert-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .expert-toolbar select, .expert-toolbar .expert-search { width: auto; min-height: 36px; }
+    .expert-search { flex: 1 1 240px; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 14px; min-width: 0; }
+    .expert-search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .fu-setting { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; white-space: nowrap; }
+    .fu-setting input { width: 64px; min-height: 34px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: var(--radius-sm); font-size: 14px; }
+    .expert-list { display: flex; flex-direction: column; gap: 6px; }
+    .expert-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: border-color .15s; }
+    .expert-row:hover { border-color: var(--accent); }
+    .expert-main { flex: 1 1 220px; min-width: 0; }
+    .expert-name { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+    .expert-sub { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+    .expert-chips { justify-content: flex-end; }
+    .xs-request_sent { background: var(--yellow-soft); color: var(--yellow); }
+    .xs-reply { background: rgba(139,156,255,.16); color: var(--leo); }
+    .xs-confirmed { background: var(--accent-soft); color: var(--accent-text); }
+    .xs-scheduled { background: rgba(139,156,255,.16); color: var(--accent2); }
+    .xs-recorded { background: rgba(96,165,250,.16); color: #60a5fa; }
+    .xs-published { background: var(--green-soft); color: var(--green); }
+    .xs-declined { background: var(--red-soft); color: var(--red); }
+    .x-card { margin-bottom: 12px; }
+    .x-card h2 { margin-bottom: 12px; font-size: 15px; }
+    .contact-form { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 12px; }
+    .contact-form input, .contact-form select, .contact-form textarea { background: var(--surface); }
+    .contact-list { display: flex; flex-direction: column; gap: 6px; }
+    .contact-row { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; }
+    .contact-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; }
+    .contact-summary { font-size: 13px; white-space: pre-wrap; margin-top: 4px; overflow-wrap: anywhere; }
+    .link-chips { margin-bottom: 6px; }
+    .chip-removable { padding: 0; overflow: hidden; }
+    .chip-removable .chip-link { background: none; border: none; color: inherit; font: inherit; padding: 2px 4px 2px 8px; cursor: pointer; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+    .chip-x { background: none; border: none; color: var(--muted); cursor: pointer; padding: 2px 8px 2px 4px; font-size: 11px; }
+    .chip-x:hover { color: var(--red); }
+    .link-add { width: auto !important; max-width: 100%; min-height: 34px; font-size: 13px; }
+    .suggest-box { margin-top: 12px; background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .suggest-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; padding: 3px 0; }
+    .suggest-row .todo-btn { margin-left: auto; }
+    .fu-banner { margin-bottom: 14px; border-color: var(--yellow); }
+    .fu-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+
     /* ── ZEITSTRAHL ──────────────────────────────────────────────── */
     .timeline { position: relative; padding: 8px 0 32px 0; }
     .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); }
@@ -565,6 +609,7 @@
       <button class="nav-item" title="Zeitstrahl" data-page="zeitstrahl" onclick="showPage('zeitstrahl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg><span class="nav-label">Zeitstrahl</span></button>
       <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span></button>
       <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
+      <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
       <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
   </nav>
@@ -637,7 +682,25 @@
     </div>
     <div class="seg" id="task-views" role="tablist" aria-label="Ansicht"></div>
     <div class="filter-row" id="task-filters"></div>
+    <div id="task-followups"></div>
     <div id="tasks-content"></div>
+  </div>
+
+  <div class="page" id="page-experts">
+    <div class="section-header">
+      <div>
+        <h1>Experten</h1>
+        <p class="subtitle">Wunschgäste, Anfragen &amp; Kontakte &mdash; mit Kontaktchronik und Wiedervorlagen</p>
+      </div>
+      <button class="btn btn-primary" onclick="openNewExpert()">+ Neuer Experte</button>
+    </div>
+    <div class="expert-toolbar" id="expert-toolbar"></div>
+    <div id="experts-container"></div>
+  </div>
+
+  <div class="page" id="page-expert">
+    <button class="back-btn" onclick="showPage('experts')">&#8592; Zurück zu den Experten</button>
+    <div id="expert-detail"></div>
   </div>
 
   <div class="page" id="page-guides">
@@ -760,6 +823,8 @@
       <input type="text" id="idea-drive-link" placeholder="https://drive.google.com/...">
     </div>
     <div class="form-group">
+      <label>Verknüpfte Experten</label>
+      <div id="idea-experts" style="margin-bottom:14px"></div>
       <label>Fragen für die Folge</label>
       <textarea id="idea-questions" rows="8" placeholder="Fragen eintragen oder einfügen..."></textarea>
     </div>
@@ -864,6 +929,21 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeProjectsModal()">Fertig</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="newx-modal-bg">
+  <div class="modal" style="width:440px">
+    <h2>Neuer Experte</h2>
+    <div class="form-group"><label for="newx-name">Name</label><input type="text" id="newx-name" placeholder="Vor- und Nachname" onkeydown="if(event.key==='Enter')createExpert()"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="newx-title">Akad. Titel</label><input type="text" id="newx-title" placeholder="Prof. Dr. med."></div>
+      <div class="form-group"><label for="newx-field">Fachgebiet</label><input type="text" id="newx-field" placeholder="z. B. Kardiologie" onkeydown="if(event.key==='Enter')createExpert()"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNewExpert()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="createExpert()">Anlegen</button>
     </div>
   </div>
 </div>
@@ -1507,7 +1587,8 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides'];
+const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
+  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1554,6 +1635,7 @@ function realtimeUpdateToken() {
   rtSend('access_token', { access_token: (session && session.access_token) || SUPABASE_KEY });
 }
 function onRemoteChange(table) {
+  if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
   rtDebounce[table] = setTimeout(async () => {
     if (table === 'podcast_episodes') {
@@ -1567,6 +1649,17 @@ function onRemoteChange(table) {
         await loadTodos();
         if (todosActive) renderTodos(); else renderDashboard();
       }
+    } else if (table.startsWith('podcast_expert') || table === 'podcast_settings') {
+      if (!expertsLoaded) return;
+      if (expertWritesInFlight > 0) { expertRemotePending = true; return; }
+      const active = document.querySelector('.page.active').id;
+      const typing = document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName) && active === 'page-expert';
+      await loadExperts();
+      if (typing) return;
+      if (active === 'page-experts') renderExperts();
+      if (active === 'page-expert') renderExpertDetail();
+      if (active === 'page-dashboard') renderDashboard();
+      if (active === 'page-todos' && !todoEditingId) renderTodos();
     } else if (table === 'podcast_guides') {
       await loadGuides();
       if (document.getElementById('page-guides').classList.contains('active') && !document.getElementById('guide-modal-bg').classList.contains('open')) renderGuides();
@@ -2819,7 +2912,8 @@ function scheduleTranscriptSave(epId, val) {
 // Exports all episodes + ideas as a single JSON file (manual backup).
 async function exportAllData() {
   flushEdits();
-  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions', 'podcast_goals', 'podcast_improvements',
+  const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions',
+                  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_goals', 'podcast_improvements',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -2999,6 +3093,7 @@ let ideaEditBase = null;
 
 function openIdeaModal(id) {
   editingIdeaId = id;
+  if (expertsLoaded) renderIdeaExperts(); else loadExperts().then(renderIdeaExperts);
   const idea = id ? ideas.find(i => i.id === id) : null;
   ideaEditBase = idea ? { row: ideaToRow(idea), version: idea.updatedAt } : null;
   document.getElementById('idea-modal-title').textContent = idea ? 'Idee bearbeiten' : 'Neue Idee';
@@ -3355,7 +3450,7 @@ async function loadProjects() {
   } catch (e) { showToast('Kategorien konnten nicht geladen werden: ' + e.message, 'error'); return false; }
 }
 async function loadTasksData() {
-  const [a, b] = await Promise.all([loadTodos(), loadProjects()]);
+  const [a, b] = await Promise.all([loadTodos(), loadProjects(), loadExperts()]);
   return a && b;
 }
 
@@ -3662,7 +3757,7 @@ function renderTaskControls() {
   document.getElementById('task-views').innerHTML = TASK_VIEWS.map(([k, label]) =>
     `<button class="seg-btn${taskUi.view === k ? ' active' : ''}" onclick="setTaskView('${k}')">${label}</button>`).join('');
   const counts = {};
-  const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : [])];
+  const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : []), ...(taskUi.view === 'all' ? followUpItems() : [])];
   TASK_FILTERS.forEach(([k]) => { counts[k] = pool.filter(i => matchesFilter(i, k)).length; });
   document.getElementById('task-filters').innerHTML = TASK_FILTERS.map(([k, label]) =>
     `<button class="filter-btn${taskUi.filter === k ? ' active' : ''}${k === 'overdue' && counts[k] ? ' filter-danger' : ''}" onclick="setTaskFilter('${k}')">${label} <span class="filter-count">${counts[k]}</span></button>`).join('') +
@@ -3676,6 +3771,13 @@ function renderTodos() {
   if (todoEditingId) return;
   if (taskUi.project && !projects.find(p => p.id === taskUi.project)) taskUi.project = '';
   renderTaskControls();
+  // Due expert follow-ups stay visible in every view until someone acts on them.
+  const due = taskUi.view === 'all' ? [] : dueFollowUps();
+  document.getElementById('task-followups').innerHTML = due.length ? `<div class="card fu-banner">
+      <div class="block-head"><h2>📇 Experten-Follow-ups fällig <span class="pill pill-warn">${due.length}</span></h2>
+        <button class="link-btn" onclick="setTaskView('all')">In „Alle Aufgaben“ →</button></div>
+      <div class="todo-list">${due.map(({ x, fu }) => followUpRowHtml({ x, fu })).join('')}</div>
+    </div>` : '';
   const box = document.getElementById('tasks-content');
   const { view, filter } = taskUi;
 
@@ -3726,11 +3828,11 @@ function renderTodos() {
   }
 
   // Filtered / combined: one flat list.
-  const pool = [...(view !== 'episode' ? generalItems() : []), ...(view !== 'general' ? episodeTaskItems() : [])];
+  const pool = [...(view !== 'episode' ? generalItems() : []), ...(view !== 'general' ? episodeTaskItems() : []), ...(view === 'all' ? followUpItems() : [])];
   const items = pool.filter(i => matchesFilter(i, filter)).sort(compareItems);
   const label = (TASK_FILTERS.find(([k]) => k === filter) || [])[1];
   box.innerHTML = items.length
-    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : stepRowHtml(i)).join('')}</div>
+    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : i.kind === 'followup' ? followUpRowHtml(i) : stepRowHtml(i)).join('')}</div>
        ${filter === 'done' && view !== 'episode' && items.some(i => i.kind === 'todo') ? '<div style="margin-top:16px"><button class="btn btn-sm btn-danger" onclick="clearDoneTodos()">Erledigte allgemeine Aufgaben löschen</button></div>' : ''}`
     : emptyState(filter === 'overdue' ? '🎉' : '✅', filter === 'all' ? 'Keine offenen Aufgaben' : `Keine Aufgaben: ${label}`, '', '', true);
 }
@@ -3942,6 +4044,10 @@ function episodeInfoHtml(ep) {
       <div class="form-group">
         <label for="ep-guest">Gast</label>
         <input type="text" id="ep-guest" value="${esc(ep.guest)}" placeholder="z. B. Prof. Dr. … (Klinik)" oninput="scheduleEpisodeFieldSave(${idArg},'guest',this.value.trim())">
+      </div>
+      <div class="form-group">
+        <label>Verknüpfte Experten</label>
+        ${linkedExpertsHtml('episode', ep.id)}
       </div>
       <div class="ep-links">
         ${EPISODE_LINKS.map(([k, label]) => {
@@ -4351,6 +4457,422 @@ function onKanbanDrop(event, status) {
   if (id) setEpisodeStatus(id, status);
 }
 
+// ── EXPERTEN (CRM) ───────────────────────────────────────────────
+const EXPERT_TABLE = 'podcast_experts';
+const CONTACT_TABLE = 'podcast_expert_contacts';
+const EXPERT_STATUS = [
+  ['wish', 'Wunschgast'], ['research', 'Recherche'], ['prepare', 'Anfrage vorbereiten'], ['request_sent', 'Anfrage versendet'],
+  ['reply', 'Rückmeldung erhalten'], ['confirmed', 'Zusage'], ['scheduled', 'Termin vereinbart'], ['recorded', 'Aufnahme abgeschlossen'],
+  ['published', 'Folge veröffentlicht'], ['declined', 'Abgesagt'], ['postponed', 'Zurückgestellt'],
+];
+const EXPERT_STATUS_LABEL = Object.fromEntries(EXPERT_STATUS);
+const CONTACT_CHANNELS = [['email', 'E-Mail'], ['phone', 'Telefon'], ['linkedin', 'LinkedIn'], ['meeting', 'Persönlich'], ['other', 'Sonstiges']];
+const CONTACT_CHANNEL_LABEL = Object.fromEntries(CONTACT_CHANNELS);
+let experts = [];
+let expertContacts = [];
+let expertIdeaLinks = [];
+let expertEpisodeLinks = [];
+let followUpDays = 10;
+let expertsLoaded = false;
+let editingExpertId = null;
+let expertUi = { q: '', field: '', status: '', sort: 'followup' };
+try { Object.assign(expertUi, JSON.parse(localStorage.getItem('gg_expert_ui')) || {}); } catch {}
+function saveExpertUi() { try { localStorage.setItem('gg_expert_ui', JSON.stringify(expertUi)); } catch {} }
+
+async function loadExperts() {
+  try {
+    const [x, c, li, le, st] = await Promise.all([
+      apiFetch(EXPERT_TABLE + '?select=*&order=name.asc'),
+      apiFetch(CONTACT_TABLE + '?select=*&order=date.desc,created_at.desc'),
+      apiFetch('podcast_expert_ideas?select=expert_id,idea_id'),
+      apiFetch('podcast_expert_episodes?select=expert_id,episode_id'),
+      apiFetch('podcast_settings?select=key,value&key=eq.expert_follow_up_days'),
+    ]);
+    experts = x; expertContacts = c; expertIdeaLinks = li; expertEpisodeLinks = le;
+    if (st[0] && Number(st[0].value) > 0) followUpDays = Number(st[0].value);
+    expertsLoaded = true;
+    if (!ideas.length) await loadIdeas();
+    return true;
+  } catch (e) { showToast('Experten konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+
+// Field-level writes per expert, in order and coalesced (like tasks).
+let expertWritesInFlight = 0;
+let expertRemotePending = false;
+const expertChain = {};
+const expertPending = {};
+function queueExpertWrite(key, write) {
+  expertWritesInFlight++;
+  const p = (expertChain[key] || Promise.resolve()).catch(() => {}).then(write);
+  expertChain[key] = p;
+  p.then(flashSaved, e => { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); expertRemotePending = true; })
+   .finally(() => {
+     expertWritesInFlight--;
+     if (!expertWritesInFlight && expertRemotePending) { expertRemotePending = false; onRemoteChange('podcast_experts'); }
+   });
+  return p;
+}
+function patchExpert(id, changes) {
+  const x = experts.find(e => e.id === id);
+  if (x) Object.assign(x, changes);
+  const queued = !!expertPending[id];
+  expertPending[id] = { ...(expertPending[id] || {}), ...changes };
+  if (queued) return expertChain[id];
+  return queueExpertWrite(id, async () => {
+    const body = { ...expertPending[id], updated_at: new Date().toISOString() };
+    delete expertPending[id];
+    const rows = await apiFetch(`${EXPERT_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(body) });
+    const local = experts.find(e => e.id === id);
+    if (local && rows[0]) { local.status_changed_at = rows[0].status_changed_at; local.updated_at = rows[0].updated_at; }
+  });
+}
+function scheduleExpertField(id, field, value) {
+  debounceEdit(`expert:${id}:${field}`, () => patchExpert(id, { [field]: value.trim() || null }));
+  if (field === 'drive_link' || field === 'website') updateExpertLink(field, value);
+}
+function updateExpertLink(field, value) {
+  const href = field === 'email' ? '' : safeUrl(value);
+  const a = document.getElementById('xlink-' + field);
+  if (a) { a.href = href || '#'; a.hidden = !href; }
+}
+
+// ── Follow-ups ───────────────────────────────────────────────────
+function contactsOf(id) { return expertContacts.filter(c => c.expert_id === id); }
+function lastContact(id) { return contactsOf(id)[0] || null; }
+// Next follow-up for an expert: an explicit "Wiedervorlage" on the latest contact wins;
+// otherwise an unanswered request ("Anfrage versendet") is due N days after the last contact.
+function expertFollowUp(x) {
+  if (['declined', 'published', 'recorded'].includes(x.status)) return null;
+  const last = lastContact(x.id);
+  if (last && last.next_follow_up) {
+    return { due: safeParseIso(last.next_follow_up), reason: 'Wiedervorlage', responsible: last.responsible || x.owner || null };
+  }
+  if (x.status === 'request_sent') {
+    const base = last ? safeParseIso(last.date) : new Date(x.status_changed_at);
+    if (!base) return null;
+    base.setHours(0, 0, 0, 0);
+    const due = new Date(base); due.setDate(base.getDate() + followUpDays);
+    return { due, reason: `Keine Antwort seit ${Math.max(0, daysFromToday(base) * -1)} Tagen`, responsible: (last && last.responsible) || x.owner || null };
+  }
+  return null;
+}
+function dueFollowUps(withinDays = 0) {
+  const limit = new Date(); limit.setHours(0, 0, 0, 0); limit.setDate(limit.getDate() + withinDays);
+  return experts.map(x => ({ x, fu: expertFollowUp(x) })).filter(({ fu }) => fu && fu.due && fu.due <= limit)
+    .sort((a, b) => a.fu.due - b.fu.due);
+}
+function followUpItems() {
+  return experts.map(x => ({ x, fu: expertFollowUp(x) })).filter(({ fu }) => fu && fu.due)
+    .map(({ x, fu }) => ({ kind: 'followup', key: 'fu:' + x.id, x, fu, assignee: fu.responsible, done: false, due: fu.due }));
+}
+function followUpRowHtml(item) {
+  const { x, fu } = item;
+  return `<div class="todo-row">
+    <span class="fu-icon" title="Experten-Follow-up">📇</span>
+    <div class="todo-main">
+      <span class="todo-text" style="cursor:pointer" onclick="openExpert(${jsArg(x.id)})">Nachfassen: ${esc(expertDisplayName(x))}</span>
+      <div class="todo-chips">
+        ${expertStatusPill(x.status)}
+        <span class="chip">${esc(fu.reason)}</span>
+        ${dueChip(fu.due, false)}
+        ${fu.responsible ? whoBadge(fu.responsible) : ''}
+      </div>
+    </div>
+    <div class="todo-actions"><button class="todo-btn" onclick="openExpert(${jsArg(x.id)})">Kontakt erfassen</button></div>
+  </div>`;
+}
+async function saveFollowUpDays(value) {
+  const n = Math.max(1, Math.min(90, parseInt(value, 10) || 10));
+  followUpDays = n;
+  renderExperts();
+  try {
+    await apiFetch('podcast_settings', { method: 'POST', prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({ key: 'expert_follow_up_days', value: n, updated_at: new Date().toISOString() }) });
+    flashSaved();
+  } catch (e) { showToast('Einstellung nicht gespeichert: ' + e.message, 'error'); }
+}
+
+// ── Overview ─────────────────────────────────────────────────────
+function expertDisplayName(x) { return [x.title, x.name].filter(Boolean).join(' '); }
+function expertStatusPill(s) { return `<span class="st-pill xs-${s}">${EXPERT_STATUS_LABEL[s] || s}</span>`; }
+function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+function setExpertUi(key, value) { expertUi[key] = value; saveExpertUi(); renderExperts(); }
+
+function renderExperts() {
+  const fields = [...new Set(experts.map(x => (x.field || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'de'));
+  document.getElementById('expert-toolbar').innerHTML = `
+    <input type="search" class="expert-search" placeholder="Suchen: Name, Fachgebiet, Klinik, Notizen…" value="${esc(expertUi.q)}" oninput="expertUi.q=this.value;saveExpertUi();renderExpertList()" aria-label="Experten suchen">
+    <select onchange="setExpertUi('field', this.value)" aria-label="Fachgebiet">
+      <option value="">Alle Fachgebiete</option>${fields.map(f => `<option${expertUi.field === f ? ' selected' : ''}>${esc(f)}</option>`).join('')}
+    </select>
+    <select onchange="setExpertUi('status', this.value)" aria-label="Status">
+      <option value="">Alle Status</option>${EXPERT_STATUS.map(([k, l]) => `<option value="${k}"${expertUi.status === k ? ' selected' : ''}>${l}</option>`).join('')}
+    </select>
+    <select onchange="setExpertUi('sort', this.value)" aria-label="Sortierung">
+      <option value="followup"${expertUi.sort === 'followup' ? ' selected' : ''}>Sortieren: Wiedervorlage</option>
+      <option value="contact"${expertUi.sort === 'contact' ? ' selected' : ''}>Sortieren: Letzter Kontakt</option>
+      <option value="name"${expertUi.sort === 'name' ? ' selected' : ''}>Sortieren: Name</option>
+    </select>
+    <label class="fu-setting" title="Nach wie vielen Tagen ohne Antwort nachgefasst werden soll">Nachfassen nach
+      <input type="number" min="1" max="90" value="${followUpDays}" onchange="saveFollowUpDays(this.value)" aria-label="Tage bis zum Nachfassen"> Tagen</label>`;
+  renderExpertList();
+}
+function renderExpertList() {
+  const box = document.getElementById('experts-container');
+  if (!experts.length) {
+    box.innerHTML = `<div class="card">${emptyState('📇', 'Noch keine Experten', 'Erfasst Wunschgäste und Kontakte – mit Status, Kontaktchronik und Wiedervorlagen.', '<button class="btn btn-primary" onclick="openNewExpert()">+ Neuer Experte</button>')}</div>`;
+    return;
+  }
+  const q = norm(expertUi.q).trim();
+  let list = experts.filter(x =>
+    (!expertUi.field || (x.field || '').trim() === expertUi.field) &&
+    (!expertUi.status || x.status === expertUi.status) &&
+    (!q || norm([x.name, x.title, x.field, x.specialization, x.institution, x.email, x.notes].join(' ')).includes(q)));
+  const lastDate = x => { const c = lastContact(x.id); return c ? c.date : ''; };
+  const fuTime = x => { const fu = expertFollowUp(x); return fu && fu.due ? fu.due.getTime() : Infinity; };
+  if (expertUi.sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+  else if (expertUi.sort === 'contact') list.sort((a, b) => lastDate(b).localeCompare(lastDate(a)) || a.name.localeCompare(b.name, 'de'));
+  else list.sort((a, b) => fuTime(a) - fuTime(b) || a.name.localeCompare(b.name, 'de'));
+  box.innerHTML = list.length ? `<div class="expert-list">${list.map(x => {
+    const last = lastContact(x.id);
+    const fu = expertFollowUp(x);
+    return `<div class="expert-row" onclick="openExpert(${jsArg(x.id)})">
+      <div class="expert-main">
+        <div class="expert-name">${esc(expertDisplayName(x))}</div>
+        <div class="expert-sub">${esc([x.field, x.specialization].filter(Boolean).join(' · ') || '–')}${x.institution ? ' · ' + esc(x.institution) : ''}</div>
+      </div>
+      <div class="todo-chips expert-chips">
+        ${expertStatusPill(x.status)}
+        ${last ? `<span class="chip" title="Letzter Kontakt">✉ ${formatDate(safeParseIso(last.date))}</span>` : '<span class="chip">kein Kontakt</span>'}
+        ${fu && fu.due ? dueChip(fu.due, false).replace('📅', '⏰') : ''}
+        ${x.owner ? whoBadge(x.owner) : ''}
+      </div>
+    </div>`;
+  }).join('')}</div>` : emptyState('🔍', 'Keine Treffer', 'Suche oder Filter anpassen.', '', true);
+}
+
+// ── New expert ───────────────────────────────────────────────────
+function openNewExpert() {
+  ['newx-name', 'newx-title', 'newx-field'].forEach(i => { document.getElementById(i).value = ''; });
+  document.getElementById('newx-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('newx-name').focus(), 50);
+}
+function closeNewExpert() { document.getElementById('newx-modal-bg').classList.remove('open'); }
+async function createExpert() {
+  const name = document.getElementById('newx-name').value.trim();
+  if (!name) { document.getElementById('newx-name').focus(); return; }
+  const row = { id: newId(), name, title: document.getElementById('newx-title').value.trim() || null, field: document.getElementById('newx-field').value.trim() || null };
+  try {
+    const rows = await apiFetch(EXPERT_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify(row) });
+    experts.push(rows[0]);
+    closeNewExpert();
+    flashSaved();
+    openExpert(rows[0].id);
+  } catch (e) { showToast('Anlegen fehlgeschlagen: ' + e.message, 'error'); }
+}
+async function deleteExpert() {
+  const x = experts.find(e => e.id === editingExpertId);
+  if (!x || !confirm(`„${expertDisplayName(x)}“ mit Kontaktchronik und Verknüpfungen löschen? Ideen und Folgen bleiben erhalten.`)) return;
+  try {
+    await apiFetch(EXPERT_TABLE + '?id=eq.' + encodeURIComponent(x.id), { method: 'DELETE' });
+    experts = experts.filter(e => e.id !== x.id);
+    expertContacts = expertContacts.filter(c => c.expert_id !== x.id);
+    expertIdeaLinks = expertIdeaLinks.filter(l => l.expert_id !== x.id);
+    expertEpisodeLinks = expertEpisodeLinks.filter(l => l.expert_id !== x.id);
+    showToast('Gelöscht');
+    showPage('experts');
+  } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+}
+
+// ── Expert detail page ───────────────────────────────────────────
+function openExpert(id) {
+  if (!experts.find(x => x.id === id)) { showPage('experts'); return; }
+  editingExpertId = id;
+  renderExpertDetail();
+  showPage('expert');
+}
+function renderExpertDetail() {
+  const x = experts.find(e => e.id === editingExpertId);
+  const box = document.getElementById('expert-detail');
+  if (!x) { box.innerHTML = emptyState('📇', 'Experte nicht gefunden'); return; }
+  const idArg = jsArg(x.id);
+  const fu = expertFollowUp(x);
+  const field = (key, label, placeholder = '', type = 'text') => `<div class="form-group">
+      <label for="x-${key}">${label}</label>
+      <div class="ep-link-row">
+        <input type="${type}" id="x-${key}" value="${esc(x[key])}" placeholder="${placeholder}" oninput="scheduleExpertField(${idArg},'${key}',this.value)">
+        ${key === 'website' || key === 'drive_link' ? `<a class="btn btn-sm" id="xlink-${key}" href="${esc(safeUrl(x[key]) || '#')}" target="_blank" rel="noopener noreferrer" ${safeUrl(x[key]) ? '' : 'hidden'} title="Öffnen">↗</a>` : ''}
+        ${key === 'email' && x.email ? `<a class="btn btn-sm" href="mailto:${esc(x.email)}" title="E-Mail schreiben">✉</a>` : ''}
+      </div></div>`;
+  const today = new Date().toISOString().slice(0, 10);
+  const linkedIdeas = expertIdeaLinks.filter(l => l.expert_id === x.id).map(l => ideas.find(i => i.id === l.idea_id)).filter(Boolean);
+  const linkedEps = expertEpisodeLinks.filter(l => l.expert_id === x.id).map(l => episodes.find(e => e.id === l.episode_id)).filter(Boolean);
+  // Suggestions from existing free-text guest names – only linked after explicit confirmation.
+  const tokens = norm(x.name).split(/[\s,.-]+/).filter(t => t.length >= 4 && !['prof', 'professor', 'doktor'].includes(t));
+  const matches = text => tokens.length && tokens.some(t => norm(text).includes(t));
+  const ideaSuggest = ideas.filter(i => !linkedIdeas.includes(i) && matches(i.guests));
+  const epSuggest = episodes.filter(e => !linkedEps.includes(e) && matches(e.guest));
+  box.innerHTML = `
+    <div class="ep-header">
+      <div class="ep-header-info">
+        <h1>${esc(expertDisplayName(x))}</h1>
+        <div class="ep-meta">
+          ${x.field ? `<span>${esc(x.field)}</span>` : ''}${x.institution ? `<span>🏥 ${esc(x.institution)}</span>` : ''}
+          ${fu && fu.due ? `<span>${dueChip(fu.due, false).replace('📅', '⏰ Wiedervorlage')}</span>` : ''}
+        </div>
+      </div>
+      <div class="ep-header-actions">
+        <select class="status-select xs-${x.status}" aria-label="Status" onchange="setExpertStatus(${idArg}, this.value)">
+          ${EXPERT_STATUS.map(([k, l]) => `<option value="${k}"${x.status === k ? ' selected' : ''}>${l}</option>`).join('')}
+        </select>
+        <div class="seg seg-sm" title="Zuständig">
+          <button class="seg-btn${x.owner === 'leo' ? ' active' : ''}" onclick="setExpertOwner(${idArg},'leo')">Leo</button>
+          <button class="seg-btn${x.owner === 'nils' ? ' active' : ''}" onclick="setExpertOwner(${idArg},'nils')">Nils</button>
+        </div>
+      </div>
+    </div>
+    ${fu && fu.due && fu.due <= new Date() ? `<div class="remote-banner">⏰ <span><b>Nachfassen fällig</b> – ${esc(fu.reason)}. Neuen Kontakt erfassen oder Status ändern.</span></div>` : ''}
+
+    <div class="card x-card">
+      <h2>Kontaktchronik</h2>
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-group"><label for="c-date">Datum</label><input type="date" id="c-date" value="${today}"></div>
+          <div class="form-group"><label for="c-channel">Art</label><select id="c-channel">${CONTACT_CHANNELS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></div>
+          <div class="form-group"><label for="c-resp">Zuständig</label><select id="c-resp"><option value="">–</option><option value="leo"${x.owner === 'leo' ? ' selected' : ''}>Leo</option><option value="nils"${x.owner === 'nils' ? ' selected' : ''}>Nils</option></select></div>
+          <div class="form-group"><label for="c-next">Nächste Wiedervorlage</label><input type="date" id="c-next"></div>
+        </div>
+        <div class="form-group"><label for="c-summary">Zusammenfassung</label><textarea id="c-summary" rows="2" placeholder="Was wurde besprochen / gesendet?"></textarea></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary btn-sm" onclick="addContact()">Kontakt speichern</button>
+          ${x.status === 'prepare' || x.status === 'research' || x.status === 'wish' ? '<label class="guide-req"><input type="checkbox" id="c-sent"> Anfrage damit versendet (Status setzen)</label>' : ''}
+        </div>
+      </div>
+      <div class="contact-list">${contactsOf(x.id).map(c => `<div class="contact-row">
+        <div class="contact-head">
+          <b>${formatDate(safeParseIso(c.date))}</b>
+          <span class="chip">${CONTACT_CHANNEL_LABEL[c.channel] || esc(c.channel)}</span>
+          ${c.responsible ? whoBadge(c.responsible) : ''}
+          ${c.next_follow_up ? `<span class="chip">⏰ ${formatDate(safeParseIso(c.next_follow_up))}</span>` : ''}
+          <button class="todo-del" style="margin-left:auto" onclick="deleteContact(${jsArg(c.id)})" title="Eintrag löschen" aria-label="Eintrag löschen">🗑</button>
+        </div>
+        ${c.summary ? `<div class="contact-summary">${esc(c.summary)}</div>` : ''}
+      </div>`).join('') || '<div class="todo-empty">Noch kein Kontakt erfasst</div>'}</div>
+    </div>
+
+    <div class="card x-card">
+      <h2>Verknüpfungen</h2>
+      <label>Themenideen</label>
+      <div class="todo-chips link-chips">${linkedIdeas.map(i => `<span class="chip chip-removable"><button class="chip-link" onclick="showPage('ideen');setTimeout(()=>openIdeaModal(${jsArg(i.id)}),300)">💡 ${esc(i.title)}</button><button class="chip-x" onclick="unlinkExpert('idea',${jsArg(i.id)})" aria-label="Verknüpfung lösen">✕</button></span>`).join('') || '<span class="muted" style="font-size:13px">Keine</span>'}</div>
+      <select class="link-add" onchange="if(this.value)linkExpert('idea',this.value)" aria-label="Idee verknüpfen">
+        <option value="">+ Idee verknüpfen…</option>${ideas.filter(i => !linkedIdeas.includes(i)).map(i => `<option value="${esc(i.id)}">${esc(i.title)}</option>`).join('')}
+      </select>
+      <label style="margin-top:12px">Folgen</label>
+      <div class="todo-chips link-chips">${linkedEps.map(e => `<span class="chip chip-removable"><button class="chip-link" onclick="openDetail(${jsArg(e.id)})">🎙 ${esc(e.date)} · ${esc(e.title)}</button><button class="chip-x" onclick="unlinkExpert('episode',${jsArg(e.id)})" aria-label="Verknüpfung lösen">✕</button></span>`).join('') || '<span class="muted" style="font-size:13px">Keine</span>'}</div>
+      <select class="link-add" onchange="if(this.value)linkExpert('episode',this.value)" aria-label="Folge verknüpfen">
+        <option value="">+ Folge verknüpfen…</option>${[...episodes].filter(e => !linkedEps.includes(e)).sort((a, b) => (safeParseDate(b.date) || 0) - (safeParseDate(a.date) || 0)).map(e => `<option value="${esc(e.id)}">${esc(e.date)} · ${esc(e.title)}</option>`).join('')}
+      </select>
+      ${ideaSuggest.length || epSuggest.length ? `<div class="suggest-box">
+        <div class="muted" style="font-size:12px;margin-bottom:6px">Mögliche Zuordnungen (Name im Gast-Feld gefunden) – nur nach Bestätigung:</div>
+        ${ideaSuggest.map(i => `<div class="suggest-row">💡 ${esc(i.title)} <span class="muted">(Gast: ${esc(i.guests)})</span><button class="todo-btn" onclick="linkExpert('idea',${jsArg(i.id)})">Verknüpfen</button></div>`).join('')}
+        ${epSuggest.map(e => `<div class="suggest-row">🎙 ${esc(e.title)} <span class="muted">(Gast: ${esc(e.guest)})</span><button class="todo-btn" onclick="linkExpert('episode',${jsArg(e.id)})">Verknüpfen</button></div>`).join('')}
+      </div>` : ''}
+    </div>
+
+    <div class="card x-card">
+      <h2>Profil</h2>
+      <div class="form-row">${field('title', 'Akad. Titel', 'Prof. Dr. med.')}${field('name', 'Name')}</div>
+      <div class="form-row">${field('field', 'Fachgebiet', 'z. B. Kardiologie')}${field('specialization', 'Spezialisierung', 'z. B. Rhythmologie')}</div>
+      ${field('institution', 'Klinik / Universität')}
+      <div class="form-row">${field('email', 'E-Mail', 'name@klinik.de', 'email')}${field('website', 'Website', 'https://…')}</div>
+      <div class="form-row">${field('social', 'Social Media', 'LinkedIn, Instagram …')}${field('drive_link', 'Google-Drive-Link', 'https://drive.google.com/…')}</div>
+      <div class="form-group"><label for="x-notes">Notizen</label>
+        <textarea id="x-notes" rows="4" oninput="scheduleExpertField(${idArg},'notes',this.value)">${esc(x.notes)}</textarea></div>
+      <button class="btn btn-danger btn-sm" onclick="deleteExpert()">Experte löschen</button>
+    </div>`;
+}
+function setExpertStatus(id, status) { patchExpert(id, { status }); renderExpertDetail(); }
+function setExpertOwner(id, who) {
+  const x = experts.find(e => e.id === id);
+  if (x) { patchExpert(id, { owner: x.owner === who ? null : who }); renderExpertDetail(); }
+}
+async function addContact() {
+  const x = experts.find(e => e.id === editingExpertId);
+  if (!x) return;
+  const row = {
+    id: newId(), expert_id: x.id,
+    date: document.getElementById('c-date').value || new Date().toISOString().slice(0, 10),
+    channel: document.getElementById('c-channel').value,
+    summary: document.getElementById('c-summary').value.trim(),
+    responsible: document.getElementById('c-resp').value || null,
+    next_follow_up: document.getElementById('c-next').value || null,
+  };
+  if (!row.summary && !row.next_follow_up) { showToast('Bitte eine kurze Zusammenfassung eintragen.', 'error'); document.getElementById('c-summary').focus(); return; }
+  const markSent = document.getElementById('c-sent')?.checked;
+  try {
+    await queueExpertWrite('contacts:' + x.id, () => apiFetch(CONTACT_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify(row) }));
+    expertContacts.unshift({ ...row, created_at: new Date().toISOString() });
+    expertContacts.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.created_at || '').localeCompare(a.created_at || ''));
+    if (markSent) patchExpert(x.id, { status: 'request_sent' });
+    renderExpertDetail();
+    showToast('Kontakt gespeichert');
+  } catch {}
+}
+async function deleteContact(cid) {
+  if (!confirm('Diesen Eintrag aus der Kontaktchronik löschen?')) return;
+  try {
+    await queueExpertWrite('contacts:' + editingExpertId, () => apiFetch(CONTACT_TABLE + '?id=eq.' + encodeURIComponent(cid), { method: 'DELETE' }));
+    expertContacts = expertContacts.filter(c => c.id !== cid);
+    renderExpertDetail();
+  } catch {}
+}
+async function linkExpert(kind, targetId, expertId = editingExpertId) {
+  const table = kind === 'idea' ? 'podcast_expert_ideas' : 'podcast_expert_episodes';
+  const col = kind === 'idea' ? 'idea_id' : 'episode_id';
+  const list = kind === 'idea' ? expertIdeaLinks : expertEpisodeLinks;
+  if (list.some(l => l.expert_id === expertId && l[col] === targetId)) return;
+  try {
+    await queueExpertWrite('links:' + expertId, () => apiFetch(table, { method: 'POST', prefer: 'resolution=ignore-duplicates,return=minimal',
+      body: JSON.stringify({ expert_id: expertId, [col]: targetId }) }));
+    list.push({ expert_id: expertId, [col]: targetId });
+    refreshExpertViews();
+  } catch {}
+}
+async function unlinkExpert(kind, targetId, expertId = editingExpertId) {
+  const table = kind === 'idea' ? 'podcast_expert_ideas' : 'podcast_expert_episodes';
+  const col = kind === 'idea' ? 'idea_id' : 'episode_id';
+  try {
+    await queueExpertWrite('links:' + expertId, () => apiFetch(`${table}?expert_id=eq.${encodeURIComponent(expertId)}&${col}=eq.${encodeURIComponent(targetId)}`, { method: 'DELETE' }));
+    if (kind === 'idea') expertIdeaLinks = expertIdeaLinks.filter(l => !(l.expert_id === expertId && l.idea_id === targetId));
+    else expertEpisodeLinks = expertEpisodeLinks.filter(l => !(l.expert_id === expertId && l.episode_id === targetId));
+    refreshExpertViews();
+  } catch {}
+}
+function refreshExpertViews() {
+  const active = document.querySelector('.page.active').id;
+  if (active === 'page-expert') renderExpertDetail();
+  if (active === 'page-experts') renderExperts();
+  if (active === 'page-detail' && editingEpId) rerenderDetail(editingEpId);
+  if (document.getElementById('idea-modal-bg').classList.contains('open')) renderIdeaExperts();
+}
+
+// Experts shown inside ideas and episodes (linking from there too).
+function linkedExpertsHtml(kind, targetId) {
+  const col = kind === 'idea' ? 'idea_id' : 'episode_id';
+  const list = (kind === 'idea' ? expertIdeaLinks : expertEpisodeLinks).filter(l => l[col] === targetId)
+    .map(l => experts.find(x => x.id === l.expert_id)).filter(Boolean);
+  const options = experts.filter(x => !list.includes(x)).sort((a, b) => a.name.localeCompare(b.name, 'de'));
+  return `<div class="todo-chips link-chips">${list.map(x => `<span class="chip chip-removable"><button class="chip-link" onclick="closeIdeaModal();openExpert(${jsArg(x.id)})">📇 ${esc(expertDisplayName(x))}</button><button class="chip-x" onclick="unlinkExpert('${kind}',${jsArg(targetId)},${jsArg(x.id)})" aria-label="Verknüpfung lösen">✕</button></span>`).join('') || '<span class="muted" style="font-size:13px">Keine Experten verknüpft</span>'}</div>
+    ${options.length ? `<select class="link-add" onchange="if(this.value)linkExpert('${kind}',${jsArg(targetId)},this.value)" aria-label="Experten verknüpfen">
+      <option value="">+ Experten verknüpfen…</option>${options.map(x => `<option value="${esc(x.id)}">${esc(expertDisplayName(x))}</option>`).join('')}
+    </select>` : ''}`;
+}
+function renderIdeaExperts() {
+  const box = document.getElementById('idea-experts');
+  if (!box) return;
+  box.innerHTML = editingIdeaId ? linkedExpertsHtml('idea', editingIdeaId) : '<span class="muted" style="font-size:13px">Nach dem ersten Speichern verknüpfbar.</span>';
+}
+
 // ── DASHBOARD ────────────────────────────────────────────────────
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 function safeParseDate(str) {
@@ -4384,6 +4906,7 @@ function renderDashboard() {
   const box = document.getElementById('dashboard-content');
   if (!episodesLoadOk) { box.innerHTML = errorState('Folgen konnten nicht geladen werden.', 'reloadAllData()'); return; }
   if (!todosLoaded) loadTodos().then(ok => { if (ok && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
+  if (!expertsLoaded) loadExperts().then(ok => { if (ok && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const hour = new Date().getHours();
@@ -4485,6 +5008,16 @@ function renderDashboard() {
       activeRows ? `<div class="dash-list">${activeRows}</div>` : emptyState('🎬', 'Keine Folge in Produktion', 'Alle aktuellen Folgen sind fertig.', '', true))}
     ${card('Nächste Aufnahmen', '',
       recordingRows ? `<div class="dash-list">${recordingRows}</div>` : emptyState('🎙️', 'Keine Aufnahme terminiert', 'Aufnahmetermine werden in der Folge unter „Bearbeiten“ eingetragen.', '', true))}
+    ${card('Experten-Follow-ups', `<button class="link-btn" onclick="showPage('experts')">Experten →</button>`,
+      !expertsLoaded ? loadingState() : (() => {
+        const list = dueFollowUps(7);
+        return list.length ? `<div class="dash-list">${list.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
+          ${dateTile(fu.due)}
+          <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
+            <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
+          ${fu.responsible ? whoBadge(fu.responsible) : ''}
+        </div>`).join('')}</div>` : emptyState('📇', 'Keine Follow-ups fällig', 'In den nächsten 7 Tagen muss bei keinem Experten nachgefasst werden.', '', true);
+      })())}
     ${card('Offene Aufgaben', `<button class="link-btn" onclick="showPage('todos')">Alle →</button>`,
       !todosLoaded ? loadingState() : todoRows ? `<div class="dash-list">${todoRows}</div>` : emptyState('🙌', 'Keine offenen Aufgaben', '', '', true))}
   </div>`;
@@ -4492,8 +5025,12 @@ function renderDashboard() {
 
 // ── NAV & ROUTING ────────────────────────────────────────────────
 // Detail pages belong to the Planer in the navigation.
-const NAV_PARENT = { detail: 'planer' };
-function pageHash(name) { return name === 'detail' && editingEpId ? '#folge/' + encodeURIComponent(editingEpId) : '#' + name; }
+const NAV_PARENT = { detail: 'planer', expert: 'experts' };
+function pageHash(name) {
+  if (name === 'detail' && editingEpId) return '#folge/' + encodeURIComponent(editingEpId);
+  if (name === 'expert' && editingExpertId) return '#experte/' + encodeURIComponent(editingExpertId);
+  return '#' + name;
+}
 
 function showPage(name, { fromHistory = false } = {}) {
   const target = document.getElementById('page-' + name);
@@ -4515,6 +5052,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'todos')        { loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
   if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
+  if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
   if (name === 'verbesserung') {
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
     loadAndRender('improvements-container', loadImprovements, renderImprovements, improvements.length > 0);
@@ -4536,7 +5074,12 @@ function routeFromHash() {
     const id = h.slice(6);
     if (episodes.find(e => e.id === id)) { openDetail(id); return; }
   }
-  const name = document.getElementById('page-' + h) && h !== 'detail' ? h : 'dashboard';
+  if (h.startsWith('experte/')) {
+    const id = h.slice(8);
+    (expertsLoaded ? Promise.resolve(true) : loadExperts()).then(() => openExpert(id));
+    return;
+  }
+  const name = document.getElementById('page-' + h) && !['detail', 'expert'].includes(h) ? h : 'dashboard';
   showPage(name, { fromHistory: true });
   if (location.hash !== pageHash(name)) history.replaceState(null, '', pageHash(name));
 }
@@ -4577,7 +5120,8 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); if (guideEdit) closeGuideEditor(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (guideEdit) closeGuideEditor(); } });
+document.getElementById('newx-modal-bg').addEventListener('click', e => { if (e.target.id === 'newx-modal-bg') closeNewExpert(); });
 document.getElementById('guide-modal-bg').addEventListener('click', e => { if (e.target.id === 'guide-modal-bg') closeGuideEditor(); });
 ['task-modal-bg', 'projects-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'task-modal-bg') closeTaskModal(); else closeProjectsModal(); }
@@ -4634,7 +5178,7 @@ async function initAuth() {
   initSidebar();
   renderSyncState();
   await initAuth();
-  await Promise.all([loadEpisodes(), loadGuides()]);
+  await Promise.all([loadEpisodes(), loadGuides(), loadExperts()]);
   routeFromHash();
   connectRealtime();
 })();
