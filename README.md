@@ -45,6 +45,14 @@ Die App generiert keine Inhalte mehr. Titel, Shownotes, Reels, LinkedIn-Posts us
 - Filter: Alle, Nils, Leo, Nicht zugewiesen, Überfällig, Diese Woche, Erledigt
 - Fälligkeit von Folgenaufgaben: Produktion/Upload bis Release, Social Media/LinkedIn bis Release + 13 Tage
 
+### Experten (CRM)
+- Profil: Name, akad. Titel, Fachgebiet, Spezialisierung, Klinik/Uni, E-Mail, Website, Social Media, Drive-Link, Notizen, Zuständigkeit
+- Status: Wunschgast → Recherche → Anfrage vorbereiten → Anfrage versendet → Rückmeldung → Zusage → Termin → Aufnahme → Folge veröffentlicht (bzw. Abgesagt / Zurückgestellt)
+- Kontaktchronik mit Datum, Art, Zusammenfassung, Zuständigkeit und nächster Wiedervorlage
+- Follow-ups: explizite Wiedervorlage oder automatisch bei „Anfrage versendet“ ohne Antwort nach N Tagen (Standard 10, einstellbar) – sichtbar im Dashboard und unter Aufgaben
+- Verknüpfung mit Ideen und Folgen (mehrere); Freitext-Gastnamen bleiben unverändert, passende Experten werden nur vorgeschlagen
+- Suche, Filter (Fachgebiet, Status), Sortierung (Wiedervorlage, letzter Kontakt, Name)
+
 ### Ideenpool
 - Folgenideen sammeln: Titel, Themenpunkte, Kernaussage & G&G, Gast, Status
 - Status: 💡 Idee → 📩 Gast angefragt → ✅ Bestätigt
