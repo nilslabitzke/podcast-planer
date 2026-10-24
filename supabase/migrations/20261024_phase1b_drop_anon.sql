@@ -15,3 +15,5 @@ drop policy if exists anon_all_expenses     on public.podcast_expenses;
 drop policy if exists anon_all_income       on public.podcast_income;
 drop policy if exists anon_all_settlements  on public.podcast_settlements;
 drop policy if exists anon_all_task_projects on public.podcast_task_projects;  -- added in phase 3
+drop policy if exists anon_all_guides         on public.podcast_guides;          -- added in phase 4
+drop policy if exists anon_all_guide_versions on public.podcast_guide_versions;  -- added in phase 4
