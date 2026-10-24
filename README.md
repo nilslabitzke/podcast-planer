@@ -33,9 +33,13 @@ Jede Aufgabe: abhakbar, Freitext-Inhalt mit Kopieren-Button.
 ### Inhalte (ohne KI in der App)
 Die App generiert keine Inhalte mehr. Titel, Shownotes, Reels, LinkedIn-Posts usw. werden separat (Claude-Skills) erstellt und in die Felder eingefügt. Die Edge Function `podcast-ai` und die Tabelle `podcast_prompts` sind vorerst noch vorhanden, werden aber nicht mehr genutzt.
 
-### Offene Aufgaben
-- Übersicht aller unerledigten Workflow-Schritte über alle Folgen
-- **Content-Kalender-Aufgaben** mit Filter nach Nils / Leo
+### Aufgaben
+- Eingang „Nicht zugewiesen“ → per Klick an Leo oder Nils verteilen; Spalten Leo (links) / Nils (rechts) mit offenen und einklappbaren erledigten Aufgaben
+- Felder: Titel, Beschreibung, Verantwortlich, Priorität, Deadline, Status (Offen/In Arbeit/Erledigt), Projekt/Kategorie, Unteraufgaben
+- Kategorien frei bearbeitbar (Tabelle `podcast_task_projects`)
+- Ansichten: Allgemeine To-dos · Folgenaufgaben (Produktionsschritte direkt aus den Folgen, keine Kopien) · Alle Aufgaben
+- Filter: Alle, Nils, Leo, Nicht zugewiesen, Überfällig, Diese Woche, Erledigt
+- Fälligkeit von Folgenaufgaben: Produktion/Upload bis Release, Social Media/LinkedIn bis Release + 13 Tage
 
 ### Ideenpool
 - Folgenideen sammeln: Titel, Themenpunkte, Kernaussage & G&G, Gast, Status
