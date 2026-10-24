@@ -23,29 +23,15 @@ Aufgaben in einklappbaren Abschnitten:
 - **Social Media** – Karussell-Posts
 - **LinkedIn** – 5 Beiträge erstellen & hochladen
 
-Jede Aufgabe: abhakbar, KI-generierbar (✨), Freitext-Notiz.
+Jede Aufgabe: abhakbar, Freitext-Inhalt mit Kopieren-Button.
 
 ### Content-Kalender (pro Folge)
 - 14-Tage-Plan nach Release mit allen geplanten Posts/Reels/Karussells
 - Jedes Item: abhakbar + N/L-Zuweisung (Nils / Leo)
 - Fertige LinkedIn- und Reel-Kategorien haken automatisch die übergeordnete Workflow-Aufgabe ab
 
-### KI-Generierung
-Alle Generierungen über Supabase Edge Function `podcast-ai` (Claude via Anthropic API):
-
-| Funktion | Beschreibung |
-|---|---|
-| Titel (Spotify/YouTube) | Aus Transkript generieren |
-| Shownotes | Strukturierte Episodenbeschreibung |
-| Kapitel | Zeitstempel-Kapitel |
-| Thumbnail-Idee | Visuelles Konzept |
-| 8 Reel-Transkripte | Splittet Transkript in 8 Clips |
-| Reel-Hook, Beschreibung, Thumbnails | Pro Reel einzeln |
-| 5 LinkedIn-Beiträge | Split-Generierung, je Beitrag in eigenem Feld |
-| Fragen (Ideenpool) | Interviewfragen aus Titel/Thema/Gast |
-
-**Custom-Prompts** für alle KI-Schritte einstellbar unter *Prompt-Einstellungen*.  
-**Abschneide-Warnung** wenn der Output am Token-Limit abgeschnitten wurde.
+### Inhalte (ohne KI in der App)
+Die App generiert keine Inhalte mehr. Titel, Shownotes, Reels, LinkedIn-Posts usw. werden separat (Claude-Skills) erstellt und in die Felder eingefügt. Die Edge Function `podcast-ai` und die Tabelle `podcast_prompts` sind vorerst noch vorhanden, werden aber nicht mehr genutzt.
 
 ### Offene Aufgaben
 - Übersicht aller unerledigten Workflow-Schritte über alle Folgen
@@ -54,12 +40,12 @@ Alle Generierungen über Supabase Edge Function `podcast-ai` (Claude via Anthrop
 ### Ideenpool
 - Folgenideen sammeln: Titel, Themenpunkte, Kernaussage & G&G, Gast, Status
 - Status: 💡 Idee → 📩 Gast angefragt → ✅ Bestätigt
-- Google-Drive-Link & Fragenkatalog (KI-generierbar) pro Idee
+- Google-Drive-Link & Fragenkatalog pro Idee
 - **„In Planer übernehmen"** – aus einer bestätigten Idee direkt eine neue Folge anlegen (Titel, Beschreibung, Fragenkatalog werden übertragen)
 
 ### Sonstiges
 - Dark / Light Mode
-- **💾 JSON-Backup** – alle Folgen & Ideen als Datei exportieren
+- **💾 JSON-Backup** – alle Tabellen als Datei exportieren
 - Echtzeit-Sync via Supabase Realtime (Änderungen von zwei Geräten gleichzeitig)
 - Git-Auto-Push-Hook: jede Änderung an `index.html` wird automatisch committed & gepusht
 
@@ -71,8 +57,7 @@ Alle Generierungen über Supabase Edge Function `podcast-ai` (Claude via Anthrop
 |---|---|
 | Frontend | Vanilla HTML/CSS/JS (kein Framework, kein Build-Step) |
 | Hosting | GitHub Pages |
-| Datenbank | Supabase Postgres (Projekt `xsxsyfaxhwrbllvvfxxm`) |
-| KI | Supabase Edge Function → Anthropic Claude API |
+| Datenbank | Supabase Postgres (Projekt `wkqaktxdrtohwzrtpjrh`) |
 | Realtime | Supabase Realtime Websocket |
 
 ### Datenbank-Tabellen
@@ -94,13 +79,21 @@ questions, core_message, updated_at
 
 ---
 
-## Sicherheitshinweis
+## Login & Sicherheit
+- Login per E-Mail-Link (Supabase Auth, kein Passwort). Zugriff haben nur E-Mails in der Tabelle `app_users`.
+- RLS: Mitglieder-Policies auf allen Tabellen (`supabase/migrations/20261024_phase1a_members.sql`).
+- Übergangsphase: anonymer Zugriff ist noch offen, bis Nils und Leo sich erfolgreich angemeldet haben. Danach `20261024_phase1b_drop_anon.sql` ausführen und in `index.html` `AUTH_REQUIRED = true` setzen.
+- Gleichzeitiges Bearbeiten: Speichern mit Versionsprüfung (`updated_at`), bei Konflikt 3-Wege-Merge – Änderungen an verschiedenen Feldern gehen nicht verloren.
 
-Der Supabase Anon-Key ist im Client-Code enthalten (by design für Public-Key-Konzept von Supabase).  
-**Solange Row Level Security (RLS) in Supabase deaktiviert ist, sind die Daten mit dem Key lesbar und schreibbar.**  
-Empfehlung: RLS aktivieren + einfaches Login einbauen, oder Repo auf privat stellen.
-
----
+## Datensicherung & Wiederherstellung
+- Automatisch: jeden Montag 03:00 UTC sichert die Edge Function `backup` alle Tabellen als JSON in den privaten Storage-Bucket `backups` (12 Versionen).
+- Manuell: 💾-Button in der App lädt alle Tabellen als JSON herunter (gleiches Format).
+- Wichtig: Kopien zusätzlich außerhalb von Supabase aufbewahren (z. B. `Desktop/Podcast/PodcastBackups/`), nicht im öffentlichen Repo.
+- Wiederherstellen (löscht nie, upsert per ID; erst Probelauf):
+  ```bash
+  python3 scripts/restore-backup.py backup.json            # Probelauf, zeigt Unterschiede
+  SUPABASE_SERVICE_KEY=... python3 scripts/restore-backup.py backup.json --apply
+  ```
 
 ## Lokale Entwicklung
 
