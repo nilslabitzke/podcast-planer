@@ -572,6 +572,59 @@
     .fu-banner { margin-bottom: 14px; border-color: var(--yellow); }
     .fu-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
 
+    /* Phase 6: posts & calendar */
+    .cal-type-story { --cal-type-color: #a78bfa; --cal-type-bg: rgba(167,139,250,.16); }
+    body.light .cal-type-story { --cal-type-color: #7c3aed; --cal-type-bg: rgba(124,58,237,.12); }
+    .post-chip { display: flex; align-items: flex-start; gap: 6px; padding: 5px 6px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--cal-type-color); border-radius: 6px; cursor: pointer; min-width: 0; }
+    .post-chip:hover { border-color: var(--accent); border-left-color: var(--cal-type-color); }
+    .post-chip .task-check { width: 16px; height: 16px; margin-top: 2px; }
+    .post-chip .task-check::after { left: 4px; top: 1px; width: 4px; height: 8px; }
+    .post-chip.done { opacity: .55; }
+    .post-chip.done .post-chip-title { text-decoration: line-through; }
+    .post-chip-body { min-width: 0; flex: 1; }
+    .post-chip-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .post-chip-meta .who { min-width: 16px; height: 16px; font-size: 9px; padding: 0 4px; }
+    .post-chip-title { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.35; margin-top: 2px; }
+    .post-chip-title .muted { font-weight: 400; }
+    .post-box-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+    .cal-cell.drag-over, .calp-day.drag-over { outline: 2px dashed var(--accent); }
+    .post-source { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 14px; }
+    .post-source-text { font-size: 13px; white-space: pre-wrap; max-height: 140px; overflow: auto; margin-bottom: 4px; }
+    .calp-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .calp-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .calp-label { font-weight: 700; margin-left: 6px; }
+    .calp-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+    .calp-filters select { width: auto; min-height: 34px; font-size: 13px; padding: 4px 10px; max-width: 220px; }
+    .calp-week { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+    .calp-day { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px; min-height: 140px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .calp-day.is-today { border-color: var(--accent); background: var(--accent-soft); }
+    .calp-day.is-outside { opacity: .45; }
+    .calp-day-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .calp-day.is-today .calp-day-head { color: var(--accent-text); }
+    .calp-add { background: none; border: none; color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; padding: 0 4px; border-radius: 4px; opacity: .5; }
+    .calp-day:hover .calp-add, .calp-add:focus-visible { opacity: 1; }
+    .calp-add:hover { background: var(--accent); color: var(--on-accent); }
+    .calp-items { display: flex; flex-direction: column; gap: 4px; }
+    .calp-month-wrap { overflow-x: auto; padding-bottom: 6px; }
+    .calp-month-head, .calp-month { min-width: 760px; }
+    .calp-month-head { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; margin-bottom: 4px; }
+    .calp-month { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+    .calp-month .calp-day { min-height: 110px; }
+    .calp-more { font-size: 11px; text-align: left; }
+    .calp-list-group { margin-bottom: 16px; }
+    .calp-list-group h3 { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .calp-overdue h3 { color: var(--red); }
+    @media (hover: none) { .calp-add { opacity: 1; } }
+    @media (max-width: 900px) {
+      .calp-week { grid-template-columns: 1fr; overflow-x: visible; }
+      .calp-month-head, .calp-month { min-width: 0; }
+      .calp-week .calp-day { min-height: 0; }
+      .calp-month .calp-day { min-height: 64px; padding: 3px; }
+      .calp-month .post-chip-body, .calp-month .post-chip .task-check { display: none; }
+      .calp-month .post-chip { padding: 0; height: 6px; border-width: 0; background: var(--cal-type-color); border-radius: 3px; }
+      .calp-filters { margin-left: 0; }
+    }
+
     /* ── ZEITSTRAHL ──────────────────────────────────────────────── */
     .timeline { position: relative; padding: 8px 0 32px 0; }
     .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); }
@@ -611,6 +664,7 @@
       <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
       <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
       <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
+      <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
   </nav>
   <div class="sb-foot">
@@ -684,6 +738,18 @@
     <div class="filter-row" id="task-filters"></div>
     <div id="task-followups"></div>
     <div id="tasks-content"></div>
+  </div>
+
+  <div class="page" id="page-calendar">
+    <div class="section-header">
+      <div>
+        <h1>Kalender</h1>
+        <p class="subtitle">Social-Media-Veröffentlichungen &mdash; ziehen zum Verschieben, Haken setzen nach dem Posten</p>
+      </div>
+      <button class="btn btn-primary" onclick="openPostEditor(null)">+ Post</button>
+    </div>
+    <div class="calp-toolbar" id="calendar-toolbar"></div>
+    <div id="calendar-content"></div>
   </div>
 
   <div class="page" id="page-experts">
@@ -929,6 +995,38 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="closeProjectsModal()">Fertig</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="post-modal-bg">
+  <div class="modal" style="width:620px">
+    <h2 id="post-modal-title">Post</h2>
+    <div id="post-template-hint"></div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label for="post-title">Titel</label><input type="text" id="post-title" placeholder="z. B. Reel 3 – Mythos Muskelkater"></div>
+      <div class="form-group"><label for="post-format">Format</label><select id="post-format" onchange="onPostFormatChange(this.value)"></select></div>
+    </div>
+    <div class="form-group"><label>Plattformen</label><div class="filter-row" id="post-platforms" style="margin:0"></div></div>
+    <div class="form-row">
+      <div class="form-group"><label for="post-date">Datum</label><input type="date" id="post-date"></div>
+      <div class="form-group"><label for="post-time">Uhrzeit</label><input type="text" id="post-time" placeholder="18:30" inputmode="numeric"></div>
+      <div class="form-group"><label for="post-assignee">Zuständig</label><select id="post-assignee"><option value="">Nicht zugewiesen</option><option value="leo">Leo</option><option value="nils">Nils</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label for="post-episode">Folge</label><select id="post-episode"></select></div>
+      <div class="form-group"><label for="post-status">Status</label><select id="post-status"><option value="planned">Geplant</option><option value="in_progress">In Arbeit</option><option value="scheduled">Eingeplant</option><option value="published">Veröffentlicht</option></select></div>
+    </div>
+    <div class="form-group"><label for="post-description">Beschreibung / Caption</label><textarea id="post-description" rows="4" placeholder="Text, Hashtags, Notizen…"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label for="post-media">Medienlink</label><div class="ep-link-row"><input type="text" id="post-media" placeholder="https://… (Drive, Canva)" oninput="updatePostLinkButtons()"><a class="btn btn-sm" id="post-media-open" target="_blank" rel="noopener noreferrer" hidden title="Öffnen">↗</a></div></div>
+      <div class="form-group"><label for="post-publish">Veröffentlichungslink</label><div class="ep-link-row"><input type="text" id="post-publish" placeholder="https://… (fertiger Post)" oninput="updatePostLinkButtons()"><a class="btn btn-sm" id="post-publish-open" target="_blank" rel="noopener noreferrer" hidden title="Öffnen">↗</a></div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="post-delete-btn" onclick="deletePostFromEditor()">Löschen</button>
+      <button class="btn" id="post-duplicate-btn" onclick="duplicatePost()">Duplizieren</button>
+      <button class="btn btn-ghost" onclick="closePostEditor()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="savePostEditor()">Speichern</button>
     </div>
   </div>
 </div>
@@ -1588,7 +1686,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
 const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
-  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings'];
+  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1660,6 +1758,10 @@ function onRemoteChange(table) {
       if (active === 'page-expert') renderExpertDetail();
       if (active === 'page-dashboard') renderDashboard();
       if (active === 'page-todos' && !todoEditingId) renderTodos();
+    } else if (table === 'podcast_posts') {
+      if (postWritesInFlight > 0) { postRemotePending = true; return; }
+      await loadPosts();
+      refreshPostViews();
     } else if (table === 'podcast_guides') {
       await loadGuides();
       if (document.getElementById('page-guides').classList.contains('active') && !document.getElementById('guide-modal-bg').classList.contains('open')) renderGuides();
@@ -1707,7 +1809,8 @@ async function reloadAllData() {
   const active = document.querySelector('.page.active');
   if (!active) return;
   if (active.id === 'page-todos') { await loadTasksData(); renderTodos(); }
-  else if (active.id === 'page-dashboard') renderDashboard();
+  else if (active.id === 'page-dashboard') { await loadPosts(); renderDashboard(); }
+  else if (active.id === 'page-calendar') { await loadPosts(); renderCalendarPage(); }
   else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
   else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements()]); renderGoals(); renderImprovements(); }
   else if (changed) onEpisodesChanged(changed);
@@ -1955,46 +2058,6 @@ function changePlannerYear(delta) {
   renderPlaner();
 }
 
-// Collects all not-yet-done content-calendar items that fall on `today` or
-// `tomorrow` (relative to each episode's content plan), across all episodes.
-function getTodayWidgetItems() {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
-  const todayStr = formatDate(today);
-  const tomorrowStr = formatDate(tomorrow);
-
-  const items = [];
-  episodes.forEach(ep => {
-    const start = parseDate(ep.date);
-    for (let offset = 0; offset < 14; offset++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + offset);
-      const key = formatDate(d);
-      if (key !== todayStr && key !== tomorrowStr) continue;
-      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
-      dayItems.forEach((item, idx) => {
-        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
-        if (entry.done) return;
-        items.push({ ep, date: key, isToday: key === todayStr, item: { ...item, _dateKey: key, _idx: idx }, entry });
-      });
-    }
-  });
-  items.sort((a, b) => (a.isToday === b.isToday ? a.item.time.localeCompare(b.item.time) : a.isToday ? -1 : 1));
-  return items;
-}
-
-function todayItemsHtml(items) {
-  return `<div class="today-widget-list">${items.map(({ ep, isToday, item, entry }) => {
-      const meta = CAL_TYPE_META[item.type];
-      return `<div class="today-widget-item" onclick="openDetail(${jsArg(ep.id)})">
-        <div class="task-check" onclick="event.stopPropagation();toggleCalendarItem(${jsArg(ep.id)},'${item._dateKey}',${item._idx},true)" style="width:18px;height:18px" title="Erledigt"></div>
-        <span class="today-widget-date">${isToday ? 'Heute' : 'Morgen'} · ${item.time}</span>
-        <span class="cal-type-badge cal-type-${item.type}">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
-        <span style="min-width:0;overflow-wrap:anywhere">${esc(ep.title)}</span>
-        ${entry.assignee ? `<span class="who ${entry.assignee === 'N' ? 'who-nils' : 'who-leo'}">${esc(entry.assignee)}</span>` : ''}
-      </div>`;
-    }).join('')}</div>`;
-}
 function renderTodayWidget() {
   const box = document.getElementById('today-widget');
   const items = getTodayWidgetItems();
@@ -2145,13 +2208,16 @@ async function swapEpisodeDates(fromDate, toDate) {
   const epB = episodeForDate(toDate);
   if (!epA) return; // nothing to move
 
+  const shift = daysBetween(fromDate, toDate);
   if (epB) {
     // Swap dates
     epA.date = toDate;
     epB.date = fromDate;
     try {
       await Promise.all([upsertEpisode(epA), upsertEpisode(epB)]);
-      showToast('📅 Folgen getauscht');
+      shiftEpisodePosts(epA.id, shift); shiftEpisodePosts(epB.id, -shift);
+      afterPostChange(epA.id); afterPostChange(epB.id);
+      showToast('📅 Folgen getauscht · offene Posts mit verschoben');
     } catch(e) {
       // rollback
       epA.date = fromDate;
@@ -2164,7 +2230,9 @@ async function swapEpisodeDates(fromDate, toDate) {
     epA.date = toDate;
     try {
       await upsertEpisode(epA);
-      showToast('📅 Folge verschoben');
+      shiftEpisodePosts(epA.id, shift);
+      afterPostChange(epA.id);
+      showToast('📅 Folge verschoben · offene Posts mit verschoben');
     } catch(e) {
       epA.date = oldDate;
       showToast('Fehler beim Verschieben', 'error');
@@ -2201,23 +2269,14 @@ function renderZeitstrahl() {
         tlItems.push({ type: 'recording', date: recDateStr, time: recTime, ep, sortDate: recDate });
       }
     }
-    // Open content-calendar items (LinkedIn, Reels, Karussell) in window
-    if (!slotsInWindow.length) return; // no episode start basis needed, but still iterate
-    const start = parseDate(ep.date);
-    for (let offset = 0; offset < 14; offset++) {
-      const d = new Date(start); d.setDate(start.getDate() + offset);
-      if (d < today || d > windowEnd) continue;
-      const key = formatDate(d);
-      const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
-      dayItems.forEach((item, idx) => {
-        const entry = getCalEntry(ep.contentPlan || {}, key, idx);
-        if (entry.done) return;
-        tlItems.push({ type: 'content', date: key, sortDate: d, ep, item, entry });
-      });
-    }
+  });
+  posts.forEach(p => {
+    const d = postDate(p);
+    if (!d || isPublished(p) || d < today || d > windowEnd) return;
+    tlItems.push({ type: 'content', sortDate: d, post: p });
   });
 
-  tlItems.sort((a, b) => a.sortDate - b.sortDate);
+  tlItems.sort((a, b) => a.sortDate - b.sortDate || ((a.post && a.post.time) || '').localeCompare((b.post && b.post.time) || ''));
 
   if (!tlItems.length) {
     container.innerHTML = `<div class="card">${emptyState('🎉', 'Nichts geplant', 'In den nächsten 4 Wochen stehen keine Aufnahmen, Releases oder Content-Termine an.')}</div>`;
@@ -2251,13 +2310,15 @@ function renderZeitstrahl() {
     }
 
     if (item.type === 'content') {
-      const meta = CAL_TYPE_META[item.item.type];
+      const p = item.post;
+      const f = POST_FORMATS[p.format] || POST_FORMATS.other;
+      const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
       html += `<div class="tl-item">
         <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot filled"></div></div>
-        <div class="tl-card" onclick="openDetail(${jsArg(item.ep.id)})">
-          <div class="tl-card-title"><span class="cal-type-badge">${meta.icon} ${meta.label}${item.item.num ? ' ' + item.item.num : ''}</span> ${esc(item.ep.title)}
-            ${item.entry.assignee ? `<span class="open-task-assignee" style="margin-left:8px">${esc(item.entry.assignee)}</span>` : ''}
+        <div class="tl-card cal-type-${f.cls}" onclick="openPostEditor(${jsArg(p.id)})">
+          <div class="tl-card-title"><span class="cal-type-badge">${f.icon} ${f.label}</span> ${esc(p.title || f.label)}${ep ? ` <span class="muted" style="font-weight:400">· ${esc(ep.title)}</span>` : ''}${p.time ? ` <span class="muted" style="font-weight:400">· ${esc(p.time)}</span>` : ''}
+            ${p.assignee ? `<span class="who who-${p.assignee}" style="margin-left:6px">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}
           </div>
         </div>
       </div>`;
@@ -2446,7 +2507,7 @@ function openDetail(id) {
           oninput="scheduleTranscriptSave(${idArg},this.value)">${esc(ep.transcript)}</textarea>
       </div>
     </div>
-    ${renderContentCalendar(ep)}
+    ${renderEpisodePosts(ep)}
     ${sectionsHtml}
     <div class="card" style="margin-top:8px">
       <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500">Notizen</label>
@@ -2499,110 +2560,6 @@ function rerenderDetail(epId) {
   restoreDetailState(st);
 }
 
-// ── CONTENT CALENDAR (2 weeks starting from publish date) ────────
-// Fixed 2-week content schedule template (dayOffset relative to release day = 0)
-const CAL_TYPE_META = {
-  release:  { label: 'Release',  color: '#34d399', icon: '🚀' },
-  karussell:{ label: 'Karussell',color: '#f472b6', icon: '🖼️' },
-  reel:     { label: 'Reel',     color: '#60a5fa', icon: '🎬' },
-  linkedin: { label: 'LinkedIn', color: '#22d3ee', icon: '💼' },
-};
-const CAL_PLATFORM_ICONS = { ig: '📸', tiktok: '🎵', yt: '▶️' };
-
-const CONTENT_CAL_TEMPLATE = {
-  0:  [{ time: '07:00', type: 'karussell', num: 1, label: '', platforms: ['ig'] },
-       { time: '18:30', type: 'reel', num: 1, label: '', platforms: ['ig','tiktok','yt'] }],
-  1:  [{ time: '07:45', type: 'linkedin', num: 1, label: '', platforms: [] },
-       { time: '18:00', type: 'karussell', num: 2, label: '', platforms: ['ig'] }],
-  2:  [{ time: '18:30', type: 'reel', num: 2, label: '', platforms: ['ig','tiktok','yt'] }],
-  3:  [{ time: '07:45', type: 'linkedin', num: 2, label: '', platforms: [] },
-       { time: '18:30', type: 'reel', num: 3, label: '', platforms: ['ig','tiktok','yt'] }],
-  4:  [{ time: '18:30', type: 'reel', num: 4, label: '', platforms: ['ig','tiktok','yt'] }],
-  5:  [{ time: '09:00', type: 'linkedin', num: 3, label: '', platforms: [] }],
-  7:  [{ time: '18:30', type: 'reel', num: 5, label: '', platforms: ['ig','tiktok','yt'] }],
-  8:  [{ time: '07:45', type: 'linkedin', num: 4, label: '', platforms: [] },
-       { time: '18:00', type: 'karussell', num: 3, label: '', platforms: ['ig'] }],
-  9:  [{ time: '18:30', type: 'reel', num: 6, label: '', platforms: ['ig','tiktok','yt'] }],
-  10: [{ time: '07:45', type: 'linkedin', num: 5, label: '', platforms: [] },
-       { time: '18:30', type: 'reel', num: 7, label: '', platforms: ['ig','tiktok','yt'] }],
-  11: [{ time: '18:30', type: 'reel', num: 8, label: '', platforms: ['ig','tiktok','yt'] }],
-};
-const CONTENT_CAL_TOTAL = Object.values(CONTENT_CAL_TEMPLATE).reduce((n, items) => n + items.length, 0);
-
-function renderContentCalendar(ep) {
-  const start = parseDate(ep.date);
-  const today = new Date(); today.setHours(0,0,0,0);
-  const plan = ep.contentPlan || {};
-
-  const offsets = [];
-  for (let i = 0; i < 14; i++) offsets.push(i);
-
-  const weekdayNames = ['Mo','Di','Mi','Do','Fr','Sa','So'];
-  const headerCells = weekdayNames.map(w => `<div class="cal-weekday">${w}</div>`).join('');
-
-  let doneCount = 0;
-  const cells = offsets.map(offset => {
-    const d = new Date(start);
-    d.setDate(start.getDate() + offset);
-    const key = formatDate(d);
-    const isToday = d.toDateString() === today.toDateString();
-    const shortDate = d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-    const dayPlan = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
-    const dayItems = CONTENT_CAL_TEMPLATE[offset] || [];
-    const weekStart = offset === 0 || offset === 7;
-    const items = dayItems.map((item, idx) => {
-      const entry = getCalEntry(plan, key, idx);
-      const checked = entry.done;
-      if (checked) doneCount++;
-      const meta = CAL_TYPE_META[item.type];
-      return `<div class="cal-item cal-type-${item.type} ${checked ? 'done' : ''}" id="cal-item-${key}-${idx}" onclick="toggleCalendarItem(${jsArg(ep.id)},'${key}',${idx})">
-        <div class="task-check ${checked ? 'done' : ''}" id="cal-check-${key}-${idx}"></div>
-        <div class="cal-item-body">
-          <div class="cal-item-meta">
-            <span class="cal-item-time">${item.time}</span>
-            <span class="cal-type-badge">${meta.icon} ${meta.label}${item.num ? ' ' + item.num : ''}</span>
-          </div>
-          ${item.label ? `<div class="cal-item-text">${item.label}</div>` : ''}
-        </div>
-        <div class="cal-assignee">
-          <span class="cal-assignee-pill ${entry.assignee === 'N' ? 'active' : ''}" id="cal-assignee-N-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee(${jsArg(ep.id)},'${key}',${idx},'N')" title="Nils zuweisen">N</span>
-          <span class="cal-assignee-pill ${entry.assignee === 'L' ? 'active' : ''}" id="cal-assignee-L-${key}-${idx}" onclick="event.stopPropagation();toggleCalendarAssignee(${jsArg(ep.id)},'${key}',${idx},'L')" title="Leo zuweisen">L</span>
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="cal-cell${isToday ? ' cal-today' : ''}${dayItems.length === 0 ? ' cal-empty' : ''}${weekStart ? ' cal-week-start' : ''}">
-      <div class="cal-cell-head">${shortDate}</div>
-      <div class="cal-cell-items">${items || '<div class="cal-empty-hint">–</div>'}</div>
-    </div>`;
-  }).join('');
-
-  return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:28px">
-    <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0" onclick="toggleCalendarBox()">
-      📅 Content-Kalender (2 Wochen) <span class="pill">ab Veröffentlichung</span>
-      <span class="pill pill-accent">${doneCount}/${CONTENT_CAL_TOTAL} erledigt</span>
-      <span id="calendar-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
-    </h2>
-    <div id="calendar-body">
-      <div class="cal-weekday-row">${headerCells}</div>
-      <div class="cal-grid">${cells}</div>
-    </div>
-  </div>`;
-}
-
-// A calendar cell entry is either a legacy boolean (done only, no assignee)
-// or an object { done, assignee: 'N'|'L'|null }.
-function getCalEntry(plan, key, idx) {
-  const dp = (plan[key] && typeof plan[key] === 'object') ? plan[key] : {};
-  const v = dp[idx];
-  if (v && typeof v === 'object') return { done: !!v.done, assignee: v.assignee || null };
-  return { done: !!v, assignee: null };
-}
-function setCalEntry(ep, key, idx, entry) {
-  if (!ep.contentPlan) ep.contentPlan = {};
-  if (!ep.contentPlan[key] || typeof ep.contentPlan[key] !== 'object') ep.contentPlan[key] = {};
-  ep.contentPlan[key][idx] = entry;
-}
-
 function toggleSection(sec) {
   const box = document.getElementById('section-' + sec);
   const icon = box.querySelector('.section-toggle-icon');
@@ -2617,77 +2574,496 @@ function toggleCalendarBox() {
   icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
 }
 
-// Counts checked content-calendar items per type ('linkedin' / 'reel') and
-// auto-checks/-unchecks the corresponding overall workflow task once all
-// items of that type are done (and un-checks it again if one is unchecked).
-function syncCalendarTaskCompletion(ep) {
-  const plan = ep.contentPlan || {};
-  const start = parseDate(ep.date);
+// ── SOCIAL MEDIA POSTS ───────────────────────────────────────────
+// Flexible posts (podcast_posts). The standard template (8 reels, 3 carousels,
+// 5 LinkedIn posts over 14 days) is applied per episode; template posts carry a
+// template_key so they are never duplicated.
+const POST_TABLE = 'podcast_posts';
+const POST_FORMATS = {
+  reel: { label: 'Reel', icon: '🎬', cls: 'reel' }, carousel: { label: 'Karussell', icon: '🖼️', cls: 'karussell' },
+  story: { label: 'Story', icon: '⭕', cls: 'story' }, linkedin: { label: 'LinkedIn', icon: '💼', cls: 'linkedin' },
+  short: { label: 'Short', icon: '▶️', cls: 'reel' }, community: { label: 'Community', icon: '💬', cls: 'story' },
+  post: { label: 'Beitrag', icon: '📝', cls: 'story' }, other: { label: 'Sonstiges', icon: '•', cls: 'story' },
+};
+const PLATFORMS = [
+  ['ig_reels', 'Instagram Reels', 'IG Reels'], ['ig_carousel', 'Instagram Carousel', 'IG Carousel'], ['ig_story', 'Instagram Story', 'IG Story'],
+  ['tiktok', 'TikTok', 'TikTok'], ['yt_shorts', 'YouTube Shorts', 'YT Shorts'], ['yt_community', 'YouTube Community', 'YT Community'],
+  ['linkedin', 'LinkedIn', 'LinkedIn'], ['facebook', 'Facebook', 'Facebook'],
+];
+const PLATFORM_LABEL = Object.fromEntries(PLATFORMS.map(([k, l]) => [k, l]));
+const PLATFORM_SHORT = Object.fromEntries(PLATFORMS.map(([k, , s]) => [k, s]));
+const FORMAT_DEFAULT_PLATFORMS = {
+  reel: ['ig_reels', 'tiktok', 'yt_shorts'], carousel: ['ig_carousel'], story: ['ig_story'], linkedin: ['linkedin'],
+  short: ['yt_shorts'], community: ['yt_community'], post: [], other: [],
+};
+const POST_STATUS = [['planned', 'Geplant'], ['in_progress', 'In Arbeit'], ['scheduled', 'Eingeplant'], ['published', 'Veröffentlicht']];
+const POST_STATUS_LABEL = Object.fromEntries(POST_STATUS);
+const POST_TEMPLATE = [
+  [0, '07:00', 'carousel', 1], [0, '18:30', 'reel', 1], [1, '07:45', 'linkedin', 1], [1, '18:00', 'carousel', 2],
+  [2, '18:30', 'reel', 2], [3, '07:45', 'linkedin', 2], [3, '18:30', 'reel', 3], [4, '18:30', 'reel', 4],
+  [5, '09:00', 'linkedin', 3], [7, '18:30', 'reel', 5], [8, '07:45', 'linkedin', 4], [8, '18:00', 'carousel', 3],
+  [9, '18:30', 'reel', 6], [10, '07:45', 'linkedin', 5], [10, '18:30', 'reel', 7], [11, '18:30', 'reel', 8],
+].map(([offset, time, format, num]) => ({
+  offset, time, format, num, key: `${format}-${num}`,
+  title: `${format === 'reel' ? 'Reel' : format === 'carousel' ? 'Karussell' : 'LinkedIn-Beitrag'} ${num}`,
+}));
+const TEMPLATE_TOTAL = POST_TEMPLATE.length;
 
-  // Count by type per week (week1 = offset 0-6, week2 = offset 7-13)
-  const w1 = { reel: { done: 0, total: 0 }, karussell: { done: 0, total: 0 }, linkedin: { done: 0, total: 0 } };
-  const w2 = { reel: { done: 0, total: 0 }, karussell: { done: 0, total: 0 }, linkedin: { done: 0, total: 0 } };
-  for (let offset = 0; offset < 14; offset++) {
-    const items = CONTENT_CAL_TEMPLATE[offset] || [];
-    if (!items.length) continue;
-    const d = new Date(start); d.setDate(start.getDate() + offset);
-    const key = formatDate(d);
-    const week = offset < 7 ? w1 : w2;
-    items.forEach((item, idx) => {
-      const type = item.type;
-      if (!week[type]) week[type] = { done: 0, total: 0 };
-      week[type].total++;
-      if (getCalEntry(plan, key, idx).done) week[type].done++;
-    });
-  }
-
-  let changed = false;
-  const sync = (taskId, bucket) => {
-    if (!bucket || bucket.total === 0) return;
-    const allDone = bucket.done >= bucket.total;
-    if (taskDone(ep, taskId) !== allDone && setEpisodeStepDone(ep, taskId, allDone)) changed = true;
-  };
-
-  sync('sm1_reels',     w1.reel);
-  sync('sm2_reels',     w2.reel);
-  sync('sm1_karussell', w1.karussell);
-  sync('sm2_karussell', w2.karussell);
-
-  // LinkedIn: all 5 posts across both weeks
-  const liTotal = w1.linkedin.total + w2.linkedin.total;
-  const liDone  = w1.linkedin.done  + w2.linkedin.done;
-  if (liTotal > 0) {
-    const allDone = liDone >= liTotal;
-    if (taskDone(ep, 'li_beitraege') !== allDone && setEpisodeStepDone(ep, 'li_beitraege', allDone)) changed = true;
-  }
-  return changed;
+let posts = [];
+let postsLoaded = false;
+async function loadPosts() {
+  try {
+    posts = await apiFetch(POST_TABLE + '?select=*&order=date.asc,time.asc');
+    postsLoaded = true;
+    return true;
+  } catch (e) { showToast('Social-Media-Posts konnten nicht geladen werden: ' + e.message, 'error'); return false; }
 }
+function isoDate(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function postDate(p) { return safeParseIso(p.date); }
+function postsOf(epId) { return posts.filter(p => p.episode_id === epId); }
+function isPublished(p) { return p.status === 'published'; }
+function sortPosts(list) { return list.sort((a, b) => (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || '')); }
 
-async function toggleCalendarItem(epId, dateKey, idx, fromWidget = false) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const entry = getCalEntry(ep.contentPlan || {}, dateKey, idx);
-  const newVal = !entry.done;
-  setCalEntry(ep, dateKey, idx, { done: newVal, assignee: entry.assignee });
-  document.getElementById(`cal-item-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
-  document.getElementById(`cal-check-${dateKey}-${idx}`)?.classList.toggle('done', newVal);
-  const taskChanged = syncCalendarTaskCompletion(ep);
-  if (fromWidget) { renderTodayWidget(); if (document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); }
-  else if (taskChanged) rerenderDetail(epId);
-  try { await upsertEpisode(ep); } catch { return; }
-  if (taskChanged) showToast('✅ Aufgabe automatisch abgehakt!');
+// Ordered, coalesced field-level writes; realtime reloads wait for own writes.
+let postWritesInFlight = 0;
+let postRemotePending = false;
+const postChain = {};
+const postPending = {};
+function queuePostWrite(key, write) {
+  postWritesInFlight++;
+  const p = (postChain[key] || Promise.resolve()).catch(() => {}).then(write);
+  postChain[key] = p;
+  p.then(flashSaved, e => { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); postRemotePending = true; })
+   .finally(() => {
+     postWritesInFlight--;
+     if (!postWritesInFlight && postRemotePending) { postRemotePending = false; onRemoteChange('podcast_posts'); }
+   });
+  return p;
 }
-
-async function toggleCalendarAssignee(epId, dateKey, idx, who) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const entry = getCalEntry(ep.contentPlan || {}, dateKey, idx);
-  const newAssignee = entry.assignee === who ? null : who;
-  setCalEntry(ep, dateKey, idx, { done: entry.done, assignee: newAssignee });
-  ['N', 'L'].forEach(w => {
-    document.getElementById(`cal-assignee-${w}-${dateKey}-${idx}`)?.classList.toggle('active', w === newAssignee);
+function patchPost(id, changes) {
+  const p = posts.find(x => x.id === id);
+  if (p) Object.assign(p, changes);
+  const queued = !!postPending[id];
+  postPending[id] = { ...(postPending[id] || {}), ...changes };
+  if (queued) return postChain[id];
+  return queuePostWrite(id, async () => {
+    const body = postPending[id];
+    delete postPending[id];
+    await apiFetch(`${POST_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(body) });
   });
-  upsertEpisode(ep).catch(() => {});
+}
+function insertPosts(rows) {
+  posts.push(...rows);
+  return queuePostWrite('insert', () => apiFetch(POST_TABLE, { method: 'POST', prefer: 'resolution=ignore-duplicates,return=minimal', body: JSON.stringify(rows) }));
+}
+function deletePostById(id) {
+  posts = posts.filter(p => p.id !== id);
+  return queuePostWrite(id, () => apiFetch(`${POST_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' }));
+}
+
+// ── Template & episode coupling ─────────────────────────────────
+function missingTemplatePosts(ep) {
+  const have = new Set(postsOf(ep.id).map(p => p.template_key).filter(Boolean));
+  return POST_TEMPLATE.filter(t => !have.has(t.key));
+}
+function applyTemplate(ep) {
+  const release = safeParseDate(ep.date);
+  if (!release) return 0;
+  const rows = missingTemplatePosts(ep).map(t => ({
+    id: newId(), episode_id: ep.id, template_key: t.key, format: t.format, platforms: FORMAT_DEFAULT_PLATFORMS[t.format],
+    date: isoDate(addDays(release, t.offset)), time: t.time, title: t.title, description: '', status: 'planned', assignee: null,
+  }));
+  if (rows.length) insertPosts(rows);
+  return rows.length;
+}
+function applyTemplateFromDetail(epId) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const n = applyTemplate(ep);
+  showToast(n ? `${n} Posts aus der Standardvorlage angelegt` : 'Standardvorlage ist bereits vollständig');
+  rerenderDetail(epId);
+}
+// When an episode moves, its not-yet-published posts move with it.
+function shiftEpisodePosts(epId, days) {
+  if (!days) return;
+  postsOf(epId).filter(p => !isPublished(p)).forEach(p => patchPost(p.id, { date: isoDate(addDays(postDate(p), days)) }));
+}
+function daysBetween(a, b) { return Math.round((safeParseDate(b) - safeParseDate(a)) / 86400000); }
+
+// Social-media steps in the episode follow the posts (week 1 = first 7 days after release).
+// Steps are completed automatically when all their posts are published; they are only
+// reopened when a post is explicitly set back to unpublished (never by adding/moving posts),
+// so steps finished by hand in the past stay finished.
+function syncEpisodeTasksFromPosts(ep, allowReopen = false) {
+  const release = safeParseDate(ep.date);
+  if (!release) return { changed: false, completed: false };
+  const weekEnd = addDays(release, 7);
+  const buckets = {};
+  const add = (taskId, p) => { (buckets[taskId] = buckets[taskId] || []).push(p); };
+  postsOf(ep.id).forEach(p => {
+    const d = postDate(p);
+    const w = d && d < weekEnd ? 1 : 2;
+    if (p.format === 'reel') add(`sm${w}_reels`, p);
+    else if (p.format === 'carousel') add(`sm${w}_karussell`, p);
+    else if (p.format === 'linkedin') add('li_beitraege', p);
+  });
+  let changed = false, completed = false;
+  Object.entries(buckets).forEach(([taskId, list]) => {
+    const allDone = list.every(isPublished);
+    if (!allDone && !allowReopen) return;
+    if (taskDone(ep, taskId) !== allDone && setEpisodeStepDone(ep, taskId, allDone)) {
+      changed = true;
+      if (allDone) completed = true;
+    }
+  });
+  return { changed, completed };
+}
+function afterPostChange(epId, allowReopen = false) {
+  if (!epId) return;
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const { changed, completed } = syncEpisodeTasksFromPosts(ep, allowReopen);
+  if (changed) {
+    upsertEpisode(ep).catch(() => {});
+    if (completed) showToast('✅ Folgenaufgabe automatisch abgehakt');
+  }
+}
+function refreshPostViews() {
+  const active = document.querySelector('.page.active').id;
+  if (active === 'page-calendar') renderCalendarPage();
+  if (active === 'page-detail' && editingEpId) rerenderDetail(editingEpId);
+  if (active === 'page-dashboard') renderDashboard();
+  if (active === 'page-planer') renderTodayWidget();
+  if (active === 'page-zeitstrahl') renderZeitstrahl();
+  if (active === 'page-todos' && !todoEditingId) renderTodos();
+}
+function togglePostDone(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  const unpublish = isPublished(p);
+  patchPost(id, { status: unpublish ? 'planned' : 'published' });
+  afterPostChange(p.episode_id, unpublish);
+  refreshPostViews();
+}
+function movePost(id, iso) {
+  const p = posts.find(x => x.id === id);
+  if (!p || p.date === iso) return;
+  patchPost(id, { date: iso });
+  afterPostChange(p.episode_id);
+  refreshPostViews();
+}
+
+// ── Rendering helpers ────────────────────────────────────────────
+function postLabel(p) {
+  const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+  return p.title || (ep ? ep.title : POST_FORMATS[p.format].label);
+}
+function postChipHtml(p, { showEpisode = true, draggable = true } = {}) {
+  const f = POST_FORMATS[p.format] || POST_FORMATS.other;
+  const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+  return `<div class="post-chip cal-type-${f.cls}${isPublished(p) ? ' done' : ''}" ${draggable ? `draggable="true" ondragstart="event.dataTransfer.setData('text/plain', ${jsArg(p.id)})"` : ''} onclick="openPostEditor(${jsArg(p.id)})" title="${esc(postLabel(p))}">
+    <div class="task-check ${isPublished(p) ? 'done' : ''}" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" role="checkbox" aria-checked="${isPublished(p)}" title="${isPublished(p) ? 'Als nicht veröffentlicht markieren' : 'Als veröffentlicht abhaken'}"></div>
+    <div class="post-chip-body">
+      <div class="post-chip-meta">${p.time ? `<span class="cal-item-time">${esc(p.time)}</span>` : ''}<span class="cal-type-badge">${f.icon} ${f.label}</span>${p.assignee ? `<span class="who who-${p.assignee}">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}</div>
+      <div class="post-chip-title">${esc(p.title || f.label)}${showEpisode && ep ? ` <span class="muted">· ${esc(ep.title)}</span>` : ''}</div>
+    </div>
+  </div>`;
+}
+function postRowHtml(item) {
+  const p = item.p;
+  const f = POST_FORMATS[p.format] || POST_FORMATS.other;
+  const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+  return `<div class="todo-row${isPublished(p) ? ' done' : ''}">
+    <div class="task-check ${isPublished(p) ? 'done' : ''}" onclick="togglePostDone(${jsArg(p.id)})" role="checkbox" aria-checked="${isPublished(p)}"></div>
+    <div class="todo-main">
+      <span class="todo-text" style="cursor:pointer" onclick="openPostEditor(${jsArg(p.id)})">${f.icon} ${esc(p.title || f.label)}</span>
+      <div class="todo-chips">
+        <span class="chip">Social Media${p.time ? ' · ' + esc(p.time) : ''}</span>
+        ${ep ? `<button class="chip chip-link" onclick="openDetail(${jsArg(ep.id)})">🎙 ${esc(ep.title)}</button>` : ''}
+        ${dueChip(postDate(p), isPublished(p))}
+        ${p.assignee ? whoBadge(p.assignee) : ''}
+      </div>
+    </div>
+    <div class="todo-actions"><button class="todo-btn" onclick="openPostEditor(${jsArg(p.id)})">Öffnen</button></div>
+  </div>`;
+}
+// Posts as tasks: open posts from 14 days back to 8 weeks ahead (and published ones for "Erledigt").
+function postTaskItems() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const from = addDays(today, -14), to = addDays(today, 56);
+  return posts.filter(p => { const d = postDate(p); return d && d >= from && d <= to; })
+    .map(p => ({ kind: 'post', key: 'post:' + p.id, p, assignee: p.assignee, done: isPublished(p), due: postDate(p) }));
+}
+
+// Episode detail: the 14-day plan from release plus any further posts of the episode.
+function renderEpisodePosts(ep) {
+  const release = safeParseDate(ep.date);
+  const list = sortPosts(postsOf(ep.id));
+  const published = list.filter(isPublished).length;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const weekdayNames = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  const inWindow = new Set();
+  const cells = release ? Array.from({ length: 14 }, (_, offset) => {
+    const d = addDays(release, offset);
+    const iso = isoDate(d);
+    const dayPosts = list.filter(p => p.date === iso);
+    dayPosts.forEach(p => inWindow.add(p.id));
+    return `<div class="cal-cell${d.getTime() === today.getTime() ? ' cal-today' : ''}${dayPosts.length ? '' : ' cal-empty'}${offset === 0 || offset === 7 ? ' cal-week-start' : ''}" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onPostDrop(event,'${iso}')">
+      <div class="cal-cell-head">${weekdayNames[(d.getDay() + 6) % 7]} ${d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}</div>
+      <div class="cal-cell-items">${dayPosts.map(p => postChipHtml(p, { showEpisode: false })).join('') || '<div class="cal-empty-hint">–</div>'}</div>
+    </div>`;
+  }).join('') : '';
+  const others = list.filter(p => !inWindow.has(p.id));
+  const missing = missingTemplatePosts(ep).length;
+  const idArg = jsArg(ep.id);
+  return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:12px">
+    <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0;flex-wrap:wrap" onclick="toggleCalendarBox()">
+      📅 Social Media <span class="pill">ab Veröffentlichung</span>
+      <span class="pill pill-accent">${published}/${list.length} veröffentlicht</span>
+      <span id="calendar-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
+    </h2>
+    <div id="calendar-body">
+      <div class="post-box-actions">
+        <button class="btn btn-sm" onclick="openPostEditor(null, { episodeId: ${idArg}, date: ${jsArg(release ? isoDate(release) : isoDate(today))} })">+ Post</button>
+        ${missing ? `<button class="btn btn-sm" onclick="applyTemplateFromDetail(${idArg})">Standardvorlage anwenden (${missing} fehlen)</button>` : ''}
+        <button class="link-btn" onclick="calUi.episode=${idArg};saveCalUi();showPage('calendar')">Im Kalender öffnen →</button>
+      </div>
+      <div class="cal-weekday-row">${weekdayNames.map(w => `<div class="cal-weekday">${w}</div>`).join('')}</div>
+      <div class="cal-grid">${cells}</div>
+      ${others.length ? `<h3 style="margin:14px 0 8px">Weitere Posts dieser Folge</h3><div class="todo-list">${others.map(p => postChipHtml(p, { showEpisode: false })).join('')}</div>` : ''}
+    </div>
+  </div>`;
+}
+function onPostDrop(event, iso) {
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const id = event.dataTransfer.getData('text/plain');
+  if (id && posts.find(p => p.id === id)) movePost(id, iso);
+}
+
+// "Heute & morgen fällig": open posts dated today or tomorrow.
+function getTodayWidgetItems() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const tIso = isoDate(today), mIso = isoDate(addDays(today, 1));
+  return sortPosts(posts.filter(p => !isPublished(p) && (p.date === tIso || p.date === mIso)))
+    .map(p => ({ p, isToday: p.date === tIso }));
+}
+function todayItemsHtml(items) {
+  return `<div class="today-widget-list">${items.map(({ p, isToday }) => {
+    const f = POST_FORMATS[p.format] || POST_FORMATS.other;
+    const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+    return `<div class="today-widget-item" onclick="openPostEditor(${jsArg(p.id)})">
+      <div class="task-check" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" style="width:18px;height:18px" title="Als veröffentlicht abhaken"></div>
+      <span class="today-widget-date">${isToday ? 'Heute' : 'Morgen'}${p.time ? ' · ' + esc(p.time) : ''}</span>
+      <span class="cal-type-badge cal-type-${f.cls}">${f.icon} ${f.label}</span>
+      <span style="min-width:0;overflow-wrap:anywhere">${esc(p.title || f.label)}${ep ? ` <span class="muted">· ${esc(ep.title)}</span>` : ''}</span>
+      ${p.assignee ? `<span class="who who-${p.assignee}">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ── Post editor ──────────────────────────────────────────────────
+let postEdit = null;
+function openPostEditor(id, defaults = {}) {
+  const p = id ? posts.find(x => x.id === id) : null;
+  if (id && !p) return;
+  const format = p ? p.format : (defaults.format || 'reel');
+  postEdit = { id: p ? p.id : null, platforms: new Set(p ? p.platforms : FORMAT_DEFAULT_PLATFORMS[format]), lastFormat: format, wasPublished: !!p && isPublished(p) };
+  document.getElementById('post-modal-title').textContent = p ? 'Post bearbeiten' : 'Neuer Post';
+  const epSel = document.getElementById('post-episode');
+  const sortedEps = [...episodes].sort((a, b) => (safeParseDate(b.date) || 0) - (safeParseDate(a.date) || 0));
+  epSel.innerHTML = '<option value="">Ohne Folge</option>' + sortedEps.map(e => `<option value="${esc(e.id)}">${esc(e.date)} · ${esc(e.title)}</option>`).join('');
+  epSel.value = p ? p.episode_id || '' : defaults.episodeId || '';
+  document.getElementById('post-format').innerHTML = Object.entries(POST_FORMATS).map(([k, f]) => `<option value="${k}">${f.icon} ${f.label}</option>`).join('');
+  document.getElementById('post-format').value = format;
+  document.getElementById('post-date').value = p ? p.date : defaults.date || isoDate(new Date());
+  document.getElementById('post-time').value = p ? p.time || '' : defaults.time || '18:00';
+  document.getElementById('post-assignee').value = p ? p.assignee || '' : '';
+  document.getElementById('post-status').value = p ? p.status : 'planned';
+  document.getElementById('post-title').value = p ? p.title : '';
+  document.getElementById('post-description').value = p ? p.description : '';
+  document.getElementById('post-media').value = p ? p.media_link || '' : '';
+  document.getElementById('post-publish').value = p ? p.publish_link || '' : '';
+  document.getElementById('post-delete-btn').hidden = !p;
+  document.getElementById('post-duplicate-btn').hidden = !p;
+  document.getElementById('post-template-hint').innerHTML = p && p.template_key ? postSourceHtml(p) : '';
+  renderPostPlatforms();
+  updatePostLinkButtons();
+  document.getElementById('post-modal-bg').classList.add('open');
+}
+// Content written in the episode (reel texts, LinkedIn posts) shown next to the template post.
+function postSourceHtml(p) {
+  const ep = episodes.find(e => e.id === p.episode_id);
+  if (!ep) return '';
+  const [format, numStr] = p.template_key.split('-');
+  const n = parseInt(numStr, 10) - 1;
+  let body = '';
+  if (format === 'reel') {
+    const r = getReels(ep)[n] || {};
+    body = [r.hook && `<b>Hook:</b> ${esc(r.hook)}`, r.desc && `<b>Beschreibung:</b> ${esc(r.desc)}`].filter(Boolean).join('<br>');
+  } else if (format === 'linkedin') {
+    const post = getLiPosts(ep)[n] || {};
+    body = post.text ? esc(post.text) : '';
+  } else return '';
+  return `<div class="post-source"><div class="muted" style="font-size:12px;margin-bottom:4px">Inhalt aus der Folge („${esc(p.title)}“)</div>
+    <div class="post-source-text">${body || '<span class="muted">Noch kein Text in der Folge hinterlegt.</span>'}</div>
+    <button class="link-btn" onclick="closePostEditor();openDetail(${jsArg(ep.id)});openStepContent('${format === 'reel' ? 'reels_download' : 'li_beitraege'}')">In der Folge bearbeiten →</button></div>`;
+}
+function closePostEditor() { document.getElementById('post-modal-bg').classList.remove('open'); postEdit = null; }
+function renderPostPlatforms() {
+  document.getElementById('post-platforms').innerHTML = PLATFORMS.map(([k, l]) =>
+    `<button type="button" class="filter-btn${postEdit.platforms.has(k) ? ' active' : ''}" onclick="togglePostPlatform('${k}')">${l}</button>`).join('');
+}
+function togglePostPlatform(k) { if (postEdit.platforms.has(k)) postEdit.platforms.delete(k); else postEdit.platforms.add(k); renderPostPlatforms(); }
+function onPostFormatChange(format) {
+  const prevDefault = FORMAT_DEFAULT_PLATFORMS[postEdit.lastFormat] || [];
+  const current = [...postEdit.platforms].sort().join(',');
+  if (!postEdit.platforms.size || current === [...prevDefault].sort().join(',')) postEdit.platforms = new Set(FORMAT_DEFAULT_PLATFORMS[format]);
+  postEdit.lastFormat = format;
+  renderPostPlatforms();
+}
+function updatePostLinkButtons() {
+  ['media', 'publish'].forEach(k => {
+    const href = safeUrl(document.getElementById('post-' + k).value);
+    const a = document.getElementById('post-' + k + '-open');
+    a.href = href || '#'; a.hidden = !href;
+  });
+}
+function readPostForm() {
+  const date = document.getElementById('post-date').value;
+  if (!date) throw new Error('Bitte ein Datum wählen.');
+  const time = document.getElementById('post-time').value.trim();
+  if (time && !/^([01]?\d|2[0-3]):[0-5]\d$/.test(time)) throw new Error('Uhrzeit bitte als HH:MM angeben.');
+  return {
+    episode_id: document.getElementById('post-episode').value || null,
+    format: document.getElementById('post-format').value,
+    platforms: PLATFORMS.map(([k]) => k).filter(k => postEdit.platforms.has(k)),
+    date, time: time ? time.padStart(5, '0') : null,
+    assignee: document.getElementById('post-assignee').value || null,
+    status: document.getElementById('post-status').value,
+    title: document.getElementById('post-title').value.trim(),
+    description: document.getElementById('post-description').value.trim(),
+    media_link: document.getElementById('post-media').value.trim() || null,
+    publish_link: document.getElementById('post-publish').value.trim() || null,
+  };
+}
+function savePostEditor() {
+  let row;
+  try { row = readPostForm(); } catch (e) { showToast(e.message, 'error'); return; }
+  const p = postEdit.id ? posts.find(x => x.id === postEdit.id) : null;
+  const affected = new Set([row.episode_id, p && p.episode_id].filter(Boolean));
+  if (p) {
+    const changes = {};
+    Object.keys(row).forEach(k => { if (JSON.stringify(row[k]) !== JSON.stringify(p[k])) changes[k] = row[k]; });
+    if (Object.keys(changes).length) patchPost(p.id, changes);
+  } else {
+    insertPosts([{ id: newId(), template_key: null, ...row }]);
+  }
+  const unpublished = !!p && postEdit.wasPublished && row.status !== 'published';
+  closePostEditor();
+  affected.forEach(id => afterPostChange(id, unpublished));
+  refreshPostViews();
+}
+function duplicatePost() {
+  const p = posts.find(x => x.id === postEdit.id);
+  if (!p) return;
+  let row;
+  try { row = readPostForm(); } catch (e) { showToast(e.message, 'error'); return; }
+  const copy = { ...row, id: newId(), template_key: null, status: 'planned', publish_link: null, title: (row.title || '') + ' (Kopie)' };
+  insertPosts([copy]);
+  closePostEditor();
+  afterPostChange(copy.episode_id);
+  refreshPostViews();
+  openPostEditor(copy.id);
+  showToast('Kopie angelegt – Datum anpassen');
+}
+function deletePostFromEditor() {
+  const p = posts.find(x => x.id === postEdit.id);
+  if (!p || !confirm('Diesen Post löschen?' + (p.template_key ? '\nEr stammt aus der Standardvorlage und kann über „Standardvorlage anwenden“ neu angelegt werden.' : ''))) return;
+  closePostEditor();
+  deletePostById(p.id);
+  afterPostChange(p.episode_id);
+  refreshPostViews();
+}
+
+// ── Kalender page ────────────────────────────────────────────────
+let calUi = { view: 'week', platform: '', episode: '', assignee: '' };
+try { Object.assign(calUi, JSON.parse(localStorage.getItem('gg_cal_ui')) || {}); } catch {}
+let calAnchor = new Date(); calAnchor.setHours(0, 0, 0, 0);
+function saveCalUi() { try { localStorage.setItem('gg_cal_ui', JSON.stringify(calUi)); } catch {} }
+function setCalUi(key, value) { calUi[key] = value; saveCalUi(); renderCalendarPage(); }
+function calNav(dir) {
+  if (dir === 0) { calAnchor = new Date(); calAnchor.setHours(0, 0, 0, 0); }
+  else if (calUi.view === 'month') calAnchor = new Date(calAnchor.getFullYear(), calAnchor.getMonth() + dir, 1);
+  else calAnchor = addDays(calAnchor, dir * (calUi.view === 'week' ? 7 : 30));
+  renderCalendarPage();
+}
+function filteredPosts() {
+  return posts.filter(p =>
+    (!calUi.platform || (p.platforms || []).includes(calUi.platform)) &&
+    (!calUi.episode || (calUi.episode === 'none' ? !p.episode_id : p.episode_id === calUi.episode)) &&
+    (!calUi.assignee || (calUi.assignee === 'none' ? !p.assignee : p.assignee === calUi.assignee)));
+}
+function weekStart(d) { return addDays(d, -((d.getDay() + 6) % 7)); }
+function isoWeek(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+  return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+}
+function calDayCell(d, list, { compact = false, outside = false } = {}) {
+  const iso = isoDate(d);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const dayPosts = sortPosts(list.filter(p => p.date === iso));
+  const shown = compact ? dayPosts.slice(0, 3) : dayPosts;
+  return `<div class="calp-day${d.getTime() === today.getTime() ? ' is-today' : ''}${outside ? ' is-outside' : ''}" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onPostDrop(event,'${iso}')">
+    <div class="calp-day-head"><span>${compact ? d.getDate() : d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' })}</span>
+      <button class="calp-add" onclick="openPostEditor(null,{date:'${iso}'})" title="Post am ${formatDate(d)} anlegen" aria-label="Post anlegen">+</button></div>
+    <div class="calp-items">${shown.map(p => postChipHtml(p)).join('')}${compact && dayPosts.length > 3 ? `<button class="link-btn calp-more" onclick="calAnchor=new Date(${d.getFullYear()},${d.getMonth()},${d.getDate()});setCalUi('view','week')">+${dayPosts.length - 3} weitere</button>` : ''}</div>
+  </div>`;
+}
+function renderCalendarPage() {
+  const sortedEps = [...episodes].filter(e => postsOf(e.id).length).sort((a, b) => (safeParseDate(b.date) || 0) - (safeParseDate(a.date) || 0));
+  let label = '';
+  const list = filteredPosts();
+  let body = '';
+  if (calUi.view === 'week') {
+    const start = weekStart(calAnchor);
+    const end = addDays(start, 6);
+    label = `KW ${isoWeek(start)} · ${start.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}–${end.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+    body = `<div class="calp-week">${Array.from({ length: 7 }, (_, i) => calDayCell(addDays(start, i), list)).join('')}</div>`;
+  } else if (calUi.view === 'month') {
+    const first = new Date(calAnchor.getFullYear(), calAnchor.getMonth(), 1);
+    label = first.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+    const start = weekStart(first);
+    body = `<div class="calp-month-wrap"><div class="calp-month-head">${['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map(w => `<div>${w}</div>`).join('')}</div>
+      <div class="calp-month">${Array.from({ length: 42 }, (_, i) => { const d = addDays(start, i); return calDayCell(d, list, { compact: true, outside: d.getMonth() !== first.getMonth() }); }).join('')}</div></div>`;
+  } else {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const end = addDays(calAnchor, 60);
+    label = `${formatDate(calAnchor)} – ${formatDate(end)}`;
+    const overdue = sortPosts(list.filter(p => !isPublished(p) && postDate(p) < today && postDate(p) >= addDays(today, -30)));
+    const range = sortPosts(list.filter(p => { const d = postDate(p); return d >= calAnchor && d <= end; }));
+    const byDay = new Map();
+    range.forEach(p => { if (!byDay.has(p.date)) byDay.set(p.date, []); byDay.get(p.date).push(p); });
+    body = (overdue.length && calAnchor <= today ? `<div class="calp-list-group calp-overdue"><h3>⚠️ Überfällig (letzte 30 Tage, nicht veröffentlicht)</h3><div class="todo-list">${overdue.map(p => postChipHtml(p, { draggable: false })).join('')}</div></div>` : '') +
+      ([...byDay.entries()].map(([iso, ps]) => `<div class="calp-list-group"><h3>${safeParseIso(iso).toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long' })}</h3><div class="todo-list">${ps.map(p => postChipHtml(p, { draggable: false })).join('')}</div></div>`).join('') ||
+      emptyState('📅', 'Keine Posts in diesem Zeitraum', 'Filter anpassen oder neuen Post anlegen.', '', true));
+  }
+  document.getElementById('calendar-toolbar').innerHTML = `
+    <div class="seg" style="margin:0">${[['week', 'Woche'], ['month', 'Monat'], ['list', 'Liste']].map(([k, l]) => `<button class="seg-btn${calUi.view === k ? ' active' : ''}" onclick="setCalUi('view','${k}')">${l}</button>`).join('')}</div>
+    <div class="calp-nav">
+      <button class="btn btn-sm" onclick="calNav(-1)" aria-label="Zurück">‹</button>
+      <button class="btn btn-sm" onclick="calNav(0)">Heute</button>
+      <button class="btn btn-sm" onclick="calNav(1)" aria-label="Weiter">›</button>
+      <span class="calp-label">${label}</span>
+    </div>
+    <div class="calp-filters">
+      <select onchange="setCalUi('platform', this.value)" aria-label="Plattform"><option value="">Alle Plattformen</option>${PLATFORMS.map(([k, l]) => `<option value="${k}"${calUi.platform === k ? ' selected' : ''}>${l}</option>`).join('')}</select>
+      <select onchange="setCalUi('episode', this.value)" aria-label="Folge"><option value="">Alle Folgen</option><option value="none"${calUi.episode === 'none' ? ' selected' : ''}>Ohne Folge</option>${sortedEps.map(e => `<option value="${esc(e.id)}"${calUi.episode === e.id ? ' selected' : ''}>${esc(e.date)} · ${esc(e.title)}</option>`).join('')}</select>
+      <select onchange="setCalUi('assignee', this.value)" aria-label="Zuständigkeit"><option value="">Alle</option><option value="nils"${calUi.assignee === 'nils' ? ' selected' : ''}>Nils</option><option value="leo"${calUi.assignee === 'leo' ? ' selected' : ''}>Leo</option><option value="none"${calUi.assignee === 'none' ? ' selected' : ''}>Nicht zugewiesen</option></select>
+    </div>`;
+  document.getElementById('calendar-content').innerHTML = body;
 }
 
 function toggleTranscriptBox() {
@@ -2913,7 +3289,7 @@ function scheduleTranscriptSave(epId, val) {
 async function exportAllData() {
   flushEdits();
   const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions',
-                  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_goals', 'podcast_improvements',
+                  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_goals', 'podcast_improvements',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -2989,8 +3365,10 @@ async function saveEpisode() {
   if (!date) { document.getElementById('modal-ep-date').focus(); return; }
 
   let ep;
+  let shiftDays = 0;
   if (editingEpId) {
     ep = episodes.find(e => e.id === editingEpId);
+    if (ep.date !== date && safeParseDate(ep.date) && safeParseDate(date)) shiftDays = daysBetween(ep.date, date);
     Object.assign(ep, { title, num, date, desc, recordingDate });
   } else {
     ep = { id: Date.now().toString(), title, num, date, desc, recordingDate, tasks: {}, notes: '', transcript: '', contentPlan: {},
@@ -3007,18 +3385,25 @@ async function saveEpisode() {
 
   closeModal();
   if (editingEpId) rerenderDetail(ep.id); else { renderPlaner(); showPage('planer'); }
+  const isNew = !editingEpId;
   try {
     await upsertEpisode(ep);
-    showToast('Gespeichert ✓');
+    if (isNew) { const n = applyTemplate(ep); showToast(`Gespeichert ✓ · ${n} Social-Media-Posts aus der Standardvorlage angelegt`); }
+    else {
+      if (shiftDays) { shiftEpisodePosts(ep.id, shiftDays); afterPostChange(ep.id); }
+      showToast('Gespeichert ✓' + (shiftDays ? ' · offene Posts mit verschoben' : ''));
+    }
   } catch (e) {
-    if (!editingEpId) { episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
+    if (isNew) { episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
   }
 }
 
 async function deleteEpisode() {
   if (!editingEpId) return;
-  if (!confirm('Folge wirklich löschen?')) return;
+  const postCount = postsOf(editingEpId).length;
+  if (!confirm('Folge wirklich löschen?' + (postCount ? `\nDabei werden auch ${postCount} Social-Media-Posts dieser Folge gelöscht.` : ''))) return;
   const id = editingEpId;
+  posts = posts.filter(p => p.episode_id !== id);
   closeModal();
   episodes = episodes.filter(e => e.id !== id);
   renderPlaner();
@@ -3658,7 +4043,7 @@ function matchesFilter(item, filter) {
 }
 function compareItems(a, b) {
   if (a.done !== b.done) return a.done ? 1 : -1;
-  if (a.done) return ((b.t && b.t.doneAt) || '').localeCompare((a.t && a.t.doneAt) || '');
+  if (a.done) return ((b.t && b.t.doneAt) || (b.due && b.due.toISOString()) || '').localeCompare((a.t && a.t.doneAt) || (a.due && a.due.toISOString()) || '');
   const pa = a.t ? PRIORITY_META[a.t.priority].order : 1, pb = b.t ? PRIORITY_META[b.t.priority].order : 1;
   if (pa !== pb) return pa - pb;
   const da = a.due ? a.due.getTime() : Infinity, db = b.due ? b.due.getTime() : Infinity;
@@ -3757,7 +4142,7 @@ function renderTaskControls() {
   document.getElementById('task-views').innerHTML = TASK_VIEWS.map(([k, label]) =>
     `<button class="seg-btn${taskUi.view === k ? ' active' : ''}" onclick="setTaskView('${k}')">${label}</button>`).join('');
   const counts = {};
-  const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : []), ...(taskUi.view === 'all' ? followUpItems() : [])];
+  const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : []), ...(taskUi.view === 'all' ? [...followUpItems(), ...postTaskItems()] : [])];
   TASK_FILTERS.forEach(([k]) => { counts[k] = pool.filter(i => matchesFilter(i, k)).length; });
   document.getElementById('task-filters').innerHTML = TASK_FILTERS.map(([k, label]) =>
     `<button class="filter-btn${taskUi.filter === k ? ' active' : ''}${k === 'overdue' && counts[k] ? ' filter-danger' : ''}" onclick="setTaskFilter('${k}')">${label} <span class="filter-count">${counts[k]}</span></button>`).join('') +
@@ -3828,11 +4213,11 @@ function renderTodos() {
   }
 
   // Filtered / combined: one flat list.
-  const pool = [...(view !== 'episode' ? generalItems() : []), ...(view !== 'general' ? episodeTaskItems() : []), ...(view === 'all' ? followUpItems() : [])];
+  const pool = [...(view !== 'episode' ? generalItems() : []), ...(view !== 'general' ? episodeTaskItems() : []), ...(view === 'all' ? [...followUpItems(), ...postTaskItems()] : [])];
   const items = pool.filter(i => matchesFilter(i, filter)).sort(compareItems);
   const label = (TASK_FILTERS.find(([k]) => k === filter) || [])[1];
   box.innerHTML = items.length
-    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : i.kind === 'followup' ? followUpRowHtml(i) : stepRowHtml(i)).join('')}</div>
+    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : i.kind === 'followup' ? followUpRowHtml(i) : i.kind === 'post' ? postRowHtml(i) : stepRowHtml(i)).join('')}</div>
        ${filter === 'done' && view !== 'episode' && items.some(i => i.kind === 'todo') ? '<div style="margin-top:16px"><button class="btn btn-sm btn-danger" onclick="clearDoneTodos()">Erledigte allgemeine Aufgaben löschen</button></div>' : ''}`
     : emptyState(filter === 'overdue' ? '🎉' : '✅', filter === 'all' ? 'Keine offenen Aufgaben' : `Keine Aufgaben: ${label}`, '', '', true);
 }
@@ -5052,6 +5437,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'todos')        { loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
   if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
+  if (name === 'calendar')     loadAndRender('calendar-content', loadPosts, renderCalendarPage, postsLoaded);
   if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
   if (name === 'verbesserung') {
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
@@ -5120,7 +5506,8 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (guideEdit) closeGuideEditor(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); } });
+document.getElementById('post-modal-bg').addEventListener('click', e => { if (e.target.id === 'post-modal-bg') closePostEditor(); });
 document.getElementById('newx-modal-bg').addEventListener('click', e => { if (e.target.id === 'newx-modal-bg') closeNewExpert(); });
 document.getElementById('guide-modal-bg').addEventListener('click', e => { if (e.target.id === 'guide-modal-bg') closeGuideEditor(); });
 ['task-modal-bg', 'projects-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
@@ -5178,7 +5565,7 @@ async function initAuth() {
   initSidebar();
   renderSyncState();
   await initAuth();
-  await Promise.all([loadEpisodes(), loadGuides(), loadExperts()]);
+  await Promise.all([loadEpisodes(), loadGuides(), loadExperts(), loadPosts()]);
   routeFromHash();
   connectRealtime();
 })();
