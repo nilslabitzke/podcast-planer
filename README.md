@@ -29,10 +29,14 @@ Abschnitte Produktion, Plattform-Upload, Social Media, LinkedIn. Jeder Schritt: 
 - Pro Folge wird die verwendete Version samt Prüfpunkten gespeichert; ein Schritt lässt sich erst abschließen, wenn alle Pflichtpunkte erfüllt sind
 - Bereits abgeschlossene Schritte bleiben unverändert; offene Schritte können auf eine neue Version aktualisiert werden
 
-### Content-Kalender (pro Folge)
-- 14-Tage-Plan nach Release mit allen geplanten Posts/Reels/Karussells
-- Jedes Item: abhakbar + N/L-Zuweisung (Nils / Leo)
-- Fertige LinkedIn- und Reel-Kategorien haken automatisch die übergeordnete Workflow-Aufgabe ab
+### Social-Media-Kalender
+- Flexible Posts (`podcast_posts`): Folge, Format, Plattformen, Datum, Uhrzeit, Zuständigkeit, Titel, Beschreibung, Medien- und Veröffentlichungslink, Status
+- Standardvorlage (8 Reels, 3 Instagram-Karussells, 5 LinkedIn-Beiträge über 14 Tage ab Release) wird für neue Folgen automatisch angelegt, für bestehende per „Standardvorlage anwenden“ – ohne Duplikate (`template_key`)
+- Seite „Kalender“: Woche, Monat, Liste; Filter nach Plattform, Folge, Zuständigkeit; Drag & Drop zum Verschieben; anlegen, bearbeiten, duplizieren, löschen, abhaken
+- Verschieben einer Folge verschiebt ihre noch nicht veröffentlichten Posts mit
+- Sind alle Posts eines Bereichs veröffentlicht, werden die Folgenaufgaben (Reels/Karussell Woche 1/2, LinkedIn) automatisch abgehakt
+- Posts erscheinen unter Aufgaben („Alle Aufgaben“), im Dashboard („Heute & morgen fällig“) und im Zeitstrahl
+- Das frühere Feld `content_plan` bleibt unverändert erhalten (Migration nach `podcast_posts`: 20261025_phase6_posts.sql)
 
 ### Inhalte (ohne KI in der App)
 Die App generiert keine Inhalte mehr. Titel, Shownotes, Reels, LinkedIn-Posts usw. werden separat (Claude-Skills) erstellt und in die Felder eingefügt. Die Edge Function `podcast-ai` und die Tabelle `podcast_prompts` sind vorerst noch vorhanden, werden aber nicht mehr genutzt.
