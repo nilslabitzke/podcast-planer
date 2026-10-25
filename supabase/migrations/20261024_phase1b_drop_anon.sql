@@ -23,3 +23,5 @@ drop policy if exists anon_all_expert_ideas    on public.podcast_expert_ideas;  
 drop policy if exists anon_all_expert_episodes on public.podcast_expert_episodes;  -- added in phase 5
 drop policy if exists anon_all_settings        on public.podcast_settings;         -- added in phase 5
 drop policy if exists anon_all_posts           on public.podcast_posts;            -- added in phase 6
+drop policy if exists anon_all_events          on public.podcast_events;           -- added in phase 7
+drop policy if exists anon_all_calendar_feeds  on public.podcast_calendar_feeds;   -- added in phase 7 (contains feed tokens!)
