@@ -638,6 +638,61 @@
     .feed-row input[readonly] { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
     @media (max-width: 900px) { .calp-month .termin-chip { font-size: 0; padding: 0; height: 6px; } }
 
+    /* Phase 8: dashboard, search, quick actions */
+    .dash-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .kpi-danger { border-color: var(--red); }
+    .kpi-danger .kpi-value { color: var(--red); }
+    .kpi-warn { border-color: var(--yellow); }
+    .alerts { margin-bottom: 16px; border-color: var(--yellow); }
+    .alerts h2 { margin-bottom: 10px; font-size: 15px; display: flex; gap: 8px; align-items: center; }
+    .alerts-ok { margin-bottom: 16px; font-size: 14px; padding: 12px 16px; }
+    .alert-list { display: flex; flex-direction: column; gap: 6px; }
+    .alert { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--surface2); border-left: 3px solid var(--yellow); }
+    .alert-danger { border-left-color: var(--red); }
+    .alert-icon { font-size: 18px; flex-shrink: 0; }
+    .alert-main { flex: 1; min-width: 0; }
+    .alert-title { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; }
+    .alert-text { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+    .person-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .person-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 13px; }
+    .person-item { display: flex; justify-content: space-between; gap: 6px; align-items: center; font-size: 13px; padding: 5px 0; border-top: 1px solid var(--border); cursor: pointer; }
+    .person-item span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .person-item:hover span:first-child { color: var(--accent-text); }
+    .dash-row .task-check { flex-shrink: 0; }
+    @media (max-width: 600px) { .person-cols { grid-template-columns: 1fr; } .alert { flex-wrap: wrap; align-items: flex-start; } .alert-main { flex-basis: calc(100% - 40px); } .alert .btn { margin-left: 30px; } }
+    .sb-search { display: flex; align-items: center; gap: 10px; margin: 0 10px 8px; padding: 8px 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; }
+    .sb-search:hover { border-color: var(--accent); color: var(--text); }
+    .sb-search svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .sb-search kbd { margin-left: auto; font-size: 11px; }
+    kbd { font-family: inherit; font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; background: var(--surface); }
+    @media (min-width: 861px) { body.sb-collapsed .sb-search { justify-content: center; margin: 0 8px 8px; padding: 8px 0; } body.sb-collapsed .sb-search kbd { display: none; } }
+    .search-bg { align-items: flex-start; padding-top: 12vh; }
+    .search-box { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; width: 620px; max-width: 100%; box-shadow: var(--shadow); overflow: hidden; }
+    .search-input-row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .search-input-row svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .search-input-row input { flex: 1; border: none !important; background: none !important; box-shadow: none !important; padding: 4px 0 !important; font-size: 16px; min-height: 0; color: var(--text); outline: none; }
+    .search-results { max-height: 60vh; overflow-y: auto; padding: 6px; }
+    .search-hint { padding: 18px 12px; color: var(--muted); font-size: 13px; text-align: center; }
+    .search-group-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); padding: 8px 8px 4px; }
+    .search-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: none; background: none; color: var(--text); padding: 8px; border-radius: var(--radius-sm); cursor: pointer; }
+    .search-item.active { background: var(--accent-soft); }
+    .search-icon { width: 22px; text-align: center; flex-shrink: 0; }
+    .search-text { display: flex; flex-direction: column; min-width: 0; }
+    .search-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .search-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .quick-wrap { position: fixed; right: 24px; bottom: 24px; z-index: 130; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .quick-fab { width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--accent); color: var(--on-accent); font-size: 28px; line-height: 1; cursor: pointer; box-shadow: var(--shadow); }
+    .quick-fab:hover { opacity: .92; }
+    .quick-menu { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; box-shadow: var(--shadow); min-width: 200px; }
+    .quick-menu button { border: none; background: none; color: var(--text); text-align: left; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; }
+    .quick-menu button:hover { background: var(--surface2); }
+    .toast { right: 92px; }
+    @media (max-width: 860px) {
+      .quick-wrap { right: 16px; bottom: calc(74px + env(safe-area-inset-bottom)); } .quick-fab { width: 48px; height: 48px; }
+      .toast { bottom: calc(132px + env(safe-area-inset-bottom)) !important; }
+    }
+    @media (max-width: 1000px) { .dash-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
     /* ── ZEITSTRAHL ──────────────────────────────────────────────── */
     .timeline { position: relative; padding: 8px 0 32px 0; }
     .timeline::before { content: ''; position: absolute; left: 9px; top: 0; bottom: 0; width: 2px; background: var(--border); }
@@ -669,6 +724,7 @@
     <button class="icon-btn" id="sb-collapse-btn" onclick="toggleSidebar()" title="Seitenleiste ein-/ausklappen" aria-label="Seitenleiste ein-/ausklappen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="icon-btn" id="sb-close-btn" onclick="closeDrawer()" title="Menü schließen" aria-label="Menü schließen" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
   </div>
+  <button class="sb-search" onclick="openSearch()" title="Suchen (⌘K / Strg+K)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="sb-label">Suchen</span><kbd class="sb-label">⌘K</kbd></button>
   <nav class="sb-nav">
       <button class="nav-item" title="Dashboard" data-page="dashboard" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="nav-label">Dashboard</span></button>
       <button class="nav-item" title="Planer" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-label">Planer</span></button>
@@ -692,7 +748,10 @@
 <div class="app-main">
 <header class="mobile-top">
   <a class="brand" href="#dashboard" onclick="event.preventDefault();showPage('dashboard')"><span class="brand-mark">G&amp;G</span><span class="brand-name">Glans &amp; Gloria</span></a>
-  <div class="sync-status"><span class="sync-dot js-sync-dot"></span><span class="sync-label js-sync-label" onclick="retryFailedSaves()">Verbinde…</span></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div class="sync-status"><span class="sync-dot js-sync-dot"></span><span class="sync-label js-sync-label" onclick="retryFailedSaves()">Verbinde…</span></div>
+    <button class="icon-btn" onclick="openSearch()" aria-label="Suchen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+  </div>
 </header>
 
 <main>
@@ -838,6 +897,17 @@
     <div id="detail-content"></div>
   </div>
 </main>
+</div>
+
+<div class="quick-wrap">
+  <div class="quick-menu" id="quick-menu" hidden>
+    <button onclick="quickAction('episode')">🎙️ Neue Folge</button>
+    <button onclick="quickAction('idea')">💡 Neue Idee</button>
+    <button onclick="quickAction('task')">✅ Neue Aufgabe</button>
+    <button onclick="quickAction('expert')">📇 Neuer Experte</button>
+    <button onclick="quickAction('event')">📌 Neuer Termin</button>
+  </div>
+  <button class="quick-fab" onclick="toggleQuickMenu()" aria-label="Schnellaktionen" title="Neu anlegen">+</button>
 </div>
 
 <nav class="tabbar" aria-label="Hauptnavigation">
@@ -1044,6 +1114,29 @@
       <button class="btn" id="post-duplicate-btn" onclick="duplicatePost()">Duplizieren</button>
       <button class="btn btn-ghost" onclick="closePostEditor()">Abbrechen</button>
       <button class="btn btn-primary" onclick="savePostEditor()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg search-bg" id="search-bg" onclick="if(event.target.id==='search-bg')closeSearch()">
+  <div class="search-box" role="dialog" aria-label="Suche">
+    <div class="search-input-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input type="search" id="search-input" placeholder="Suchen…" autocomplete="off" oninput="renderSearch()" onkeydown="onSearchKey(event)" aria-label="Suchbegriff"><kbd>Esc</kbd></div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="qt-modal-bg" onclick="if(event.target.id==='qt-modal-bg')closeQuickTask()">
+  <div class="modal" style="width:440px">
+    <h2>Neue Aufgabe</h2>
+    <div class="form-group"><label for="qt-title">Was muss erledigt werden?</label><input type="text" id="qt-title" onkeydown="if(event.key==='Enter')saveQuickTask()"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="qt-assignee">Zuständig</label><select id="qt-assignee"><option value="">Nicht zugewiesen</option><option value="leo">Leo</option><option value="nils">Nils</option></select></div>
+      <div class="form-group"><label for="qt-priority">Priorität</label><select id="qt-priority"><option value="high">Hoch</option><option value="medium">Mittel</option><option value="low">Niedrig</option></select></div>
+      <div class="form-group"><label for="qt-due">Deadline</label><input type="date" id="qt-due"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeQuickTask()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveQuickTask()">Anlegen</button>
     </div>
   </div>
 </div>
@@ -5540,58 +5633,106 @@ function nextOpenStep(ep) {
 }
 
 let todosLoaded = false;
+function goTasks(view, filter) {
+  taskUi.view = view; taskUi.filter = filter; saveTaskUi();
+  showPage('todos');
+}
+function goCalendarList() { calUi.view = 'list'; saveCalUi(); calAnchor = new Date(); calAnchor.setHours(0, 0, 0, 0); showPage('calendar'); }
+
+// Facts the dashboard and alerts are built from – only stored data, nothing estimated.
+function dashboardFacts() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const todayIso = isoDate(today);
+  const in7 = addDays(today, 7), ago7 = addDays(today, -7), ago14 = addDays(today, -14);
+  const withDate = episodes.map(ep => ({ ep, d: safeParseDate(ep.date) })).filter(x => x.d);
+  const upcoming = withDate.filter(x => x.d >= today).sort((a, b) => a.d - b.d);
+  const recordings = episodes.map(ep => ({ ep, d: safeParseDate(ep.recordingDate) })).filter(x => x.d && x.d >= today).sort((a, b) => a.d - b.d);
+  const activeEps = withDate.filter(x => (x.ep.status || 'planned') !== 'published' && x.d >= ago14).sort((a, b) => a.d - b.d);
+  const inProduction = withDate.filter(x => x.d >= ago14 && progress(x.ep).pct < 100).sort((a, b) => a.d - b.d);
+  const openTodos = todos.filter(t => !t.done && !t.parentId);
+  const overdueTodos = openTodos.filter(t => t.dueDate && t.dueDate < todayIso);
+  const overdueSteps = [];
+  episodes.forEach(ep => WORKFLOW_STEPS.forEach(step => {
+    const due = taskField(ep, step.id, 'due');
+    if (due && due < todayIso && !taskDone(ep, step.id)) overdueSteps.push({ ep, step, due });
+  }));
+  const prodSections = new Set(['Produktion', 'Upload']);
+  const releaseRisks = withDate.filter(x => x.d >= ago7 && x.d <= in7).map(x => ({
+    ...x, open: WORKFLOW_STEPS.filter(s => prodSections.has(s.section) && !taskDone(x.ep, s.id)),
+  })).filter(x => x.open.length).sort((a, b) => a.d - b.d);
+  const recordingRisks = recordings.filter(x => x.d <= in7 && !taskDone(x.ep, 'fragenerstellung'));
+  const overduePosts = sortPosts(posts.filter(p => !isPublished(p) && p.date < todayIso && p.date >= isoDate(ago14)));
+  const nextPosts = sortPosts(posts.filter(p => !isPublished(p) && p.date >= todayIso)).slice(0, 6);
+  const openRequests = experts.filter(x => x.status === 'request_sent');
+  const followUpsDue = dueFollowUps(0);
+  return { today, todayIso, upcoming, recordings, activeEps, inProduction, openTodos, overdueTodos, overdueSteps,
+           releaseRisks, recordingRisks, overduePosts, nextPosts, openRequests, followUpsDue };
+}
+
+function alertsHtml(f) {
+  const alerts = [];
+  const overdueCount = f.overdueTodos.length + f.overdueSteps.length;
+  if (overdueCount) alerts.push({ level: 'danger', icon: '⏰', title: `${overdueCount} überfällige Aufgabe${overdueCount === 1 ? '' : 'n'}`,
+    text: [...f.overdueTodos.map(t => t.text), ...f.overdueSteps.map(s => `${s.step.label} (${s.ep.title})`)].slice(0, 3).join(' · '),
+    action: `goTasks('all','overdue')`, cta: 'Anzeigen' });
+  f.releaseRisks.forEach(r => alerts.push({ level: r.d < f.today ? 'danger' : 'warn', icon: '🚀',
+    title: `${r.ep.title}: Release ${relativeDay(r.d)} – ${r.open.length} Produktionsschritt${r.open.length === 1 ? '' : 'e'} offen`,
+    text: r.open.slice(0, 4).map(s => s.label).join(' · ') + (r.open.length > 4 ? ' …' : ''),
+    action: `openDetail(${jsArg(r.ep.id)})`, cta: 'Folge öffnen' }));
+  f.recordingRisks.forEach(r => alerts.push({ level: 'warn', icon: '🎙️',
+    title: `Aufnahme ${relativeDay(r.d)} (${r.ep.title}) – Interviewfragen noch nicht fertig`,
+    text: 'Der Schritt „Fragenerstellung“ ist noch offen.', action: `openDetail(${jsArg(r.ep.id)});openStepContent('fragenerstellung')`, cta: 'Öffnen' }));
+  if (f.followUpsDue.length) alerts.push({ level: 'warn', icon: '📇', title: `${f.followUpsDue.length} Experten-Follow-up${f.followUpsDue.length === 1 ? '' : 's'} fällig`,
+    text: f.followUpsDue.slice(0, 3).map(({ x, fu }) => `${expertDisplayName(x)} (${fu.reason})`).join(' · '),
+    action: f.followUpsDue.length === 1 ? `openExpert(${jsArg(f.followUpsDue[0].x.id)})` : `showPage('experts')`, cta: 'Öffnen' });
+  if (f.overduePosts.length) alerts.push({ level: 'warn', icon: '📱', title: `${f.overduePosts.length} Social-Media-Post${f.overduePosts.length === 1 ? '' : 's'} überfällig (letzte 14 Tage)`,
+    text: f.overduePosts.slice(0, 3).map(p => `${postLabel(p)} · ${formatDate(postDate(p))}`).join(' · ') + ' – veröffentlicht? Dann abhaken.',
+    action: 'goCalendarList()', cta: 'Im Kalender' });
+  if (!alerts.length) return `<div class="card alerts-ok">✅ <b>Kein Handlungsbedarf</b> <span class="muted">– keine überfälligen Aufgaben, Follow-ups oder gefährdeten Releases.</span></div>`;
+  return `<div class="card alerts"><h2>Handlungsbedarf <span class="pill pill-warn">${alerts.length}</span></h2>
+    <div class="alert-list">${alerts.map(a => `<div class="alert alert-${a.level}">
+      <span class="alert-icon">${a.icon}</span>
+      <div class="alert-main"><div class="alert-title">${esc(a.title)}</div>${a.text ? `<div class="alert-text">${esc(a.text)}</div>` : ''}</div>
+      <button class="btn btn-sm" onclick="${a.action}">${a.cta}</button>
+    </div>`).join('')}</div></div>`;
+}
+
 function renderDashboard() {
   const box = document.getElementById('dashboard-content');
   if (!episodesLoadOk) { box.innerHTML = errorState('Folgen konnten nicht geladen werden.', 'reloadAllData()'); return; }
-  if (!todosLoaded) loadTodos().then(ok => { if (ok && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
-  if (!expertsLoaded) loadExperts().then(ok => { if (ok && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
-
-  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const missing = [];
+  if (!todosLoaded) missing.push(loadTodos());
+  if (!expertsLoaded) missing.push(loadExperts());
+  if (!postsLoaded) missing.push(loadPosts());
+  if (missing.length) {
+    if (!box.querySelector('.dash-kpis')) box.innerHTML = loadingState('Lade Dashboard…');
+    Promise.all(missing).then(r => { if (r.every(Boolean) && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
+    return;
+  }
+  const f = dashboardFacts();
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen' : hour < 18 ? 'Hallo' : 'Guten Abend';
   document.getElementById('dash-title').textContent = currentUserName ? `${greet}, ${currentUserName}` : 'Dashboard';
-  document.getElementById('dash-subtitle').textContent = today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('dash-subtitle').textContent = f.today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-  const withDate = episodes.map(ep => ({ ep, d: safeParseDate(ep.date) })).filter(x => x.d);
-  const upcoming = withDate.filter(x => x.d >= today).sort((a, b) => a.d - b.d);
-  const recordings = episodes.map(ep => ({ ep, d: safeParseDate(ep.recordingDate) }))
-    .filter(x => x.d && x.d >= today).sort((a, b) => a.d - b.d);
-  const twoWeeksAgo = new Date(today); twoWeeksAgo.setDate(today.getDate() - 14);
-  const active = withDate.filter(x => x.d >= twoWeeksAgo && progress(x.ep).pct < 100).sort((a, b) => a.d - b.d);
-  const openSteps = episodes.filter(ep => taskDone(ep, 'aufnahme'))
-    .reduce((n, ep) => n + WORKFLOW_STEPS.filter(s => s.id !== 'aufnahme' && !taskDone(ep, s.id)).length, 0);
-  const openTodos = todos.filter(t => !t.done && !t.parentId);
-  const todayIso = today.toISOString().slice(0, 10);
-  const byWho = w => openTodos.filter(t => t.assignee === w).length;
-  const dueItems = getTodayWidgetItems();
-  const dueToday = dueItems.filter(i => i.isToday).length;
-
-  const next = upcoming[0];
-  const nextRec = recordings[0];
+  const byWho = w => f.openTodos.filter(t => (t.assignee || null) === w);
+  const next = f.upcoming[0], nextRec = f.recordings[0];
+  const overdueCount = f.overdueTodos.length + f.overdueSteps.length;
+  const kpi = (label, value, sub, action, cls = '') => `<div class="kpi${action ? ' clickable' : ''}${cls}" ${action ? `onclick="${action}"` : ''}>
+      <div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`;
   const kpis = `<div class="dash-kpis">
-    <div class="kpi${next ? ' clickable' : ''}" ${next ? `onclick="openDetail(${jsArg(next.ep.id)})"` : ''}>
-      <div class="kpi-label">🚀 Nächste Veröffentlichung</div>
-      <div class="kpi-value">${next ? relativeDay(next.d) : '–'}</div>
-      <div class="kpi-sub">${next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant'}</div>
-    </div>
-    <div class="kpi${nextRec ? ' clickable' : ''}" ${nextRec ? `onclick="openDetail(${jsArg(nextRec.ep.id)})"` : ''}>
-      <div class="kpi-label">🎙️ Nächste Aufnahme</div>
-      <div class="kpi-value">${nextRec ? relativeDay(nextRec.d) : '–'}</div>
-      <div class="kpi-sub">${nextRec ? esc(nextRec.ep.recordingDate + ' · ' + nextRec.ep.title) : 'Kein Termin eingetragen'}</div>
-    </div>
-    <div class="kpi clickable" onclick="showPage('todos')">
-      <div class="kpi-label">✅ Offene Aufgaben</div>
-      <div class="kpi-value">${todosLoaded ? openTodos.length : '…'}</div>
-      <div class="kpi-sub">${todosLoaded ? `Nils ${byWho('nils')} · Leo ${byWho('leo')} · offen ${byWho(null)}` : 'Lädt…'}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">📌 Social Media fällig</div>
-      <div class="kpi-value">${dueItems.length}</div>
-      <div class="kpi-sub">${dueToday} heute · ${dueItems.length - dueToday} morgen</div>
-    </div>
+    ${kpi('🚀 Nächste Veröffentlichung', next ? relativeDay(next.d) : '–', next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant', next ? `openDetail(${jsArg(next.ep.id)})` : '')}
+    ${kpi('🎙️ Nächste Aufnahme', nextRec ? relativeDay(nextRec.d) : '–', nextRec ? esc(nextRec.ep.recordingDate + ' · ' + nextRec.ep.title) : 'Kein Termin eingetragen', nextRec ? `openDetail(${jsArg(nextRec.ep.id)})` : '')}
+    ${kpi('🎬 Aktive Folgen', f.activeEps.length, f.activeEps.length ? esc(f.activeEps.map(x => x.ep.title).slice(0, 3).join(' · ')) : 'Keine in Produktion', `setPlanerView('kanban');showPage('planer')`)}
+    ${kpi('✅ Offene Aufgaben', f.openTodos.length, `Nils ${byWho('nils').length} · Leo ${byWho('leo').length} · offen ${byWho(null).length}`, `goTasks('general','all')`)}
+    ${kpi('⏰ Überfällige Aufgaben', overdueCount, overdueCount ? 'mit gesetzter Deadline' : 'Alles im Plan', `goTasks('all','overdue')`, overdueCount ? ' kpi-danger' : '')}
+    ${kpi('📩 Offene Expertenanfragen', f.openRequests.length, f.openRequests.length ? esc(f.openRequests.map(x => x.name).slice(0, 2).join(' · ')) : 'Keine Anfrage offen', `setExpertUi('status','request_sent');showPage('experts')`)}
+    ${kpi('📇 Follow-ups fällig', f.followUpsDue.length, `${dueFollowUps(7).length} in den nächsten 7 Tagen`, `showPage('experts')`, f.followUpsDue.length ? ' kpi-warn' : '')}
+    ${kpi('📱 Nächster Post', f.nextPosts[0] ? relativeDay(postDate(f.nextPosts[0])) : '–', f.nextPosts[0] ? esc(postLabel(f.nextPosts[0]) + (f.nextPosts[0].time ? ' · ' + f.nextPosts[0].time : '')) : 'Keine Posts geplant', `showPage('calendar')`)}
   </div>`;
 
-  const releaseRows = upcoming.slice(0, 4).map(({ ep, d }) => {
+  const card = (title, action, body) => `<div class="card"><div class="block-head"><h2>${title}</h2>${action}</div>${body}</div>`;
+  const releaseRows = f.upcoming.slice(0, 4).map(({ ep, d }) => {
     const p = progress(ep);
     return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
       ${dateTile(d)}
@@ -5602,63 +5743,197 @@ function renderDashboard() {
       </div>
     </div>`;
   }).join('');
-
-  const recordingRows = recordings.slice(0, 4).map(({ ep, d }) => {
+  const recordingRows = f.recordings.slice(0, 4).map(({ ep, d }) => {
     const time = (ep.recordingDate.split(' ')[1] || '').trim();
     return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
       ${dateTile(d)}
       <div class="dash-row-main">
         <div class="dash-row-title">${esc(ep.title)}</div>
-        <div class="dash-row-sub">${relativeDay(d)}${time ? ' · ' + esc(time) + ' Uhr' : ''} · ${taskDone(ep, 'fragenerstellung') ? 'Fragen fertig' : 'Fragen noch offen'}</div>
+        <div class="dash-row-sub">${relativeDay(d)}${time ? ' · ' + esc(time) + ' Uhr' : ''} · ${taskDone(ep, 'fragenerstellung') ? 'Fragen fertig' : 'Fragen noch offen'}${ep.guest ? ' · ' + esc(ep.guest) : ''}</div>
       </div>
     </div>`;
   }).join('');
-
-  const activeRows = active.slice(0, 5).map(({ ep, d }) => {
+  const prodRows = f.inProduction.slice(0, 5).map(({ ep }) => {
     const p = progress(ep);
     const step = nextOpenStep(ep);
     return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
       <div class="dash-row-main">
         <div class="dash-row-title">${esc(ep.title)}</div>
-        <div class="dash-row-sub">${esc(ep.date)} · Nächster Schritt: ${esc(step || '–')}</div>
+        <div class="dash-row-sub">${statusPill(ep.status)} ${esc(ep.date)} · Nächster Schritt: ${esc(step || '–')}</div>
         <div class="progress"><div style="width:${p.pct}%"></div></div>
       </div>
       <span class="pill">${p.pct}%</span>
     </div>`;
   }).join('');
+  const postRows = f.nextPosts.map(p => {
+    const fm = POST_FORMATS[p.format] || POST_FORMATS.other;
+    const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+    return `<div class="dash-row" onclick="openPostEditor(${jsArg(p.id)})">
+      ${dateTile(postDate(p))}
+      <div class="dash-row-main">
+        <div class="dash-row-title">${fm.icon} ${esc(p.title || fm.label)}</div>
+        <div class="dash-row-sub">${p.time ? esc(p.time) + ' · ' : ''}${ep ? esc(ep.title) : 'ohne Folge'}</div>
+      </div>
+      ${p.assignee ? whoBadge(p.assignee) : ''}
+      <div class="task-check" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" title="Als veröffentlicht abhaken"></div>
+    </div>`;
+  }).join('');
+  const personCol = (who, label) => {
+    const list = byWho(who).map(todoItem).sort(compareItems);
+    return `<div class="person-col">
+      <div class="person-head">${who ? whoBadge(who) : '<span class="who who-none">Offen</span>'} <b>${label}</b> <span class="muted">${list.length}</span></div>
+      ${list.slice(0, 4).map(({ t }) => `<div class="person-item" onclick="goTasks('general','all');setTimeout(()=>openTaskModal(${jsArg(t.id)}),50)">
+        <span>${esc(t.text)}</span>${t.dueDate ? `<span class="chip${t.dueDate < f.todayIso ? ' chip-danger' : ''}">${formatDate(safeParseIso(t.dueDate)).slice(0, 6)}</span>` : ''}</div>`).join('') || '<div class="todo-empty" style="padding:4px 0">Nichts offen</div>'}
+      ${list.length > 4 ? `<button class="link-btn" onclick="goTasks('general','${who || 'none'}')">+${list.length - 4} weitere</button>` : ''}
+    </div>`;
+  };
+  const fuList = dueFollowUps(7);
 
-  const whoChip = a => a === 'nils' ? '<span class="who who-nils">N</span>' : a === 'leo' ? '<span class="who who-leo">L</span>' : '<span class="who who-none">–</span>';
-  const todoRows = openTodos.map(todoItem).sort(compareItems).slice(0, 6).map(({ t }) => `
-    <div class="dash-row" onclick="showPage('todos')">
-      ${whoChip(t.assignee)}
-      <div class="dash-row-main"><div class="dash-row-title" style="font-weight:500">${esc(t.text)}</div>${t.dueDate ? `<div class="dash-row-sub">Fällig ${formatDate(safeParseIso(t.dueDate))}${t.dueDate < todayIso ? ' · überfällig' : ''}</div>` : ''}</div>
-    </div>`).join('');
-
-  const card = (title, action, body) => `<div class="card">
-    <div class="block-head"><h2>${title}</h2>${action}</div>${body}</div>`;
-
-  box.innerHTML = kpis + `<div class="dash-grid">
+  box.innerHTML = alertsHtml(f) + kpis + `<div class="dash-grid">
     ${card('Nächste Veröffentlichungen', `<button class="link-btn" onclick="showPage('planer')">Planer →</button>`,
-      releaseRows ? `<div class="dash-list">${releaseRows}</div>` : emptyState('🚀', 'Keine Veröffentlichungen geplant', '', `<button class="btn btn-sm" onclick="showPage('planer')">Zum Planer</button>`, true))}
-    ${card('Heute &amp; morgen fällig', '',
-      dueItems.length ? todayItemsHtml(dueItems) : emptyState('✅', 'Nichts fällig', 'Heute und morgen stehen keine Social-Media-Posts an.', '', true))}
-    ${card('Produktionsfortschritt', `<span class="pill">${openSteps} offene Schritte</span>`,
-      activeRows ? `<div class="dash-list">${activeRows}</div>` : emptyState('🎬', 'Keine Folge in Produktion', 'Alle aktuellen Folgen sind fertig.', '', true))}
+      releaseRows ? `<div class="dash-list">${releaseRows}</div>` : emptyState('🚀', 'Keine Veröffentlichungen geplant', '', `<button class="btn btn-sm" onclick="openAddModal(null)">+ Neue Folge</button>`, true))}
+    ${card('Nächste Social-Media-Posts', `<button class="link-btn" onclick="showPage('calendar')">Kalender →</button>`,
+      postRows ? `<div class="dash-list">${postRows}</div>` : emptyState('📱', 'Keine Posts geplant', '', '', true))}
+    ${card('Produktionsfortschritt', `<span class="pill">${f.inProduction.length} Folge${f.inProduction.length === 1 ? '' : 'n'}</span>`,
+      prodRows ? `<div class="dash-list">${prodRows}</div>` : emptyState('🎬', 'Keine Folge in Produktion', 'Alle aktuellen Folgen sind fertig.', '', true))}
     ${card('Nächste Aufnahmen', '',
       recordingRows ? `<div class="dash-list">${recordingRows}</div>` : emptyState('🎙️', 'Keine Aufnahme terminiert', 'Aufnahmetermine werden in der Folge unter „Bearbeiten“ eingetragen.', '', true))}
+    ${card('Aufgaben nach Person', `<button class="link-btn" onclick="goTasks('general','all')">Alle →</button>`,
+      `<div class="person-cols">${personCol('nils', 'Nils')}${personCol('leo', 'Leo')}${personCol(null, 'Nicht zugewiesen')}</div>`)}
     ${card('Experten-Follow-ups', `<button class="link-btn" onclick="showPage('experts')">Experten →</button>`,
-      !expertsLoaded ? loadingState() : (() => {
-        const list = dueFollowUps(7);
-        return list.length ? `<div class="dash-list">${list.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
-          ${dateTile(fu.due)}
-          <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
-            <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
-          ${fu.responsible ? whoBadge(fu.responsible) : ''}
-        </div>`).join('')}</div>` : emptyState('📇', 'Keine Follow-ups fällig', 'In den nächsten 7 Tagen muss bei keinem Experten nachgefasst werden.', '', true);
-      })())}
-    ${card('Offene Aufgaben', `<button class="link-btn" onclick="showPage('todos')">Alle →</button>`,
-      !todosLoaded ? loadingState() : todoRows ? `<div class="dash-list">${todoRows}</div>` : emptyState('🙌', 'Keine offenen Aufgaben', '', '', true))}
+      fuList.length ? `<div class="dash-list">${fuList.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
+        ${dateTile(fu.due)}
+        <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
+          <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= f.today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
+        ${fu.responsible ? whoBadge(fu.responsible) : ''}
+      </div>`).join('')}</div>` : emptyState('📇', 'Keine Follow-ups fällig', 'In den nächsten 7 Tagen muss bei keinem Experten nachgefasst werden.', '', true))}
   </div>`;
+}
+
+// ── GLOBAL SEARCH (⌘K / Strg+K) ──────────────────────────────────
+let searchResults = [];
+let searchIndex = 0;
+async function openSearch() {
+  closeQuickMenu();
+  document.getElementById('search-bg').classList.add('open');
+  const input = document.getElementById('search-input');
+  input.value = '';
+  renderSearch();
+  setTimeout(() => input.focus(), 30);
+  const loads = [];
+  if (!ideas.length) loads.push(loadIdeas());
+  if (!todosLoaded) loads.push(loadTodos());
+  if (!expertsLoaded) loads.push(loadExperts());
+  if (!guidesLoaded) loads.push(loadGuides());
+  if (loads.length) { await Promise.all(loads); renderSearch(); }
+}
+function closeSearch() { document.getElementById('search-bg').classList.remove('open'); }
+function searchScore(words, title, ...rest) {
+  const t = norm(title), all = norm([title, ...rest].join(' '));
+  if (!words.every(w => all.includes(w))) return 0;
+  const q = words.join(' ');
+  return t.startsWith(q) ? 3 : words.every(w => t.includes(w)) ? 2 : 1;
+}
+function runSearch(q) {
+  const words = norm(q).trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const groups = [];
+  const add = (label, items) => {
+    const list = items.filter(i => i.score > 0).sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, 'de')).slice(0, 6);
+    if (list.length) groups.push({ label, items: list });
+  };
+  add('Folgen', episodes.map(ep => ({ score: searchScore(words, ep.title, ep.num, ep.guest, ep.desc, ep.date), title: ep.title,
+    sub: `${ep.date} · ${EPISODE_STATUS_LABEL[ep.status || 'planned']}${ep.guest ? ' · ' + ep.guest : ''}`, icon: '🎙️', run: () => openDetail(ep.id) })));
+  add('Experten', experts.map(x => ({ score: searchScore(words, expertDisplayName(x), x.field, x.specialization, x.institution, x.email, x.notes), title: expertDisplayName(x),
+    sub: [EXPERT_STATUS_LABEL[x.status], x.field, x.institution].filter(Boolean).join(' · '), icon: '📇', run: () => openExpert(x.id) })));
+  add('Ideen', ideas.map(i => ({ score: searchScore(words, i.title, i.content, i.guests, i.coreMessage), title: i.title,
+    sub: i.guests ? 'Gast: ' + i.guests : (i.content || '').slice(0, 80), icon: '💡', run: () => { showPage('ideen'); openIdeaModal(i.id); } })));
+  add('Aufgaben', todos.filter(t => !t.parentId).map(t => ({ score: searchScore(words, t.text, t.description), title: t.text,
+    sub: `${t.done ? 'Erledigt' : STATUS_META[t.status] || 'Offen'}${t.assignee ? ' · ' + TODO_NAMES[t.assignee] : ''}${t.dueDate ? ' · fällig ' + formatDate(safeParseIso(t.dueDate)) : ''}`,
+    icon: t.done ? '☑️' : '✅', run: () => { goTasks('general', 'all'); openTaskModal(t.id); } })));
+  const steps = [];
+  episodes.forEach(ep => WORKFLOW_STEPS.forEach(step => {
+    // Step label or the step's own text has to match – the episode title alone is not enough.
+    const own = [step.label, taskField(ep, step.id, 'description') || '', taskContent(ep, step.id)].join(' ');
+    if (!words.some(w => norm(own).includes(w))) return;
+    steps.push({ score: searchScore(words, step.label, ep.title, taskField(ep, step.id, 'description') || '', taskContent(ep, step.id)),
+      title: `${step.label} – ${ep.title}`, sub: `${taskDone(ep, step.id) ? 'Erledigt' : 'Offen'} · ${ep.date}`, icon: '🎬',
+      run: () => { openDetail(ep.id); openStepContent(step.id); } });
+  }));
+  add('Produktionsaufgaben', steps);
+  add('Leitfäden', guides.map(g => ({ score: searchScore(words, g.title, g.category, g.instructions, (g.checklist || []).map(i => i.text).join(' ')), title: g.title,
+    sub: `${g.category || 'Ohne Kategorie'} · ${g.version > 0 ? 'v' + g.version : 'Entwurf'}`, icon: '📘', run: () => { showPage('guides'); openGuideEditor(g.id); } })));
+  return groups;
+}
+function renderSearch() {
+  const q = document.getElementById('search-input').value;
+  const groups = runSearch(q);
+  searchResults = groups.flatMap(g => g.items);
+  searchIndex = 0;
+  const box = document.getElementById('search-results');
+  if (!q.trim()) { box.innerHTML = '<div class="search-hint">Folgen, Experten, Ideen, Aufgaben, Produktionsaufgaben und Leitfäden durchsuchen</div>'; return; }
+  if (!groups.length) { box.innerHTML = `<div class="search-hint">Keine Treffer für „${esc(q)}“</div>`; return; }
+  let n = 0;
+  box.innerHTML = groups.map(g => `<div class="search-group"><div class="search-group-label">${g.label}</div>
+    ${g.items.map(i => `<button class="search-item${n === 0 ? ' active' : ''}" data-idx="${n++}" onclick="pickSearch(${n - 1})" onmousemove="setSearchIndex(${n - 1})">
+      <span class="search-icon">${i.icon}</span><span class="search-text"><span class="search-title">${esc(i.title)}</span><span class="search-sub">${esc(i.sub || '')}</span></span>
+    </button>`).join('')}</div>`).join('');
+}
+function setSearchIndex(i) {
+  searchIndex = i;
+  document.querySelectorAll('.search-item').forEach(el => el.classList.toggle('active', +el.dataset.idx === i));
+}
+function pickSearch(i) {
+  const r = searchResults[i];
+  if (!r) return;
+  closeSearch();
+  r.run();
+}
+function onSearchKey(e) {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!searchResults.length) return;
+    setSearchIndex((searchIndex + (e.key === 'ArrowDown' ? 1 : -1) + searchResults.length) % searchResults.length);
+    document.querySelector(`.search-item[data-idx="${searchIndex}"]`)?.scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter') { e.preventDefault(); pickSearch(searchIndex); }
+  else if (e.key === 'Escape') { e.stopPropagation(); closeSearch(); }
+}
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
+});
+
+// ── QUICK ACTIONS (+) ────────────────────────────────────────────
+function toggleQuickMenu() { document.getElementById('quick-menu').hidden = !document.getElementById('quick-menu').hidden; }
+function closeQuickMenu() { const m = document.getElementById('quick-menu'); if (m) m.hidden = true; }
+document.addEventListener('click', e => { if (!e.target.closest('.quick-wrap')) closeQuickMenu(); });
+function quickAction(kind) {
+  closeQuickMenu();
+  if (kind === 'episode') openAddModal(null);
+  if (kind === 'idea') openIdeaModal(null);
+  if (kind === 'task') openQuickTask();
+  if (kind === 'expert') openNewExpert();
+  if (kind === 'event') { if (!eventsLoaded) loadEvents(); openEventEditor(null); }
+}
+function openQuickTask() {
+  ['qt-title', 'qt-due'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('qt-assignee').value = '';
+  document.getElementById('qt-priority').value = 'medium';
+  document.getElementById('qt-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('qt-title').focus(), 50);
+}
+function closeQuickTask() { document.getElementById('qt-modal-bg').classList.remove('open'); }
+function saveQuickTask() {
+  const text = document.getElementById('qt-title').value.trim();
+  if (!text) { document.getElementById('qt-title').focus(); return; }
+  const t = newTodo({ text, assignee: document.getElementById('qt-assignee').value || null,
+    priority: document.getElementById('qt-priority').value, dueDate: document.getElementById('qt-due').value || null });
+  todos.push(t);
+  insertTodo(t);
+  closeQuickTask();
+  showToast('Aufgabe angelegt' + (t.assignee ? ' für ' + TODO_NAMES[t.assignee] : ' (nicht zugewiesen)'));
+  const active = document.querySelector('.page.active').id;
+  if (active === 'page-todos') renderTodos();
+  if (active === 'page-dashboard') renderDashboard();
 }
 
 // ── NAV & ROUTING ────────────────────────────────────────────────
@@ -5759,7 +6034,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
