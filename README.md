@@ -19,7 +19,7 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 | **Experten** | Experten-CRM mit Kontaktchronik und Follow-ups |
 | **Leitfäden** | SOPs mit Checklisten und Versionen |
 | **Kalender** | Social-Media-Kalender, eigene Termine, Apple-Kalender-Abo |
-| **Verbesserungen** | Ziele und Verbesserungsvorschläge |
+| **Strategie** | Ziele und Verbesserungsvorschläge |
 
 **Überall verfügbar**
 - 🔍 **Globale Suche** – Sidebar „Suchen“, Lupe in der mobilen Kopfzeile oder **⌘K / Strg+K**.
