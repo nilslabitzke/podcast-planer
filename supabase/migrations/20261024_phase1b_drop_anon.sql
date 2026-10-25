@@ -22,3 +22,4 @@ drop policy if exists anon_all_expert_contacts on public.podcast_expert_contacts
 drop policy if exists anon_all_expert_ideas    on public.podcast_expert_ideas;     -- added in phase 5
 drop policy if exists anon_all_expert_episodes on public.podcast_expert_episodes;  -- added in phase 5
 drop policy if exists anon_all_settings        on public.podcast_settings;         -- added in phase 5
+drop policy if exists anon_all_posts           on public.podcast_posts;            -- added in phase 6
