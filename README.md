@@ -38,6 +38,13 @@ Abschnitte Produktion, Plattform-Upload, Social Media, LinkedIn. Jeder Schritt: 
 - Posts erscheinen unter Aufgaben („Alle Aufgaben“), im Dashboard („Heute & morgen fällig“) und im Zeitstrahl
 - Das frühere Feld `content_plan` bleibt unverändert erhalten (Migration nach `podcast_posts`: 20261025_phase6_posts.sql)
 
+### Apple-Kalender-Abo (ICS)
+- Kalender „Glans & Gloria“ als **schreibgeschütztes Abonnement** (kein Zwei-Wege-Sync) über die Edge Function `calendar-ics`
+- Inhalte wählbar: Aufnahmetermine, Veröffentlichungen (05:30 Uhr), wichtige Deadlines (Aufgaben mit Priorität hoch, Produktionsschritte mit Deadline), Social-Media-Posts, eigene Termine (`podcast_events`); optional nur Aufgaben/Posts von Nils oder Leo
+- Zugriff nur über geheimen, widerrufbaren Link (`podcast_calendar_feeds`); stabile UIDs, Zeitzone Europe/Berlin, Änderungen/Löschungen erscheinen beim nächsten Abruf
+- Einrichtung: Kalender-Seite → „📲 Abonnieren“
+- Machbarkeit einer echten iCloud-CalDAV-Synchronisierung: `docs/caldav-machbarkeit.md`
+
 ### Inhalte (ohne KI in der App)
 Die App generiert keine Inhalte mehr. Titel, Shownotes, Reels, LinkedIn-Posts usw. werden separat (Claude-Skills) erstellt und in die Felder eingefügt. Die Edge Function `podcast-ai` und die Tabelle `podcast_prompts` sind vorerst noch vorhanden, werden aber nicht mehr genutzt.
 
