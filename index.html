@@ -524,6 +524,27 @@
     .guide-history { margin-bottom: 4px; font-size: 13px; }
     .guide-history summary { cursor: pointer; color: var(--muted); font-weight: 600; }
     .guide-version { padding: 4px 0; color: var(--muted); }
+    /* Produktionsleitlinien: read-only checklist + one confirming tick */
+    .sop-panel { gap: 12px; }
+    .sop-panel.sop-done { border-left-color: var(--green); }
+    .sop-guide { display: flex; flex-direction: column; gap: 6px; }
+    .sop-intro { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .sop-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; }
+    .sop-list li:not(.sop-heading) { position: relative; padding-left: 18px; }
+    .sop-list li:not(.sop-heading)::before { content: '•'; position: absolute; left: 6px; color: var(--accent); }
+    .sop-list .sop-heading { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-top: 6px; }
+    .sop-list .sop-heading:first-child { margin-top: 0; }
+    .sop-confirm { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--surface2); border-radius: var(--radius-sm); font-size: 13px; }
+    .sop-confirm .task-check { flex-shrink: 0; margin-top: 1px; }
+    .sop-confirm .muted { font-size: 12px; margin-top: 2px; }
+    .sop-hint { font-size: 12px; padding: 8px 10px; background: var(--surface2); border-radius: var(--radius-sm); }
+    .sop-reel-conf { display: block; font-size: 11px; font-weight: 400; margin-top: 2px; }
+    .sop-reel-conf:empty { display: none; }
+    .guide-edit-item.is-heading input[type=text] { font-weight: 700; }
+    .guide-step-secs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: -2px 0 8px 22px; font-size: 12px; }
+    .guide-step-secs .filter-btn { padding: 2px 8px; font-size: 11px; }
+    .me-choice { display: flex; gap: 10px; margin-top: 14px; }
+    .me-choice .btn { flex: 1; justify-content: center; padding: 14px; font-size: 15px; }
     .kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; }
     .kanban-col { background: var(--surface2); border-radius: var(--radius); padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
     .kanban-col.drag-over { outline: 2px dashed var(--accent); }
@@ -741,6 +762,7 @@
   <div class="sb-foot">
     <div class="sync-status" title="Speicher- und Verbindungsstatus"><span class="sync-dot js-sync-dot"></span><span class="sync-label js-sync-label" onclick="retryFailedSaves()">Verbinde…</span></div>
     <button class="sb-action" id="auth-btn" onclick="onAuthButton()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="sb-label" id="auth-label">Anmelden</span></button>
+    <button class="sb-action" id="me-btn" onclick="openMeModal()" title="Wer bestätigt auf diesem Gerät die Leitfäden?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span class="sb-label" id="me-label">Wer bin ich?</span></button>
     <button class="sb-action" onclick="exportAllData()" title="Alle Daten als JSON exportieren"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span class="sb-label">Backup exportieren</span></button>
     <button class="sb-action" id="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span class="sb-label" id="theme-label">Heller Modus</span></button>
   </div>
@@ -1223,16 +1245,18 @@
       <textarea id="guide-instructions" rows="8" placeholder="Schritt für Schritt: Was ist zu tun, worauf ist zu achten?"></textarea>
     </div>
     <div class="form-group">
-      <label>Checkliste</label>
+      <label>Vorgaben</label>
+      <p class="muted" style="font-size:12px;margin:0 0 6px">Werden in der Aufgabe als lesbare Checkliste angezeigt – ohne einzelne Häkchen. Überschriften gliedern die Vorgaben in Abschnitte.</p>
       <div id="guide-items" class="guide-edit-list"></div>
       <div class="todo-input-row" style="margin:8px 0 0">
-        <input type="text" id="guide-item-input" placeholder="Prüfpunkt hinzufügen…" aria-label="Prüfpunkt" onkeydown="if(event.key==='Enter')addGuideItem()">
-        <label class="guide-req"><input type="checkbox" id="guide-item-required" checked> Pflicht</label>
+        <input type="text" id="guide-item-input" placeholder="Vorgabe hinzufügen…" aria-label="Vorgabe" onkeydown="if(event.key==='Enter')addGuideItem()">
+        <label class="guide-req"><input type="checkbox" id="guide-item-heading"> Überschrift</label>
         <button class="btn btn-sm" onclick="addGuideItem()">Hinzufügen</button>
       </div>
     </div>
     <div class="form-group">
       <label>Gilt für Produktionsschritte</label>
+      <p class="muted" style="font-size:12px;margin:0 0 6px">Ein Leitfaden kann mehreren Schritten zugeordnet werden. Bei Leitfäden mit Abschnitten lässt sich pro Schritt auswählen, welche Abschnitte gelten.</p>
       <div id="guide-steps" class="guide-steps"></div>
     </div>
     <p class="muted" id="guide-status" style="font-size:12px;margin-bottom:6px"></p>
@@ -1243,6 +1267,18 @@
       <button class="btn" onclick="saveGuideDraft(false)">Entwurf speichern</button>
       <button class="btn btn-primary" id="guide-release-btn" onclick="saveGuideDraft(true)">Freigeben</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="me-modal-bg" onclick="if(event.target===this)closeMeModal()">
+  <div class="modal" style="width:380px">
+    <h2>Wer bist du?</h2>
+    <p class="muted" style="font-size:13px;margin:0">Damit beim Abhaken gespeichert wird, wer die Einhaltung des Produktionsleitfadens bestätigt hat. Wird auf diesem Gerät gemerkt und lässt sich in der Seitenleiste ändern.</p>
+    <div class="me-choice">
+      <button class="btn" onclick="chooseActor('leo')">Leo</button>
+      <button class="btn" onclick="chooseActor('nils')">Nils</button>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeMeModal()">Abbrechen</button></div>
   </div>
 </div>
 
@@ -1585,6 +1621,7 @@ function updateAuthUi() {
   if (!btn || !label) return;
   const who = currentUserName || (session && session.email) || '';
   label.textContent = session ? who + ' · Abmelden' : 'Anmelden';
+  updateMeUi();
   btn.title = session ? 'Angemeldet als ' + (session.email || who) + ' – klicken zum Abmelden' : 'Mit E-Mail-Link anmelden';
 }
 
@@ -2135,13 +2172,27 @@ function setReelDownloaded(ep, idx, downloaded) {
   reels[idx] = { ...reels[idx], downloaded };
   saveReels(ep, reels);
 }
+// Each reel is ticked on its own; with a reel guide the tick confirms it for this reel.
 function toggleReelDownloaded(epId, idx) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  const reels = getReels(ep);
-  setReelDownloaded(ep, idx, !reels[idx].downloaded);
-  document.getElementById(`reel-check-${idx}`).classList.toggle('done', !reels[idx].downloaded);
-  upsertEpisode(ep).catch(() => {});
+  const done = !getReels(ep)[idx].downloaded;
+  const run = () => {
+    const reels = getReels(ep);
+    reels[idx] = { ...reels[idx], downloaded: done, sopConfirmation: done && hasGuides(REEL_TARGET) ? sopConfirmation(REEL_TARGET) : null };
+    saveReels(ep, reels);
+    document.getElementById(`reel-check-${idx}`)?.classList.toggle('done', done);
+    const conf = document.getElementById(`reel-conf-${idx}`);
+    if (conf) {
+      const c = reels[idx].downloaded && reels[idx].sopConfirmation;
+      conf.textContent = c ? confirmationText(c, true) : '';
+      conf.title = c ? confirmationText(c) : '';
+    }
+    // All eight reels finished → the reel step is finished as well.
+    if (done && reels.every(r => r.downloaded) && !taskDone(ep, 'reels_download')) { setTaskDone(ep, 'reels_download', true); rerenderDetail(epId); }
+    upsertEpisode(ep).catch(() => {});
+  };
+  if (done && hasGuides(REEL_TARGET)) withActor(run); else run();
 }
 function toggleReelExpand(idx) {
   const detail = document.getElementById(`reel-detail-${idx}`);
@@ -2544,11 +2595,11 @@ function openDetail(id) {
 
   const stepBody = (step) => {
     if (step.id === 'reels_download') {
-      return `<div class="reel-list">
+      return `${reelGuidePanelHtml()}<div class="reel-list">
               ${getReels(ep).map((r, idx) => `<div class="reel-block">
                 <div class="reel-item">
                   <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded(${idArg},${idx})"></div>
-                  <div class="reel-label">Reel ${idx + 1}</div>
+                  <div class="reel-label">Reel ${idx + 1}<span class="sop-reel-conf muted" id="reel-conf-${idx}" title="${r.sopConfirmation ? esc(confirmationText(r.sopConfirmation)) : ''}">${reelConfHtml(r)}</span></div>
                   <span class="reel-expand-toggle" onclick="toggleReelExpand(${idx})">
                     <span id="reel-expand-icon-${idx}">▸</span> Details
                   </span>
@@ -2608,14 +2659,14 @@ function openDetail(id) {
         const chips = stepChipsHtml(ep, step);
         return `<div class="task-row" id="row-${step.id}">
           <div class="task-item ${done ? 'done' : ''}" onclick="toggleContent('${step.id}')">
-            <div class="task-check" onclick="event.stopPropagation();toggleTask(${idArg},'${step.id}')" role="checkbox" aria-checked="${done}"></div>
+            <div class="task-check" onclick="event.stopPropagation();toggleTask(${idArg},'${step.id}')" role="checkbox" aria-checked="${done}"${hasGuides(step.id) ? ` title="${done ? 'Wieder öffnen – hebt die Leitfaden-Bestätigung auf' : SOP_HINT}"` : ''}></div>
             <div class="task-label">${step.label}${chips ? `<div class="todo-chips" style="margin-top:3px">${chips}</div>` : ''}</div>
             <a id="linkopen-row-${step.id}" href="${esc(link || '#')}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
                 class="task-expand-btn" style="margin-left:auto" ${link ? '' : 'hidden'} title="Link öffnen">🔗 Öffnen</a>
           </div>
           <div class="task-content-area" id="content-${step.id}">
-            ${stepMetaHtml(ep, step)}
             ${guidePanelHtml(ep, step)}
+            ${stepMetaHtml(ep, step)}
             ${stepBody(step)}
           </div>
         </div>`;
@@ -3290,13 +3341,22 @@ function restoreOpenSections(openSecs) {
 
 // Single place for ticking a production step (used by the episode view and the task list).
 // Single place for ticking a production step (episode view, task list, calendar sync).
-// Returns false if a released guide still has open required items.
-function setEpisodeStepDone(ep, taskId, done) {
-  if (done && !canCompleteStep(ep, taskId)) return false;
-  if (done) ensureGuideSnapshot(ep, taskId);
+// Steps with a production guide are only completed by a deliberate tick, which records the
+// confirmation (who, when, guide versions). Returns false if the step cannot be completed here.
+function canCompleteStep(ep, taskId, deliberate) {
+  if (hasGuides(taskId) && !deliberate) return false;
+  if (taskId === 'reels_download' && hasGuides(REEL_TARGET) && getReels(ep).some(r => !r.downloaded)) return false;
+  return true;
+}
+function setEpisodeStepDone(ep, taskId, done, deliberate = false) {
+  const was = taskDone(ep, taskId);
+  if (done && !was && !canCompleteStep(ep, taskId, deliberate)) return false;
   setTaskDone(ep, taskId, done);
+  if (done && !was && hasGuides(taskId)) patchTask(ep, taskId, { sopConfirmation: sopConfirmation(taskId) });
+  if (!done && taskField(ep, taskId, 'sopConfirmation')) patchTask(ep, taskId, { sopConfirmation: null });
   if (taskId === 'reels_download') {
-    saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: done })));
+    // With a reel guide every reel is confirmed on its own; reopening the step keeps them.
+    if (!hasGuides(REEL_TARGET)) saveReels(ep, getReels(ep).map(r => ({ ...r, downloaded: done })));
   } else if (taskId === 'li_beitraege') {
     saveLiPosts(ep, getLiPosts(ep).map(p => ({ ...p, done })));
   }
@@ -3306,9 +3366,13 @@ function setEpisodeStepDone(ep, taskId, done) {
 async function toggleTask(epId, taskId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  if (!setEpisodeStepDone(ep, taskId, !taskDone(ep, taskId))) { openStepContent(taskId); blockedToast([taskId]); return; }
-  rerenderDetail(epId);
-  upsertEpisode(ep).catch(() => {});
+  const done = !taskDone(ep, taskId);
+  const run = () => {
+    if (!setEpisodeStepDone(ep, taskId, done, true)) { openStepContent(taskId); blockedToast([taskId]); return; }
+    rerenderDetail(epId);
+    upsertEpisode(ep).catch(() => {});
+  };
+  if (done && hasGuides(taskId)) withActor(run); else run();
 }
 
 async function toggleSectionTasks(epId, sec) {
@@ -4186,14 +4250,18 @@ function episodeTaskItems() {
 function toggleEpisodeStep(epId, stepId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
-  if (!setEpisodeStepDone(ep, stepId, !taskDone(ep, stepId))) {
-    blockedToast([stepId]);
-    openDetail(epId);
-    openStepContent(stepId);
-    return;
-  }
-  renderTodos();
-  upsertEpisode(ep).catch(() => {});
+  const done = !taskDone(ep, stepId);
+  const run = () => {
+    if (!setEpisodeStepDone(ep, stepId, done, true)) {
+      blockedToast([stepId]);
+      openDetail(epId);
+      openStepContent(stepId);
+      return;
+    }
+    renderTodos();
+    upsertEpisode(ep).catch(() => {});
+  };
+  if (done && hasGuides(stepId)) withActor(run); else run();
 }
 function setEpisodeStepAssignee(epId, stepId, who) {
   const ep = episodes.find(e => e.id === epId);
@@ -4302,7 +4370,7 @@ function stepRowHtml(item, { showEpisode = true } = {}) {
         <span class="chip">${SECTION_LABELS[step.section]}</span>
         ${dueChip(due, done)}
         ${stepStatus(ep, step.id) === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : ''}
-        ${(() => { const g = stepGuide(ep, step.id); if (!g || g.preIntro || done) return ''; const req = g.items.filter(i => i.required).length; return req ? `<span class="chip${guideMissing(g) ? ' chip-warn' : ''}">📘 ${req - guideMissing(g)}/${req}</span>` : ''; })()}
+        ${guideChipHtml(ep, step.id)}
       </div>
     </div>
     <div class="todo-actions">
@@ -4660,7 +4728,8 @@ function setStepStatus(epId, stepId, status) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
   if (status === 'done') {
-    if (!setEpisodeStepDone(ep, stepId, true)) { rerenderDetail(epId); return; }
+    if (!taskDone(ep, stepId) && hasGuides(stepId) && !currentActor()) { rerenderDetail(epId); withActor(() => setStepStatus(epId, stepId, 'done')); return; }
+    if (!setEpisodeStepDone(ep, stepId, true, true)) { rerenderDetail(epId); blockedToast([stepId]); return; }
   } else {
     if (taskDone(ep, stepId)) setEpisodeStepDone(ep, stepId, false);
     patchTask(ep, stepId, { status });
@@ -4724,18 +4793,25 @@ function stepMetaHtml(ep, step) {
 function stepChipsHtml(ep, step) {
   const a = taskAssignee(ep, step.id);
   const due = stepDueDate(ep, step);
-  const g = stepGuide(ep, step.id);
   return [
     a ? `<span class="who ${a === 'N' ? 'who-nils' : 'who-leo'}">${a === 'N' ? 'Nils' : 'Leo'}</span>` : '',
     stepStatus(ep, step.id) === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : '',
     taskField(ep, step.id, 'due') ? dueChip(due, taskDone(ep, step.id)) : '',
-    g && !g.preIntro && g.items.length ? `<span class="chip${guideMissing(g) && !taskDone(ep, step.id) ? ' chip-warn' : ''}" title="Leitfaden-Pflichtpunkte">📘 ${g.items.filter(i => i.required).length - guideMissing(g)}/${g.items.filter(i => i.required).length}</span>` : '',
+    guideChipHtml(ep, step.id),
   ].filter(Boolean).join('');
 }
 
 // ── GUIDES (SOPs) ────────────────────────────────────────────────
+// Released guides are shown read-only at their production steps. One deliberate tick of the
+// step (or of a single reel) confirms that all linked guides were followed; the confirmation
+// stores who, when and which guide versions applied (tasks.<step>.sopConfirmation, per reel
+// reels[i].sopConfirmation). Steps finished before a guide existed keep their state – no
+// confirmation is created retroactively. Bulk/automatic ticking never confirms a guide.
 const GUIDE_TABLE = 'podcast_guides';
 const GUIDE_VERSION_TABLE = 'podcast_guide_versions';
+const REEL_TARGET = 'reel';
+const GUIDE_EXTRA_TARGETS = [{ id: REEL_TARGET, label: 'Jedes einzelne Reel / Short' }];
+const SOP_HINT = 'Mit dem Abhaken bestätigst du, dass der zugehörige Produktionsleitfaden eingehalten wurde.';
 let guides = [];
 let guideVersions = [];
 let guidesLoaded = false;
@@ -4749,94 +4825,141 @@ async function loadGuides() {
     return true;
   } catch (e) { showToast('Leitfäden konnten nicht geladen werden: ' + e.message, 'error'); return false; }
 }
-function guideForStep(stepId) { return guides.find(g => (g.step_ids || []).includes(stepId)); }
+function fmtVersion(v) { return `v${v}.0`; }
 function latestRelease(guideId) { return guideVersions.find(v => v.guide_id === guideId) || null; }
-// The released version currently in force for a step (drafts never apply to episodes).
-function currentGuideRelease(stepId) {
-  const g = guideForStep(stepId);
-  const v = g && g.version > 0 ? latestRelease(g.id) : null;
-  return v ? { guideId: g.id, version: v.version, title: v.title, instructions: v.instructions, items: v.checklist || [] } : null;
+function guideVersion(guideId, version) { return guideVersions.find(v => v.guide_id === guideId && v.version === version) || null; }
+// Released guides in force for a step (drafts never apply), limited to the linked sections.
+function guidesForStep(stepId) {
+  return guides.filter(g => g.version > 0 && (g.step_ids || []).includes(stepId)).map(g => {
+    const v = latestRelease(g.id);
+    const sections = (g.step_sections || {})[stepId];
+    return v && { id: g.id, version: v.version, title: v.title, instructions: v.instructions, items: v.checklist || [], sections: sections && sections.length ? sections : null };
+  }).filter(Boolean);
 }
-// Guide checklist as used by this episode: its stored snapshot, or the current release.
-function stepGuide(ep, stepId) {
-  const snap = taskField(ep, stepId, 'guide');
-  const current = currentGuideRelease(stepId);
-  if (snap) {
-    const outdated = !!current && current.guideId === snap.guideId && current.version > snap.version;
-    return { ...snap, checked: snap.checked || {}, persisted: true, outdated, currentVersion: current && current.version };
-  }
-  if (!current) return null;
-  // Finished before this guide existed: stays finished, nothing is required retroactively.
-  if (taskDone(ep, stepId)) return { ...current, checked: {}, preIntro: true };
-  return { ...current, checked: {}, persisted: false };
+function hasGuides(stepId) { return guidesForStep(stepId).length > 0; }
+// Headings group the items; with linked sections only those headings and their items are shown.
+function guideItems(items, sections) {
+  if (!sections) return items;
+  let on = false;
+  const out = items.filter(i => { if (i.heading) on = sections.includes(i.id); return on; });
+  return out.length ? out : items;
 }
-function guideMissing(g) { return g.items.filter(i => i.required && !g.checked[i.id]).length; }
-function canCompleteStep(ep, stepId) {
-  const g = stepGuide(ep, stepId);
-  return !g || g.preIntro || guideMissing(g) === 0;
+// Guides as documented in a confirmation (the versions that applied back then).
+function confirmedGuides(conf) {
+  return (conf.guides || []).map(c => {
+    const v = guideVersion(c.id, c.version);
+    return { id: c.id, version: c.version, title: v ? v.title : c.title, instructions: v ? v.instructions : '', items: v ? v.checklist || [] : [], sections: c.sections || null };
+  });
 }
-function ensureGuideSnapshot(ep, stepId) {
-  if (taskField(ep, stepId, 'guide')) return;
-  const current = currentGuideRelease(stepId);
-  if (current) patchTask(ep, stepId, { guide: { ...current, checked: {} } });
+
+// ── Who confirms: the signed-in member, otherwise the person chosen once on this device ──
+const ME_KEY = 'gg_me';
+let meFallback = null;
+let pendingActorAction = null;
+function currentActor() {
+  const n = (currentUserName || '').toLowerCase();
+  if (n.startsWith('nils')) return 'nils';
+  if (n.startsWith('leo')) return 'leo';
+  let v = meFallback;
+  try { v = localStorage.getItem(ME_KEY) || v; } catch {}
+  return v === 'nils' || v === 'leo' ? v : null;
 }
-function toggleGuideItem(epId, stepId, itemId) {
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  ensureGuideSnapshot(ep, stepId);
-  const snap = taskField(ep, stepId, 'guide');
-  if (!snap) return;
-  const checked = { ...(snap.checked || {}) };
-  if (checked[itemId]) delete checked[itemId]; else checked[itemId] = true;
-  patchTask(ep, stepId, { guide: { ...snap, checked } });
-  rerenderDetail(epId);
-  upsertEpisode(ep).catch(() => {});
+function actorName(who) { return who === 'nils' ? 'Nils' : who === 'leo' ? 'Leo' : 'Unbekannt'; }
+function withActor(action) {
+  if (currentActor()) { action(); return; }
+  pendingActorAction = action;
+  document.getElementById('me-modal-bg').classList.add('open');
 }
-function updateGuideToCurrent(epId, stepId) {
-  const ep = episodes.find(e => e.id === epId);
-  const current = currentGuideRelease(stepId);
-  const snap = ep && taskField(ep, stepId, 'guide');
-  if (!snap || !current) return;
-  const ids = new Set(current.items.map(i => i.id));
-  const checked = Object.fromEntries(Object.entries(snap.checked || {}).filter(([k]) => ids.has(k)));
-  patchTask(ep, stepId, { guide: { ...current, checked } });
-  rerenderDetail(epId);
-  upsertEpisode(ep).catch(() => {});
-  showToast(`Leitfaden auf v${current.version} aktualisiert`);
+function openMeModal() { pendingActorAction = null; document.getElementById('me-modal-bg').classList.add('open'); }
+function closeMeModal() { pendingActorAction = null; document.getElementById('me-modal-bg').classList.remove('open'); }
+function chooseActor(who) {
+  meFallback = who;
+  try { localStorage.setItem(ME_KEY, who); } catch {}
+  document.getElementById('me-modal-bg').classList.remove('open');
+  updateMeUi();
+  const action = pendingActorAction;
+  pendingActorAction = null;
+  if (action) action();
 }
-function toggleGuideInstructions(stepId) {
-  const el = document.getElementById('guide-instr-' + stepId);
-  if (el) el.hidden = !el.hidden;
+function updateMeUi() {
+  const el = document.getElementById('me-label');
+  if (el) el.textContent = currentActor() ? 'Ich bin ' + actorName(currentActor()) : 'Wer bin ich?';
 }
-function guidePanelHtml(ep, step) {
-  const g = stepGuide(ep, step.id);
-  if (!g) return '';
-  const e = jsArg(ep.id);
-  const required = g.items.filter(i => i.required);
-  const missing = guideMissing(g);
-  const done = taskDone(ep, step.id);
-  return `<div class="guide-panel${missing && !done && !g.preIntro ? ' guide-open' : ''}">
-    <div class="guide-head">
-      <span>📘 <b>${esc(g.title)}</b></span>
-      <span class="pill">v${g.version}</span>
-      ${g.outdated && !done ? `<button class="link-btn" onclick="updateGuideToCurrent(${e},'${step.id}')">Neue Version v${g.currentVersion} übernehmen</button>` : ''}
-      ${g.instructions ? `<button class="link-btn" style="margin-left:auto" onclick="toggleGuideInstructions('${step.id}')">Anleitung anzeigen</button>` : ''}
-    </div>
-    ${g.instructions ? `<div class="guide-instructions" id="guide-instr-${step.id}" hidden>${esc(g.instructions)}</div>` : ''}
-    ${g.preIntro ? '<div class="muted" style="font-size:12px">Vor Einführung dieses Leitfadens abgeschlossen – keine Nacharbeit nötig.</div>' : `
-    <div class="guide-items">
-      ${g.items.map(i => `<label class="guide-item${g.checked[i.id] ? ' done' : ''}">
-        <div class="task-check ${g.checked[i.id] ? 'done' : ''}" onclick="event.preventDefault();toggleGuideItem(${e},'${step.id}',${jsArg(i.id)})" role="checkbox" aria-checked="${!!g.checked[i.id]}"></div>
-        <span>${esc(i.text)}</span>
-        ${i.required ? '<span class="chip chip-danger">Pflicht</span>' : '<span class="chip">optional</span>'}
-      </label>`).join('')}
-    </div>
-    ${required.length ? `<div class="muted" style="font-size:12px">${required.length - missing} von ${required.length} Pflichtpunkten erledigt${missing && !done ? ' – erst danach kann der Schritt abgeschlossen werden' : ''}</div>` : ''}`}
+function sopConfirmation(stepId) {
+  return {
+    by: currentActor(), byEmail: (session && session.email) || null, at: new Date().toISOString(),
+    guides: guidesForStep(stepId).map(g => ({ id: g.id, version: g.version, title: g.title, sections: g.sections })),
+  };
+}
+function confirmationText(conf, short = false) {
+  const d = new Date(conf.at);
+  const when = `${formatDate(d)}, ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr`;
+  const versions = (conf.guides || []).map(g => `${g.title} ${fmtVersion(g.version)}`).join(' · ');
+  return short ? `✓ ${actorName(conf.by)} · ${when}`
+    : `Leitfaden-Einhaltung bestätigt von ${actorName(conf.by)} am ${when}${versions ? ' – ' + versions : ''}`;
+}
+
+// ── Rendering ──
+function guideListHtml(g) {
+  const items = guideItems(g.items, g.sections);
+  return `<div class="sop-guide">
+    <div class="guide-head">📘 <b>${esc(g.title)}</b> <span class="pill">${fmtVersion(g.version)}</span>${g.sections ? '<span class="muted" style="font-size:12px">Auszug</span>' : ''}</div>
+    ${g.instructions ? `<div class="sop-intro">${esc(g.instructions)}</div>` : ''}
+    ${items.length ? `<ul class="sop-list">${items.map(i => i.heading ? `<li class="sop-heading">${esc(i.text)}</li>` : `<li>${esc(i.text)}</li>`).join('')}</ul>` : ''}
   </div>`;
 }
+function guidePanelHtml(ep, step) {
+  const done = taskDone(ep, step.id);
+  const conf = taskField(ep, step.id, 'sopConfirmation');
+  const current = guidesForStep(step.id);
+  const e = jsArg(ep.id);
+  if (done && conf) {
+    return `<div class="guide-panel sop-panel sop-done">
+      ${confirmedGuides(conf).map(guideListHtml).join('')}
+      <div class="sop-confirm">
+        <div class="task-check done" onclick="toggleTask(${e},'${step.id}')" role="checkbox" aria-checked="true" title="Wieder öffnen – hebt die Bestätigung auf"></div>
+        <div><b>Erledigt</b><div class="muted">${esc(confirmationText(conf))}</div></div>
+      </div>
+    </div>`;
+  }
+  if (!current.length) return '';
+  if (done) {
+    return `<div class="guide-panel sop-panel sop-done">
+      <div class="muted" style="font-size:13px">Abgeschlossen vor Einführung des Leitfadens – keine Bestätigung dokumentiert.</div>
+      <details class="guide-history"><summary>Aktuellen Leitfaden ansehen</summary>${current.map(guideListHtml).join('')}</details>
+    </div>`;
+  }
+  return `<div class="guide-panel sop-panel">
+    ${current.map(guideListHtml).join('')}
+    <div class="sop-confirm">
+      <div class="task-check" onclick="toggleTask(${e},'${step.id}')" role="checkbox" aria-checked="false"></div>
+      <div><b>Erledigt – Leitfaden eingehalten</b><div class="muted">${SOP_HINT}</div></div>
+    </div>
+  </div>`;
+}
+// Shown once above the eight reels; every reel has its own tick.
+function reelGuidePanelHtml() {
+  const current = guidesForStep(REEL_TARGET);
+  if (!current.length) return '';
+  return `<div class="guide-panel sop-panel">
+    ${current.map(guideListHtml).join('')}
+    <div class="muted sop-hint">Gilt für jedes Reel einzeln: Mit dem Abhaken eines Reels bestätigst du, dass der Produktionsleitfaden für dieses Reel eingehalten wurde.</div>
+  </div>`;
+}
+function reelConfHtml(r) {
+  return r.downloaded && r.sopConfirmation ? esc(confirmationText(r.sopConfirmation, true)) : '';
+}
+function guideChipHtml(ep, stepId) {
+  const done = taskDone(ep, stepId);
+  const conf = taskField(ep, stepId, 'sopConfirmation');
+  if (done && conf) return `<span class="chip chip-accent" title="${esc(confirmationText(conf))}">📘 bestätigt</span>`;
+  if (!done && (hasGuides(stepId) || (stepId === 'reels_download' && hasGuides(REEL_TARGET)))) return '<span class="chip" title="Für diesen Schritt gilt ein Produktionsleitfaden">📘 Leitfaden</span>';
+  return '';
+}
 function blockedToast(stepIds) {
+  if (stepIds.length === 1 && stepIds[0] === 'reels_download') { showToast('Bitte die Reels einzeln abhaken – jedes Häkchen bestätigt den Leitfaden für dieses Reel.', 'error'); return; }
   const labels = stepIds.map(id => (WORKFLOW_STEPS.find(s => s.id === id) || {}).label).filter(Boolean);
-  showToast(`Erst die Leitfaden-Pflichtpunkte abhaken: ${labels.slice(0, 3).join(', ')}${labels.length > 3 ? ' …' : ''}`, 'error');
+  showToast(`Schritte mit Produktionsleitfaden bitte einzeln abhaken: ${labels.slice(0, 3).join(', ')}${labels.length > 3 ? ' …' : ''}`, 'error');
 }
 
 // ── LEITFÄDEN PAGE ───────────────────────────────────────────────
@@ -4853,21 +4976,24 @@ function renderGuides() {
     <div class="card-grid">${list.map(g => {
       const rel = latestRelease(g.id);
       const draftChanged = rel && (rel.title !== g.title || rel.instructions !== g.instructions || JSON.stringify(rel.checklist) !== JSON.stringify(g.checklist));
-      const req = (g.checklist || []).filter(i => i.required).length;
-      const steps = (g.step_ids || []).map(id => (WORKFLOW_STEPS.find(s => s.id === id) || {}).label).filter(Boolean);
+      const points = (g.checklist || []).filter(i => !i.heading).length;
+      const heads = (g.checklist || []).filter(i => i.heading).length;
+      const steps = (g.step_ids || []).map(id => (guideTargets().find(s => s.id === id) || {}).label).filter(Boolean);
       return `<div class="card card-clickable" onclick="openGuideEditor(${jsArg(g.id)})">
         <div class="card-title-row">
           <div class="card-title">${esc(g.title)}</div>
-          ${g.version > 0 ? `<span class="pill pill-accent">v${g.version}</span>` : '<span class="pill">Entwurf</span>'}
+          ${g.version > 0 ? `<span class="pill pill-accent">${fmtVersion(g.version)}</span>` : '<span class="pill">Entwurf</span>'}
         </div>
-        <div class="card-meta">${(g.checklist || []).length} Prüfpunkte · ${req} Pflicht</div>
+        <div class="card-meta">${points} Vorgaben${heads ? ` · ${heads} Abschnitte` : ''}</div>
         <div class="card-meta">${g.version > 0 && g.released_at ? 'Freigegeben am ' + formatDate(new Date(g.released_at)) : 'Noch nicht freigegeben – gilt noch für keine Folge'}${draftChanged ? ' · <b>ungeprüfte Änderungen</b>' : ''}</div>
         ${steps.length ? `<div class="todo-chips" style="margin-top:8px">${steps.map(l => `<span class="chip">${esc(l)}</span>`).join('')}</div>` : '<div class="card-meta">Mit keinem Produktionsschritt verknüpft</div>'}
       </div>`;
     }).join('')}</div>`).join('');
 }
 
-let guideEdit = null; // { id, base, version, items }
+// Everything a guide can be linked to: production steps plus every single reel.
+function guideTargets() { return [...WORKFLOW_STEPS, ...GUIDE_EXTRA_TARGETS]; }
+let guideEdit = null; // { id, base, version, items, stepIds, sections }
 function openGuideEditor(id) {
   const g = id ? guides.find(x => x.id === id) : null;
   guideEdit = {
@@ -4877,6 +5003,7 @@ function openGuideEditor(id) {
     releasedVersion: g ? g.version : 0,
     items: clone(g ? g.checklist || [] : []),
     stepIds: new Set(g ? g.step_ids || [] : []),
+    sections: clone(g ? g.step_sections || {} : {}),
   };
   document.getElementById('guide-modal-title').textContent = g ? 'Leitfaden bearbeiten' : 'Neuer Leitfaden';
   document.getElementById('guide-title').value = g ? g.title : '';
@@ -4884,9 +5011,9 @@ function openGuideEditor(id) {
   document.getElementById('guide-instructions').value = g ? g.instructions : '';
   document.getElementById('guide-categories').innerHTML = [...new Set(guides.map(x => x.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('');
   document.getElementById('guide-delete-btn').hidden = !g;
-  document.getElementById('guide-release-btn').textContent = `Freigeben als v${(g ? g.version : 0) + 1}`;
+  document.getElementById('guide-release-btn').textContent = `Freigeben als ${fmtVersion((g ? g.version : 0) + 1)}`;
   document.getElementById('guide-status').textContent = g && g.version > 0
-    ? `Aktuell freigegeben: v${g.version} vom ${formatDate(new Date(g.released_at))}. Änderungen gelten erst nach erneuter Freigabe – laufende Folgen behalten ihre Version.`
+    ? `Aktuell freigegeben: ${fmtVersion(g.version)} vom ${formatDate(new Date(g.released_at))}. Änderungen gelten erst nach erneuter Freigabe für offene Schritte – bereits bestätigte Schritte behalten ihre Version.`
     : 'Entwurf – gilt erst nach der Freigabe für Folgen.';
   renderGuideSteps();
   renderGuideItems();
@@ -4895,29 +5022,45 @@ function openGuideEditor(id) {
 }
 function closeGuideEditor() { document.getElementById('guide-modal-bg').classList.remove('open'); guideEdit = null; }
 function guideToRow(g) {
-  return { id: g.id, title: g.title, category: g.category || null, instructions: g.instructions || '', checklist: g.checklist || [], step_ids: g.step_ids || [] };
+  return { id: g.id, title: g.title, category: g.category || null, instructions: g.instructions || '', checklist: g.checklist || [], step_ids: g.step_ids || [], step_sections: g.step_sections || {} };
 }
 function renderGuideSteps() {
-  document.getElementById('guide-steps').innerHTML = SECTIONS.map(sec => `<div class="guide-step-sec">
-    <div class="guide-step-sec-title">${SECTION_LABELS[sec]}</div>
-    ${WORKFLOW_STEPS.filter(s => s.section === sec).map(s => {
-      const other = guides.find(g => g.id !== guideEdit.id && (g.step_ids || []).includes(s.id));
-      return `<label class="guide-step${other ? ' taken' : ''}" title="${other ? 'Bereits verknüpft mit „' + esc(other.title) + '“' : ''}">
-        <input type="checkbox" ${guideEdit.stepIds.has(s.id) ? 'checked' : ''} ${other ? 'disabled' : ''} onchange="toggleGuideStep('${s.id}', this.checked)">
-        <span>${s.label}${other ? ` <em class="muted">(${esc(other.title)})</em>` : ''}</span>
-      </label>`;
+  const heads = guideEdit.items.filter(i => i.heading && i.text.trim());
+  const groups = [...SECTIONS.map(sec => [SECTION_LABELS[sec], WORKFLOW_STEPS.filter(s => s.section === sec)]), ['Reels / Shorts einzeln', GUIDE_EXTRA_TARGETS]];
+  document.getElementById('guide-steps').innerHTML = groups.map(([title, steps]) => `<div class="guide-step-sec">
+    <div class="guide-step-sec-title">${title}</div>
+    ${steps.map(s => {
+      const others = guides.filter(g => g.id !== guideEdit.id && (g.step_ids || []).includes(s.id)).map(g => g.title);
+      const on = guideEdit.stepIds.has(s.id);
+      const secs = guideEdit.sections[s.id] || [];
+      return `<label class="guide-step">
+        <input type="checkbox" ${on ? 'checked' : ''} onchange="toggleGuideStep('${s.id}', this.checked)">
+        <span>${s.label}${others.length ? ` <em class="muted">(auch: ${esc(others.join(', '))})</em>` : ''}</span>
+      </label>
+      ${on && heads.length ? `<div class="guide-step-secs">${heads.map(h => `<button type="button" class="filter-btn${secs.includes(h.id) ? ' active' : ''}" onclick="toggleGuideSection('${s.id}',${jsArg(h.id)})">${esc(h.text)}</button>`).join('')}
+        <span class="muted">${secs.length ? 'nur gewählte Abschnitte' : 'ganzer Leitfaden'}</span></div>` : ''}`;
     }).join('')}
   </div>`).join('');
 }
-function toggleGuideStep(stepId, on) { if (on) guideEdit.stepIds.add(stepId); else guideEdit.stepIds.delete(stepId); }
+function toggleGuideStep(stepId, on) {
+  if (on) guideEdit.stepIds.add(stepId); else { guideEdit.stepIds.delete(stepId); delete guideEdit.sections[stepId]; }
+  renderGuideSteps();
+}
+function toggleGuideSection(stepId, headId) {
+  const list = new Set(guideEdit.sections[stepId] || []);
+  if (list.has(headId)) list.delete(headId); else list.add(headId);
+  guideEdit.sections[stepId] = [...list];
+  renderGuideSteps();
+}
 function renderGuideItems() {
-  document.getElementById('guide-items').innerHTML = guideEdit.items.length ? guideEdit.items.map((it, i) => `<div class="guide-edit-item">
-      <input type="text" value="${esc(it.text)}" aria-label="Prüfpunkt" oninput="guideEdit.items[${i}].text=this.value">
-      <label class="guide-req"><input type="checkbox" ${it.required ? 'checked' : ''} onchange="guideEdit.items[${i}].required=this.checked"> Pflicht</label>
+  document.getElementById('guide-items').innerHTML = guideEdit.items.length ? guideEdit.items.map((it, i) => `<div class="guide-edit-item${it.heading ? ' is-heading' : ''}">
+      <input type="text" value="${esc(it.text)}" aria-label="${it.heading ? 'Abschnittsüberschrift' : 'Vorgabe'}" oninput="guideEdit.items[${i}].text=this.value">
+      <label class="guide-req"><input type="checkbox" ${it.heading ? 'checked' : ''} onchange="guideEdit.items[${i}].heading=this.checked;renderGuideItems()"> Überschrift</label>
       <button class="todo-del" onclick="moveGuideItem(${i},-1)" title="Nach oben" aria-label="Nach oben" ${i === 0 ? 'disabled' : ''}>↑</button>
       <button class="todo-del" onclick="moveGuideItem(${i},1)" title="Nach unten" aria-label="Nach unten" ${i === guideEdit.items.length - 1 ? 'disabled' : ''}>↓</button>
       <button class="todo-del" onclick="guideEdit.items.splice(${i},1);renderGuideItems()" title="Entfernen" aria-label="Entfernen">✕</button>
-    </div>`).join('') : '<div class="todo-empty">Noch keine Prüfpunkte</div>';
+    </div>`).join('') : '<div class="todo-empty">Noch keine Vorgaben</div>';
+  renderGuideSteps();
 }
 function moveGuideItem(i, dir) {
   const j = i + dir;
@@ -4929,28 +5072,35 @@ function addGuideItem() {
   const input = document.getElementById('guide-item-input');
   const text = input.value.trim();
   if (!text) return;
-  guideEdit.items.push({ id: newId(), text, required: document.getElementById('guide-item-required').checked });
+  const heading = document.getElementById('guide-item-heading').checked;
+  guideEdit.items.push(heading ? { id: newId(), text, heading: true } : { id: newId(), text });
   input.value = '';
+  document.getElementById('guide-item-heading').checked = false;
   renderGuideItems();
   input.focus();
 }
 function renderGuideVersions() {
   const list = guideEdit.id ? guideVersions.filter(v => v.guide_id === guideEdit.id) : [];
   document.getElementById('guide-versions').innerHTML = list.length
-    ? list.map(v => `<div class="guide-version"><b>v${v.version}</b> · ${formatDate(new Date(v.created_at))} · ${(v.checklist || []).length} Prüfpunkte (${(v.checklist || []).filter(i => i.required).length} Pflicht)</div>`).join('')
+    ? list.map(v => `<div class="guide-version"><b>${fmtVersion(v.version)}</b> · ${formatDate(new Date(v.created_at))} · ${(v.checklist || []).filter(i => !i.heading).length} Vorgaben</div>`).join('')
     : '<div class="todo-empty">Noch keine freigegebene Version</div>';
 }
 function readGuideForm() {
   const title = document.getElementById('guide-title').value.trim();
   if (!title) { document.getElementById('guide-title').focus(); throw new Error('Bitte einen Titel eingeben.'); }
   const items = guideEdit.items.map(i => ({ ...i, text: i.text.trim() })).filter(i => i.text);
+  const headIds = new Set(items.filter(i => i.heading).map(i => i.id));
+  const stepIds = guideTargets().map(s => s.id).filter(id => guideEdit.stepIds.has(id));
+  const sections = {};
+  stepIds.forEach(id => { const l = (guideEdit.sections[id] || []).filter(h => headIds.has(h)); if (l.length) sections[id] = l; });
   return {
     id: guideEdit.id || newId(),
     title,
     category: document.getElementById('guide-category').value.trim() || null,
     instructions: document.getElementById('guide-instructions').value.trim(),
     checklist: items,
-    step_ids: WORKFLOW_STEPS.map(s => s.id).filter(id => guideEdit.stepIds.has(id)),
+    step_ids: stepIds,
+    step_sections: sections,
   };
 }
 async function saveGuideDraft(release = false) {
@@ -6052,7 +6202,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
@@ -6115,6 +6265,7 @@ async function initAuth() {
   renderSyncState();
   await initAuth();
   await Promise.all([loadEpisodes(), loadGuides(), loadExperts(), loadPosts()]);
+  updateMeUi();
   routeFromHash();
   connectRealtime();
 })();
