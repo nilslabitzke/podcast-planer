@@ -1356,7 +1356,7 @@ const WORKFLOW_STEPS = [
   { id: 'sm2_karussell',   label: 'Woche 2 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
   { id: 'sm2_reels',       label: 'Woche 2 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
   // LinkedIn
-  { id: 'li_beitraege',    label: '5 LinkedIn-Beiträge erstellen & hochladen',   section: 'LinkedIn' },
+  { id: 'li_beitraege',    label: '2 LinkedIn-Beiträge erstellen & hochladen',   section: 'LinkedIn' },
 ];
 const SECTIONS = ['Produktion','Upload','SocialMedia','LinkedIn'];
 const SECTION_LABELS = {
@@ -1369,7 +1369,7 @@ const SECTION_LABELS = {
 // ── STATE ────────────────────────────────────────────────────────
 let episodes = [];
 let editingEpId = null;
-const LI_POST_COUNT = 5;
+const LI_POST_COUNT = 2;
 
 let ideas = [];
 let editingIdeaId = null;
@@ -2168,7 +2168,8 @@ function getLiPosts(ep) {
   const v = ep.tasks && ep.tasks['li_beitraege'];
   const posts = (v && typeof v === 'object' && Array.isArray(v.posts)) ? v.posts : [];
   const out = [];
-  for (let i = 0; i < LI_POST_COUNT; i++) out.push({ done: false, text: '', ...posts[i] });
+  // Older episodes may hold more posts (formerly 5) – never hide or drop them.
+  for (let i = 0; i < Math.max(LI_POST_COUNT, posts.length); i++) out.push({ done: false, text: '', ...posts[i] });
   return out;
 }
 function saveLiPosts(ep, posts) {
@@ -2735,7 +2736,7 @@ function toggleCalendarBox() {
 
 // ── SOCIAL MEDIA POSTS ───────────────────────────────────────────
 // Flexible posts (podcast_posts). The standard template (8 reels, 3 carousels,
-// 5 LinkedIn posts over 14 days) is applied per episode; template posts carry a
+// 2 LinkedIn posts on Tuesdays 07:45) is applied per episode; template posts carry a
 // template_key so they are never duplicated.
 const POST_TABLE = 'podcast_posts';
 const POST_FORMATS = {
@@ -2759,9 +2760,9 @@ const POST_STATUS = [['planned', 'Geplant'], ['in_progress', 'In Arbeit'], ['sch
 const POST_STATUS_LABEL = Object.fromEntries(POST_STATUS);
 const POST_TEMPLATE = [
   [0, '07:00', 'carousel', 1], [0, '18:30', 'reel', 1], [1, '07:45', 'linkedin', 1], [1, '18:00', 'carousel', 2],
-  [2, '18:30', 'reel', 2], [3, '07:45', 'linkedin', 2], [3, '18:30', 'reel', 3], [4, '18:30', 'reel', 4],
-  [5, '09:00', 'linkedin', 3], [7, '18:30', 'reel', 5], [8, '07:45', 'linkedin', 4], [8, '18:00', 'carousel', 3],
-  [9, '18:30', 'reel', 6], [10, '07:45', 'linkedin', 5], [10, '18:30', 'reel', 7], [11, '18:30', 'reel', 8],
+  [2, '18:30', 'reel', 2], [3, '18:30', 'reel', 3], [4, '18:30', 'reel', 4],
+  [7, '18:30', 'reel', 5], [8, '07:45', 'linkedin', 2], [8, '18:00', 'carousel', 3],
+  [9, '18:30', 'reel', 6], [10, '18:30', 'reel', 7], [11, '18:30', 'reel', 8],
 ].map(([offset, time, format, num]) => ({
   offset, time, format, num, key: `${format}-${num}`,
   title: `${format === 'reel' ? 'Reel' : format === 'carousel' ? 'Karussell' : 'LinkedIn-Beitrag'} ${num}`,
@@ -2826,12 +2827,17 @@ function missingTemplatePosts(ep) {
   const have = new Set(postsOf(ep.id).map(p => p.template_key).filter(Boolean));
   return POST_TEMPLATE.filter(t => !have.has(t.key));
 }
+// LinkedIn posts go out on Tuesdays: post n on the n-th Tuesday after the release.
+function nextTuesday(d) { return addDays(d, ((2 - d.getDay() + 7) % 7) || 7); }
+function templateDate(release, t) {
+  return t.format === 'linkedin' ? addDays(nextTuesday(release), 7 * (t.num - 1)) : addDays(release, t.offset);
+}
 function applyTemplate(ep) {
   const release = safeParseDate(ep.date);
   if (!release) return 0;
   const rows = missingTemplatePosts(ep).map(t => ({
     id: newId(), episode_id: ep.id, template_key: t.key, format: t.format, platforms: FORMAT_DEFAULT_PLATFORMS[t.format],
-    date: isoDate(addDays(release, t.offset)), time: t.time, title: t.title, description: '', status: 'planned', assignee: null,
+    date: isoDate(templateDate(release, t)), time: t.time, title: t.title, description: '', status: 'planned', assignee: null,
   }));
   if (rows.length) insertPosts(rows);
   return rows.length;
@@ -2846,7 +2852,11 @@ function applyTemplateFromDetail(epId) {
 // When an episode moves, its not-yet-published posts move with it.
 function shiftEpisodePosts(epId, days) {
   if (!days) return;
-  postsOf(epId).filter(p => !isPublished(p)).forEach(p => patchPost(p.id, { date: isoDate(addDays(postDate(p), days)) }));
+  postsOf(epId).filter(p => !isPublished(p)).forEach(p => {
+    let d = addDays(postDate(p), days);
+    if (p.format === 'linkedin' && p.template_key && d.getDay() !== 2) d = nextTuesday(d);
+    patchPost(p.id, { date: isoDate(d) });
+  });
 }
 function daysBetween(a, b) { return Math.round((safeParseDate(b) - safeParseDate(a)) / 86400000); }
 
