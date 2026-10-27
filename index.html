@@ -1520,8 +1520,14 @@
   <div class="modal" style="width:560px">
     <h2 id="fb-title">Neue Buchung</h2>
     <div class="form-row">
-      <div class="form-group"><label for="fb-amount">Betrag in €</label><input type="text" id="fb-amount" inputmode="decimal" placeholder="0,00" onkeydown="if(event.key==='Enter')saveBooking()" oninput="this.classList.remove('invalid')"></div>
-      <div class="form-group"><label for="fb-date">Datum</label><input type="date" id="fb-date"></div>
+      <div class="form-group"><label for="fb-amount">Betrag in €</label><input type="text" id="fb-amount" inputmode="decimal" placeholder="0,00" onkeydown="if(event.key==='Enter')saveBooking()" oninput="this.classList.remove('invalid');updateFbRepeat()"></div>
+      <div class="form-group"><label for="fb-date" id="fb-date-label">Datum</label><input type="date" id="fb-date" onchange="updateFbRepeat()"></div>
+    </div>
+    <div class="form-group" id="fb-repeat-row">
+      <label for="fb-repeat">Wiederholung</label>
+      <select id="fb-repeat" onchange="updateFbRepeat()"><option value="once">Einmalig</option><option value="monthly">Monatlich</option><option value="quarterly">Quartalsweise</option><option value="semiannual">Halbjährlich</option><option value="yearly">Jährlich</option></select>
+      <div class="muted fin-small" id="fb-repeat-hint" style="margin-top:4px"></div>
+      <label class="rev-confirm" id="fb-past-row" hidden style="margin-top:6px"><input type="checkbox" id="fb-past" checked onchange="updateFbRepeat()"> <span id="fb-past-label"></span></label>
     </div>
     <div class="form-group"><label for="fb-desc">Beschreibung / Verwendungszweck</label><input type="text" id="fb-desc" placeholder="z. B. Riverside Jahresabo" onkeydown="if(event.key==='Enter')saveBooking()"></div>
     <div class="form-row">
@@ -1562,10 +1568,11 @@
       <div class="form-group"><label for="fr-status">Status</label><select id="fr-status"><option value="active">Aktiv</option><option value="paused">Pausiert</option><option value="ended">Beendet</option></select></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label for="fr-start">Startdatum</label><input type="date" id="fr-start"></div>
+      <div class="form-group"><label for="fr-start">Startdatum (erste Zahlung)</label><input type="date" id="fr-start" onchange="updateRecMonthly()"></div>
       <div class="form-group"><label for="fr-end">Enddatum (optional)</label><input type="date" id="fr-end"></div>
       <div class="form-group"><label for="fr-next">Nächste Fälligkeit (optional)</label><input type="date" id="fr-next"></div>
     </div>
+    <label class="rev-confirm" id="fr-past-row" hidden style="margin:-4px 0 12px"><input type="checkbox" id="fr-past" checked> <span id="fr-past-label"></span></label>
     <div class="form-group"><label for="fr-notes">Notizen</label><textarea id="fr-notes" rows="2"></textarea></div>
     <div class="form-group"><label for="fr-file">Beleg / Vertrag (optional)</label><input type="file" id="fr-file" accept="application/pdf,image/*" onchange="onFinFile('fr', this)"><div id="fr-receipt" class="fin-receipt"></div></div>
     <div class="muted fin-small">Planungswert: Es entstehen dadurch keine Buchungen. Fällige Zahlungen werden vorgeschlagen und zählen erst nach dem Erfassen.</div>
@@ -4675,11 +4682,75 @@ function openBooking(kind, id = null, defaults = {}) {
   document.getElementById('fb-file').value = '';
   renderFinReceipt('fb');
   document.getElementById('fb-delete').hidden = !b;
+  // "Wiederholung" only when creating a new, free booking (not when booking a due recurring payment).
+  document.getElementById('fb-repeat-row').hidden = !!(b || defaults.recurring_id || defaults.noRepeat);
+  document.getElementById('fb-repeat').value = 'once';
+  document.getElementById('fb-past').checked = true;
+  updateFbRepeat();
   document.getElementById('fb-amount').classList.remove('invalid');
   document.getElementById('fin-booking-bg').classList.add('open');
   setTimeout(() => document.getElementById('fb-amount').focus(), 50);
 }
 function closeBooking() { document.getElementById('fin-booking-bg').classList.remove('open'); finEdit = null; }
+// Payment dates of a (new) recurring item from its first payment up to today.
+function recPastDates(startIso, interval) {
+  if (startIso > isoToday()) return [];
+  return recDueDates({ start_date: startIso, billing_interval: interval, next_due: null, end_date: null, status: 'active' }, startIso, isoToday());
+}
+function updateFbRepeat() {
+  const row = document.getElementById('fb-repeat-row');
+  if (!row || row.hidden) return;
+  const rep = document.getElementById('fb-repeat').value;
+  const date = document.getElementById('fb-date').value;
+  const cents = parseEuro(document.getElementById('fb-amount').value).cents;
+  const hint = document.getElementById('fb-repeat-hint'), pastRow = document.getElementById('fb-past-row');
+  document.getElementById('fb-date-label').textContent = rep === 'once' ? 'Datum' : 'Erste Zahlung am';
+  if (rep === 'once') { hint.textContent = ''; pastRow.hidden = true; return; }
+  const per = FIN_INTERVALS[rep];
+  hint.textContent = `Wird als wiederkehrender Posten gespeichert${cents ? ` (= ${eur(Math.round(cents / per[1]))} pro Monat rechnerisch)` : ''}. Künftige Zahlungen werden zum Fälligkeitstermin vorgeschlagen.`;
+  const dates = date ? recPastDates(date, rep) : [];
+  pastRow.hidden = dates.length < 2;
+  document.getElementById('fb-past-label').textContent = dates.length >= 2
+    ? `Alle ${dates.length} Zahlungen seit ${formatDate(safeParseIso(date))} bis heute als bezahlt buchen${cents ? ` (zusammen ${eur(cents * dates.length)})` : ''}` : '';
+}
+// Creates the recurring item and books its payments up to today (first payment only, or all past ones).
+async function bookRecurringPayments(rec, dates, base) {
+  if (!dates.length) return [];
+  const rows = dates.map(d => ({ ...base, kind: rec.kind, amount_cents: rec.amount_cents, date: d, category_id: rec.category_id, recurring_id: rec.id,
+    period_key: recPeriodKey(rec, d), created_by: currentActor(), updated_by: currentActor() }))
+    .filter(r => !finBookings.some(b => b.recurring_id === rec.id && b.period_key === r.period_key));
+  if (!rows.length) return [];
+  const saved = await apiFetch('podcast_fin_bookings', { method: 'POST', prefer: 'return=representation', body: JSON.stringify(rows) });
+  finBookings = finBookings.concat(saved).sort((a, b) => b.date.localeCompare(a.date));
+  return saved;
+}
+async function saveRepeatingBooking(cents, date, interval) {
+  const desc = document.getElementById('fb-desc').value.trim();
+  const catId = document.getElementById('fb-cat').value || null;
+  const name = desc || (catId ? finCatName(catId) : '');
+  if (!name) { showToast('Bitte eine Beschreibung eingeben (z. B. „Canva“) – sie wird der Name des wiederkehrenden Postens.', 'error'); document.getElementById('fb-desc').focus(); return; }
+  const status = document.getElementById('fb-status').value;
+  const allPast = !document.getElementById('fb-past-row').hidden && document.getElementById('fb-past').checked;
+  const dates = date > isoToday() ? [] : status === 'open' ? [date] : allPast ? recPastDates(date, interval) : [date];
+  const btn = document.getElementById('fb-save');
+  btn.disabled = true;
+  await finWrite(async () => {
+    try {
+      const rec = (await apiFetch('podcast_fin_recurring', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({
+        kind: finEdit.kind, name, category_id: catId, amount_cents: cents, billing_interval: interval, start_date: date, status: 'active',
+        notes: document.getElementById('fb-note').value.trim() || null, created_by: currentActor(), updated_by: currentActor() }) }))[0];
+      finRecurring = finRecurring.concat(rec);
+      const booked = await bookRecurringPayments(rec, dates, { description: name, status, episode_id: document.getElementById('fb-ep').value || null,
+        cooperation: document.getElementById('fb-coop').value.trim() || null, note: document.getElementById('fb-note').value.trim() || null });
+      if (finEdit.newFile && booked[0]) await uploadFinReceipt('podcast_fin_bookings', booked[0], finEdit.newFile);
+      closeBooking();
+      flashSaved();
+      showToast(`„${name}“ als ${FIN_INTERVALS[interval][0].toLowerCase()}e ${rec.kind === 'income' ? 'Einnahme' : 'Ausgabe'} angelegt` + (booked.length ? ` · ${booked.length} Zahlung${booked.length === 1 ? '' : 'en'} gebucht` : ' · erste Zahlung wird bei Fälligkeit vorgeschlagen'));
+    } catch (e) { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); }
+  });
+  btn.disabled = false;
+  finAfterChange();
+}
 function bookRecurring(recId, dueIso) {
   const r = finRecurring.find(x => x.id === recId);
   if (!r) return;
@@ -4696,6 +4767,8 @@ async function saveBooking() {
   if (parsed.error || !parsed.cents) { amountEl.classList.add('invalid'); showToast(parsed.error || 'Bitte einen Betrag größer 0 eingeben.', 'error'); amountEl.focus(); return; }
   const date = document.getElementById('fb-date').value;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { showToast('Bitte ein Datum wählen.', 'error'); return; }
+  const repeat = document.getElementById('fb-repeat-row').hidden ? 'once' : document.getElementById('fb-repeat').value;
+  if (!finEdit.id && repeat !== 'once') { await saveRepeatingBooking(parsed.cents, date, repeat); return; }
   const recId = document.getElementById('fb-rec').value || null;
   const rec = recId ? finRecurring.find(r => r.id === recId) : null;
   // Period of a recurring payment: kept if the item is unchanged, otherwise derived from the date.
@@ -4772,6 +4845,7 @@ function openRecurring(id, kind = 'expense') {
   document.getElementById('fr-status').value = r ? r.status : 'active';
   document.getElementById('fr-notes').value = r ? r.notes || '' : '';
   document.getElementById('fr-file').value = '';
+  document.getElementById('fr-past').checked = true;
   finFillRecCats(r ? r.category_id : null);
   renderFinReceipt('fr');
   updateRecMonthly();
@@ -4788,8 +4862,15 @@ function finFillRecCats(selected) {
 }
 function updateRecMonthly() {
   const p = parseEuro(document.getElementById('fr-amount').value);
-  const div = FIN_INTERVALS[document.getElementById('fr-interval').value][1];
+  const interval = document.getElementById('fr-interval').value;
+  const div = FIN_INTERVALS[interval][1];
   document.getElementById('fr-monthly').textContent = p.cents ? `= ${eur(Math.round(p.cents / div))} pro Monat (rechnerisch)` : '';
+  // New items starting in the past: offer to book the payments already made (explicit choice).
+  const start = document.getElementById('fr-start').value;
+  const dates = finRecEdit && !finRecEdit.id && start ? recPastDates(start, interval) : [];
+  document.getElementById('fr-past-row').hidden = !dates.length;
+  document.getElementById('fr-past-label').textContent = dates.length
+    ? `${dates.length === 1 ? 'Die Zahlung' : `Alle ${dates.length} Zahlungen`} seit ${formatDate(safeParseIso(start))} bis heute als bezahlt buchen${p.cents ? ` (zusammen ${eur(p.cents * dates.length)})` : ''}` : '';
 }
 function closeRecurring() { document.getElementById('fin-rec-bg').classList.remove('open'); finRecEdit = null; }
 async function saveRecurring() {
@@ -4811,6 +4892,10 @@ async function saveRecurring() {
         : (await apiFetch('podcast_fin_recurring', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, created_by: currentActor() }) }))[0];
       if (finRecEdit.newFile) saved = await uploadFinReceipt('podcast_fin_recurring', saved, finRecEdit.newFile) || saved;
       finRecurring = finRecurring.filter(r => r.id !== saved.id).concat(saved);
+      if (!finRecEdit.id && saved.status === 'active' && !document.getElementById('fr-past-row').hidden && document.getElementById('fr-past').checked) {
+        const booked = await bookRecurringPayments(saved, recPastDates(saved.start_date, saved.billing_interval), { description: saved.name, status: 'paid' });
+        if (booked.length) showToast(`${booked.length} Zahlung${booked.length === 1 ? '' : 'en'} gebucht`);
+      }
       finUi.recTab = saved.kind; saveFinUi();
       closeRecurring();
       flashSaved();
