@@ -527,6 +527,60 @@
     .guide-history { margin-bottom: 4px; font-size: 13px; }
     .guide-history summary { cursor: pointer; color: var(--muted); font-weight: 600; }
     .guide-version { padding: 4px 0; color: var(--muted); }
+
+    /* Einnahmen (Strategie) */
+    .rev-card { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+    .rev-head { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
+    .rev-year { font-size: 18px; font-weight: 700; }
+    .rev-total { margin-left: auto; font-size: 22px; font-weight: 700; color: var(--accent-text); white-space: nowrap; }
+    .rev-goal { display: flex; flex-direction: column; gap: 4px; }
+    .rev-goal-head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+    .rev-goal-values { font-size: 14px; }
+    .rev-bar { position: relative; height: 10px; background: var(--surface2); border-radius: 999px; overflow: visible; }
+    .rev-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width .2s; }
+    .rev-bar.reached .rev-bar-fill { background: var(--green); }
+    .rev-bar.bonus .rev-bar-fill { background: linear-gradient(90deg, var(--green), var(--accent)); }
+    .rev-bar-mark { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); opacity: .6; border-radius: 1px; }
+    .rev-note { font-size: 12px; }
+    .rev-sub { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin-top: 4px; }
+    .rev-sources { display: flex; flex-wrap: wrap; gap: 6px; }
+    .rev-meta { font-size: 12px; }
+    .rev-spark { display: flex; align-items: flex-end; gap: 4px; height: 48px; }
+    .rev-spark-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; font-size: 10px; color: var(--muted); }
+    .rev-spark-bar { width: 100%; max-width: 22px; background: var(--accent); border-radius: 3px 3px 0 0; }
+    .rev-spark-bar.is-none { background: var(--border); }
+    .rev-months { border-top: 1px solid var(--border); padding-top: 10px; }
+    .rev-row { display: grid; grid-template-columns: 96px repeat(3, minmax(0, 1fr)) 110px 170px; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .rev-row.confirmed .rev-input { background: var(--surface); color: var(--muted); }
+    .rev-row-head { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); border-bottom: 0; }
+    .rev-month { font-weight: 600; font-size: 13px; }
+    .rev-cell { display: flex; flex-direction: column; gap: 2px; margin: 0; }
+    .rev-cell-label { display: none; font-size: 11px; color: var(--muted); }
+    .rev-input { width: 100%; text-align: right; font-variant-numeric: tabular-nums; }
+    .rev-input.invalid { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-soft); }
+    .rev-corr-hint { font-size: 11px; color: var(--yellow); text-align: right; }
+    .rev-month-sum { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 13px; }
+    .rev-month-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; font-size: 12px; }
+    .rev-confirm { display: inline-flex; align-items: center; gap: 4px; margin: 0; cursor: pointer; font-size: 12px; }
+    .rev-confirm.disabled { opacity: .5; cursor: not-allowed; }
+    .rev-corr-list { grid-column: 1 / -1; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+    .rev-corr-form { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: var(--surface2); padding: 8px; border-radius: var(--radius-sm); }
+    .rev-corr-form input, .rev-corr-form select { flex: 1; min-width: 140px; }
+    .rev-rule { display: flex; flex-direction: column; gap: 8px; }
+    .rev-rule-window { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; margin: 0; }
+    .rev-rule-window select { width: auto; }
+    .rev-rule-status { font-size: 14px; padding: 8px 10px; background: var(--surface2); border-radius: var(--radius-sm); }
+    .rev-rule-status.ok { background: var(--green-soft); }
+    @media (max-width: 720px) {
+      .rev-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .rev-row-head { display: none; }
+      .rev-month { grid-column: 1 / 2; }
+      .rev-month-sum { grid-column: 2 / 4; }
+      .rev-month { order: -2; } .rev-month-sum { order: -1; }
+      .rev-cell-label { display: block; }
+      .rev-month-actions { grid-column: 1 / -1; justify-content: flex-start; }
+      .rev-total { font-size: 18px; }
+    }
     /* Produktionsleitlinien: read-only checklist + one confirming tick */
     .sop-panel { gap: 12px; }
     .sop-panel.sop-done { border-left-color: var(--green); }
@@ -904,6 +958,11 @@
         <p class="subtitle">Ziele für den Podcast &amp; Verbesserungsoptionen &mdash; nach Wichtigkeit sortiert</p>
       </div>
     </div>
+
+    <div class="block-head">
+      <h2>💶 Einnahmen</h2>
+    </div>
+    <div id="revenue-container" style="margin-bottom:32px"></div>
 
     <div class="block-head">
       <h2>🎯 Ziele</h2>
@@ -1887,7 +1946,8 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
 const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
-  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events'];
+  'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
+  'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1934,6 +1994,8 @@ function realtimeUpdateToken() {
   rtSend('access_token', { access_token: (session && session.access_token) || SUPABASE_KEY });
 }
 function onRemoteChange(table) {
+  if (table.startsWith('podcast_revenue')) table = 'podcast_revenue';
+  if (table === 'podcast_settings') onRemoteChange('podcast_revenue'); // revenue rule lives in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
   rtDebounce[table] = setTimeout(async () => {
@@ -1959,6 +2021,10 @@ function onRemoteChange(table) {
       if (active === 'page-expert') renderExpertDetail();
       if (active === 'page-dashboard') renderDashboard();
       if (active === 'page-todos' && !todoEditingId) renderTodos();
+    } else if (table === 'podcast_revenue') {
+      if (!revenueLoaded) return;
+      await loadRevenue();
+      if (document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
     } else if (table === 'podcast_events') {
       await loadEvents();
       if (document.getElementById('page-calendar').classList.contains('active') && !document.getElementById('event-modal-bg').classList.contains('open')) renderCalendarPage();
@@ -2016,7 +2082,7 @@ async function reloadAllData() {
   else if (active.id === 'page-dashboard') { await loadPosts(); renderDashboard(); }
   else if (active.id === 'page-calendar') { await loadCalendarData(); renderCalendarPage(); }
   else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
-  else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements()]); renderGoals(); renderImprovements(); }
+  else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements(), loadRevenue()]); renderGoals(); renderImprovements(); renderRevenue(); }
   else if (changed) onEpisodesChanged(changed);
 }
 
@@ -3483,6 +3549,7 @@ async function exportAllData() {
   flushEdits();
   const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions',
                   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events', 'podcast_goals', 'podcast_improvements',
+                  'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -3730,6 +3797,296 @@ async function deleteIdea() {
     showToast('Löschen fehlgeschlagen: ' + e.message, 'error');
   }
 }
+
+// ── STRATEGIE: EINNAHMEN ─────────────────────────────────────────
+// Monthly revenue per source (podcast_revenue_entries, integer cents, one row per
+// year/month/source). No row = not entered; a row with 0 = deliberately 0 €. Negative changes
+// only as append-only corrections with a reason. Year totals are always computed, never stored.
+const REV_SOURCES = [['adsense', 'YouTube AdSense', 'AdSense'], ['sponsoring', 'Sponsoring', 'Sponsoring'], ['affiliate', 'Affiliate', 'Affiliate']];
+const REV_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+const REV_RULE_DEFAULT = { threshold_cents: 30000, window_months: 3 };
+let revEntries = [];
+let revCorrections = [];
+let revMonthRows = [];
+let revGoals = [];
+let revRule = { ...REV_RULE_DEFAULT };
+let revenueLoaded = false;
+let revRenderPending = false;
+let revCorrForm = null; // "year-month" with the open correction form
+let revOpenYears = new Set();
+try { revOpenYears = new Set(JSON.parse(localStorage.getItem('gg_rev_open') || '[]')); } catch {}
+
+async function loadRevenue() {
+  try {
+    const [e, c, m, g, s] = await Promise.all([
+      apiFetch('podcast_revenue_entries?select=*'),
+      apiFetch('podcast_revenue_corrections?select=*&order=created_at.asc'),
+      apiFetch('podcast_revenue_months?select=*'),
+      apiFetch('podcast_revenue_goals?select=*&order=year.asc,scope.asc'),
+      apiFetch('podcast_settings?select=value&key=eq.revenue_outsourcing'),
+    ]);
+    revEntries = e; revCorrections = c; revMonthRows = m; revGoals = g;
+    revRule = { ...REV_RULE_DEFAULT, ...((s[0] && s[0].value) || {}) };
+    revenueLoaded = true;
+    return true;
+  } catch (err) { showToast('Einnahmen konnten nicht geladen werden: ' + err.message, 'error'); return false; }
+}
+
+// ── Calculation ──
+function eur(cents) { return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
+function eurPlain(cents) { return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function revEntry(y, m, src) { return revEntries.find(e => e.year === y && e.month === m && e.source === src) || null; }
+function revCorrs(y, m, src) { return revCorrections.filter(c => c.year === y && c.month === m && (!src || c.source === src)); }
+// Entered amount plus corrections; null = nothing entered for this month and source.
+function revValue(y, m, src) {
+  const e = revEntry(y, m, src);
+  const corr = revCorrs(y, m, src);
+  if (!e && !corr.length) return null;
+  return (e ? e.amount_cents : 0) + corr.reduce((a, c) => a + c.amount_cents, 0);
+}
+// Month total over all sources (AdSense is one of the three sources – counted once).
+function revMonthTotal(y, m) {
+  const vals = REV_SOURCES.map(([k]) => revValue(y, m, k)).filter(v => v !== null);
+  return vals.length ? vals.reduce((a, b) => a + b, 0) : null;
+}
+function revMonthState(y, m) {
+  const entered = REV_SOURCES.filter(([k]) => revEntry(y, m, k)).length;
+  const row = revMonthRows.find(r => r.year === y && r.month === m);
+  return { entered, complete: entered === REV_SOURCES.length, confirmed: !!(row && row.confirmed) && entered === REV_SOURCES.length, row };
+}
+function revSum(y, months, src) {
+  return months.reduce((a, m) => { const v = src ? revValue(y, m, src) : revMonthTotal(y, m); return a + (v || 0); }, 0);
+}
+const ALL_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+function revGoalMonths(g) { return g.period === 'nov_dec' ? [11, 12] : ALL_MONTHS; }
+function revGoalActual(g) { return revSum(g.year, revGoalMonths(g), g.scope === 'total' ? null : 'adsense'); }
+function revGoalLabel(g) {
+  const scope = g.scope === 'total' ? 'Gesamteinnahmen (AdSense + Sponsoring + Affiliate)' : 'YouTube AdSense';
+  return g.period === 'nov_dec' ? `${scope} · Summe November + Dezember ${g.year}` : `${scope} · Jahresziel ${g.year}`;
+}
+function revYears() {
+  const ys = new Set([new Date().getFullYear(), ...revGoals.map(g => g.year), ...revEntries.map(e => e.year), ...revCorrections.map(c => c.year)]);
+  return [...ys].sort((a, b) => a - b);
+}
+// Outsourcing rule: the last N fully passed calendar months, evaluated only if all are confirmed.
+function revRuleWindow() {
+  const n = Math.max(1, Math.min(12, parseInt(revRule.window_months, 10) || 3));
+  const now = new Date();
+  const out = [];
+  for (let i = n; i >= 1; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); out.push({ y: d.getFullYear(), m: d.getMonth() + 1 }); }
+  return out;
+}
+function revRuleResult() {
+  const win = revRuleWindow();
+  const missing = win.filter(({ y, m }) => !revMonthState(y, m).confirmed);
+  if (missing.length) return { win, missing };
+  const avg = Math.round(win.reduce((a, { y, m }) => a + (revMonthTotal(y, m) || 0), 0) / win.length);
+  return { win, missing, avg, reached: avg >= revRule.threshold_cents };
+}
+
+// ── Input parsing & validation ──
+function parseEuro(raw) {
+  let s = String(raw || '').replace(/€|\s/g, '');
+  if (!s) return { cents: null };
+  if (s.startsWith('-')) return { error: 'Negative Beträge bitte über „± Korrektur“ erfassen.' };
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+  if (!/^\d+(\.\d{1,2})?$/.test(s)) return { error: 'Ungültiger Betrag – bitte z. B. 123,45 eingeben (max. zwei Nachkommastellen).' };
+  const cents = Math.round(parseFloat(s) * 100);
+  if (cents > 100000000) return { error: 'Betrag zu groß (max. 1.000.000 €).' };
+  return { cents };
+}
+
+// ── Saving ──
+function revAfterChange() { flashSaved(); setTimeout(renderRevenue, 0); }
+async function saveRevenueCell(y, m, src, input) {
+  const parsed = parseEuro(input.value);
+  if (parsed.error) { input.classList.add('invalid'); input.setAttribute('aria-invalid', 'true'); showToast(parsed.error, 'error'); return; }
+  input.classList.remove('invalid'); input.removeAttribute('aria-invalid');
+  const cur = revEntry(y, m, src);
+  try {
+    if (parsed.cents === null) {
+      if (!cur) return;
+      await apiFetch(`podcast_revenue_entries?year=eq.${y}&month=eq.${m}&source=eq.${src}`, { method: 'DELETE' });
+      revEntries = revEntries.filter(e => e !== cur);
+    } else {
+      input.value = eurPlain(parsed.cents);
+      if (cur && cur.amount_cents === parsed.cents) return;
+      const rows = await apiFetch('podcast_revenue_entries?on_conflict=year,month,source', { method: 'POST', prefer: 'resolution=merge-duplicates,return=representation',
+        body: JSON.stringify({ year: y, month: m, source: src, amount_cents: parsed.cents, updated_by: currentActor() }) });
+      revEntries = revEntries.filter(e => !(e.year === y && e.month === m && e.source === src)).concat(rows);
+    }
+    revAfterChange();
+  } catch (e) { input.classList.add('invalid'); showToast('Einnahme nicht gespeichert: ' + e.message, 'error'); }
+}
+function toggleRevMonthConfirmed(y, m) {
+  const st = revMonthState(y, m);
+  if (!st.confirmed && !st.complete) { showToast('Erst alle drei Quellen eintragen (0 € ist erlaubt), dann bestätigen.', 'error'); return; }
+  const run = async () => {
+    const confirmed = !st.confirmed;
+    try {
+      const rows = await apiFetch('podcast_revenue_months?on_conflict=year,month', { method: 'POST', prefer: 'resolution=merge-duplicates,return=representation',
+        body: JSON.stringify({ year: y, month: m, confirmed, confirmed_by: confirmed ? currentActor() : null, confirmed_at: confirmed ? new Date().toISOString() : null }) });
+      revMonthRows = revMonthRows.filter(r => !(r.year === y && r.month === m)).concat(rows);
+      revAfterChange();
+    } catch (e) { showToast('Bestätigung nicht gespeichert: ' + e.message, 'error'); }
+  };
+  if (!st.confirmed) withActor(run); else run();
+}
+function openRevCorrection(y, m) { revCorrForm = revCorrForm === `${y}-${m}` ? null : `${y}-${m}`; renderRevenue(); }
+function saveRevCorrection(y, m) {
+  const src = document.getElementById(`revc-src-${y}-${m}`).value;
+  const rawAmount = document.getElementById(`revc-amount-${y}-${m}`).value.trim();
+  const reason = document.getElementById(`revc-reason-${y}-${m}`).value.trim();
+  const neg = rawAmount.startsWith('-');
+  const parsed = parseEuro(rawAmount.replace(/^[-+]/, ''));
+  if (parsed.error || !parsed.cents) { showToast('Bitte einen Korrekturbetrag ungleich 0 eingeben, z. B. -12,50 oder 5,00.', 'error'); return; }
+  if (!reason) { showToast('Bitte einen Grund für die Korrektur angeben.', 'error'); document.getElementById(`revc-reason-${y}-${m}`).focus(); return; }
+  withActor(async () => {
+    try {
+      const rows = await apiFetch('podcast_revenue_corrections', { method: 'POST', prefer: 'return=representation',
+        body: JSON.stringify({ year: y, month: m, source: src, amount_cents: neg ? -parsed.cents : parsed.cents, reason, created_by: currentActor() }) });
+      revCorrections = revCorrections.concat(rows);
+      revCorrForm = null;
+      revAfterChange();
+      showToast('Korrektur erfasst');
+    } catch (e) { showToast('Korrektur nicht gespeichert: ' + e.message, 'error'); }
+  });
+}
+async function saveRevRuleWindow(value) {
+  const n = Math.max(1, Math.min(12, parseInt(value, 10) || 3));
+  revRule = { ...revRule, window_months: n };
+  renderRevenue();
+  try {
+    await apiFetch('podcast_settings', { method: 'POST', prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({ key: 'revenue_outsourcing', value: revRule, updated_at: new Date().toISOString() }) });
+    flashSaved();
+  } catch (e) { showToast('Einstellung nicht gespeichert: ' + e.message, 'error'); }
+}
+function toggleRevYear(y) {
+  if (revOpenYears.has(y)) revOpenYears.delete(y); else revOpenYears.add(y);
+  try { localStorage.setItem('gg_rev_open', JSON.stringify([...revOpenYears])); } catch {}
+  renderRevenue();
+}
+
+// ── Rendering ──
+function revBarHtml(actual, target, bonus) {
+  const scale = bonus || target;
+  const pct = Math.min(100, Math.max(0, actual / scale * 100));
+  const mark = bonus ? target / bonus * 100 : null;
+  const cls = bonus && actual >= bonus ? ' bonus' : actual >= target ? ' reached' : '';
+  return `<div class="rev-bar${cls}" role="progressbar" aria-valuemin="0" aria-valuemax="${scale / 100}" aria-valuenow="${actual / 100}">
+    <div class="rev-bar-fill" style="width:${pct.toFixed(1)}%"></div>
+    ${mark !== null ? `<div class="rev-bar-mark" style="left:${mark.toFixed(1)}%" title="Reguläres Ziel ${eur(target)}"></div>` : ''}
+  </div>`;
+}
+function revGoalHtml(g) {
+  const actual = revGoalActual(g);
+  const status = g.bonus_cents && actual >= g.bonus_cents ? '🏆 Bonusziel erreicht' : actual >= g.target_cents ? '✅ Ziel erreicht' : `noch ${eur(g.target_cents - actual)} bis zum Ziel`;
+  return `<div class="rev-goal">
+    <div class="rev-goal-head"><span>${esc(revGoalLabel(g))}</span><span class="muted">${status}</span></div>
+    <div class="rev-goal-values"><b>${eur(actual)}</b> <span class="muted">von ${eur(g.target_cents)}${g.bonus_cents ? ` · Bonus ${eur(g.bonus_cents)}` : ''}</span></div>
+    ${revBarHtml(actual, g.target_cents, g.bonus_cents)}
+    ${g.note ? `<div class="muted rev-note">${esc(g.note)}</div>` : ''}
+  </div>`;
+}
+function revMonthRowHtml(y, m) {
+  const st = revMonthState(y, m);
+  const total = revMonthTotal(y, m);
+  const key = `${y}-${m}`;
+  const corrs = revCorrs(y, m);
+  const lock = st.confirmed;
+  const cells = REV_SOURCES.map(([k, label, short]) => {
+    const e = revEntry(y, m, k);
+    const corr = revCorrs(y, m, k).reduce((a, c) => a + c.amount_cents, 0);
+    return `<label class="rev-cell"><span class="rev-cell-label">${short}</span>
+      <input type="text" inputmode="decimal" class="rev-input" id="rev-${y}-${m}-${k}" value="${e ? eurPlain(e.amount_cents) : ''}" placeholder="–"
+        aria-label="${label} ${REV_MONTHS[m - 1]} ${y}" ${lock ? 'readonly title="Monat bestätigt – zum Ändern Bestätigung aufheben oder Korrektur erfassen"' : ''}
+        onchange="saveRevenueCell(${y},${m},'${k}',this)" onkeydown="if(event.key==='Enter')this.blur()">
+      ${corr ? `<span class="rev-corr-hint" title="Summe der Korrekturen">${corr > 0 ? '+' : '−'}${eurPlain(Math.abs(corr))} Korr.</span>` : ''}
+    </label>`;
+  }).join('');
+  return `<div class="rev-row${lock ? ' confirmed' : ''}">
+    <div class="rev-month">${REV_MONTHS[m - 1]}</div>
+    ${cells}
+    <div class="rev-month-sum">${total === null ? '<span class="muted">nicht erfasst</span>' : eur(total)}</div>
+    <div class="rev-month-actions">
+      <label class="rev-confirm${st.complete ? '' : ' disabled'}" title="${st.complete ? 'Monat als vollständig und geprüft bestätigen' : `Erst alle drei Quellen eintragen (${st.entered}/3)`}">
+        <input type="checkbox" ${st.confirmed ? 'checked' : ''} ${st.complete || st.confirmed ? '' : 'disabled'} onchange="toggleRevMonthConfirmed(${y},${m})"> bestätigt</label>
+      <button type="button" class="link-btn" onclick="openRevCorrection(${y},${m})">± Korrektur</button>
+    </div>
+    ${corrs.length ? `<div class="rev-corr-list">${corrs.map(c => `<div>↳ ${formatDate(new Date(c.created_at))} · ${esc(actorName(c.created_by))} · ${esc((REV_SOURCES.find(s => s[0] === c.source) || [])[2] || c.source)} <b>${c.amount_cents > 0 ? '+' : '−'}${eur(Math.abs(c.amount_cents))}</b> – ${esc(c.reason)}</div>`).join('')}</div>` : ''}
+    ${revCorrForm === key ? `<div class="rev-corr-form">
+      <select id="revc-src-${key}" aria-label="Quelle">${REV_SOURCES.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select>
+      <input type="text" inputmode="decimal" id="revc-amount-${key}" placeholder="Betrag, z. B. -12,50" aria-label="Korrekturbetrag">
+      <input type="text" id="revc-reason-${key}" placeholder="Grund (Pflicht), z. B. Rückbuchung AdSense" aria-label="Grund">
+      <button type="button" class="btn btn-sm btn-primary" onclick="saveRevCorrection(${y},${m})">Korrektur speichern</button>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="openRevCorrection(${y},${m})">Abbrechen</button>
+      <div class="muted" style="flex-basis:100%;font-size:12px">Korrekturen werden mit Datum, Person und Grund protokolliert und können nicht geändert werden – Fehler bitte mit einer Gegenkorrektur ausgleichen.</div>
+    </div>` : ''}
+  </div>`;
+}
+function revYearCardHtml(y) {
+  const open = revOpenYears.has(y);
+  const bySource = REV_SOURCES.map(([k, label]) => [label, revSum(y, ALL_MONTHS, k)]);
+  const total = revSum(y, ALL_MONTHS, null);
+  const entered = ALL_MONTHS.filter(m => revMonthTotal(y, m) !== null);
+  const confirmed = ALL_MONTHS.filter(m => revMonthState(y, m).confirmed).length;
+  const goals = revGoals.filter(g => g.year === y);
+  const yearGoals = goals.filter(g => g.period === 'year');
+  const otherGoals = goals.filter(g => g.period !== 'year');
+  const max = Math.max(1, ...ALL_MONTHS.map(m => revMonthTotal(y, m) || 0));
+  return `<div class="card rev-card${open ? ' open' : ''}">
+    <button type="button" class="rev-head" onclick="toggleRevYear(${y})" aria-expanded="${open}">
+      <div><div class="rev-year">${y}</div><div class="muted" style="font-size:12px">Jahresumsatz – automatisch aus den Monatswerten</div></div>
+      <div class="rev-total">${eur(total)}</div>
+      <span class="section-toggle-icon">${open ? '▾' : '▸'}</span>
+    </button>
+    ${yearGoals.length ? yearGoals.map(revGoalHtml).join('') : `<div class="muted rev-note">Kein Jahresziel für ${y} festgelegt.</div>`}
+    ${otherGoals.length ? `<div class="rev-sub">Separates Ziel (nicht das Jahresziel)</div>${otherGoals.map(revGoalHtml).join('')}` : ''}
+    <div class="rev-sources">${bySource.map(([l, v]) => `<span class="chip">${l}: <b>${eur(v)}</b></span>`).join('')}</div>
+    <div class="rev-meta muted">${entered.length}/12 Monate erfasst · ${confirmed} bestätigt${entered.length ? ` · Ø ${eur(Math.round(total / entered.length))} pro erfasstem Monat` : ''}</div>
+    <div class="rev-spark" aria-hidden="true">${ALL_MONTHS.map(m => { const v = revMonthTotal(y, m); return `<div class="rev-spark-col" title="${REV_MONTHS[m - 1]}: ${v === null ? 'nicht erfasst' : eur(v)}"><div class="rev-spark-bar${v === null ? ' is-none' : ''}" style="height:${v === null ? 2 : Math.max(2, v / max * 32)}px"></div><span>${REV_MONTHS[m - 1][0]}</span></div>`; }).join('')}</div>
+    ${open ? `<div class="rev-months">
+      <div class="rev-row rev-row-head"><div>Monat</div>${REV_SOURCES.map(([, l]) => `<div>${l}</div>`).join('')}<div>Summe</div><div></div></div>
+      ${ALL_MONTHS.map(m => revMonthRowHtml(y, m)).join('')}
+      <div class="muted" style="font-size:12px;margin-top:8px">Leeres Feld = nicht erfasst · 0 = bewusst 0 € · Beträge in Euro mit bis zu zwei Nachkommastellen. Änderungen werden beim Verlassen des Feldes gespeichert.</div>
+    </div>` : ''}
+  </div>`;
+}
+function revRuleHtml() {
+  const r = revRuleResult();
+  const fmtM = ({ y, m }) => `${REV_MONTHS[m - 1].slice(0, 3)} ${y}`;
+  const range = `${fmtM(r.win[0])} – ${fmtM(r.win[r.win.length - 1])}`;
+  const status = r.missing.length
+    ? `<div class="rev-rule-status">⏳ Keine Auswertung: Für ${r.missing.map(fmtM).join(', ')} liegen noch keine vollständigen, bestätigten Monatsdaten vor.</div>`
+    : r.reached
+      ? `<div class="rev-rule-status ok">✅ Schwelle erreicht: Ø ${eur(r.avg)} pro Monat (${range}). Der Schnitt der Langfolgen kann jetzt extern vergeben werden.</div>`
+      : `<div class="rev-rule-status">Ø ${eur(r.avg)} pro Monat (${range}) – noch ${eur(revRule.threshold_cents - r.avg)} bis zur Schwelle.</div>`;
+  return `<div class="card rev-rule">
+    <div class="rev-goal-head"><b>✂️ Langfolgen-Schnitt extern vergeben</b></div>
+    <div class="muted" style="font-size:13px">Regel: Sobald die Gesamteinnahmen im Monatsdurchschnitt mindestens ${eur(revRule.threshold_cents)} erreichen, wird der Schnitt der Langfolgen extern bezahlt.</div>
+    <label class="rev-rule-window">Betrachtungszeitraum: die letzten
+      <select onchange="saveRevRuleWindow(this.value)" aria-label="Anzahl Monate">${ALL_MONTHS.map(n => `<option value="${n}"${n === (parseInt(revRule.window_months, 10) || 3) ? ' selected' : ''}>${n}</option>`).join('')}</select>
+      abgeschlossenen Kalendermonate (${range})</label>
+    ${status}
+    <div class="muted" style="font-size:12px">Nur eine Auswertung – es wird nichts automatisch beauftragt oder bezahlt.</div>
+  </div>`;
+}
+function renderRevenue() {
+  const box = document.getElementById('revenue-container');
+  if (!box || !revenueLoaded) return;
+  // Never overwrite a field someone is typing in; re-render once they leave it.
+  const active = document.activeElement;
+  if (active && box.contains(active) && active.matches('input[type=text]') && active.value !== active.defaultValue) { revRenderPending = true; return; }
+  const focusId = active && box.contains(active) ? active.id : null;
+  revRenderPending = false;
+  box.innerHTML = `${revYears().map(revYearCardHtml).join('')}${revRuleHtml()}`;
+  if (focusId) document.getElementById(focusId)?.focus();
+}
+document.addEventListener('focusout', e => {
+  if (revRenderPending && e.target.closest && e.target.closest('#revenue-container')) setTimeout(() => { if (revRenderPending) renderRevenue(); }, 0);
+});
 
 // ── VERBESSERUNG: ZIELE ─────────────────────────────────────────
 const GOAL_TABLE = 'podcast_goals';
@@ -6063,6 +6420,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'calendar')     loadAndRender('calendar-content', loadCalendarData, renderCalendarPage, postsLoaded && eventsLoaded);
   if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
   if (name === 'verbesserung') {
+    loadAndRender('revenue-container', loadRevenue, renderRevenue, revenueLoaded);
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
     loadAndRender('improvements-container', loadImprovements, renderImprovements, improvements.length > 0);
   }
