@@ -654,6 +654,36 @@
       .fin-fix-total { font-size: 18px; }
       .fin-actions { width: 100%; } .fin-actions .btn { flex: 1; justify-content: center; }
     }
+
+    /* Strategie */
+    .strat-group { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 22px 0 10px; }
+    .strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 8px; }
+    .strat-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .strat-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .strat-title { font-weight: 600; font-size: 14px; }
+    .strat-value { font-size: 26px; font-weight: 700; letter-spacing: -.3px; font-variant-numeric: tabular-nums; line-height: 1.15; }
+    .strat-sub, .strat-small { font-size: 12px; }
+    .strat-meta { display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
+    .strat-meta b { color: var(--text); font-variant-numeric: tabular-nums; }
+    .strat-note { font-size: 12px; color: var(--muted); background: var(--surface2); border-radius: var(--radius-sm); padding: 6px 8px; }
+    .strat-note.ok { color: var(--green); background: var(--green-soft); }
+    .strat-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
+    .strat-pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--surface2); color: var(--muted); white-space: nowrap; }
+    .strat-pill.st-reached { background: var(--green-soft); color: var(--green); }
+    .strat-pill.st-bonus { background: var(--accent-soft); color: var(--accent-text); }
+    .strat-pill.st-progress { background: var(--accent-soft); color: var(--accent-text); }
+    .strat-spark { display: block; margin-top: 2px; }
+    .strat-summary { margin-bottom: 4px; display: flex; flex-direction: column; gap: 8px; }
+    .strat-sum-row { display: grid; grid-template-columns: minmax(130px, 200px) minmax(80px, 1fr) 150px 92px; gap: 12px; align-items: center; font-size: 13px; }
+    .strat-sum-row[role=button] { cursor: pointer; }
+    .strat-sum-row .strat-pill { text-align: center; }
+    .strat-sum-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+    .strat-rule { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+    @media (max-width: 640px) {
+      .strat-sum-row { grid-template-columns: 1fr auto; gap: 4px 10px; }
+      .strat-sum-row .rev-bar { grid-column: 1 / -1; grid-row: 2; }
+      .strat-sum-row .strat-pill { display: none; }
+    }
     /* Einnahmen (Strategie) */
     .rev-card { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
     .rev-head { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
@@ -1082,17 +1112,14 @@
     <div class="section-header">
       <div>
         <h1>Strategie</h1>
-        <p class="subtitle">Ziele für den Podcast &amp; Verbesserungsoptionen &mdash; nach Wichtigkeit sortiert</p>
+        <p class="subtitle">Wachstums-, Produktions- und Finanzziele &mdash; Ist-Werte aus Messungen, Planer und Finanzen</p>
       </div>
+      <div class="seg" id="strat-years" role="tablist" aria-label="Jahr" style="margin:0"></div>
     </div>
+    <div id="strategy-container" style="margin-bottom:32px"></div>
 
     <div class="block-head">
-      <h2>💶 Einnahmen</h2>
-    </div>
-    <div id="revenue-container" style="margin-bottom:32px"></div>
-
-    <div class="block-head">
-      <h2>🎯 Ziele</h2>
+      <h2>🎯 Weitere Ziele</h2>
       <button class="btn btn-sm" onclick="openGoalModal(null)">+ Neues Ziel</button>
     </div>
     <div id="goals-container" style="margin-bottom:32px"></div>
@@ -1556,6 +1583,34 @@
     <p class="muted fin-small" style="margin:0 0 8px">Standardkategorien steuern Diagramme und Strategie-Ziele und können umbenannt, aber nicht archiviert werden.</p>
     <div id="fin-cat-list"></div>
     <div class="modal-actions"><button class="btn btn-primary" onclick="closeFinCategories()">Fertig</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="metric-bg" onclick="if(event.target===this)closeMetricEntry()">
+  <div class="modal" style="width:480px">
+    <h2 id="metric-title">Ist-Wert erfassen</h2>
+    <div id="metric-form"></div>
+    <div id="metric-history"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeMetricEntry()">Abbrechen</button>
+      <button class="btn btn-primary" id="metric-save" onclick="saveMetricEntry()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="sgoal-bg" onclick="if(event.target===this)closeGoalEdit()">
+  <div class="modal" style="width:480px">
+    <h2 id="sgoal-title">Ziel bearbeiten</h2>
+    <div class="form-row">
+      <div class="form-group"><label for="sgoal-target">Ziel <span id="sgoal-unit" class="muted"></span></label><input type="text" id="sgoal-target" inputmode="decimal"></div>
+      <div class="form-group"><label for="sgoal-bonus">Bonusziel</label><input type="text" id="sgoal-bonus" inputmode="decimal"></div>
+    </div>
+    <div class="form-group" id="sgoal-period-row"><label for="sgoal-period">Messzeitraum (Beschriftung)</label><input type="text" id="sgoal-period"></div>
+    <div class="form-group"><label for="sgoal-ref">Hinweis / Referenzwert (wird nie als Ist-Wert gezählt)</label><input type="text" id="sgoal-ref"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeGoalEdit()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveGoalEdit()">Speichern</button>
+    </div>
   </div>
 </div>
 
@@ -2172,7 +2227,8 @@ const RT_TOPIC = 'realtime:podcast-sync';
 const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
-  'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months'];
+  'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months',
+  'podcast_strategy_goals', 'podcast_metric_values'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -2219,7 +2275,7 @@ function realtimeUpdateToken() {
   rtSend('access_token', { access_token: (session && session.access_token) || SUPABASE_KEY });
 }
 function onRemoteChange(table) {
-  if (table.startsWith('podcast_revenue')) table = 'podcast_revenue';
+  if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
   if (table === 'podcast_settings') onRemoteChange('podcast_revenue'); // revenue rule lives in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
@@ -2231,10 +2287,11 @@ function onRemoteChange(table) {
     } else if (table === 'podcast_todos') {
       const todosActive = document.getElementById('page-todos').classList.contains('active');
       const dashActive = document.getElementById('page-dashboard').classList.contains('active');
+      const stratActive = document.getElementById('page-verbesserung').classList.contains('active');
       if (todoWritesInFlight > 0 || todoEditingId) { todoRemotePending = true; return; }
-      if (todosActive || dashActive) {
+      if (todosActive || dashActive || stratActive) {
         await loadTodos();
-        if (todosActive) renderTodos(); else renderDashboard();
+        if (todosActive) renderTodos(); else if (dashActive) renderDashboard(); else renderRevenue();
       }
     } else if (table.startsWith('podcast_expert') || table === 'podcast_settings') {
       if (!expertsLoaded) return;
@@ -3784,6 +3841,7 @@ async function exportAllData() {
                   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events', 'podcast_goals', 'podcast_improvements',
                   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
                   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months', 'podcast_fin_booking_log',
+                  'podcast_strategy_goals', 'podcast_metric_values',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -4917,49 +4975,51 @@ function finAfterChange() {
   if (document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
 }
 
-// ── STRATEGIE: EINNAHMEN ─────────────────────────────────────────
-// Actual revenue comes exclusively from the finance module (paid income bookings) – nothing is
-// entered twice. Goals (podcast_revenue_goals) and the outsourcing rule (podcast_settings) stay here.
-// Month completeness = "vollständig erfasst" in Finanzen. Year totals are always computed.
+// ── STRATEGIE ────────────────────────────────────────────────────
+// Goals per year, grouped: reach (followers), performance (plays, episodes), finance, milestones.
+// Actuals come from their single source: manual measurements (podcast_metric_values),
+// the planner (published episodes), Finanzen (paid income bookings) and general to-dos
+// (milestones). Reference/planned start values are text only and never count as actuals.
+// A goal is only shown as reached when the measurement lies inside its own period.
+const STRAT_YEARS = [2026, 2027, 2028];
 const REV_SOURCES = [['adsense', 'YouTube AdSense', 'AdSense'], ['sponsoring', 'Sponsoring', 'Sponsoring'], ['affiliate', 'Affiliate', 'Affiliate'], ['other', 'Sonstige Einnahmen', 'Sonstige']];
-const REV_MONTHS = FIN_MONTHS;
-const REV_RULE_DEFAULT = { threshold_cents: 30000, window_months: 3, milestone_done_at: null };
+const REV_RULE_DEFAULT = { threshold_cents: 30000, window_months: 3 };
 const ALL_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 let revGoals = [];
 let revRule = { ...REV_RULE_DEFAULT };
+let stratGoals = [];
+let metricValues = [];
 let revenueLoaded = false;
-let revOpenYears = new Set();
-try { revOpenYears = new Set(JSON.parse(localStorage.getItem('gg_rev_open') || '[]')); } catch {}
+let stratYear = Math.min(2028, Math.max(2026, new Date().getFullYear()));
+try { const y = +localStorage.getItem('gg_strat_year'); if (STRAT_YEARS.includes(y)) stratYear = y; } catch {}
 
 async function loadRevenue() {
   try {
-    const [ok, g, s] = await Promise.all([
+    const [ok, g, s, sg, mv] = await Promise.all([
       loadFinance(),
       apiFetch('podcast_revenue_goals?select=*&order=year.asc,scope.asc'),
       apiFetch('podcast_settings?select=value&key=eq.revenue_outsourcing'),
+      apiFetch('podcast_strategy_goals?select=*&order=year.asc,category.asc,sort.asc'),
+      apiFetch('podcast_metric_values?select=*&order=measured_on.asc,created_at.asc'),
+      todosLoaded ? Promise.resolve(true) : loadTodos(),
     ]);
     if (!ok) return false;
-    revGoals = g;
+    revGoals = g; stratGoals = sg; metricValues = mv;
     revRule = { ...REV_RULE_DEFAULT, ...((s[0] && s[0].value) || {}) };
     revenueLoaded = true;
     return true;
-  } catch (err) { showToast('Einnahmen konnten nicht geladen werden: ' + err.message, 'error'); return false; }
+  } catch (err) { showToast('Strategie-Daten konnten nicht geladen werden: ' + err.message, 'error'); return false; }
 }
-// Paid income of a month for one source (null = month has no income booking for it).
+function setStratYear(y) { stratYear = y; try { localStorage.setItem('gg_strat_year', String(y)); } catch {} renderRevenue(); }
+
+// ── Finance actuals (paid income bookings) ──
 function revValue(y, m, src) { return finSum(y, m, 'income', b => finBucket(b) === src); }
 function revMonthTotal(y, m) { return finSum(y, m, 'income'); }
 function revSum(y, months, src) { return months.reduce((a, m) => a + (src ? revValue(y, m, src) : revMonthTotal(y, m)), 0); }
 function revGoalMonths(g) { return g.period === 'nov_dec' ? [11, 12] : ALL_MONTHS; }
 function revGoalActual(g) { return revSum(g.year, revGoalMonths(g), g.scope === 'total' ? null : 'adsense'); }
-function revGoalLabel(g) {
-  const scope = g.scope === 'total' ? 'Gesamteinnahmen (AdSense + Sponsoring + Affiliate + Sonstige)' : 'YouTube AdSense';
-  return g.period === 'nov_dec' ? `${scope} · Summe November + Dezember ${g.year}` : `${scope} · Jahresziel ${g.year}`;
-}
-function revYears() {
-  const ys = new Set([new Date().getFullYear(), ...revGoals.map(g => g.year), ...finBookings.filter(b => b.kind === 'income').map(bYear)]);
-  return [...ys].sort((a, b) => a - b);
-}
-// Outsourcing rule: average total income of the last N fully recorded calendar months (up to the current month).
+function revGoalLabel(g) { return g.scope === 'total' ? 'Gesamtumsatz (AdSense + Sponsoring + Affiliate + Sonstige)' : 'YouTube-AdSense-Umsatz'; }
+// Outsourcing rule: average total income of the last N fully recorded calendar months (up to now).
 function revRuleResult() {
   const n = Math.max(1, Math.min(12, parseInt(revRule.window_months, 10) || 3));
   const now = new Date();
@@ -4973,8 +5033,8 @@ function revRuleResult() {
   const avg = Math.round(used.reduce((a, { y, m }) => a + revMonthTotal(y, m), 0) / n);
   return { n, used, missing: 0, avg, reached: avg >= revRule.threshold_cents };
 }
-async function saveRevRule(changes) {
-  revRule = { ...revRule, ...changes };
+async function saveRevRuleWindow(value) {
+  revRule = { ...revRule, window_months: Math.max(1, Math.min(12, parseInt(value, 10) || 3)) };
   renderRevenue();
   try {
     await apiFetch('podcast_settings', { method: 'POST', prefer: 'resolution=merge-duplicates',
@@ -4982,101 +5042,284 @@ async function saveRevRule(changes) {
     flashSaved();
   } catch (e) { showToast('Einstellung nicht gespeichert: ' + e.message, 'error'); }
 }
-function saveRevRuleWindow(value) { saveRevRule({ window_months: Math.max(1, Math.min(12, parseInt(value, 10) || 3)) }); }
-function toggleRevMilestone() {
-  const done = !revRule.milestone_done_at;
-  if (done && !confirm('Meilenstein als umgesetzt markieren? (Nur Dokumentation – es wird nichts beauftragt.)')) { renderRevenue(); return; }
-  saveRevRule({ milestone_done_at: done ? new Date().toISOString() : null, milestone_done_by: done ? currentActor() : null });
-}
-function toggleRevYear(y) {
-  if (revOpenYears.has(y)) revOpenYears.delete(y); else revOpenYears.add(y);
-  try { localStorage.setItem('gg_rev_open', JSON.stringify([...revOpenYears])); } catch {}
-  renderRevenue();
-}
-function openFinanceMonth(y, m) { finYear = y; finUi.tab = 'months'; finUi.month = m; saveFinUi(); showPage('finanzen'); }
+function openFinanceYear(y) { finYear = y; finUi.tab = 'overview'; finUi.month = null; saveFinUi(); showPage('finanzen'); }
 
-// ── Rendering ──
-function revBarHtml(actual, target, bonus) {
-  const scale = bonus || target;
-  const pct = Math.min(100, Math.max(0, actual / scale * 100));
-  const mark = bonus ? target / bonus * 100 : null;
-  const cls = bonus && actual >= bonus ? ' bonus' : actual >= target ? ' reached' : '';
-  return `<div class="rev-bar${cls}" role="progressbar" aria-valuemin="0" aria-valuemax="${scale / 100}" aria-valuenow="${actual / 100}">
-    <div class="rev-bar-fill" style="width:${pct.toFixed(1)}%"></div>
-    ${mark !== null ? `<div class="rev-bar-mark" style="left:${mark.toFixed(1)}%" title="Reguläres Ziel ${eur(target)}"></div>` : ''}
+// ── Growth actuals ──
+const nf = v => Number(v).toLocaleString('de-DE');
+function monthsBetween(startIso, endIso) {
+  const out = [];
+  let y = +startIso.slice(0, 4), m = +startIso.slice(5, 7);
+  const ey = +endIso.slice(0, 4), em = +endIso.slice(5, 7);
+  while (y < ey || (y === ey && m <= em)) { out.push(`${y}-${String(m).padStart(2, '0')}`); m++; if (m > 12) { m = 1; y++; } }
+  return out;
+}
+function publishedEpisodesIn(startIso, endIso) {
+  return episodes.filter(ep => {
+    const d = safeParseDate(ep.date);
+    if (!d || ep.status !== 'published') return false;
+    const iso = isoDate(d);
+    return iso >= startIso && iso <= endIso && iso <= isoToday(); // only episodes that are actually out
+  });
+}
+// { value|null, asOf, inPeriod, info }
+function stratActual(g) {
+  const today = isoToday();
+  if (g.measure === 'episodes') {
+    const list = publishedEpisodesIn(g.period_start, g.period_end);
+    return { value: list.length, asOf: today, inPeriod: today >= g.period_start, info: 'automatisch aus dem Planer (Status „Veröffentlicht“)', list };
+  }
+  if (g.measure === 'snapshot') {
+    const vals = metricValues.filter(v => v.metric_key === g.metric_key && !v.period_month && v.measured_on <= g.period_end);
+    const last = vals[vals.length - 1];
+    if (!last) return { value: null, info: 'Noch kein Ist-Wert erfasst' };
+    return { value: last.value, asOf: last.measured_on, by: last.created_by, inPeriod: last.measured_on >= g.period_start,
+      info: last.measured_on >= g.period_start ? `Stand ${formatDate(safeParseIso(last.measured_on))}` : `letzter Stand ${formatDate(safeParseIso(last.measured_on))} – vor dem Messzeitraum` };
+  }
+  const months = monthsBetween(g.period_start, g.period_end);
+  const vals = metricValues.filter(v => v.metric_key === g.metric_key && months.includes(v.period_month));
+  const latest = vals.reduce((a, v) => (!a || v.created_at > a.created_at ? v : a), null);
+  if (!vals.length) return { value: null, info: `Noch kein Monatswert erfasst (0/${months.length} Monate)` };
+  if (g.measure === 'month_avg') {
+    if (vals.length < months.length) return { value: null, info: `${vals.length}/${months.length} Monate erfasst – Durchschnitt erst mit allen Monaten`, asOf: latest.created_at.slice(0, 10) };
+    return { value: Math.round(vals.reduce((a, v) => a + v.value, 0) / months.length), asOf: latest.created_at.slice(0, 10), inPeriod: true, info: `Ø aus ${months.length} Monaten` };
+  }
+  return { value: vals.reduce((a, v) => a + v.value, 0), asOf: latest.created_at.slice(0, 10), inPeriod: true, info: `bisher ${vals.length}/${months.length} Monate erfasst` };
+}
+function stratStatus(value, target, bonus, inPeriod) {
+  if (value === null || value === undefined) return { key: 'none', label: 'Kein Ist-Wert' };
+  if (!inPeriod) return { key: 'before', label: 'Messzeitraum noch nicht begonnen' };
+  if (bonus && value >= bonus) return { key: 'bonus', label: '🏆 Bonus erreicht' };
+  if (value >= target) return { key: 'reached', label: '✅ Ziel erreicht' };
+  return { key: 'progress', label: `${Math.floor(value / target * 100)} % vom Ziel` };
+}
+function stratBar(value, target, bonus) {
+  const scale = bonus && bonus > target ? bonus : target;
+  const pct = value === null ? 0 : Math.min(100, Math.max(0, value / scale * 100));
+  const mark = bonus && bonus > target ? target / bonus * 100 : null;
+  const cls = bonus && value >= bonus ? ' bonus' : value !== null && value >= target ? ' reached' : '';
+  return `<div class="rev-bar${cls}" role="progressbar" aria-valuemin="0" aria-valuemax="${scale}" aria-valuenow="${value ?? 0}">
+    <div class="rev-bar-fill" style="width:${pct.toFixed(1)}%"></div>${mark !== null ? `<div class="rev-bar-mark" style="left:${mark.toFixed(1)}%" title="Ziel"></div>` : ''}</div>`;
+}
+function stratSpark(g) {
+  if (g.measure !== 'snapshot') return '';
+  const vals = metricValues.filter(v => v.metric_key === g.metric_key && !v.period_month);
+  if (vals.length < 2) return '';
+  const W = 220, H = 40, min = Math.min(...vals.map(v => v.value)), max = Math.max(...vals.map(v => v.value));
+  const t0 = safeParseIso(vals[0].measured_on).getTime(), t1 = safeParseIso(vals[vals.length - 1].measured_on).getTime();
+  const x = v => t1 === t0 ? W : (safeParseIso(v.measured_on).getTime() - t0) / (t1 - t0) * (W - 6) + 3;
+  const y = v => max === min ? H / 2 : H - 4 - (v.value - min) / (max - min) * (H - 8);
+  const d = vals.map((v, i) => `${i ? 'L' : 'M'}${x(v).toFixed(1)},${y(v).toFixed(1)}`).join('');
+  return `<svg class="strat-spark" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Verlauf: ${vals.map(v => formatDate(safeParseIso(v.measured_on)) + ' ' + nf(v.value)).join(', ')}">
+    <path d="${d}" fill="none" class="fin-line"/>${vals.map(v => `<circle cx="${x(v).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.5" class="fin-dot"><title>${formatDate(safeParseIso(v.measured_on))}: ${nf(v.value)}</title></circle>`).join('')}</svg>`;
+}
+function stratCardHtml(g) {
+  const a = stratActual(g);
+  const st = stratStatus(a.value, g.target, g.bonus, a.inPeriod);
+  const manual = g.measure !== 'episodes';
+  return `<div class="card strat-card st-${st.key}" id="sg-${g.id}">
+    <div class="strat-card-head"><span class="strat-title">${esc(g.title)}</span><span class="strat-pill st-${st.key}">${st.label}</span></div>
+    <div class="strat-value">${a.value === null ? '<span class="muted">–</span>' : nf(a.value)}</div>
+    <div class="muted strat-sub">${esc(a.info)}${a.by ? ' · ' + esc(actorName(a.by)) : ''}</div>
+    ${stratBar(a.value, g.target, g.bonus)}
+    <div class="strat-meta"><span>Ziel <b>${nf(g.target)}</b></span>${g.bonus && g.bonus !== g.target ? `<span>Bonus <b>${nf(g.bonus)}</b></span>` : ''}</div>
+    <div class="muted strat-small">Messzeitraum: ${esc(g.period_label)}</div>
+    ${g.confirmed_note ? `<div class="strat-note ok">✓ ${esc(g.confirmed_note)}</div>` : ''}
+    ${g.reference_note ? `<div class="strat-note">ℹ️ ${esc(g.reference_note)} – kein bestätigter Ist-Wert</div>` : ''}
+    ${stratSpark(g)}
+    ${g.measure === 'episodes' && a.list && a.list.length ? `<div class="muted strat-small">${a.list.map(ep => esc(ep.title)).join(' · ')}</div>` : ''}
+    <div class="strat-actions">
+      ${manual ? `<button class="btn btn-sm" onclick="openMetricEntry(${jsArg(g.id)})">Ist-Wert erfassen</button>` : ''}
+      <button class="btn btn-sm btn-ghost" onclick="openGoalEdit('strategy',${jsArg(g.id)})">Ziel bearbeiten</button>
+    </div>
   </div>`;
 }
-function revGoalHtml(g) {
+function stratFinanceCardHtml(g) {
   const actual = revGoalActual(g);
-  const status = g.bonus_cents && actual >= g.bonus_cents ? '🏆 Bonusziel erreicht' : actual >= g.target_cents ? '✅ Ziel erreicht' : `noch ${eur(g.target_cents - actual)} bis zum Ziel`;
-  return `<div class="rev-goal">
-    <div class="rev-goal-head"><span>${esc(revGoalLabel(g))}</span><span class="muted">${status}</span></div>
-    <div class="rev-goal-values"><b>${eur(actual)}</b> <span class="muted">von ${eur(g.target_cents)}${g.bonus_cents ? ` · Bonus ${eur(g.bonus_cents)}` : ''}</span></div>
-    ${revBarHtml(actual, g.target_cents, g.bonus_cents)}
-    ${g.note ? `<div class="muted rev-note">${esc(g.note)}</div>` : ''}
+  const st = stratStatus(actual, g.target_cents, g.bonus_cents, isoToday() >= `${g.year}-${g.period === 'nov_dec' ? '11' : '01'}-01`);
+  return `<div class="card strat-card card-clickable st-${st.key}" onclick="openFinanceYear(${g.year})" title="Finanzübersicht ${g.year} öffnen">
+    <div class="strat-card-head"><span class="strat-title">${esc(revGoalLabel(g))}</span><span class="strat-pill st-${st.key}">${st.label}</span></div>
+    <div class="strat-value">${eur(actual)}</div>
+    <div class="muted strat-sub">laufend aus „Finanzen“ (bezahlte Einnahmen)</div>
+    ${stratBar(actual, g.target_cents, g.bonus_cents)}
+    <div class="strat-meta"><span>Ziel <b>${eur(g.target_cents)}</b></span>${g.bonus_cents ? `<span>Bonus <b>${eur(g.bonus_cents)}</b></span>` : ''}</div>
+    <div class="muted strat-small">Messzeitraum: ${g.period === 'nov_dec' ? `Summe November + Dezember ${g.year} (nicht das ganze Jahr)` : `Januar–Dezember ${g.year}`}</div>
+    ${g.note ? `<div class="strat-note">ℹ️ ${esc(g.note)}</div>` : ''}
+    <div class="strat-actions"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();openGoalEdit('finance',${jsArg(g.id)})">Ziel bearbeiten</button><span class="link-btn">Finanzen öffnen →</span></div>
   </div>`;
 }
-function revYearCardHtml(y) {
-  const open = revOpenYears.has(y);
-  const total = revSum(y, ALL_MONTHS, null);
-  const withData = ALL_MONTHS.filter(m => finBookings.some(b => b.kind === 'income' && bYear(b) === y && bMonth(b) === m));
-  const complete = ALL_MONTHS.filter(m => finMonthComplete(y, m));
-  const avg = complete.length ? Math.round(complete.reduce((a, m) => a + revMonthTotal(y, m), 0) / complete.length) : null;
-  const goals = revGoals.filter(g => g.year === y);
-  const yearGoals = goals.filter(g => g.period === 'year');
-  const otherGoals = goals.filter(g => g.period !== 'year');
-  const max = Math.max(1, ...ALL_MONTHS.map(m => revMonthTotal(y, m)));
-  return `<div class="card rev-card${open ? ' open' : ''}">
-    <button type="button" class="rev-head" onclick="toggleRevYear(${y})" aria-expanded="${open}">
-      <div><div class="rev-year">${y}</div><div class="muted" style="font-size:12px">Jahresumsatz – automatisch aus den Buchungen in „Finanzen“</div></div>
-      <div class="rev-total">${eur(total)}</div>
-      <span class="section-toggle-icon">${open ? '▾' : '▸'}</span>
-    </button>
-    ${yearGoals.length ? yearGoals.map(revGoalHtml).join('') : `<div class="muted rev-note">Kein Jahresziel für ${y} festgelegt.</div>`}
-    ${otherGoals.length ? `<div class="rev-sub">Separates Ziel (nicht das Jahresziel)</div>${otherGoals.map(revGoalHtml).join('')}` : ''}
-    <div class="rev-sources">${REV_SOURCES.map(([k, l]) => `<span class="chip">${l}: <b>${eur(revSum(y, ALL_MONTHS, k))}</b></span>`).join('')}</div>
-    <div class="rev-meta muted">${withData.length}/12 Monate mit Einnahmen · ${complete.length} vollständig erfasst${avg !== null ? ` · Ø ${eur(avg)} pro vollständig erfasstem Monat` : ''}</div>
-    <div class="rev-spark" aria-hidden="true">${ALL_MONTHS.map(m => { const v = revMonthTotal(y, m); const has = withData.includes(m) || finMonthComplete(y, m); return `<div class="rev-spark-col" title="${REV_MONTHS[m - 1]}: ${has ? eur(v) : 'keine Einnahmen erfasst'}"><div class="rev-spark-bar${has ? '' : ' is-none'}" style="height:${has ? Math.max(2, v / max * 32) : 2}px"></div><span>${REV_MONTHS[m - 1][0]}</span></div>`; }).join('')}</div>
-    ${open ? `<div class="rev-months">
-      <div class="rev-row rev-row-head"><div>Monat</div>${REV_SOURCES.map(([, , s]) => `<div>${s}</div>`).join('')}<div>Summe</div><div></div></div>
-      ${ALL_MONTHS.map(m => { const has = withData.includes(m); const c = finMonthComplete(y, m); return `<div class="rev-row${c ? ' confirmed' : ''}">
-        <div class="rev-month">${REV_MONTHS[m - 1]}</div>
-        ${REV_SOURCES.map(([k, , s]) => `<div class="rev-cell"><span class="rev-cell-label">${s}</span><span class="rev-val">${has ? eurPlain(revValue(y, m, k)) : '–'}</span></div>`).join('')}
-        <div class="rev-month-sum">${has || c ? eur(revMonthTotal(y, m)) : '<span class="muted">nicht erfasst</span>'}</div>
-        <div class="rev-month-actions">${c ? '<span class="pill pill-accent">✓ vollständig</span>' : ''}<button type="button" class="link-btn" onclick="openFinanceMonth(${y},${m})">In Finanzen →</button></div>
-      </div>`; }).join('')}
-      <div class="muted" style="font-size:12px;margin-top:8px">Werte stammen aus den bezahlten Einnahme-Buchungen (Finanzen). Bearbeiten und „vollständig erfasst“ markieren nur dort – keine doppelte Erfassung.</div>
-    </div>` : ''}
+// Comparison of all numeric goals of the year: actual vs. goal (marker) vs. bonus (bar end).
+function stratSummaryHtml(y) {
+  const rows = [
+    ...stratGoals.filter(g => g.year === y).sort((a, b) => b.category.localeCompare(a.category) || a.sort - b.sort).map(g => { const a = stratActual(g); return { id: 'sg-' + g.id, label: g.title, v: a.value, t: g.target, b: g.bonus, inP: a.inPeriod, fmt: nf, note: g.confirmed_note }; }),
+    ...revGoals.filter(g => g.year === y).map(g => ({ id: null, label: revGoalLabel(g).split(' (')[0], v: revGoalActual(g), t: g.target_cents, b: g.bonus_cents, inP: isoToday() >= `${g.year}-${g.period === 'nov_dec' ? '11' : '01'}-01`, fmt: eur })),
+  ];
+  if (!rows.length) return '';
+  const done = rows.filter(r => r.v !== null && r.inP && r.v >= r.t).length;
+  return `<div class="card strat-summary">
+    <div class="strat-card-head"><h2 style="margin:0;font-size:15px">Zielerreichung ${y}</h2><span class="muted strat-small">${done}/${rows.length} Ziele erreicht · Balken = Ist, Markierung = Ziel, Ende = Bonus</span></div>
+    ${rows.map(r => { const st = stratStatus(r.v, r.t, r.b, r.inP); return `<div class="strat-sum-row"${r.id ? ` role="button" tabindex="0" onclick="document.getElementById('${r.id}')?.scrollIntoView({behavior:'smooth',block:'center'})"` : ''}>
+      <span class="strat-sum-label">${esc(r.label)}</span>${stratBar(r.v, r.t, r.b)}
+      <span class="strat-sum-val">${r.v === null ? (r.note ? '✓ laut Vorgabe' : '–') : r.fmt(r.v)} <span class="muted">/ ${r.fmt(r.t)}</span></span>
+      <span class="strat-pill st-${st.key}">${st.key === 'progress' ? st.label.replace(' vom Ziel', '') : st.key === 'none' ? 'offen' : st.key === 'before' ? 'später' : st.label.replace(/^\S+ /, '')}</span></div>`; }).join('')}
   </div>`;
 }
-function revRuleHtml() {
+function stratMilestonesHtml(y) {
+  const list = todos.filter(t => t.strategyYear === y && !t.parentId).sort((a, b) => (a.done - b.done) || (a.dueDate || '9').localeCompare(b.dueDate || '9'));
+  return `<div class="card strat-ms">
+    ${list.length ? list.map(t => `<div class="todo-row${t.done ? ' done' : ''}">
+      <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone(${jsArg(t.id)})" role="checkbox" aria-checked="${t.done}" title="${t.done ? 'Wieder öffnen' : 'Erledigt'} (auch unter Aufgaben)"></div>
+      <div class="todo-main"><span class="todo-text" style="cursor:pointer" onclick="openTaskModal(${jsArg(t.id)})">${esc(t.text)}</span>
+        <div class="todo-chips">${t.assignee ? whoBadge(t.assignee) : '<span class="who who-none">Offen</span>'}${dueChip(t.dueDate ? safeParseIso(t.dueDate) : null, t.done)}${t.done && t.doneAt ? `<span class="chip">✓ ${formatDate(new Date(t.doneAt))}</span>` : ''}</div>
+        ${t.strategyKey === 'outsource_editing' ? revRuleHtml(t) : ''}</div>
+    </div>`).join('') : '<div class="todo-empty">Keine Meilensteine für dieses Jahr.</div>'}
+    <div class="todo-input-row" style="margin:10px 0 0"><input type="text" id="ms-input" placeholder="Neuer Meilenstein für ${y}…" aria-label="Neuer Meilenstein" onkeydown="if(event.key==='Enter')addStrategyMilestone(${y})"><button class="btn btn-sm" onclick="addStrategyMilestone(${y})">Hinzufügen</button></div>
+    <div class="muted strat-small" style="margin-top:6px">Meilensteine sind allgemeine To-dos (Aufgaben → Allgemeine To-dos) – Erledigt-Status ist an beiden Stellen derselbe.</div>
+  </div>`;
+}
+function addStrategyMilestone(y) {
+  const input = document.getElementById('ms-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const t = newTodo({ text, strategyYear: y });
+  todos.unshift(t);
+  insertTodo(t);
+  renderRevenue();
+  showToast('Meilenstein angelegt (auch unter Aufgaben)');
+}
+function revRuleHtml(todo) {
   const r = revRuleResult();
-  const fmtM = ({ y, m }) => `${REV_MONTHS[m - 1].slice(0, 3)} ${y}`;
+  const fmtM = ({ y, m }) => `${FIN_MONTHS[m - 1].slice(0, 3)} ${y}`;
   const range = r.used.length ? r.used.map(fmtM).join(', ') : '–';
-  const done = !!revRule.milestone_done_at;
   const status = r.missing
-    ? `<div class="rev-rule-status">⏳ Keine Auswertung: Es ${r.used.length === 1 ? 'ist erst 1 Monat' : `sind erst ${r.used.length} Monate`} als vollständig erfasst markiert (benötigt: ${r.n}). Monate in „Finanzen → Monate“ als vollständig markieren.</div>`
-    : r.reached
-      ? `<div class="rev-rule-status ok">✅ Schwelle erreicht: Ø ${eur(r.avg)} pro Monat (${range}) ≥ ${eur(revRule.threshold_cents)}.</div>`
-      : `<div class="rev-rule-status">Ø ${eur(r.avg)} pro Monat (${range}) – noch ${eur(revRule.threshold_cents - r.avg)} bis zur Schwelle von ${eur(revRule.threshold_cents)}.</div>`;
-  const milestone = done ? `✅ Umgesetzt – Schnitt ist ausgelagert (seit ${formatDate(new Date(revRule.milestone_done_at))}${revRule.milestone_done_by ? ', ' + esc(actorName(revRule.milestone_done_by)) : ''})`
-    : !r.missing && r.reached ? '🟠 Bereit zur Umsetzung – Schwelle erreicht, Auslagerung noch nicht erfolgt' : '⚪ Offen – Schwelle noch nicht nachgewiesen';
-  return `<div class="card rev-rule">
-    <div class="rev-goal-head"><b>✂️ Meilenstein: Langfolgen-Schnitt extern vergeben</b></div>
-    <div class="muted" style="font-size:13px">Regel: Sobald die Gesamteinnahmen im Monatsdurchschnitt mindestens <b>${eur(revRule.threshold_cents)}</b> erreichen, wird der Schnitt der Langfolgen extern bezahlt und abgegeben.</div>
+    ? `⏳ Keine Auswertung: erst ${r.used.length} von ${r.n} Monaten als vollständig erfasst markiert (Finanzen → Monate).`
+    : r.reached ? `✅ Schwelle erreicht: Ø ${eur(r.avg)} pro Monat (${range}) ≥ ${eur(revRule.threshold_cents)}.`
+      : `Ø ${eur(r.avg)} pro Monat (${range}) – noch ${eur(revRule.threshold_cents - r.avg)} bis ${eur(revRule.threshold_cents)}.`;
+  const milestone = todo.done ? '✅ Umgesetzt' : !r.missing && r.reached ? '🟠 Bereit zur Umsetzung' : '⚪ Offen';
+  return `<div class="strat-rule">
+    <div><b>Meilenstein-Status: ${milestone}</b></div>
+    <div class="rev-rule-status${!r.missing && r.reached ? ' ok' : ''}">${status}</div>
     <label class="rev-rule-window">Betrachtungszeitraum: die letzten
       <select onchange="saveRevRuleWindow(this.value)" aria-label="Anzahl Monate">${ALL_MONTHS.map(n => `<option value="${n}"${n === r.n ? ' selected' : ''}>${n}</option>`).join('')}</select>
-      vollständig erfassten Kalendermonate${r.n === 3 ? ' (Standard)' : ''} · verwendet: ${range}</label>
-    ${status}
-    <div class="rev-goal-head"><span>Status: <b>${milestone}</b></span>
-      <label class="rev-confirm"><input type="checkbox" ${done ? 'checked' : ''} onchange="toggleRevMilestone()"> umgesetzt</label></div>
-    <div class="muted" style="font-size:12px">Nur eine Auswertung – es wird nichts automatisch beauftragt oder bezahlt.</div>
+      vollständig erfassten Kalendermonate${r.n === 3 ? ' (Standard)' : ''} · Schwelle ${eur(revRule.threshold_cents)} Ø pro Monat</label>
+    <div class="muted strat-small">Nur eine Auswertung – es wird nichts automatisch beauftragt oder bezahlt. Abhaken, sobald der Schnitt tatsächlich ausgelagert ist.</div>
   </div>`;
 }
 function renderRevenue() {
-  const box = document.getElementById('revenue-container');
+  const box = document.getElementById('strategy-container');
   if (!box || !revenueLoaded) return;
-  box.innerHTML = `${revYears().map(revYearCardHtml).join('')}${revRuleHtml()}`;
+  const y = stratYear;
+  document.getElementById('strat-years').innerHTML = STRAT_YEARS.map(v => `<button class="seg-btn${v === y ? ' active' : ''}" onclick="setStratYear(${v})">${v}</button>`).join('');
+  const goals = stratGoals.filter(g => g.year === y);
+  const reach = goals.filter(g => g.category === 'reach'), perf = goals.filter(g => g.category === 'performance');
+  const fin = revGoals.filter(g => g.year === y);
+  const group = (title, html) => html ? `<h2 class="strat-group">${title}</h2>${html}` : '';
+  box.innerHTML = `${stratSummaryHtml(y)}
+    ${group('📣 Reichweite & Community', reach.length ? `<div class="strat-grid">${reach.map(stratCardHtml).join('')}</div>` : '')}
+    ${group('🎧 Podcast-Performance', perf.length ? `<div class="strat-grid">${perf.map(stratCardHtml).join('')}</div>` : '')}
+    ${group('💶 Finanzielle Ziele', fin.length ? `<div class="strat-grid">${fin.map(stratFinanceCardHtml).join('')}</div>
+      <div class="muted strat-small" style="margin:-4px 0 0">Jahresumsatz ${y} gesamt: <b>${eur(revSum(y, ALL_MONTHS, null))}</b> · ${REV_SOURCES.map(([k, l]) => `${l} ${eur(revSum(y, ALL_MONTHS, k))}`).join(' · ')}</div>` : '')}
+    ${group('🚩 Strategische Meilensteine', stratMilestonesHtml(y))}`;
+}
+
+// ── Manual measurements ──
+let metricEdit = null;
+function openMetricEntry(goalId) {
+  const g = stratGoals.find(x => x.id === goalId);
+  if (!g) return;
+  metricEdit = g;
+  const monthly = g.measure !== 'snapshot';
+  document.getElementById('metric-title').textContent = `${g.title} – Ist-Wert erfassen`;
+  const months = monthsBetween(g.period_start, g.period_end).filter(m => m <= isoToday().slice(0, 7));
+  document.getElementById('metric-form').innerHTML = monthly
+    ? (months.length ? `<div class="form-row"><div class="form-group"><label for="metric-month">Monat</label><select id="metric-month">${months.map(m => `<option value="${m}">${FIN_MONTHS[+m.slice(5) - 1]} ${m.slice(0, 4)}</option>`).join('')}</select></div>
+        <div class="form-group"><label for="metric-value">Plays in diesem Monat</label><input type="text" inputmode="numeric" id="metric-value" placeholder="z. B. 3.100"></div></div>
+        <p class="muted strat-small">Ein Wert pro Monat – erneutes Speichern ersetzt den Monatswert.</p>`
+      : `<p class="muted">Der Messzeitraum (${esc(g.period_label)}) hat noch nicht begonnen – Monatswerte können ab dem ersten Monat erfasst werden.</p>`)
+    : `<div class="form-row"><div class="form-group"><label for="metric-value">Aktueller Stand</label><input type="text" inputmode="numeric" id="metric-value" placeholder="z. B. 4.600"></div>
+        <div class="form-group"><label for="metric-date">Gemessen am</label><input type="date" id="metric-date" value="${isoToday()}" max="${isoToday()}"></div></div>
+        <p class="muted strat-small">Der Wert gilt für alle Jahre mit diesem Ziel (z. B. YouTube-Abonnenten) – mit Datum, damit Messzeiträume korrekt bewertet werden.</p>`;
+  const hist = metricValues.filter(v => v.metric_key === g.metric_key && (monthly ? !!v.period_month : !v.period_month)).slice().reverse();
+  document.getElementById('metric-history').innerHTML = hist.length ? `<div class="fin-sub">Bisherige Werte</div>${hist.slice(0, 24).map(v => `<div class="fin-row">
+      <span class="fin-row-date">${v.period_month ? FIN_MONTHS[+v.period_month.slice(5) - 1].slice(0, 3) + ' ' + v.period_month.slice(0, 4) : formatDate(safeParseIso(v.measured_on))}</span>
+      <span class="fin-row-main"><b>${nf(v.value)}</b> <span class="muted">${v.created_by ? '· ' + esc(actorName(v.created_by)) : ''}${v.note ? ' · ' + esc(v.note) : ''}</span></span>
+      <button class="todo-del" onclick="deleteMetricValue(${jsArg(v.id)})" title="Wert löschen (Korrektur)" aria-label="Wert löschen">🗑</button></div>`).join('')}` : '';
+  document.getElementById('metric-save').hidden = monthly && !months.length;
+  document.getElementById('metric-bg').classList.add('open');
+  setTimeout(() => document.getElementById('metric-value')?.focus(), 50);
+}
+function closeMetricEntry() { document.getElementById('metric-bg').classList.remove('open'); metricEdit = null; }
+async function saveMetricEntry() {
+  const g = metricEdit;
+  if (!g) return;
+  const raw = (document.getElementById('metric-value').value || '').replace(/[.\s]/g, '');
+  if (!/^\d{1,9}$/.test(raw)) { showToast('Bitte eine ganze Zahl eingeben, z. B. 4.600', 'error'); document.getElementById('metric-value').focus(); return; }
+  const monthly = g.measure !== 'snapshot';
+  const row = { metric_key: g.metric_key, value: +raw, created_by: currentActor() };
+  if (monthly) { row.period_month = document.getElementById('metric-month').value; row.measured_on = isoDate(new Date(+row.period_month.slice(0, 4), +row.period_month.slice(5), 0)); }
+  else {
+    row.measured_on = document.getElementById('metric-date').value;
+    if (!row.measured_on || row.measured_on > isoToday()) { showToast('Bitte ein Messdatum bis heute wählen.', 'error'); return; }
+  }
+  try {
+    const saved = await apiFetch('podcast_metric_values' + (monthly ? '?on_conflict=metric_key,period_month' : ''), { method: 'POST', prefer: (monthly ? 'resolution=merge-duplicates,' : '') + 'return=representation', body: JSON.stringify(row) });
+    metricValues = metricValues.filter(v => !saved.some(s => s.id === v.id) && !(monthly && v.metric_key === row.metric_key && v.period_month === row.period_month)).concat(saved)
+      .sort((a, b) => a.measured_on.localeCompare(b.measured_on) || a.created_at.localeCompare(b.created_at));
+    closeMetricEntry();
+    flashSaved();
+    renderRevenue();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+}
+async function deleteMetricValue(id) {
+  if (!confirm('Diesen Messwert löschen?')) return;
+  try {
+    await apiFetch(`podcast_metric_values?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+    metricValues = metricValues.filter(v => v.id !== id);
+    if (metricEdit) openMetricEntry(metricEdit.id);
+    renderRevenue();
+  } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+}
+
+// ── Editing targets (only on purpose) ──
+let goalEdit = null;
+function openGoalEdit(kind, id) {
+  const g = kind === 'finance' ? revGoals.find(x => x.id === id) : stratGoals.find(x => x.id === id);
+  if (!g) return;
+  goalEdit = { kind, g };
+  const money = kind === 'finance';
+  document.getElementById('sgoal-title').textContent = (money ? revGoalLabel(g) : g.title) + ' ' + g.year;
+  document.getElementById('sgoal-unit').textContent = money ? 'in €' : '';
+  document.getElementById('sgoal-target').value = money ? eurPlain(g.target_cents) : nf(g.target);
+  document.getElementById('sgoal-bonus').value = money ? (g.bonus_cents ? eurPlain(g.bonus_cents) : '') : (g.bonus ? nf(g.bonus) : '');
+  document.getElementById('sgoal-period-row').hidden = money;
+  document.getElementById('sgoal-period').value = money ? '' : g.period_label;
+  document.getElementById('sgoal-ref').value = money ? g.note || '' : g.reference_note || '';
+  document.getElementById('sgoal-bg').classList.add('open');
+}
+function closeGoalEdit() { document.getElementById('sgoal-bg').classList.remove('open'); goalEdit = null; }
+async function saveGoalEdit() {
+  if (!goalEdit) return;
+  const { kind, g } = goalEdit;
+  const money = kind === 'finance';
+  const parse = v => money ? parseEuro(v).cents : (/^\d{1,9}$/.test(v.replace(/[.\s]/g, '')) ? +v.replace(/[.\s]/g, '') : null);
+  const target = parse(document.getElementById('sgoal-target').value);
+  const bonusRaw = document.getElementById('sgoal-bonus').value.trim();
+  const bonus = bonusRaw ? parse(bonusRaw) : null;
+  if (!target) { showToast('Bitte einen gültigen Zielwert eingeben.', 'error'); return; }
+  if (bonusRaw && (!bonus || bonus < target)) { showToast('Der Bonus muss mindestens so hoch wie das Ziel sein.', 'error'); return; }
+  const note = document.getElementById('sgoal-ref').value.trim() || null;
+  try {
+    if (money) {
+      await apiFetch(`podcast_revenue_goals?id=eq.${g.id}`, { method: 'PATCH', body: JSON.stringify({ target_cents: target, bonus_cents: bonus, note }) });
+      Object.assign(g, { target_cents: target, bonus_cents: bonus, note });
+    } else {
+      const period_label = document.getElementById('sgoal-period').value.trim() || g.period_label;
+      await apiFetch(`podcast_strategy_goals?id=eq.${g.id}`, { method: 'PATCH', body: JSON.stringify({ target, bonus, reference_note: note, period_label }) });
+      Object.assign(g, { target, bonus, reference_note: note, period_label });
+    }
+    closeGoalEdit();
+    flashSaved();
+    renderRevenue();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
 }
 
 // ── VERBESSERUNG: ZIELE ─────────────────────────────────────────
@@ -5361,6 +5604,7 @@ function rowToTodo(r) {
     createdAt: r.created_at, doneAt: r.done_at, description: r.description || '', priority: r.priority || 'medium',
     dueDate: r.due_date || null, projectId: r.project_id || null, parentId: r.parent_id || null,
     episodeId: r.episode_id || null, stepId: r.step_id || null,
+    strategyYear: r.strategy_year || null, strategyKey: r.strategy_key || null,
   };
 }
 // General podcast task: top-level and not tied to an episode. Rows with episode_id refer to a
@@ -5408,6 +5652,7 @@ function queueTodoWrite(id, write) {
 const TODO_COLUMNS = {
   text: 'text', assignee: 'assignee', done: 'done', status: 'status', doneAt: 'done_at', description: 'description',
   priority: 'priority', dueDate: 'due_date', projectId: 'project_id', parentId: 'parent_id', createdAt: 'created_at',
+  strategyYear: 'strategy_year',
 };
 function todoToRow(t, keys = Object.keys(TODO_COLUMNS)) {
   const row = {};
@@ -5455,6 +5700,7 @@ function updateTodo(id, changes) {
   }
   Object.assign(t, changes);
   renderTodos();
+  if (t.strategyYear && document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
   if (document.getElementById('task-modal-bg').classList.contains('open') && taskModalId === (t.parentId || t.id)) renderSubtasks();
   patchTodo(id, todoToRow(changes, Object.keys(changes)));
 }
@@ -5641,6 +5887,7 @@ function todoRowHtml(t, { showWho = false, showType = false } = {}) {
     t.status === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : '',
     dueChip(item.due, t.done),
     project ? `<span class="chip">${esc(project.name)}</span>` : '',
+    t.strategyYear ? `<span class="chip chip-accent" title="Strategischer Meilenstein">🎯 Strategie ${t.strategyYear}</span>` : '',
     subs.length ? `<span class="chip" title="Unteraufgaben">☑ ${subsDone}/${subs.length}</span>` : '',
     t.description ? '<span class="chip" title="Hat eine Beschreibung">≡</span>' : '',
     t.done && t.doneAt ? `<span class="chip">✓ ${formatDate(new Date(t.doneAt))}</span>` : '',
@@ -7413,7 +7660,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
   if (name === 'finanzen')     loadAndRender('fin-content', loadFinance, renderFinance, financeLoaded);
   if (name === 'verbesserung') {
-    loadAndRender('revenue-container', loadRevenue, renderRevenue, revenueLoaded);
+    loadAndRender('strategy-container', loadRevenue, renderRevenue, revenueLoaded);
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
     loadAndRender('improvements-container', loadImprovements, renderImprovements, improvements.length > 0);
   }
@@ -7480,7 +7727,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); closeMetricEntry(); closeGoalEdit(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
