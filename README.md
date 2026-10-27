@@ -82,6 +82,15 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 - Kontaktchronik mit nächster Wiedervorlage; automatisches Follow-up bei „Anfrage versendet“ ohne Antwort nach N Tagen (Standard 10, einstellbar).
 - Verknüpfung mit Ideen und Folgen; Freitext-Gastnamen bleiben erhalten, passende Experten werden nur vorgeschlagen.
 
+### Strategie: Einnahmen
+- Pro Jahr eine Einnahmen-Karte: Jahresumsatz (immer automatisch aus den Monaten berechnet, nie separat gespeichert), Ziele mit Fortschrittsbalken (Markierung = reguläres Ziel, Balkenende = Bonusziel), Aufschlüsselung nach Quelle, Ø pro erfasstem Monat, Jahresverlauf.
+- Karte anklicken → 12 Monate mit je **YouTube AdSense**, **Sponsoring**, **Affiliate** und Monatssumme; Speichern beim Verlassen des Feldes. Leeres Feld = nicht erfasst, 0 = bewusst 0 €. Euro, bis zu zwei Nachkommastellen, keine negativen Eingaben.
+- Negative oder nachträgliche Änderungen über „± Korrektur“ (Betrag, Quelle, Pflicht-Grund; mit Datum und Person protokolliert, unveränderlich – Fehler per Gegenkorrektur).
+- Monat „bestätigt“ (nur wenn alle drei Quellen eingetragen sind); bestätigte Monate sind gesperrt.
+- Ziele (`podcast_revenue_goals`): 2026 AdSense **Summe Nov + Dez** 400 € / Bonus 600 € (kein Jahresziel), 2027 AdSense 2.400 € / 3.480 €, 2028 AdSense 3.600 € / 4.920 € und Gesamt (AdSense + Sponsoring + Affiliate, AdSense einmal gezählt) 6.000 € / 12.000 €.
+- Regel „Langfolgen-Schnitt extern vergeben“: Ø Gesamteinnahmen ≥ 300 €/Monat über die letzten N abgeschlossenen Kalendermonate (N einstellbar, Standard 3, `podcast_settings.revenue_outsourcing`). Ausgewertet wird nur, wenn alle Monate des Zeitraums vollständig und bestätigt sind; es wird nichts automatisch beauftragt.
+- Tabellen: `podcast_revenue_entries` (eindeutig je Jahr/Monat/Quelle, Cent-Beträge), `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`. Die bisherigen Ziele (`podcast_goals`) bleiben unverändert.
+
 ### Ideenpool
 - Titel, Themenpunkte, Kernaussage, Gast, Status (Idee → Gast angefragt → Bestätigt), Drive-Link, Fragenkatalog.
 - „In Planer übernehmen“ legt aus einer Idee eine Folge an.
@@ -124,7 +133,7 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 ### Tabellen
 `podcast_episodes`, `podcast_ideas`, `podcast_todos`, `podcast_task_projects`, `podcast_guides`, `podcast_guide_versions`,
 `podcast_experts`, `podcast_expert_contacts`, `podcast_expert_ideas`, `podcast_expert_episodes`, `podcast_posts`,
-`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `app_users`.
+`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`, `app_users`.
 Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `podcast_expenses`, `podcast_income`, `podcast_settlements`.
 
 ### Migrationen (`supabase/migrations/`)
@@ -141,6 +150,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_ytclips.sql` | Format `ytclip` + 2 YT-Clips für kommende Folgen | angewendet |
 | `20261027_sop_production_standards.sql` | `podcast_guides.step_sections` + 4 Produktionsleitlinien v1.0 | angewendet |
 | `20261027_todo_task_type.sql` | `podcast_todos.episode_id/step_id`, 13 Folgen-Kopien zugeordnet | angewendet |
+| `20261027_revenue.sql` | Einnahmen: Monatswerte, Korrekturen, Bestätigung, Ziele 2026–2028, 300-€-Regel | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
