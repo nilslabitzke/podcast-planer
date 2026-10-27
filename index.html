@@ -372,10 +372,12 @@
     .cal-type-karussell{ --cal-type-color: #f472b6; --cal-type-bg: rgba(244,114,182,.16); }
     .cal-type-reel     { --cal-type-color: #60a5fa; --cal-type-bg: rgba(96,165,250,.16); }
     .cal-type-linkedin { --cal-type-color: #22d3ee; --cal-type-bg: rgba(34,211,238,.16); }
+    .cal-type-ytclip   { --cal-type-color: #f87171; --cal-type-bg: rgba(248,113,113,.16); }
     body.light .cal-type-release  { --cal-type-color: #059669; --cal-type-bg: rgba(5,150,105,.12); }
     body.light .cal-type-karussell{ --cal-type-color: #db2777; --cal-type-bg: rgba(219,39,119,.12); }
     body.light .cal-type-reel     { --cal-type-color: #2563eb; --cal-type-bg: rgba(37,99,235,.12); }
     body.light .cal-type-linkedin { --cal-type-color: #0891b2; --cal-type-bg: rgba(8,145,178,.12); }
+    body.light .cal-type-ytclip   { --cal-type-color: #dc2626; --cal-type-bg: rgba(220,38,38,.12); }
     .cal-item.done .cal-item-text, .cal-item.done .cal-item-time { color: var(--muted); text-decoration: line-through; }
     .cal-item.done { opacity: .6; }
 
@@ -2477,7 +2479,7 @@ function renderZeitstrahl() {
         <div class="tl-date"></div>
         <div class="tl-dot-wrap"><div class="tl-dot filled"></div></div>
         <div class="tl-card cal-type-${f.cls}" onclick="openPostEditor(${jsArg(p.id)})">
-          <div class="tl-card-title"><span class="cal-type-badge">${f.icon} ${f.label}</span> ${esc(p.title || f.label)}${ep ? ` <span class="muted" style="font-weight:400">· ${esc(ep.title)}</span>` : ''}${p.time ? ` <span class="muted" style="font-weight:400">· ${esc(p.time)}</span>` : ''}
+          <div class="tl-card-title"><span class="cal-type-badge">${f.icon} ${f.label}</span> ${isDefaultPostTitle(p) ? '' : esc(p.title || f.label)}${ep ? ` <span class="muted" style="font-weight:400">${isDefaultPostTitle(p) ? '' : '· '}${esc(ep.title)}</span>` : ''}${p.time ? ` <span class="muted" style="font-weight:400">· ${esc(p.time)}</span>` : ''}
             ${p.assignee ? `<span class="who who-${p.assignee}" style="margin-left:6px">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}
           </div>
         </div>
@@ -2742,30 +2744,34 @@ const POST_TABLE = 'podcast_posts';
 const POST_FORMATS = {
   reel: { label: 'Reel', icon: '🎬', cls: 'reel' }, carousel: { label: 'Karussell', icon: '🖼️', cls: 'karussell' },
   story: { label: 'Story', icon: '⭕', cls: 'story' }, linkedin: { label: 'LinkedIn', icon: '💼', cls: 'linkedin' },
+  ytclip: { label: 'YT-Clip', icon: '📺', cls: 'ytclip' },
   short: { label: 'Short', icon: '▶️', cls: 'reel' }, community: { label: 'Community', icon: '💬', cls: 'story' },
   post: { label: 'Beitrag', icon: '📝', cls: 'story' }, other: { label: 'Sonstiges', icon: '•', cls: 'story' },
 };
 const PLATFORMS = [
   ['ig_reels', 'Instagram Reels', 'IG Reels'], ['ig_carousel', 'Instagram Carousel', 'IG Carousel'], ['ig_story', 'Instagram Story', 'IG Story'],
   ['tiktok', 'TikTok', 'TikTok'], ['yt_shorts', 'YouTube Shorts', 'YT Shorts'], ['yt_community', 'YouTube Community', 'YT Community'],
-  ['linkedin', 'LinkedIn', 'LinkedIn'], ['facebook', 'Facebook', 'Facebook'],
+  ['youtube', 'YouTube', 'YouTube'], ['linkedin', 'LinkedIn', 'LinkedIn'], ['facebook', 'Facebook', 'Facebook'],
 ];
 const PLATFORM_LABEL = Object.fromEntries(PLATFORMS.map(([k, l]) => [k, l]));
 const PLATFORM_SHORT = Object.fromEntries(PLATFORMS.map(([k, , s]) => [k, s]));
 const FORMAT_DEFAULT_PLATFORMS = {
-  reel: ['ig_reels', 'tiktok', 'yt_shorts'], carousel: ['ig_carousel'], story: ['ig_story'], linkedin: ['linkedin'],
+  reel: ['ig_reels', 'tiktok', 'yt_shorts'], carousel: ['ig_carousel'], story: ['ig_story'], linkedin: ['linkedin'], ytclip: ['youtube'],
   short: ['yt_shorts'], community: ['yt_community'], post: [], other: [],
 };
 const POST_STATUS = [['planned', 'Geplant'], ['in_progress', 'In Arbeit'], ['scheduled', 'Eingeplant'], ['published', 'Veröffentlicht']];
 const POST_STATUS_LABEL = Object.fromEntries(POST_STATUS);
+const TEMPLATE_TITLES = { reel: 'Reel', carousel: 'Karussell', linkedin: 'LinkedIn-Beitrag', ytclip: 'YT-Clip' };
+// Template titles ("Reel 3") only repeat the format badge, so chips leave them out.
+function isDefaultPostTitle(p) { return /^(Reel|Karussell|LinkedIn-Beitrag|YT-Clip) \d+$/.test(p.title || ''); }
 const POST_TEMPLATE = [
   [0, '07:00', 'carousel', 1], [0, '18:30', 'reel', 1], [1, '07:45', 'linkedin', 1], [1, '18:00', 'carousel', 2],
-  [2, '18:30', 'reel', 2], [3, '18:30', 'reel', 3], [4, '18:30', 'reel', 4],
+  [2, '18:30', 'reel', 2], [3, '18:30', 'reel', 3], [4, '18:30', 'reel', 4], [6, '10:00', 'ytclip', 1],
   [7, '18:30', 'reel', 5], [8, '07:45', 'linkedin', 2], [8, '18:00', 'carousel', 3],
-  [9, '18:30', 'reel', 6], [10, '18:30', 'reel', 7], [11, '18:30', 'reel', 8],
+  [9, '18:30', 'reel', 6], [10, '16:00', 'ytclip', 2], [10, '18:30', 'reel', 7], [11, '18:30', 'reel', 8],
 ].map(([offset, time, format, num]) => ({
   offset, time, format, num, key: `${format}-${num}`,
-  title: `${format === 'reel' ? 'Reel' : format === 'carousel' ? 'Karussell' : 'LinkedIn-Beitrag'} ${num}`,
+  title: `${TEMPLATE_TITLES[format]} ${num}`,
 }));
 const TEMPLATE_TOTAL = POST_TEMPLATE.length;
 
@@ -2935,7 +2941,8 @@ function postChipHtml(p, { showEpisode = true, draggable = true } = {}) {
     <div class="task-check ${isPublished(p) ? 'done' : ''}" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" role="checkbox" aria-checked="${isPublished(p)}" title="${isPublished(p) ? 'Als nicht veröffentlicht markieren' : 'Als veröffentlicht abhaken'}"></div>
     <div class="post-chip-body">
       <div class="post-chip-meta">${p.time ? `<span class="cal-item-time">${esc(p.time)}</span>` : ''}<span class="cal-type-badge">${f.icon} ${f.label}</span>${p.assignee ? `<span class="who who-${p.assignee}">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}</div>
-      <div class="post-chip-title">${esc(p.title || f.label)}${showEpisode && ep ? ` <span class="muted">· ${esc(ep.title)}</span>` : ''}</div>
+      ${isDefaultPostTitle(p) ? (showEpisode && ep ? `<div class="post-chip-title"><span class="muted">${esc(ep.title)}</span></div>` : '')
+        : `<div class="post-chip-title">${esc(p.title || f.label)}${showEpisode && ep ? ` <span class="muted">· ${esc(ep.title)}</span>` : ''}</div>`}
     </div>
   </div>`;
 }
@@ -2984,7 +2991,8 @@ function renderEpisodePosts(ep) {
     </div>`;
   }).join('') : '';
   const others = list.filter(p => !inWindow.has(p.id));
-  const missing = missingTemplatePosts(ep).length;
+  // Past episodes (social window over) are not offered newly added template slots.
+  const missing = !release || addDays(release, 14) >= today ? missingTemplatePosts(ep).length : 0;
   const idArg = jsArg(ep.id);
   return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:12px">
     <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0;flex-wrap:wrap" onclick="toggleCalendarBox()">
