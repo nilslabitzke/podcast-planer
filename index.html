@@ -322,7 +322,18 @@
     .reel-list { display: flex; flex-direction: column; gap: 8px; }
     .reel-block { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; background: var(--surface); }
     .reel-item { display: flex; align-items: center; gap: 10px; }
-    .reel-label { font-size: 13px; color: var(--muted); font-weight: 600; min-width: 50px; }
+    .reel-label { font-size: 13px; color: var(--text); font-weight: 600; min-width: 50px; }
+    .reel-head { display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; flex: 1; min-width: 0; background: none; border: 0; padding: 4px 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .reel-progress { font-size: 12px; color: var(--muted); }
+    .reel-progress.complete { color: var(--green); }
+    .reel-head .sop-reel-conf { flex-basis: 100%; margin-top: 0; }
+    .reel-plats { display: flex; gap: 4px; flex-shrink: 0; }
+    .reel-plat { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 999px; cursor: pointer; min-height: 28px; }
+    .reel-plat:hover { border-color: var(--accent); color: var(--text); }
+    .reel-plat.on { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+    .reel-legend { font-size: 11px; margin-top: 8px; }
+    .reel-field-row textarea { white-space: pre-wrap; }
+    @media (max-width: 560px) { .reel-item { flex-wrap: wrap; } .reel-head { flex-basis: calc(100% - 70px); } .reel-plats { margin-left: 32px; } .reel-plat { min-height: 32px; padding: 6px 10px; } }
     .reel-expand-toggle { margin-left: auto; font-size: 12px; color: var(--muted); cursor: pointer; user-select: none; padding: 4px 6px; }
     .reel-expand-toggle:hover { color: var(--text); }
     .reel-detail { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
@@ -330,15 +341,6 @@
     .reel-field-row { display: flex; gap: 6px; align-items: flex-start; }
     .reel-field-row textarea { flex: 1; }
     @media (max-width: 560px) { .reel-field-row { flex-direction: column; align-items: stretch; } .task-content-area { padding-left: 10px; } }
-    .transcript-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
-    .transcript-box h2 { font-size: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-    .transcript-box.collapsed h2 { margin-bottom: 0; }
-    .transcript-box.collapsed #transcript-body { display: none; }
-    .transcript-hint { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-    .transcript-textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: var(--radius-sm); font-size: 13px; resize: vertical; min-height: 140px; outline: none; line-height: 1.6; }
-    .transcript-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-    .upload-file-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; min-height: 34px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; margin: 0; }
-    .upload-file-btn:hover { border-color: var(--accent); color: var(--accent-text); }
     .notes-area { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: var(--radius-sm); font-size: 14px; resize: vertical; min-height: 110px; outline: none; line-height: 1.6; }
     .notes-area:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
@@ -483,8 +485,6 @@
     .ep-info.collapsed h2 { margin-bottom: 0; }
     .ep-info.collapsed .ep-info-body { display: none; }
     .pill-warn { background: var(--yellow-soft); color: var(--yellow); }
-    .ep-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 10px; }
-    .ep-link label { margin-bottom: 4px; font-size: 12px; }
     .ep-link-row { display: flex; gap: 6px; }
     .ep-link-row input { flex: 1; min-width: 0; }
     .ep-approvals { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
@@ -537,6 +537,9 @@
     .sop-confirm { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--surface2); border-radius: var(--radius-sm); font-size: 13px; }
     .sop-confirm .task-check { flex-shrink: 0; margin-top: 1px; }
     .sop-confirm .muted { font-size: 12px; margin-top: 2px; }
+    .sop-details summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+    .sop-details[open] summary { margin-bottom: 10px; }
+    .sop-details .sop-guide + .sop-guide { margin-top: 10px; }
     .sop-hint { font-size: 12px; padding: 8px 10px; background: var(--surface2); border-radius: var(--radius-sm); }
     .sop-reel-conf { display: block; font-size: 11px; font-weight: 400; margin-top: 2px; }
     .sop-reel-conf:empty { display: none; }
@@ -1386,7 +1389,7 @@ const WORKFLOW_STEPS = [
   { id: 'thumbnail_ai',    label: 'AI-Thumbnail / Cover erstellen',               section: 'Upload' },
   { id: 'cover_canva',     label: 'Quadratisches Cover über Canva erstellen',     section: 'Upload' },
   // Social Media: 8 Reels
-  { id: 'reels_download',  label: '8 Reels vorbereiten (Transkript, Hook, Beschreibung)', section: 'SocialMedia' },
+  { id: 'reels_download',  label: '8 Reels produzieren (Hook-Ideen & Beschreibungen)', section: 'SocialMedia' },
   // Social Media Woche 1
   { id: 'sm1_karussell',   label: 'Woche 1 – Karussell erstellen (Instagram)',    section: 'SocialMedia' },
   { id: 'sm1_reels',       label: 'Woche 1 – 4 Reels planen (IG, YT, TikTok)',   section: 'SocialMedia' },
@@ -2201,8 +2204,20 @@ function toggleReelExpand(idx) {
   const open = detail.style.display !== 'none';
   detail.style.display = open ? 'none' : 'block';
   if (icon) icon.textContent = open ? '▸' : '▾';
+  detail.parentElement.querySelector('.reel-head')?.setAttribute('aria-expanded', String(!open));
+}
+// The four texts per reel (existing fields; transcript/desc/text stay stored but are no longer shown).
+const REEL_TEXT_FIELDS = ['hook', 'descIg', 'descYt', 'descTiktok'];
+function reelTextCount(r) { return REEL_TEXT_FIELDS.filter(f => (r[f] || '').trim()).length; }
+function updateReelProgress(idx) {
+  const el = document.getElementById(`reel-progress-${idx}`);
+  if (!el) return;
+  const n = REEL_TEXT_FIELDS.filter(f => (document.getElementById(`reel-${f}-${idx}`)?.value || '').trim()).length;
+  el.textContent = `${n}/${REEL_TEXT_FIELDS.length} Texte vorhanden`;
+  el.classList.toggle('complete', n === REEL_TEXT_FIELDS.length);
 }
 function scheduleReelFieldSave(epId, idx, field, val) {
+  updateReelProgress(idx);
   debounceEdit(`reel:${epId}:${idx}:${field}`, () => {
     const ep = episodes.find(e => e.id === epId);
     if (!ep) return;
@@ -2212,8 +2227,62 @@ function scheduleReelFieldSave(epId, idx, field, val) {
 }
 function copyReelField(idx, field) {
   const el = document.getElementById(`reel-${field}-${idx}`);
-  if (!el) return;
-  navigator.clipboard.writeText(el.value).then(() => showToast('📋 Kopiert!'));
+  if (!el || !el.value) { showToast('Nichts zum Kopieren – das Feld ist leer.', 'error'); return; }
+  copyText(el.value);
+}
+// Copies text with line breaks intact; falls back to a selection copy where the Clipboard API is unavailable.
+function copyText(text) {
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch {}
+    ta.remove();
+    showToast(ok ? '📋 Kopiert!' : 'Kopieren nicht möglich – Text bitte markieren und kopieren.', ok ? 'success' : 'error');
+  };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => showToast('📋 Kopiert!'), fallback);
+  else fallback();
+}
+
+// ── Reel publication per platform (kept consistent with the calendar post "reel-N") ──
+const REEL_PLATFORMS = [['ig', 'Instagram', 'IG'], ['yt', 'YouTube', 'YT'], ['tiktok', 'TikTok', 'TikTok']];
+function reelPost(ep, idx) { return posts.find(p => p.episode_id === ep.id && p.template_key === `reel-${idx + 1}`) || null; }
+// A platform counts as published if ticked here or if the reel's calendar post is published.
+function reelPlatforms(ep, idx, r) {
+  const post = reelPost(ep, idx);
+  const all = !!post && isPublished(post);
+  return Object.fromEntries(REEL_PLATFORMS.map(([k]) => [k, all || !!r[k]]));
+}
+function toggleReelPlatform(epId, idx, key) {
+  const ep = episodes.find(e => e.id === epId);
+  if (!ep) return;
+  const reels = getReels(ep);
+  const next = { ...reelPlatforms(ep, idx, reels[idx]) };
+  next[key] = !next[key];
+  reels[idx] = { ...reels[idx], ...next };
+  saveReels(ep, reels);
+  upsertEpisode(ep).catch(() => {});
+  // All three platforms ⇔ calendar post published.
+  const post = reelPost(ep, idx);
+  const all = REEL_PLATFORMS.every(([k]) => next[k]);
+  if (post && all !== isPublished(post)) {
+    patchPost(post.id, { status: all ? 'published' : 'planned' });
+    afterPostChange(ep.id, !all);
+  }
+  rerenderDetail(epId);
+}
+// A reel post set back to unpublished in the calendar also clears the reel's platform ticks.
+function onReelPostUnpublished(p) {
+  const m = /^reel-(\d+)$/.exec(p && p.template_key || '');
+  const ep = m && episodes.find(e => e.id === p.episode_id);
+  if (!ep) return;
+  const idx = +m[1] - 1;
+  const reels = getReels(ep);
+  if (!reels[idx] || !REEL_PLATFORMS.some(([k]) => reels[idx][k])) return;
+  reels[idx] = { ...reels[idx], ...Object.fromEntries(REEL_PLATFORMS.map(([k]) => [k, false])) };
+  saveReels(ep, reels);
+  upsertEpisode(ep).catch(() => {});
 }
 // Canonical LinkedIn posts data lives under ep.tasks['li_beitraege'].posts
 // Each item: { done: bool, text: '' }
@@ -2587,9 +2656,9 @@ function openDetail(id) {
   const offset = circumference - (p.pct / 100) * circumference;
 
   const reelField = (r, idx, field, label, placeholder) => `
-                  <label class="reel-field-label">${label}</label>
+                  <label class="reel-field-label" for="reel-${field}-${idx}">${label}</label>
                   <div class="reel-field-row">
-                    <textarea class="task-content-textarea" id="reel-${field}-${idx}" placeholder="${placeholder}" oninput="scheduleReelFieldSave(${idArg},${idx},'${field}',this.value)">${esc(r[field])}</textarea>
+                    <textarea class="task-content-textarea" id="reel-${field}-${idx}" rows="4" placeholder="${placeholder}" oninput="scheduleReelFieldSave(${idArg},${idx},'${field}',this.value)">${esc(r[field])}</textarea>
                     <button class="copy-btn" onclick="copyReelField(${idx},'${field}')">Kopieren</button>
                   </div>`;
 
@@ -2598,26 +2667,27 @@ function openDetail(id) {
       return `${reelGuidePanelHtml()}<div class="reel-list">
               ${getReels(ep).map((r, idx) => `<div class="reel-block">
                 <div class="reel-item">
-                  <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded(${idArg},${idx})"></div>
-                  <div class="reel-label">Reel ${idx + 1}<span class="sop-reel-conf muted" id="reel-conf-${idx}" title="${r.sopConfirmation ? esc(confirmationText(r.sopConfirmation)) : ''}">${reelConfHtml(r)}</span></div>
-                  <span class="reel-expand-toggle" onclick="toggleReelExpand(${idx})">
-                    <span id="reel-expand-icon-${idx}">▸</span> Details
-                  </span>
+                  <div class="task-check ${r.downloaded ? 'done' : ''}" id="reel-check-${idx}" onclick="toggleReelDownloaded(${idArg},${idx})" role="checkbox" aria-checked="${!!r.downloaded}"
+                    title="${r.downloaded ? 'Produktion wieder öffnen' : 'Produktion abgeschlossen' + (hasGuides(REEL_TARGET) ? ' – bestätigt den Reel-Leitfaden' : '')}"></div>
+                  <button type="button" class="reel-head" onclick="toggleReelExpand(${idx})" aria-expanded="false" aria-controls="reel-detail-${idx}">
+                    <span class="reel-label">Reel ${idx + 1}</span>
+                    <span class="reel-progress${reelTextCount(r) === REEL_TEXT_FIELDS.length ? ' complete' : ''}" id="reel-progress-${idx}">${reelTextCount(r)}/${REEL_TEXT_FIELDS.length} Texte vorhanden</span>
+                    <span class="sop-reel-conf muted" id="reel-conf-${idx}" title="${r.sopConfirmation ? esc(confirmationText(r.sopConfirmation)) : ''}">${reelConfHtml(r)}</span>
+                  </button>
+                  <div class="reel-plats" role="group" aria-label="Veröffentlicht auf">
+                    ${REEL_PLATFORMS.map(([k, label, short]) => { const on = reelPlatforms(ep, idx, r)[k]; return `<button type="button" class="reel-plat${on ? ' on' : ''}" onclick="toggleReelPlatform(${idArg},${idx},'${k}')" aria-pressed="${on}" title="${on ? 'Auf ' + label + ' veröffentlicht – klicken zum Zurücksetzen' : 'Als auf ' + label + ' veröffentlicht markieren'}">${on ? '✓ ' : ''}${short}</button>`; }).join('')}
+                  </div>
+                  <span class="reel-expand-toggle" onclick="toggleReelExpand(${idx})" aria-hidden="true"><span id="reel-expand-icon-${idx}">▸</span></span>
                 </div>
                 <div class="reel-detail" id="reel-detail-${idx}" style="display:none">
-                  <label class="reel-field-label">Reel-Transkript</label>
-                  <textarea class="task-content-textarea" id="reel-transcript-${idx}" placeholder="Reel-Transkript einfügen…"
-                    oninput="scheduleReelFieldSave(${idArg},${idx},'transcript',this.value)">${esc(r.transcript)}</textarea>
-                  <label class="reel-field-label">Text-Hook</label>
-                  <input type="text" class="task-content-textarea" id="reel-hook-${idx}" style="margin-bottom:8px"
-                    value="${esc(r.hook)}" oninput="scheduleReelFieldSave(${idArg},${idx},'hook',this.value)">
-                  ${reelField(r, idx, 'desc', 'Folgenbeschreibung (allgemein)', 'Gemeinsame Beschreibung / Folgenbeschreibung für dieses Reel…')}
-                  ${reelField(r, idx, 'descIg', 'Instagram-Beschreibung', '')}
-                  ${reelField(r, idx, 'descYt', 'YouTube-Beschreibung', '')}
-                  ${reelField(r, idx, 'descTiktok', 'TikTok-Beschreibung', '')}
+                  ${reelField(r, idx, 'hook', 'Hook-Ideen', 'Mehrere Hook-Vorschläge untereinander einfügen…')}
+                  ${reelField(r, idx, 'descIg', 'Instagram-Beschreibung', 'Komplette Caption inkl. Hashtags…')}
+                  ${reelField(r, idx, 'descYt', 'YouTube-Shorts-Beschreibung', 'Komplette Beschreibung inkl. Hashtags…')}
+                  ${reelField(r, idx, 'descTiktok', 'TikTok-Beschreibung', 'Komplette Caption inkl. Hashtags…')}
                 </div>
               </div>`).join('')}
-            </div>`;
+            </div>
+            <div class="muted reel-legend">☐ = Produktion abgeschlossen · IG / YT / TikTok = auf der Plattform veröffentlicht (alle drei ⇒ Post im Kalender veröffentlicht)</div>`;
     }
     if (step.id === 'li_beitraege') {
       return `<div class="reel-list">
@@ -2700,26 +2770,6 @@ function openDetail(id) {
       </div>
     </div>
     ${episodeInfoHtml(ep)}
-    <div class="transcript-box collapsed">
-      <h2 style="cursor:pointer" onclick="toggleTranscriptBox()">
-        📄 Transkript
-        <span id="transcript-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
-      </h2>
-      <div id="transcript-body">
-        <p class="transcript-hint">Transkript einfügen oder als Datei hochladen (.txt, .md, .docx).</p>
-        <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
-          <label class="upload-file-btn" for="transcript-file" title="Datei hochladen">
-            📁 Datei hochladen
-            <input type="file" id="transcript-file" accept=".txt,.md,.text,.docx" style="display:none"
-              onchange="loadTranscriptFile(event,${idArg})">
-          </label>
-          <span id="transcript-filename" style="font-size:12px;color:var(--muted)"></span>
-        </div>
-        <textarea class="transcript-textarea" id="ep-transcript"
-          placeholder="Transkript hier einfügen…"
-          oninput="scheduleTranscriptSave(${idArg},this.value)">${esc(ep.transcript)}</textarea>
-      </div>
-    </div>
     ${renderEpisodePosts(ep)}
     ${sectionsHtml}
     <div class="card" style="margin-top:8px">
@@ -2741,7 +2791,6 @@ function captureDetailState() {
     content: [...document.querySelectorAll('.task-content-area.open')].map(el => el.id),
     reels: [...document.querySelectorAll('.reel-detail[id]')].filter(el => el.style.display !== 'none').map(el => el.id),
     calendarOpen: !!document.getElementById('content-calendar-box') && !document.getElementById('content-calendar-box').classList.contains('collapsed'),
-    transcriptOpen: !!document.querySelector('.transcript-box') && !document.querySelector('.transcript-box').classList.contains('collapsed'),
     scroll: window.scrollY,
   };
 }
@@ -2756,7 +2805,6 @@ function restoreDetailState(st) {
     if (icon) icon.textContent = '▾';
   });
   if (st.calendarOpen) toggleCalendarBox();
-  if (st.transcriptOpen) toggleTranscriptBox();
   window.scrollTo(0, st.scroll);
 }
 function openStepContent(stepId) {
@@ -2768,6 +2816,7 @@ function openStepContent(stepId) {
   document.getElementById('row-' + stepId)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 function rerenderDetail(epId) {
+  flushEdits(); // apply pending (debounced) text edits first so the re-render never shows stale text
   const st = captureDetailState();
   openDetail(epId);
   restoreDetailState(st);
@@ -2969,6 +3018,7 @@ function togglePostDone(id) {
   if (!p) return;
   const unpublish = isPublished(p);
   patchPost(id, { status: unpublish ? 'planned' : 'published' });
+  if (unpublish) onReelPostUnpublished(p);
   afterPostChange(p.episode_id, unpublish);
   refreshPostViews();
 }
@@ -3130,7 +3180,8 @@ function postSourceHtml(p) {
   let body = '';
   if (format === 'reel') {
     const r = getReels(ep)[n] || {};
-    body = [r.hook && `<b>Hook:</b> ${esc(r.hook)}`, r.desc && `<b>Beschreibung:</b> ${esc(r.desc)}`].filter(Boolean).join('<br>');
+    body = [r.hook && `<b>Hook-Ideen:</b> ${esc(r.hook)}`, r.descIg && `<b>Instagram:</b> ${esc(r.descIg)}`,
+      r.descYt && `<b>YouTube Shorts:</b> ${esc(r.descYt)}`, r.descTiktok && `<b>TikTok:</b> ${esc(r.descTiktok)}`].filter(Boolean).join('<br><br>');
   } else if (format === 'linkedin') {
     const post = getLiPosts(ep)[n] || {};
     body = post.text ? esc(post.text) : '';
@@ -3190,6 +3241,7 @@ function savePostEditor() {
     insertPosts([{ id: newId(), template_key: null, ...row }]);
   }
   const unpublished = !!p && postEdit.wasPublished && row.status !== 'published';
+  if (unpublished) onReelPostUnpublished(p);
   closePostEditor();
   affected.forEach(id => afterPostChange(id, unpublished));
   refreshPostViews();
@@ -3303,13 +3355,6 @@ function renderCalendarPage() {
       <select onchange="setCalUi('assignee', this.value)" aria-label="Zuständigkeit"><option value="">Alle</option><option value="nils"${calUi.assignee === 'nils' ? ' selected' : ''}>Nils</option><option value="leo"${calUi.assignee === 'leo' ? ' selected' : ''}>Leo</option><option value="none"${calUi.assignee === 'none' ? ' selected' : ''}>Nicht zugewiesen</option></select>
     </div>`;
   document.getElementById('calendar-content').innerHTML = body;
-}
-
-function toggleTranscriptBox() {
-  const box = document.querySelector('.transcript-box');
-  const icon = document.getElementById('transcript-toggle-icon');
-  box.classList.toggle('collapsed');
-  icon.textContent = box.classList.contains('collapsed') ? '▸' : '▾';
 }
 
 async function markAllDone(epId) {
@@ -3428,114 +3473,6 @@ function copyContent(taskId) {
   if (!ta || !ta.value) return;
   navigator.clipboard.writeText(ta.value).then(() => showToast('Kopiert ✓'));
 }
-
-// .docx is a ZIP archive: read word/document.xml via the central directory and
-// inflate it with the browser's DecompressionStream (no library needed).
-async function extractDocxText(file) {
-  const buf = new Uint8Array(await file.arrayBuffer());
-  const dv = new DataView(buf.buffer);
-  let eocd = -1;
-  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) {
-    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
-  }
-  if (eocd < 0) throw new Error('Keine gültige .docx-Datei.');
-  const count = dv.getUint16(eocd + 10, true);
-  let ptr = dv.getUint32(eocd + 16, true);
-  for (let n = 0; n < count && dv.getUint32(ptr, true) === 0x02014b50; n++) {
-    const method = dv.getUint16(ptr + 10, true);
-    const size = dv.getUint32(ptr + 20, true);
-    const nameLen = dv.getUint16(ptr + 28, true);
-    const extraLen = dv.getUint16(ptr + 30, true);
-    const commentLen = dv.getUint16(ptr + 32, true);
-    const localOffset = dv.getUint32(ptr + 42, true);
-    const name = new TextDecoder().decode(buf.subarray(ptr + 46, ptr + 46 + nameLen));
-    if (name === 'word/document.xml') {
-      const start = localOffset + 30 + dv.getUint16(localOffset + 26, true) + dv.getUint16(localOffset + 28, true);
-      const data = buf.subarray(start, start + size);
-      let xml;
-      if (method === 0) xml = data;
-      else if (method === 8) {
-        if (typeof DecompressionStream === 'undefined') throw new Error('Dieser Browser kann .docx nicht lesen – bitte als .txt speichern.');
-        xml = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
-      } else throw new Error('Nicht unterstütztes .docx-Format.');
-      return docxXmlToText(new TextDecoder('utf-8').decode(xml));
-    }
-    ptr += 46 + nameLen + extraLen + commentLen;
-  }
-  throw new Error('In der .docx-Datei wurde kein Text gefunden.');
-}
-function docxXmlToText(xml) {
-  const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
-  const doc = new DOMParser().parseFromString(xml, 'application/xml');
-  if (doc.getElementsByTagName('parsererror').length) throw new Error('Die .docx-Datei ist beschädigt.');
-  const lines = [];
-  for (const para of doc.getElementsByTagNameNS(W, 'p')) {
-    let line = '';
-    const walk = node => {
-      for (const c of node.childNodes) {
-        if (c.namespaceURI !== W) continue;
-        if (c.localName === 't') line += c.textContent;
-        else if (c.localName === 'tab') line += '\t';
-        else if (c.localName === 'br' || c.localName === 'cr') line += '\n';
-        else if (c.localName !== 'p' && c.localName !== 'delText') walk(c);
-      }
-    };
-    walk(para);
-    lines.push(line);
-  }
-  return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-}
-
-async function loadTranscriptFile(event, epId) {
-  const input = event.target;
-  const file = input.files[0];
-  input.value = '';
-  if (!file) return;
-  const ep = episodes.find(e => e.id === epId);
-  if (!ep) return;
-  const label = document.getElementById('transcript-filename');
-  const name = file.name.toLowerCase();
-  if (!/\.(txt|md|text|docx)$/.test(name)) {
-    showToast('Nur .txt, .md oder .docx – alte .doc-Dateien bitte als .docx speichern.', 'error');
-    return;
-  }
-  if (label) label.textContent = '⏳ ' + file.name;
-  let text;
-  try {
-    text = name.endsWith('.docx') ? await extractDocxText(file) : await file.text();
-  } catch (e) {
-    if (label) label.textContent = '';
-    showToast('Datei konnte nicht gelesen werden: ' + e.message, 'error');
-    return;
-  }
-  if (!text.trim()) {
-    if (label) label.textContent = '';
-    showToast('Die Datei enthält keinen Text.', 'error');
-    return;
-  }
-  const current = document.getElementById('ep-transcript')?.value ?? ep.transcript;
-  if (current.trim() && !confirm('Vorhandenes Transkript durch den Inhalt von „' + file.name + '“ ersetzen?')) {
-    if (label) label.textContent = '';
-    return;
-  }
-  delete editTimers[`transcript:${epId}`];
-  const ta = document.getElementById('ep-transcript');
-  if (ta) ta.value = text;
-  ep.transcript = text;
-  try {
-    await upsertEpisode(ep);
-    if (label) label.textContent = '✓ ' + file.name;
-    showToast('Transkript geladen ✓');
-  } catch { if (label) label.textContent = '✗ nicht gespeichert'; }
-}
-
-function scheduleTranscriptSave(epId, val) {
-  debounceEdit(`transcript:${epId}`, () => {
-    const ep = episodes.find(e => e.id === epId);
-    if (ep) { ep.transcript = val; upsertEpisode(ep).catch(() => {}); }
-  }, 800);
-}
-
 
 // Exports all episodes + ideas as a single JSON file (manual backup).
 async function exportAllData() {
@@ -4611,10 +4548,6 @@ const EPISODE_STATUS = [
   ['recorded', 'Aufgenommen'], ['editing', 'Im Schnitt'], ['ready', 'Bereit zur Veröffentlichung'], ['published', 'Veröffentlicht'],
 ];
 const EPISODE_STATUS_LABEL = Object.fromEntries(EPISODE_STATUS);
-const EPISODE_LINKS = [
-  ['riverside', 'Riverside'], ['drive', 'Google Drive'], ['spotify', 'Spotify'],
-  ['youtube', 'YouTube'], ['apple', 'Apple Podcasts'], ['website', 'Blog / Website'],
-];
 const APPROVAL_ITEMS = [['episode', 'Folge (Schnitt)'], ['reels', 'Reels'], ['cover', 'Thumbnail / Cover'], ['social', 'Social-Media-Posts']];
 const APPROVAL_STATES = [['', 'Nicht nötig'], ['pending', 'Ausstehend'], ['changes', 'Änderungen gewünscht'], ['approved', 'Freigegeben']];
 const APPROVAL_LABEL = Object.fromEntries(APPROVAL_STATES);
@@ -4643,18 +4576,6 @@ function scheduleEpisodeFieldSave(epId, field, value) {
     upsertEpisode(ep).catch(() => {});
   });
 }
-function scheduleEpisodeLinkSave(epId, key, value) {
-  const href = safeUrl(value);
-  const a = document.getElementById('eplink-open-' + key);
-  if (a) { a.href = href || '#'; a.hidden = !href; }
-  debounceEdit(`eplink:${epId}:${key}`, () => {
-    const ep = episodes.find(e => e.id === epId);
-    if (!ep) return;
-    ep.links = { ...(ep.links || {}), [key]: value.trim() };
-    if (!ep.links[key]) delete ep.links[key];
-    upsertEpisode(ep).catch(() => {});
-  });
-}
 function setApproval(epId, key, value) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
@@ -4669,16 +4590,13 @@ function toggleEpInfo() {
 }
 function episodeInfoHtml(ep) {
   const idArg = jsArg(ep.id);
-  const links = ep.links || {};
   const approvals = ep.approvals || {};
-  const linkCount = EPISODE_LINKS.filter(([k]) => links[k]).length;
   const pending = APPROVAL_ITEMS.filter(([k]) => approvals[k] === 'pending' || approvals[k] === 'changes').length;
   let open = true;
   try { open = localStorage.getItem('gg_epinfo_open') !== '0'; } catch {}
   return `<div class="card ep-info${open ? '' : ' collapsed'}" id="ep-info-box">
     <h2 onclick="toggleEpInfo()">ℹ️ Folgen-Infos
       ${ep.guest ? `<span class="pill">👤 ${esc(ep.guest)}</span>` : ''}
-      <span class="pill">${linkCount} Link${linkCount === 1 ? '' : 's'}</span>
       ${pending ? `<span class="pill pill-warn">${pending} Freigabe${pending === 1 ? '' : 'n'} offen</span>` : ''}
       <span class="section-toggle-icon">${open ? '▾' : '▸'}</span></h2>
     <div class="ep-info-body">
@@ -4689,18 +4607,6 @@ function episodeInfoHtml(ep) {
       <div class="form-group">
         <label>Verknüpfte Experten</label>
         ${linkedExpertsHtml('episode', ep.id)}
-      </div>
-      <div class="ep-links">
-        ${EPISODE_LINKS.map(([k, label]) => {
-          const href = safeUrl(links[k]);
-          return `<div class="ep-link">
-            <label for="eplink-${k}">${label}</label>
-            <div class="ep-link-row">
-              <input type="text" id="eplink-${k}" value="${esc(links[k])}" placeholder="https://…" oninput="scheduleEpisodeLinkSave(${idArg},'${k}',this.value)">
-              <a class="btn btn-sm" id="eplink-open-${k}" href="${esc(href || '#')}" target="_blank" rel="noopener noreferrer" ${href ? '' : 'hidden'} title="Öffnen">↗</a>
-            </div>
-          </div>`;
-        }).join('')}
       </div>
       <label style="margin-top:6px">Freigaben</label>
       <div class="ep-approvals">
@@ -4942,8 +4848,10 @@ function reelGuidePanelHtml() {
   const current = guidesForStep(REEL_TARGET);
   if (!current.length) return '';
   return `<div class="guide-panel sop-panel">
-    ${current.map(guideListHtml).join('')}
-    <div class="muted sop-hint">Gilt für jedes Reel einzeln: Mit dem Abhaken eines Reels bestätigst du, dass der Produktionsleitfaden für dieses Reel eingehalten wurde.</div>
+    <details class="sop-details"><summary>📘 Reel-Leitfäden anzeigen <span class="muted">(${current.map(g => esc(g.title) + ' ' + fmtVersion(g.version)).join(' · ')})</span></summary>
+      ${current.map(guideListHtml).join('')}
+    </details>
+    <div class="muted sop-hint">Gilt für jedes Reel einzeln: Mit dem Abhaken eines Reels („Produktion abgeschlossen“) bestätigst du, dass der Produktionsleitfaden für dieses Reel eingehalten wurde.</div>
   </div>`;
 }
 function reelConfHtml(r) {
