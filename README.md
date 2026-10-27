@@ -112,6 +112,9 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 ### Ideenpool
 - Titel, Themenpunkte, Kernaussage, Gast, Status (Idee → Gast angefragt → Bestätigt), Drive-Link, Fragenkatalog.
 - „In Planer übernehmen“ legt aus einer Idee eine Folge an.
+- **Priorität** (`podcast_ideas.priority`: high/medium/low, bestehende Ideen = Mittel) mit farbigem Label; Filter und Sortierung (Priorität – Standard, Status, zuletzt bearbeitet) oberhalb der Liste, gemerkt pro Gerät (`gg_idea_ui`). Innerhalb einer Prioritätsstufe bleibt die bisherige Reihenfolge (Status, dann zuletzt bearbeitet).
+- **E-Mail des Experten** (optional) mit Kopieren und „E-Mail schreiben“ (mailto). Ist genau ein Expertenprofil verknüpft, ist dessen `podcast_experts.email` die zentrale Adresse: Das Feld zeigt sie, Änderungen werden dort gespeichert, Leeren löscht sie nicht. Ohne Profil liegt die Adresse in `podcast_ideas.guest_email`; „Als Expertenprofil übernehmen“ legt ein Profil an bzw. verknüpft ein gleichnamiges bestehendes (keine Duplikate). `guest_email` bleibt dabei erhalten.
+- Beim Übernehmen in den Planer kommen Gast + E-Mail und eine abweichende Priorität in die Beschreibung; verknüpfte Experten werden auch mit der neuen Folge verknüpft.
 
 ### Social-Media-Kalender
 - Posts (`podcast_posts`): Folge, Format, Plattformen, Datum, Uhrzeit, Zuständigkeit, Titel, Beschreibung, Medien-/Veröffentlichungslink, Status.
@@ -172,6 +175,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_finance.sql` | Finanzmodul: Kategorien, wiederkehrende Posten, Buchungen, Monatsstatus, Änderungsprotokoll, Beleg-Bucket | angewendet |
 | `20261027_strategy_goals.sql` | Wachstumsziele 2026–2028, Messwerte, Meilensteine als To-dos | angewendet |
 | `20261027_fin_recurring_auto_book.sql` | Option „automatisch abgebucht“ für wiederkehrende Posten | angewendet |
+| `20261027_idea_priority_email.sql` | Ideen: Priorität (Standard Mittel) und E-Mail des Experten | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
