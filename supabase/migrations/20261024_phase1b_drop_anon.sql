@@ -25,3 +25,7 @@ drop policy if exists anon_all_settings        on public.podcast_settings;      
 drop policy if exists anon_all_posts           on public.podcast_posts;            -- added in phase 6
 drop policy if exists anon_all_events          on public.podcast_events;           -- added in phase 7
 drop policy if exists anon_all_calendar_feeds  on public.podcast_calendar_feeds;   -- added in phase 7 (contains feed tokens!)
+drop policy if exists anon_all_revenue_entries     on public.podcast_revenue_entries;     -- added 2026-10-27 (Einnahmen)
+drop policy if exists anon_all_revenue_corrections on public.podcast_revenue_corrections; -- added 2026-10-27 (Einnahmen)
+drop policy if exists anon_all_revenue_months      on public.podcast_revenue_months;      -- added 2026-10-27 (Einnahmen)
+drop policy if exists anon_all_revenue_goals       on public.podcast_revenue_goals;       -- added 2026-10-27 (Einnahmen)
