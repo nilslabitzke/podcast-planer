@@ -528,6 +528,132 @@
     .guide-history summary { cursor: pointer; color: var(--muted); font-weight: 600; }
     .guide-version { padding: 4px 0; color: var(--muted); }
 
+
+    /* Finanzen – chart colours validated for colour-vision deficiency (dark & light) */
+    body { --fin-inc: #FFA547; --fin-exp: #3987e5; --fin-c-orange: #D27024; --fin-c-blue: #3987e5; --fin-c-aqua: #199e70; --fin-c-yellow: #c98500;
+           --fin-c-magenta: #d55181; --fin-c-green: #2f9e44; --fin-c-violet: #9085e9; --fin-c-other: #6b7280; }
+    body.light { --fin-inc: #E0851F; --fin-exp: #2a78d6; --fin-c-orange: #D06A1F; --fin-c-blue: #2a78d6; --fin-c-aqua: #1baf7a; --fin-c-yellow: #eda100;
+           --fin-c-magenta: #e87ba4; --fin-c-green: #008300; --fin-c-violet: #6250d6; --fin-c-other: #9ca3af; }
+    .fin-header { flex-wrap: wrap; gap: 12px; }
+    .fin-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .fin-actions select { width: auto; min-width: 90px; }
+    .fin-export { position: relative; }
+    .fin-export-menu { position: absolute; right: 0; top: calc(100% + 6px); bottom: auto; z-index: 60; min-width: 220px; }
+    .fin-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .kpi-plan { border-style: dashed; }
+    .fin-tabs { margin-bottom: 14px; }
+    .fin-chart-card { margin-bottom: 16px; min-width: 0; }
+    .fin-chart-card h2 { font-size: 15px; margin: 0; }
+    .fin-chart-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    .fin-legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+    .fin-legend i, .fin-tip i, .fin-donut-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+    .fin-chart { position: relative; width: 100%; min-height: 200px; }
+    .fin-chart svg { display: block; max-width: 100%; height: auto; overflow: visible; }
+    .fin-chart-note { font-size: 12px; margin-top: 4px; }
+    .fin-grid { stroke: var(--border); stroke-width: 1; stroke-dasharray: 2 4; }
+    .fin-baseline { stroke: var(--muted); stroke-width: 1; opacity: .6; }
+    .fin-axis { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+    .fin-hit { fill: transparent; cursor: pointer; outline: none; }
+    .fin-hit.on, .fin-hit:focus-visible { fill: var(--surface2); fill-opacity: .55; }
+    .fin-hit-all { fill: transparent; cursor: crosshair; outline: none; }
+    .fin-line { stroke: var(--fin-inc); stroke-width: 2.25; stroke-linejoin: round; stroke-linecap: round; }
+    .fin-dot { fill: var(--fin-inc); stroke: var(--surface); stroke-width: 2; }
+    .fin-cross { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+    .fin-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 12px; line-height: 1.6; box-shadow: 0 8px 24px rgba(0,0,0,.25); white-space: nowrap; color: var(--text); }
+    .fin-tip b { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: no-preference) {
+      .fin-anim { transform-box: fill-box; transform-origin: bottom; animation: fin-grow .45s cubic-bezier(.2,.8,.2,1) both; }
+      .fin-draw { stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: fin-draw .9s ease-out forwards; }
+      .fin-fade { animation: fin-fade .6s ease-out both; }
+      .fin-segs { transform-origin: 90px 90px; animation: fin-pop .45s cubic-bezier(.2,.8,.2,1) both; }
+    }
+    @keyframes fin-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes fin-draw { to { stroke-dashoffset: 0; } }
+    @keyframes fin-fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fin-pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .fin-donuts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .fin-donut-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 10px; }
+    .fin-donut-wrap svg { flex-shrink: 0; }
+    .fin-seg { stroke: var(--surface); stroke-width: 2; cursor: pointer; transition: opacity .15s; outline: none; }
+    .fin-seg.dim { opacity: .3; }
+    .fin-donut-t { fill: var(--muted); font-size: 11px; }
+    .fin-donut-v { fill: var(--text); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .fin-donut-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 180px; font-size: 13px; }
+    .fin-donut-legend li { display: grid; grid-template-columns: auto 1fr auto auto; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; cursor: default; }
+    .fin-donut-legend li.on { background: var(--surface2); }
+    .fin-donut-legend b { font-variant-numeric: tabular-nums; }
+    .fin-donut-legend .muted { font-size: 12px; min-width: 44px; text-align: right; }
+    .fin-plan { border-style: dashed; }
+    .fin-plan-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); border: 1px dashed var(--border); border-radius: 99px; padding: 1px 8px; }
+    .fin-fix-head { display: flex; align-items: center; gap: 12px; width: 100%; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .fin-fix-head h2 { font-size: 15px; }
+    .fin-fix-total { margin-left: auto; font-size: 22px; font-weight: 700; white-space: nowrap; }
+    .fin-fix-total .muted { font-size: 13px; font-weight: 500; }
+    .fin-fix-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; margin-top: 10px; color: var(--muted); }
+    .fin-fix-meta b { color: var(--text); }
+    .pos { color: var(--green) !important; } .neg { color: var(--red) !important; }
+    .fin-list { display: flex; flex-direction: column; margin-top: 8px; }
+    .fin-row { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-top: 1px solid var(--border); font-size: 13px; min-width: 0; }
+    .fin-row:first-child { border-top: 0; }
+    .fin-row[role=button] { cursor: pointer; }
+    .fin-row[role=button]:hover { background: var(--surface2); }
+    .fin-row-date { width: 84px; flex-shrink: 0; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+    .fin-row-main { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .fin-chips { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 6px; vertical-align: middle; }
+    .fin-chips .chip { font-size: 11px; }
+    .fin-amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .fin-amt.income { color: var(--green); } .fin-amt.expense { color: var(--text); }
+    .fin-booking.is-open { opacity: .7; }
+    .fin-booking.is-open .fin-amt { text-decoration: line-through dotted; }
+    .fin-sub { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); margin: 14px 0 2px; display: flex; gap: 8px; }
+    .fin-next { margin-top: 6px; }
+    .fin-small { font-size: 12px; }
+    .fin-due { margin-bottom: 16px; border-left: 3px solid var(--yellow); padding: 10px 14px; }
+    .fin-tab-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .fin-table { display: flex; flex-direction: column; }
+    .fin-tr { display: grid; grid-template-columns: minmax(0, 2fr) 1.1fr 1fr 1fr .8fr auto; gap: 10px; align-items: center; padding: 10px 2px; border-top: 1px solid var(--border); font-size: 13px; }
+    .fin-tr.inactive { opacity: .55; }
+    .fin-th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); border-top: 0; padding-top: 0; }
+    .fin-name { font-weight: 600; text-align: left; }
+    .fin-tr-actions { text-align: right; }
+    .fin-totals { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .fin-totals > div { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+    .fin-totals b { font-size: 16px; font-variant-numeric: tabular-nums; }
+    .fin-months { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .fin-month { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: left; color: inherit; font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .fin-month:hover, .fin-month.on { border-color: var(--accent); }
+    .fin-month-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .fin-month-row { display: flex; justify-content: space-between; gap: 6px; font-size: 13px; font-variant-numeric: tabular-nums; }
+    .fin-month-saldo { border-top: 1px solid var(--border); padding-top: 4px; margin-top: 2px; }
+    .fin-month-complete { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .fin-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .fin-filters input[type=search] { flex: 1 1 200px; min-width: 0; }
+    .fin-filters select { flex: 1 1 150px; width: auto; }
+    .fin-more summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+    .fin-receipt { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+    .fin-legacy { margin-top: 16px; }
+    input.invalid { border-color: var(--red) !important; box-shadow: 0 0 0 3px var(--red-soft); }
+    .rev-val { text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; }
+    @media (max-width: 860px) {
+      .fin-months { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fin-donuts { grid-template-columns: minmax(0, 1fr); }
+      .fin-tr { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fin-th { display: none; }
+      .fin-tr > div:first-child { grid-column: 1 / -1; }
+      .fin-tr > div[data-l]::before { content: attr(data-l); display: block; font-size: 11px; color: var(--muted); }
+      .fin-tr-actions { grid-column: 1 / -1; text-align: left; }
+      .fin-totals { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .fin-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fin-kpis .kpi:last-child { grid-column: 1 / -1; }
+      .fin-row { flex-wrap: wrap; }
+      .fin-row-date { width: auto; }
+      .fin-row-main { flex-basis: 100%; order: 3; }
+      .fin-row .fin-amt { margin-left: auto; }
+      .fin-fix-total { font-size: 18px; }
+      .fin-actions { width: 100%; } .fin-actions .btn { flex: 1; justify-content: center; }
+    }
     /* Einnahmen (Strategie) */
     .rev-card { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
     .rev-head { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; width: 100%; }
@@ -818,6 +944,7 @@
       <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
       <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
+      <button class="nav-item" title="Finanzen" data-page="finanzen" onclick="showPage('finanzen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7a7 7 0 1 0 0 10"/><path d="M4 10h10M4 14h10"/></svg><span class="nav-label">Finanzen</span></button>
   </nav>
   <div class="sb-foot">
     <div class="sync-status" title="Speicher- und Verbindungsstatus"><span class="sync-dot js-sync-dot"></span><span class="sync-label js-sync-label" onclick="retryFailedSaves()">Verbinde…</span></div>
@@ -977,6 +1104,31 @@
     <div id="improvements-container"></div>
   </div>
 
+  <div class="page" id="page-finanzen">
+    <div class="section-header fin-header">
+      <div>
+        <h1>Finanzen</h1>
+        <p class="subtitle">Interne Finanzübersicht – ersetzt keine steuerliche Buchhaltung</p>
+      </div>
+      <div class="fin-actions">
+        <select id="fin-year" onchange="setFinYear(this.value)" aria-label="Jahr"></select>
+        <button class="btn btn-primary" onclick="openBooking('income')">+ Einnahme</button>
+        <button class="btn" onclick="openBooking('expense')">+ Ausgabe</button>
+        <div class="fin-export">
+          <button class="btn btn-ghost" onclick="toggleFinExportMenu()" aria-haspopup="true">⤓ CSV</button>
+          <div class="quick-menu fin-export-menu" id="fin-export-menu" hidden>
+            <button onclick="toggleFinExportMenu();exportFinCsv({})">Gesamtes Jahr</button>
+            <button onclick="toggleFinExportMenu();exportFinCsv({kind:'income'})">Nur Einnahmen</button>
+            <button onclick="toggleFinExportMenu();exportFinCsv({kind:'expense'})">Nur Ausgaben</button>
+            <button onclick="toggleFinExportMenu();finUi.tab='months';renderFinance()">Einzelner Monat …</button>
+            <button onclick="toggleFinExportMenu();finUi.tab='bookings';renderFinance()">Nach Kategorie / Filter …</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fin-content"></div>
+  </div>
+
   <div class="page" id="page-detail">
     <button class="back-btn" onclick="showPage('planer')">&#8592; Zurück zum Planer</button>
     <div class="remote-banner" id="remote-banner" hidden>
@@ -995,6 +1147,8 @@
     <button onclick="quickAction('task')">✅ Neue Aufgabe</button>
     <button onclick="quickAction('expert')">📇 Neuer Experte</button>
     <button onclick="quickAction('event')">📌 Neuer Termin</button>
+    <button onclick="quickAction('income')">💶 Einnahme erfassen</button>
+    <button onclick="quickAction('expense')">🧾 Ausgabe erfassen</button>
   </div>
   <button class="quick-fab" onclick="toggleQuickMenu()" aria-label="Schnellaktionen" title="Neu anlegen">+</button>
 </div>
@@ -1332,6 +1486,76 @@
       <button class="btn" onclick="saveGuideDraft(false)">Entwurf speichern</button>
       <button class="btn btn-primary" id="guide-release-btn" onclick="saveGuideDraft(true)">Freigeben</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="fin-booking-bg" onclick="if(event.target===this)closeBooking()">
+  <div class="modal" style="width:560px">
+    <h2 id="fb-title">Neue Buchung</h2>
+    <div class="form-row">
+      <div class="form-group"><label for="fb-amount">Betrag in €</label><input type="text" id="fb-amount" inputmode="decimal" placeholder="0,00" onkeydown="if(event.key==='Enter')saveBooking()" oninput="this.classList.remove('invalid')"></div>
+      <div class="form-group"><label for="fb-date">Datum</label><input type="date" id="fb-date"></div>
+    </div>
+    <div class="form-group"><label for="fb-desc">Beschreibung / Verwendungszweck</label><input type="text" id="fb-desc" placeholder="z. B. Riverside Jahresabo" onkeydown="if(event.key==='Enter')saveBooking()"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="fb-cat">Kategorie</label><select id="fb-cat"></select></div>
+      <div class="form-group"><label for="fb-status">Zahlungsstatus</label><select id="fb-status"><option value="paid">Bezahlt / erhalten</option><option value="open">Offen (zählt noch nicht)</option></select></div>
+    </div>
+    <details class="fin-more"><summary>Weitere Angaben (optional)</summary>
+      <div class="form-group"><label for="fb-rec">Wiederkehrender Posten</label><select id="fb-rec"></select></div>
+      <div class="form-row">
+        <div class="form-group"><label for="fb-ep">Folge</label><select id="fb-ep"></select></div>
+        <div class="form-group"><label for="fb-coop">Kooperation</label><input type="text" id="fb-coop" placeholder="z. B. Partner / Sponsor"></div>
+      </div>
+      <div class="form-group"><label for="fb-note">Notiz</label><textarea id="fb-note" rows="2"></textarea></div>
+      <div class="form-group"><label for="fb-file">Beleg (PDF oder Bild, max. 10 MB)</label><input type="file" id="fb-file" accept="application/pdf,image/*" onchange="onFinFile('fb', this)"><div id="fb-receipt" class="fin-receipt"></div></div>
+    </details>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="fb-delete" onclick="deleteBooking()">Löschen</button>
+      <button class="btn btn-ghost" onclick="closeBooking()">Abbrechen</button>
+      <button class="btn btn-primary" id="fb-save" onclick="saveBooking()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="fin-rec-bg" onclick="if(event.target===this)closeRecurring()">
+  <div class="modal" style="width:560px">
+    <h2 id="fr-title">Wiederkehrender Posten</h2>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label for="fr-name">Name / Beschreibung</label><input type="text" id="fr-name" placeholder="z. B. Riverside"></div>
+      <div class="form-group"><label for="fr-kind">Art</label><select id="fr-kind" onchange="finFillRecCats()"><option value="expense">Ausgabe</option><option value="income">Einnahme</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label for="fr-amount">Betrag pro Intervall in €</label><input type="text" id="fr-amount" inputmode="decimal" placeholder="0,00" oninput="updateRecMonthly()"></div>
+      <div class="form-group"><label for="fr-interval">Zahlungsintervall</label><select id="fr-interval" onchange="updateRecMonthly()"><option value="monthly">Monatlich</option><option value="quarterly">Quartalsweise</option><option value="semiannual">Halbjährlich</option><option value="yearly">Jährlich</option></select></div>
+    </div>
+    <div class="muted fin-small" id="fr-monthly" style="margin:-6px 0 10px"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="fr-cat">Kategorie</label><select id="fr-cat"></select></div>
+      <div class="form-group"><label for="fr-status">Status</label><select id="fr-status"><option value="active">Aktiv</option><option value="paused">Pausiert</option><option value="ended">Beendet</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label for="fr-start">Startdatum</label><input type="date" id="fr-start"></div>
+      <div class="form-group"><label for="fr-end">Enddatum (optional)</label><input type="date" id="fr-end"></div>
+      <div class="form-group"><label for="fr-next">Nächste Fälligkeit (optional)</label><input type="date" id="fr-next"></div>
+    </div>
+    <div class="form-group"><label for="fr-notes">Notizen</label><textarea id="fr-notes" rows="2"></textarea></div>
+    <div class="form-group"><label for="fr-file">Beleg / Vertrag (optional)</label><input type="file" id="fr-file" accept="application/pdf,image/*" onchange="onFinFile('fr', this)"><div id="fr-receipt" class="fin-receipt"></div></div>
+    <div class="muted fin-small">Planungswert: Es entstehen dadurch keine Buchungen. Fällige Zahlungen werden vorgeschlagen und zählen erst nach dem Erfassen.</div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="fr-delete" onclick="deleteRecurring()">Löschen</button>
+      <button class="btn btn-ghost" onclick="closeRecurring()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveRecurring()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="fin-cat-bg" onclick="if(event.target===this)closeFinCategories()">
+  <div class="modal" style="width:480px">
+    <h2>Kategorien</h2>
+    <p class="muted fin-small" style="margin:0 0 8px">Standardkategorien steuern Diagramme und Strategie-Ziele und können umbenannt, aber nicht archiviert werden.</p>
+    <div id="fin-cat-list"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeFinCategories()">Fertig</button></div>
   </div>
 </div>
 
@@ -1947,7 +2171,8 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 const RT_TOPIC = 'realtime:podcast-sync';
 const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
-  'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals'];
+  'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
+  'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months'];
 let rtSocket = null;
 let rtRef = 0;
 let rtHeartbeat = null;
@@ -1995,6 +2220,7 @@ function realtimeUpdateToken() {
 }
 function onRemoteChange(table) {
   if (table.startsWith('podcast_revenue')) table = 'podcast_revenue';
+  if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
   if (table === 'podcast_settings') onRemoteChange('podcast_revenue'); // revenue rule lives in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
@@ -2021,6 +2247,12 @@ function onRemoteChange(table) {
       if (active === 'page-expert') renderExpertDetail();
       if (active === 'page-dashboard') renderDashboard();
       if (active === 'page-todos' && !todoEditingId) renderTodos();
+    } else if (table === 'podcast_fin') {
+      if (!financeLoaded) return;
+      if (finWrites > 0) { finRemotePending = true; return; }
+      await loadFinance();
+      if (document.getElementById('page-finanzen').classList.contains('active')) renderFinance();
+      if (document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
     } else if (table === 'podcast_revenue') {
       if (!revenueLoaded) return;
       await loadRevenue();
@@ -2082,6 +2314,7 @@ async function reloadAllData() {
   else if (active.id === 'page-dashboard') { await loadPosts(); renderDashboard(); }
   else if (active.id === 'page-calendar') { await loadCalendarData(); renderCalendarPage(); }
   else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
+  else if (active.id === 'page-finanzen') { await loadFinance(); renderFinance(); }
   else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements(), loadRevenue()]); renderGoals(); renderImprovements(); renderRevenue(); }
   else if (changed) onEpisodesChanged(changed);
 }
@@ -3550,6 +3783,7 @@ async function exportAllData() {
   const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions',
                   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events', 'podcast_goals', 'podcast_improvements',
                   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
+                  'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months', 'podcast_fin_booking_log',
                   'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
   try {
     const data = {};
@@ -3798,97 +4032,56 @@ async function deleteIdea() {
   }
 }
 
-// ── STRATEGIE: EINNAHMEN ─────────────────────────────────────────
-// Monthly revenue per source (podcast_revenue_entries, integer cents, one row per
-// year/month/source). No row = not entered; a row with 0 = deliberately 0 €. Negative changes
-// only as append-only corrections with a reason. Year totals are always computed, never stored.
-const REV_SOURCES = [['adsense', 'YouTube AdSense', 'AdSense'], ['sponsoring', 'Sponsoring', 'Sponsoring'], ['affiliate', 'Affiliate', 'Affiliate']];
-const REV_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
-const REV_RULE_DEFAULT = { threshold_cents: 30000, window_months: 3 };
-let revEntries = [];
-let revCorrections = [];
-let revMonthRows = [];
-let revGoals = [];
-let revRule = { ...REV_RULE_DEFAULT };
-let revenueLoaded = false;
-let revRenderPending = false;
-let revCorrForm = null; // "year-month" with the open correction form
-let revOpenYears = new Set();
-try { revOpenYears = new Set(JSON.parse(localStorage.getItem('gg_rev_open') || '[]')); } catch {}
+// ── FINANZEN ─────────────────────────────────────────────────────
+// Two strictly separate views of money:
+//  • Bookings (podcast_fin_bookings): the actual cash flow. Only status 'paid' counts.
+//  • Recurring items (podcast_fin_recurring): planning only. Their monthly equivalent is computed
+//    here and never written as bookings; a due payment is only suggested until it is booked.
+// All amounts are integer cents (EUR). Months can be marked "vollständig erfasst" (podcast_fin_months);
+// only those months enter averages.
+const FIN_INTERVALS = { monthly: ['Monatlich', 1], quarterly: ['Quartalsweise', 3], semiannual: ['Halbjährlich', 6], yearly: ['Jährlich', 12] };
+const FIN_REC_STATUS = { active: 'Aktiv', paused: 'Pausiert', ended: 'Beendet' };
+const FIN_KIND = { income: 'Einnahme', expense: 'Ausgabe' };
+// Fixed colour per built-in category (colour follows the entity, never its rank); validated palette.
+const FIN_INCOME_COLORS = { adsense: 'var(--fin-c-orange)', sponsoring: 'var(--fin-c-blue)', affiliate: 'var(--fin-c-aqua)', other: 'var(--fin-c-other)' };
+const FIN_EXPENSE_COLORS = { software: 'var(--fin-c-blue)', hosting: 'var(--fin-c-orange)', website: 'var(--fin-c-aqua)', equipment: 'var(--fin-c-yellow)',
+  travel: 'var(--fin-c-magenta)', editing: 'var(--fin-c-green)', marketing: 'var(--fin-c-violet)', other: 'var(--fin-c-other)' };
+let finCats = [], finRecurring = [], finBookings = [], finMonthRows = [], finLog = [];
+let financeLoaded = false;
+let finYear = new Date().getFullYear();
+let finUi = { tab: 'overview', recTab: 'expense', lineMode: 'monthly', month: null, q: '', kind: '', type: '', cat: '', status: '', fixOpen: false, legacyOpen: false };
+try { Object.assign(finUi, JSON.parse(localStorage.getItem('gg_fin_ui')) || {}); finUi.month = null; } catch {}
+function saveFinUi() { try { localStorage.setItem('gg_fin_ui', JSON.stringify(finUi)); } catch {} }
+let finLegacy = null;
+let finWrites = 0, finRemotePending = false;
 
-async function loadRevenue() {
+async function loadFinance() {
   try {
-    const [e, c, m, g, s] = await Promise.all([
-      apiFetch('podcast_revenue_entries?select=*'),
-      apiFetch('podcast_revenue_corrections?select=*&order=created_at.asc'),
-      apiFetch('podcast_revenue_months?select=*'),
-      apiFetch('podcast_revenue_goals?select=*&order=year.asc,scope.asc'),
-      apiFetch('podcast_settings?select=value&key=eq.revenue_outsourcing'),
+    const [c, r, b, m] = await Promise.all([
+      apiFetch('podcast_fin_categories?select=*&order=sort.asc,name.asc'),
+      apiFetch('podcast_fin_recurring?select=*&order=name.asc'),
+      apiFetch('podcast_fin_bookings?select=*&order=date.desc,created_at.desc'),
+      apiFetch('podcast_fin_months?select=*'),
     ]);
-    revEntries = e; revCorrections = c; revMonthRows = m; revGoals = g;
-    revRule = { ...REV_RULE_DEFAULT, ...((s[0] && s[0].value) || {}) };
-    revenueLoaded = true;
+    finCats = c; finRecurring = r; finBookings = b; finMonthRows = m;
+    financeLoaded = true;
     return true;
-  } catch (err) { showToast('Einnahmen konnten nicht geladen werden: ' + err.message, 'error'); return false; }
+  } catch (e) { showToast('Finanzdaten konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+async function finWrite(fn) {
+  finWrites++;
+  try { return await fn(); }
+  finally { finWrites--; if (!finWrites && finRemotePending) { finRemotePending = false; onRemoteChange('podcast_fin_bookings'); } }
 }
 
-// ── Calculation ──
+// ── Money helpers ──
 function eur(cents) { return (cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' }); }
 function eurPlain(cents) { return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-function revEntry(y, m, src) { return revEntries.find(e => e.year === y && e.month === m && e.source === src) || null; }
-function revCorrs(y, m, src) { return revCorrections.filter(c => c.year === y && c.month === m && (!src || c.source === src)); }
-// Entered amount plus corrections; null = nothing entered for this month and source.
-function revValue(y, m, src) {
-  const e = revEntry(y, m, src);
-  const corr = revCorrs(y, m, src);
-  if (!e && !corr.length) return null;
-  return (e ? e.amount_cents : 0) + corr.reduce((a, c) => a + c.amount_cents, 0);
-}
-// Month total over all sources (AdSense is one of the three sources – counted once).
-function revMonthTotal(y, m) {
-  const vals = REV_SOURCES.map(([k]) => revValue(y, m, k)).filter(v => v !== null);
-  return vals.length ? vals.reduce((a, b) => a + b, 0) : null;
-}
-function revMonthState(y, m) {
-  const entered = REV_SOURCES.filter(([k]) => revEntry(y, m, k)).length;
-  const row = revMonthRows.find(r => r.year === y && r.month === m);
-  return { entered, complete: entered === REV_SOURCES.length, confirmed: !!(row && row.confirmed) && entered === REV_SOURCES.length, row };
-}
-function revSum(y, months, src) {
-  return months.reduce((a, m) => { const v = src ? revValue(y, m, src) : revMonthTotal(y, m); return a + (v || 0); }, 0);
-}
-const ALL_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-function revGoalMonths(g) { return g.period === 'nov_dec' ? [11, 12] : ALL_MONTHS; }
-function revGoalActual(g) { return revSum(g.year, revGoalMonths(g), g.scope === 'total' ? null : 'adsense'); }
-function revGoalLabel(g) {
-  const scope = g.scope === 'total' ? 'Gesamteinnahmen (AdSense + Sponsoring + Affiliate)' : 'YouTube AdSense';
-  return g.period === 'nov_dec' ? `${scope} · Summe November + Dezember ${g.year}` : `${scope} · Jahresziel ${g.year}`;
-}
-function revYears() {
-  const ys = new Set([new Date().getFullYear(), ...revGoals.map(g => g.year), ...revEntries.map(e => e.year), ...revCorrections.map(c => c.year)]);
-  return [...ys].sort((a, b) => a - b);
-}
-// Outsourcing rule: the last N fully passed calendar months, evaluated only if all are confirmed.
-function revRuleWindow() {
-  const n = Math.max(1, Math.min(12, parseInt(revRule.window_months, 10) || 3));
-  const now = new Date();
-  const out = [];
-  for (let i = n; i >= 1; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); out.push({ y: d.getFullYear(), m: d.getMonth() + 1 }); }
-  return out;
-}
-function revRuleResult() {
-  const win = revRuleWindow();
-  const missing = win.filter(({ y, m }) => !revMonthState(y, m).confirmed);
-  if (missing.length) return { win, missing };
-  const avg = Math.round(win.reduce((a, { y, m }) => a + (revMonthTotal(y, m) || 0), 0) / win.length);
-  return { win, missing, avg, reached: avg >= revRule.threshold_cents };
-}
-
-// ── Input parsing & validation ──
+function eurSigned(cents) { return (cents > 0 ? '+' : cents < 0 ? '−' : '') + eur(Math.abs(cents)); }
 function parseEuro(raw) {
   let s = String(raw || '').replace(/€|\s/g, '');
   if (!s) return { cents: null };
-  if (s.startsWith('-')) return { error: 'Negative Beträge bitte über „± Korrektur“ erfassen.' };
+  if (s.startsWith('-')) return { error: 'Bitte einen positiven Betrag eingeben – die Art (Einnahme/Ausgabe) bestimmt das Vorzeichen.' };
   if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
   else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
   if (!/^\d+(\.\d{1,2})?$/.test(s)) return { error: 'Ungültiger Betrag – bitte z. B. 123,45 eingeben (max. zwei Nachkommastellen).' };
@@ -3896,66 +4089,892 @@ function parseEuro(raw) {
   if (cents > 100000000) return { error: 'Betrag zu groß (max. 1.000.000 €).' };
   return { cents };
 }
+const FIN_MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+const FIN_M_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 
-// ── Saving ──
-function revAfterChange() { flashSaved(); setTimeout(renderRevenue, 0); }
-async function saveRevenueCell(y, m, src, input) {
-  const parsed = parseEuro(input.value);
-  if (parsed.error) { input.classList.add('invalid'); input.setAttribute('aria-invalid', 'true'); showToast(parsed.error, 'error'); return; }
-  input.classList.remove('invalid'); input.removeAttribute('aria-invalid');
-  const cur = revEntry(y, m, src);
-  try {
-    if (parsed.cents === null) {
-      if (!cur) return;
-      await apiFetch(`podcast_revenue_entries?year=eq.${y}&month=eq.${m}&source=eq.${src}`, { method: 'DELETE' });
-      revEntries = revEntries.filter(e => e !== cur);
-    } else {
-      input.value = eurPlain(parsed.cents);
-      if (cur && cur.amount_cents === parsed.cents) return;
-      const rows = await apiFetch('podcast_revenue_entries?on_conflict=year,month,source', { method: 'POST', prefer: 'resolution=merge-duplicates,return=representation',
-        body: JSON.stringify({ year: y, month: m, source: src, amount_cents: parsed.cents, updated_by: currentActor() }) });
-      revEntries = revEntries.filter(e => !(e.year === y && e.month === m && e.source === src)).concat(rows);
-    }
-    revAfterChange();
-  } catch (e) { input.classList.add('invalid'); showToast('Einnahme nicht gespeichert: ' + e.message, 'error'); }
+// ── Data helpers ──
+function finCat(id) { return finCats.find(c => c.id === id) || null; }
+function finCatName(id) { const c = finCat(id); return c ? c.name : 'Ohne Kategorie'; }
+function finCatsOf(kind, withArchived = false) { return finCats.filter(c => c.kind === kind && (withArchived || !c.archived)); }
+// Bucket for charts/strategy: built-in key, everything else counts as "other".
+function finBucket(b) {
+  const c = finCat(b.category_id);
+  const key = c && c.key ? c.key : null;
+  if (b.kind === 'income') return ['adsense', 'sponsoring', 'affiliate'].includes(key) ? key : 'other';
+  return key && key !== 'other_expense' && FIN_EXPENSE_COLORS[key] ? key : 'other';
 }
-function toggleRevMonthConfirmed(y, m) {
-  const st = revMonthState(y, m);
-  if (!st.confirmed && !st.complete) { showToast('Erst alle drei Quellen eintragen (0 € ist erlaubt), dann bestätigen.', 'error'); return; }
-  const run = async () => {
-    const confirmed = !st.confirmed;
-    try {
-      const rows = await apiFetch('podcast_revenue_months?on_conflict=year,month', { method: 'POST', prefer: 'resolution=merge-duplicates,return=representation',
-        body: JSON.stringify({ year: y, month: m, confirmed, confirmed_by: confirmed ? currentActor() : null, confirmed_at: confirmed ? new Date().toISOString() : null }) });
-      revMonthRows = revMonthRows.filter(r => !(r.year === y && r.month === m)).concat(rows);
-      revAfterChange();
-    } catch (e) { showToast('Bestätigung nicht gespeichert: ' + e.message, 'error'); }
-  };
-  if (!st.confirmed) withActor(run); else run();
+function bYear(b) { return +b.date.slice(0, 4); }
+function bMonth(b) { return +b.date.slice(5, 7); }
+function finPaid(b) { return b.status === 'paid'; }
+// Actual cash flow of a month (paid bookings only).
+function finSum(y, m, kind, filter) {
+  return finBookings.reduce((a, b) => a + (finPaid(b) && b.kind === kind && bYear(b) === y && (!m || bMonth(b) === m) && (!filter || filter(b)) ? b.amount_cents : 0), 0);
 }
-function openRevCorrection(y, m) { revCorrForm = revCorrForm === `${y}-${m}` ? null : `${y}-${m}`; renderRevenue(); }
-function saveRevCorrection(y, m) {
-  const src = document.getElementById(`revc-src-${y}-${m}`).value;
-  const rawAmount = document.getElementById(`revc-amount-${y}-${m}`).value.trim();
-  const reason = document.getElementById(`revc-reason-${y}-${m}`).value.trim();
-  const neg = rawAmount.startsWith('-');
-  const parsed = parseEuro(rawAmount.replace(/^[-+]/, ''));
-  if (parsed.error || !parsed.cents) { showToast('Bitte einen Korrekturbetrag ungleich 0 eingeben, z. B. -12,50 oder 5,00.', 'error'); return; }
-  if (!reason) { showToast('Bitte einen Grund für die Korrektur angeben.', 'error'); document.getElementById(`revc-reason-${y}-${m}`).focus(); return; }
-  withActor(async () => {
-    try {
-      const rows = await apiFetch('podcast_revenue_corrections', { method: 'POST', prefer: 'return=representation',
-        body: JSON.stringify({ year: y, month: m, source: src, amount_cents: neg ? -parsed.cents : parsed.cents, reason, created_by: currentActor() }) });
-      revCorrections = revCorrections.concat(rows);
-      revCorrForm = null;
-      revAfterChange();
-      showToast('Korrektur erfasst');
-    } catch (e) { showToast('Korrektur nicht gespeichert: ' + e.message, 'error'); }
+function finMonthComplete(y, m) { const r = finMonthRows.find(x => x.year === y && x.month === m); return !!(r && r.complete); }
+// Planning: monthly equivalent of a recurring item (exact fraction of cents; rounded only for display).
+function recMonthly(r) { return r.amount_cents / FIN_INTERVALS[r.billing_interval][1]; }
+function isoToday() { return isoDate(new Date()); }
+function recActiveOn(r, iso) { return r.status === 'active' && r.start_date <= iso && (!r.end_date || r.end_date >= iso); }
+function recMonthlyTotal(kind, iso = isoToday()) { return finRecurring.filter(r => r.kind === kind && recActiveOn(r, iso)).reduce((a, r) => a + recMonthly(r), 0); }
+function addMonthsIso(iso, n) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const t = new Date(y, m - 1 + n, 1);
+  const last = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate();
+  return isoDate(new Date(t.getFullYear(), t.getMonth(), Math.min(d, last)));
+}
+// Due dates of a recurring item, anchored on next_due (if set) or the start date.
+function recDueDates(r, fromIso, toIso) {
+  const step = FIN_INTERVALS[r.billing_interval][1];
+  let d = r.next_due || r.start_date;
+  let guard = 0;
+  while (d > fromIso && guard++ < 400) { const prev = addMonthsIso(d, -step); if (prev < r.start_date) break; d = prev; }
+  while (d < fromIso && guard++ < 800) d = addMonthsIso(d, step);
+  const out = [];
+  while (d <= toIso && guard++ < 1200) { if (d >= r.start_date && (!r.end_date || d <= r.end_date)) out.push(d); d = addMonthsIso(d, step); }
+  return out;
+}
+function recNextDue(r) {
+  if (r.status !== 'active') return null;
+  const next = recDueDates(r, isoToday(), addMonthsIso(isoToday(), 13))[0];
+  return next || null;
+}
+function recPeriodKey(r, iso) {
+  const y = iso.slice(0, 4), m = +iso.slice(5, 7);
+  if (r.billing_interval === 'monthly') return iso.slice(0, 7);
+  if (r.billing_interval === 'quarterly') return `${y}-Q${Math.ceil(m / 3)}`;
+  if (r.billing_interval === 'semiannual') return `${y}-H${m <= 6 ? 1 : 2}`;
+  return y;
+}
+// Expected payments of active items due in the last 60 / next 14 days that are not booked yet.
+function finDueSuggestions() {
+  const from = addMonthsIso(isoToday(), -2), to = isoDate(addDays(new Date(), 14));
+  const out = [];
+  finRecurring.filter(r => r.status === 'active').forEach(r => recDueDates(r, from, to).forEach(d => {
+    const key = recPeriodKey(r, d);
+    if (!finBookings.some(b => b.recurring_id === r.id && b.period_key === key)) out.push({ r, date: d, key });
+  }));
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+// Planned recurring costs falling into a month (monthly equivalent of all items active in that month).
+function recPlannedForMonth(y, m, kind) {
+  const first = `${y}-${String(m).padStart(2, '0')}-01`;
+  const last = isoDate(new Date(y, m, 0));
+  return finRecurring.filter(r => r.kind === kind && r.status !== 'ended' && r.start_date <= last && (!r.end_date || r.end_date >= first)).reduce((a, r) => a + recMonthly(r), 0);
+}
+function finYears() {
+  const ys = new Set([new Date().getFullYear(), ...finBookings.map(bYear)]);
+  return [...ys].sort((a, b) => b - a);
+}
+function finAverage(y) {
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const complete = months.filter(m => finMonthComplete(y, m));
+  const withData = months.filter(m => finBookings.some(b => bYear(b) === y && bMonth(b) === m));
+  const open = withData.filter(m => !finMonthComplete(y, m));
+  if (!complete.length) return { avg: null, complete, open };
+  return { avg: Math.round(complete.reduce((a, m) => a + finSum(y, m, 'income'), 0) / complete.length), complete, open };
+}
+
+// ── Page ──
+function setFinYear(y) { finYear = +y; finUi.month = null; renderFinance(); }
+function setFinTab(t) { finUi.tab = t; saveFinUi(); renderFinance(); }
+function finKpi(label, value, sub, cls = '', action = '') {
+  return `<div class="kpi${cls}${action ? ' clickable' : ''}" ${action ? `onclick="${action}" role="button" tabindex="0"` : ''}><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub" title="${esc(sub)}">${sub}</div></div>`;
+}
+function renderFinance() {
+  const box = document.getElementById('fin-content');
+  if (!box || !financeLoaded) return;
+  const active = document.activeElement;
+  if (active && box.contains(active) && active.matches('input[type=text],input[type=search]') && active.id !== 'fin-search') { finRemotePending = true; return; }
+  const y = finYear;
+  const sel = document.getElementById('fin-year');
+  sel.innerHTML = finYears().map(v => `<option value="${v}"${v === y ? ' selected' : ''}>${v}</option>`).join('');
+  const inc = finSum(y, 0, 'income'), exp = finSum(y, 0, 'expense');
+  const av = finAverage(y);
+  const fixMonthly = recMonthlyTotal('expense');
+  const due = finDueSuggestions();
+  const tabs = [['overview', 'Übersicht'], ['recurring', 'Wiederkehrend'], ['months', 'Monate'], ['bookings', 'Buchungen'], ['log', 'Protokoll']];
+  const focusSearch = active && active.id === 'fin-search';
+  const caret = focusSearch ? active.selectionStart : null;
+  box.innerHTML = `
+    <div class="fin-kpis">
+      ${finKpi(`Einnahmen ${y}`, eur(inc), 'tatsächlich bezahlt')}
+      ${finKpi(`Ausgaben ${y}`, eur(exp), 'tatsächlich bezahlt')}
+      ${finKpi(`Saldo ${y}`, eurSigned(inc - exp), 'Einnahmen − Ausgaben', inc - exp < 0 ? ' kpi-danger' : '')}
+      ${finKpi('Ø Einnahmen / Monat', av.avg === null ? '–' : eur(av.avg),
+        av.avg === null ? 'noch kein Monat als vollständig markiert' : `aus ${av.complete.length} vollständig erfassten Monat${av.complete.length === 1 ? '' : 'en'}${av.open.length ? ` · ${av.open.length} offen` : ''}`)}
+      ${finKpi('Fixkosten / Monat', eur(Math.round(fixMonthly)), 'rechnerisch · Planung', ' kpi-plan', "finUi.fixOpen=true;setFinTab('overview');setTimeout(()=>document.getElementById('fin-fix')?.scrollIntoView({behavior:'smooth',block:'center'}),50)")}
+    </div>
+    ${due.length ? `<div class="card fin-due">
+      <button type="button" class="fin-fix-head" onclick="finUi.dueOpen=!finUi.dueOpen;saveFinUi();renderFinance()" aria-expanded="${!!finUi.dueOpen}">
+        <span>⏰ <b>${due.length} fällige wiederkehrende Zahlung${due.length === 1 ? '' : 'en'}</b> <span class="muted fin-small">– Vorschläge, zählen erst nach dem Erfassen</span></span>
+        <span class="section-toggle-icon" style="margin-left:auto">${finUi.dueOpen ? '▾' : '▸'}</span></button>
+      ${finUi.dueOpen ? `<div class="fin-list">${due.map(d => `<div class="fin-row">
+        <span class="fin-row-date">${formatDate(safeParseIso(d.date))}</span>
+        <span class="fin-row-main">${esc(d.r.name)} <span class="muted">· ${FIN_INTERVALS[d.r.billing_interval][0]}</span></span>
+        <span class="fin-amt ${d.r.kind}">${d.r.kind === 'income' ? '+' : '−'}${eur(d.r.amount_cents)}</span>
+        <button class="btn btn-sm" onclick="bookRecurring(${jsArg(d.r.id)},'${d.date}')">${d.r.kind === 'income' ? 'Als erhalten' : 'Als bezahlt'} erfassen</button>
+      </div>`).join('')}</div>` : ''}
+    </div>` : ''}
+    <div class="seg fin-tabs" role="tablist">${tabs.map(([k, l]) => `<button class="seg-btn${finUi.tab === k ? ' active' : ''}" role="tab" aria-selected="${finUi.tab === k}" onclick="setFinTab('${k}')">${l}</button>`).join('')}</div>
+    <div id="fin-tab">${finTabHtml()}</div>`;
+  if (focusSearch) { const s = document.getElementById('fin-search'); if (s) { s.focus(); try { s.setSelectionRange(caret, caret); } catch {} } }
+  if (finUi.tab === 'overview') drawFinCharts();
+  if (finUi.tab === 'log') loadFinLog();
+}
+function finTabHtml() {
+  if (finUi.tab === 'recurring') return finRecurringHtml();
+  if (finUi.tab === 'months') return finMonthsHtml();
+  if (finUi.tab === 'bookings') return finBookingsHtml();
+  if (finUi.tab === 'log') return `<div class="card" id="fin-log">${loadingState()}</div>`;
+  return finOverviewHtml();
+}
+
+// ── Overview: charts + fixed costs ──
+function finOverviewHtml() {
+  const y = finYear;
+  return `
+    <div class="card fin-chart-card">
+      <div class="fin-chart-head"><h2>Einnahmen vs. Ausgaben ${y}</h2>
+        <div class="fin-legend"><span><i style="background:var(--fin-inc)"></i>Einnahmen</span><span><i style="background:var(--fin-exp)"></i>Ausgaben</span></div></div>
+      <div class="fin-chart" id="fin-chart-bars"></div>
+      <div class="muted fin-chart-note">Tatsächlicher Geldfluss (bezahlte Buchungen) je Monat.</div>
+    </div>
+    <div class="card fin-chart-card">
+      <div class="fin-chart-head"><h2>Umsatzentwicklung ${y}</h2>
+        <div class="seg seg-sm" style="margin:0">${[['monthly', 'Pro Monat'], ['cumulative', 'Kumuliert'], ['balance', 'Saldo-Verlauf']].map(([k, l]) =>
+          `<button class="seg-btn${finUi.lineMode === k ? ' active' : ''}" onclick="finUi.lineMode='${k}';saveFinUi();drawFinLine();this.parentElement.querySelectorAll('.seg-btn').forEach(b=>b.classList.toggle('active',b===this))">${l}</button>`).join('')}</div></div>
+      <div class="fin-chart" id="fin-chart-line"></div>
+    </div>
+    <div class="fin-donuts">
+      <div class="card fin-chart-card"><h2>Einnahmequellen ${y}</h2><div id="fin-donut-income" class="fin-donut-wrap"></div></div>
+      <div class="card fin-chart-card"><h2>Ausgabenkategorien ${y}</h2><div id="fin-donut-expense" class="fin-donut-wrap"></div></div>
+    </div>
+    ${finFixCardHtml()}`;
+}
+function finFixCardHtml() {
+  const today = isoToday();
+  const items = finRecurring.filter(r => r.kind === 'expense' && recActiveOn(r, today)).sort((a, b) => recMonthly(b) - recMonthly(a));
+  const monthly = items.reduce((a, r) => a + recMonthly(r), 0);
+  const incMonthly = recMonthlyTotal('income');
+  const next = finRecurring.filter(r => r.status === 'active').map(r => ({ r, d: recNextDue(r) })).filter(x => x.d).sort((a, b) => a.d.localeCompare(b.d)).slice(0, 4);
+  return `<div class="card fin-plan" id="fin-fix">
+    <button type="button" class="fin-fix-head" onclick="finUi.fixOpen=!finUi.fixOpen;saveFinUi();renderFinance()" aria-expanded="${finUi.fixOpen}">
+      <div><div class="fin-plan-badge">Planung · keine Buchung</div><h2 style="margin:4px 0 0">Monatliche Fixkosten</h2></div>
+      <div class="fin-fix-total">${eur(Math.round(monthly))}<span class="muted"> / Monat</span></div>
+      <span class="section-toggle-icon">${finUi.fixOpen ? '▾' : '▸'}</span>
+    </button>
+    <div class="fin-fix-meta">
+      <span>Pro Jahr: <b>${eur(Math.round(monthly * 12))}</b></span>
+      <span>Regelmäßige Einnahmen: <b>${eur(Math.round(incMonthly))}</b> / Monat</span>
+      <span>Differenz: <b class="${incMonthly - monthly < 0 ? 'neg' : 'pos'}">${eurSigned(Math.round(incMonthly - monthly))}</b> / Monat</span>
+    </div>
+    ${finUi.fixOpen ? `<div class="fin-list">${items.length ? items.map(r => `<div class="fin-row" onclick="openRecurring(${jsArg(r.id)})" role="button" tabindex="0">
+        <span class="fin-row-main">${esc(r.name)} <span class="muted">· ${esc(finCatName(r.category_id))}</span></span>
+        <span class="muted">${eur(r.amount_cents)} ${FIN_INTERVALS[r.billing_interval][0].toLowerCase()}</span>
+        <span class="fin-amt expense">${eur(Math.round(recMonthly(r)))}/Monat</span></div>`).join('')
+      : '<div class="todo-empty">Noch keine aktiven wiederkehrenden Ausgaben.</div>'}</div>` : ''}
+    ${next.length ? `<div class="fin-next"><div class="fin-sub">Nächste fällige Zahlungen</div>${next.map(({ r, d }) =>
+      `<div class="fin-row"><span class="fin-row-date">${formatDate(safeParseIso(d))}</span><span class="fin-row-main">${esc(r.name)}</span><span class="fin-amt ${r.kind}">${r.kind === 'income' ? '+' : '−'}${eur(r.amount_cents)}</span></div>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+// ── Charts (lightweight SVG, no library) ──
+function niceStep(max, ticks = 4) {
+  if (max <= 0) return 1;
+  const raw = max / ticks, p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / p;
+  return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * p;
+}
+function axisEur(v) { return Math.abs(v) >= 10000 ? (v / 1000).toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' Tsd. €' : v.toLocaleString('de-DE', { maximumFractionDigits: 0 }) + ' €'; }
+function finTip(container, html, x, y) {
+  let tip = container.querySelector('.fin-tip');
+  if (!tip) { tip = document.createElement('div'); tip.className = 'fin-tip'; tip.setAttribute('role', 'status'); container.appendChild(tip); }
+  tip.innerHTML = html;
+  tip.hidden = false;
+  const cw = container.clientWidth, tw = tip.offsetWidth;
+  tip.style.left = Math.max(0, Math.min(cw - tw, x - tw / 2)) + 'px';
+  tip.style.top = Math.max(0, y - tip.offsetHeight - 10) + 'px';
+}
+function finTipHide(container) { const t = container.querySelector('.fin-tip'); if (t) t.hidden = true; }
+function roundTopRect(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h);
+  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
+}
+function drawFinCharts() { drawFinBars(); drawFinLine(); drawFinDonut('income'); drawFinDonut('expense'); }
+function drawFinBars() {
+  const el = document.getElementById('fin-chart-bars');
+  if (!el) return;
+  const y = finYear;
+  const data = FIN_MONTHS.map((_, i) => ({ m: i + 1, inc: finSum(y, i + 1, 'income'), exp: finSum(y, i + 1, 'expense') }));
+  const W = Math.max(280, el.clientWidth), H = W < 520 ? 220 : 260;
+  const L = 52, R = 6, T = 10, B = 26, pw = W - L - R, ph = H - T - B;
+  const maxV = Math.max(...data.map(d => Math.max(d.inc, d.exp))) / 100;
+  const step = niceStep(maxV || 100), top = Math.max(step, Math.ceil((maxV || 100) / step) * step);
+  const yv = v => T + ph - (v / 100) / top * ph;
+  const gw = pw / 12, bw = Math.max(3, Math.min(16, (gw - 10) / 2));
+  let s = '';
+  for (let t = 0; t <= top + 1e-9; t += step) { const yy = T + ph - t / top * ph; s += `<line class="fin-grid" x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}"/><text class="fin-axis" x="${L - 6}" y="${yy + 4}" text-anchor="end">${axisEur(t)}</text>`; }
+  data.forEach((d, i) => {
+    const cx = L + gw * i + gw / 2;
+    if (d.inc) s += `<path class="fin-bar fin-anim" style="fill:var(--fin-inc)" d="${roundTopRect(cx - bw - 1, yv(d.inc), bw, T + ph - yv(d.inc), 4)}"/>`;
+    if (d.exp) s += `<path class="fin-bar fin-anim" style="fill:var(--fin-exp)" d="${roundTopRect(cx + 1, yv(d.exp), bw, T + ph - yv(d.exp), 4)}"/>`;
+    s += `<text class="fin-axis" x="${cx}" y="${H - 8}" text-anchor="middle">${W < 520 ? FIN_MONTHS[i][0] : FIN_M_SHORT[i]}</text>`;
+    s += `<rect class="fin-hit" x="${L + gw * i}" y="${T}" width="${gw}" height="${ph}" data-i="${i}" tabindex="0" aria-label="${FIN_MONTHS[i]}: Einnahmen ${eur(d.inc)}, Ausgaben ${eur(d.exp)}"/>`;
   });
+  s += `<line class="fin-baseline" x1="${L}" x2="${W - R}" y1="${T + ph}" y2="${T + ph}"/>`;
+  const total = data.reduce((a, d) => [a[0] + d.inc, a[1] + d.exp], [0, 0]);
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Einnahmen ${eur(total[0])} und Ausgaben ${eur(total[1])} im Jahr ${y}, je Monat">${s}</svg>`;
+  const show = (i, x) => {
+    const d = data[i];
+    el.querySelectorAll('.fin-hit').forEach(h => h.classList.toggle('on', +h.dataset.i === i));
+    finTip(el, `<b>${FIN_MONTHS[i]} ${y}</b><div><i style="background:var(--fin-inc)"></i>Einnahmen <b>${eur(d.inc)}</b></div><div><i style="background:var(--fin-exp)"></i>Ausgaben <b>${eur(d.exp)}</b></div><div class="muted">Saldo ${eurSigned(d.inc - d.exp)}</div>`, x, T + 4);
+  };
+  el.querySelectorAll('.fin-hit').forEach(h => {
+    const i = +h.dataset.i, x = (L + gw * i + gw / 2) * el.clientWidth / W;
+    h.addEventListener('mouseenter', () => show(i, x));
+    h.addEventListener('focus', () => show(i, x));
+    h.addEventListener('click', () => show(i, x));
+  });
+  el.querySelector('svg').addEventListener('mouseleave', () => { finTipHide(el); el.querySelectorAll('.fin-hit').forEach(h => h.classList.remove('on')); });
 }
-async function saveRevRuleWindow(value) {
-  const n = Math.max(1, Math.min(12, parseInt(value, 10) || 3));
-  revRule = { ...revRule, window_months: n };
+function drawFinLine() {
+  const el = document.getElementById('fin-chart-line');
+  if (!el) return;
+  const y = finYear, now = new Date();
+  // Up to the current month – or further if bookings are already dated later in the year.
+  const lastBooked = Math.max(0, ...finBookings.filter(b => bYear(b) === y).map(bMonth));
+  const lastM = y < now.getFullYear() ? 12 : Math.max(y > now.getFullYear() ? 0 : now.getMonth() + 1, lastBooked);
+  const mode = finUi.lineMode;
+  let acc = 0;
+  const pts = [];
+  for (let m = 1; m <= Math.max(lastM, 1); m++) {
+    const inc = finSum(y, m, 'income'), exp = finSum(y, m, 'expense');
+    acc += mode === 'balance' ? inc - exp : inc;
+    pts.push({ m, v: mode === 'monthly' ? inc : acc });
+  }
+  if (!lastM) { el.innerHTML = emptyState('📈', `Für ${y} gibt es noch keine abgeschlossenen Monate.`, '', '', true); return; }
+  const W = Math.max(280, el.clientWidth), H = W < 520 ? 200 : 230;
+  const L = 52, R = 10, T = 12, B = 26, pw = W - L - R, ph = H - T - B;
+  const vals = pts.map(p => p.v / 100);
+  const maxV = Math.max(0, ...vals), minV = Math.min(0, ...vals);
+  const step = niceStep(Math.max(maxV - minV, 1));
+  const top = Math.max(step, Math.ceil(maxV / step) * step), bot = Math.floor(minV / step) * step;
+  const yv = v => T + ph - (v / 100 - bot) / (top - bot) * ph;
+  const xv = m => L + (m - 1) / 11 * pw;
+  let s = `<defs><linearGradient id="fin-area-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--fin-inc)" stop-opacity=".28"/><stop offset="1" stop-color="var(--fin-inc)" stop-opacity="0"/></linearGradient></defs>`;
+  for (let t = bot; t <= top + 1e-9; t += step) { const yy = T + ph - (t - bot) / (top - bot) * ph; s += `<line class="${t === 0 ? 'fin-baseline' : 'fin-grid'}" x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}"/><text class="fin-axis" x="${L - 6}" y="${yy + 4}" text-anchor="end">${axisEur(t)}</text>`; }
+  FIN_MONTHS.forEach((n, i) => { s += `<text class="fin-axis" x="${xv(i + 1)}" y="${H - 8}" text-anchor="middle">${W < 520 ? n[0] : FIN_M_SHORT[i]}</text>`; });
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${xv(p.m).toFixed(1)},${yv(p.v).toFixed(1)}`).join('');
+  const zero = yv(0);
+  if (pts.length > 1) s += `<path d="${line}L${xv(pts[pts.length - 1].m).toFixed(1)},${zero}L${xv(1)},${zero}Z" fill="url(#fin-area-grad)" class="fin-fade"/>`;
+  s += `<path d="${line}" class="fin-line fin-draw" fill="none"/>`;
+  const lp = pts[pts.length - 1];
+  s += `<circle cx="${xv(lp.m)}" cy="${yv(lp.v)}" r="4.5" class="fin-dot"/>`;
+  s += `<line class="fin-cross" id="fin-cross" x1="0" x2="0" y1="${T}" y2="${T + ph}" visibility="hidden"/><circle id="fin-cross-dot" r="5" class="fin-dot" visibility="hidden"/>`;
+  s += `<rect class="fin-hit-all" x="${L - 10}" y="${T}" width="${pw + 20}" height="${ph}" tabindex="0" aria-label="Verlauf ${y}"/>`;
+  const label = { monthly: 'Einnahmen im Monat', cumulative: 'Einnahmen kumuliert', balance: 'Saldo kumuliert' }[mode];
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${label} ${y}, zuletzt ${eur(lp.v)}">${s}</svg>`;
+  const svg = el.querySelector('svg'), scale = el.clientWidth / W;
+  const show = clientX => {
+    const r = svg.getBoundingClientRect();
+    const mx = (clientX - r.left) / scale;
+    const m = Math.max(1, Math.min(pts.length, Math.round((mx - L) / pw * 11) + 1));
+    const p = pts[m - 1];
+    const cross = svg.querySelector('#fin-cross'), dot = svg.querySelector('#fin-cross-dot');
+    cross.setAttribute('x1', xv(m)); cross.setAttribute('x2', xv(m)); cross.setAttribute('visibility', 'visible');
+    dot.setAttribute('cx', xv(m)); dot.setAttribute('cy', yv(p.v)); dot.setAttribute('visibility', 'visible');
+    finTip(el, `<b>${FIN_MONTHS[m - 1]} ${y}</b><div>${label}: <b>${mode === 'balance' ? eurSigned(p.v) : eur(p.v)}</b></div>`, xv(m) * scale, yv(p.v) * scale);
+  };
+  const hit = svg.querySelector('.fin-hit-all');
+  hit.addEventListener('mousemove', e => show(e.clientX));
+  hit.addEventListener('click', e => show(e.clientX));
+  hit.addEventListener('focus', () => { const r = svg.getBoundingClientRect(); show(r.left + xv(lp.m) * scale); });
+  svg.addEventListener('mouseleave', () => { finTipHide(el); svg.querySelector('#fin-cross').setAttribute('visibility', 'hidden'); svg.querySelector('#fin-cross-dot').setAttribute('visibility', 'hidden'); });
+}
+function drawFinDonut(kind) {
+  const el = document.getElementById('fin-donut-' + kind);
+  if (!el) return;
+  const y = finYear;
+  const colors = kind === 'income' ? FIN_INCOME_COLORS : FIN_EXPENSE_COLORS;
+  const labels = kind === 'income'
+    ? { adsense: 'YouTube AdSense', sponsoring: 'Sponsoring', affiliate: 'Affiliate', other: 'Sonstiges' }
+    : { software: 'Software', hosting: 'Hosting', website: 'Website & E-Mail', equipment: 'Equipment', travel: 'Reisen', editing: 'Schnitt', marketing: 'Marketing', other: 'Sonstiges' };
+  const sums = Object.fromEntries(Object.keys(labels).map(k => [k, 0]));
+  finBookings.forEach(b => { if (finPaid(b) && b.kind === kind && bYear(b) === y) sums[finBucket(b)] += b.amount_cents; });
+  const segs = Object.keys(labels).map(k => ({ k, label: labels[k], v: sums[k], color: colors[k] })).filter(s => s.v > 0);
+  const total = segs.reduce((a, s) => a + s.v, 0);
+  if (!total) { el.innerHTML = emptyState(kind === 'income' ? '💶' : '🧾', kind === 'income' ? `Noch keine Einnahmen in ${y}` : `Noch keine Ausgaben in ${y}`, 'Sobald Buchungen erfasst sind, erscheint hier die Verteilung.', '', true); return; }
+  const R = 78, r = 54, C = 90;
+  let a0 = -Math.PI / 2, paths = '';
+  const arc = (s, e) => {
+    if (e - s >= Math.PI * 2 - 1e-6) e = s + Math.PI * 2 - 1e-4;
+    const large = e - s > Math.PI ? 1 : 0;
+    const p = (rad, ang) => `${(C + rad * Math.cos(ang)).toFixed(2)},${(C + rad * Math.sin(ang)).toFixed(2)}`;
+    return `M${p(R, s)}A${R},${R} 0 ${large} 1 ${p(R, e)}L${p(r, e)}A${r},${r} 0 ${large} 0 ${p(r, s)}Z`;
+  };
+  segs.forEach((sg, i) => {
+    const a1 = a0 + sg.v / total * Math.PI * 2;
+    paths += `<path d="${arc(a0, a1)}" style="fill:${sg.color}" class="fin-seg" data-i="${i}" tabindex="0" aria-label="${esc(sg.label)}: ${eur(sg.v)}, ${(sg.v / total * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} %"/>`;
+    a0 = a1;
+  });
+  const center = (title, value, sub) => `<text x="${C}" y="${C - 8}" text-anchor="middle" class="fin-donut-t">${esc(title)}</text><text x="${C}" y="${C + 12}" text-anchor="middle" class="fin-donut-v">${value}</text><text x="${C}" y="${C + 28}" text-anchor="middle" class="fin-donut-t">${sub}</text>`;
+  el.innerHTML = `<svg viewBox="0 0 180 180" width="180" height="180" role="img" aria-label="${kind === 'income' ? 'Einnahmequellen' : 'Ausgabenkategorien'} ${y}: gesamt ${eur(total)}">
+      <g class="fin-segs">${paths}</g><g class="fin-center">${center('Gesamt', eur(total), String(y))}</g></svg>
+    <ul class="fin-donut-legend">${segs.map((sg, i) => `<li data-i="${i}"><i style="background:${sg.color}"></i><span>${esc(sg.label)}</span><b>${eur(sg.v)}</b><span class="muted">${(sg.v / total * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 })} %</span></li>`).join('')}</ul>`;
+  const svg = el.querySelector('svg');
+  const focus = i => {
+    el.querySelectorAll('.fin-seg').forEach(p => p.classList.toggle('dim', i !== null && +p.dataset.i !== i));
+    el.querySelectorAll('.fin-donut-legend li').forEach(li => li.classList.toggle('on', +li.dataset.i === i));
+    const sg = i === null ? null : segs[i];
+    svg.querySelector('.fin-center').innerHTML = sg ? center(sg.label, eur(sg.v), (sg.v / total * 100).toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' %') : center('Gesamt', eur(total), String(y));
+  };
+  el.querySelectorAll('.fin-seg, .fin-donut-legend li').forEach(n => {
+    n.addEventListener('mouseenter', () => focus(+n.dataset.i));
+    n.addEventListener('focus', () => focus(+n.dataset.i));
+    n.addEventListener('click', () => focus(+n.dataset.i));
+  });
+  el.addEventListener('mouseleave', () => focus(null));
+}
+let finResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(finResizeTimer);
+  finResizeTimer = setTimeout(() => { if (document.getElementById('page-finanzen')?.classList.contains('active') && finUi.tab === 'overview') drawFinCharts(); }, 150);
+});
+
+// ── Recurring tab ──
+function finRecurringHtml() {
+  const kind = finUi.recTab;
+  const list = finRecurring.filter(r => r.kind === kind).sort((a, b) => (a.status === 'active' ? 0 : 1) - (b.status === 'active' ? 0 : 1) || a.name.localeCompare(b.name));
+  const incM = recMonthlyTotal('income'), expM = recMonthlyTotal('expense');
+  return `<div class="card fin-plan">
+    <div class="fin-tab-head">
+      <div class="seg seg-sm" style="margin:0">${[['income', 'Einnahmen'], ['expense', 'Ausgaben']].map(([k, l]) => `<button class="seg-btn${kind === k ? ' active' : ''}" onclick="finUi.recTab='${k}';saveFinUi();renderFinance()">${l}</button>`).join('')}</div>
+      <span class="fin-plan-badge">Planung · keine Buchung</span>
+      <button class="btn btn-sm btn-primary" style="margin-left:auto" onclick="openRecurring(null,'${kind}')">+ ${kind === 'income' ? 'Regelmäßige Einnahme' : 'Regelmäßige Ausgabe'}</button>
+    </div>
+    ${list.length ? `<div class="fin-table">
+      <div class="fin-tr fin-th"><div>Posten</div><div>Betrag</div><div>pro Monat</div><div>Nächste Zahlung</div><div>Status</div><div></div></div>
+      ${list.map(r => { const nd = recNextDue(r); return `<div class="fin-tr${r.status !== 'active' ? ' inactive' : ''}">
+        <div><button class="link-btn fin-name" onclick="openRecurring(${jsArg(r.id)})">${esc(r.name)}</button><div class="muted fin-small">${esc(finCatName(r.category_id))}${r.receipt_path ? ' · 📎' : ''}</div></div>
+        <div data-l="Betrag">${eur(r.amount_cents)}<div class="muted fin-small">${FIN_INTERVALS[r.billing_interval][0]}</div></div>
+        <div data-l="pro Monat"><b>${eur(Math.round(recMonthly(r)))}</b></div>
+        <div data-l="Nächste Zahlung">${nd ? formatDate(safeParseIso(nd)) : '<span class="muted">–</span>'}</div>
+        <div data-l="Status"><span class="pill${r.status === 'active' ? ' pill-accent' : ''}">${FIN_REC_STATUS[r.status]}</span></div>
+        <div class="fin-tr-actions">${r.status === 'active' ? `<button class="btn btn-sm" onclick="bookRecurring(${jsArg(r.id)})">Zahlung erfassen</button>` : ''}</div>
+      </div>`; }).join('')}
+    </div>` : emptyState(kind === 'income' ? '💶' : '🔁', kind === 'income' ? 'Noch keine regelmäßigen Einnahmen' : 'Noch keine regelmäßigen Ausgaben', 'z. B. ' + (kind === 'income' ? 'monatlicher Sponsoringvertrag' : 'Riverside, Hosting, Domain, E-Mail'), '', true)}
+    <div class="fin-totals">
+      <div><span class="muted">Regelmäßige Einnahmen</span><b>${eur(Math.round(incM))} / Monat</b></div>
+      <div><span class="muted">Regelmäßige Ausgaben</span><b>${eur(Math.round(expM))} / Monat</b></div>
+      <div><span class="muted">Rechnerischer Überschuss</span><b class="${incM - expM < 0 ? 'neg' : 'pos'}">${eurSigned(Math.round(incM - expM))} / Monat</b></div>
+    </div>
+    <div class="muted fin-small" style="margin-top:8px">Die Monatsbeträge sind rechnerische Vergleichswerte (z. B. 120 € jährlich = 10 € pro Monat) – keine Buchungen. Tatsächliche Zahlungen erfasst ihr über „Zahlung erfassen“.</div>
+  </div>`;
+}
+
+// ── Months tab ──
+function finMonthsHtml() {
+  const y = finYear;
+  const tiles = FIN_MONTHS.map((n, i) => {
+    const m = i + 1, inc = finSum(y, m, 'income'), exp = finSum(y, m, 'expense');
+    const plan = recPlannedForMonth(y, m, 'expense');
+    const has = finBookings.some(b => bYear(b) === y && bMonth(b) === m);
+    return `<button type="button" class="fin-month${finUi.month === m ? ' on' : ''}" onclick="finUi.month=finUi.month===${m}?null:${m};renderFinance();setTimeout(()=>document.getElementById('fin-month-detail')?.scrollIntoView({behavior:'smooth',block:'start'}),30)">
+      <div class="fin-month-head"><b>${n}</b>${finMonthComplete(y, m) ? '<span class="pill pill-accent" title="vollständig erfasst">✓ vollständig</span>' : has ? '<span class="pill">offen</span>' : ''}</div>
+      <div class="fin-month-row"><span class="muted">Einnahmen</span><span class="fin-amt income">${eur(inc)}</span></div>
+      <div class="fin-month-row"><span class="muted">Ausgaben</span><span class="fin-amt expense">${eur(exp)}</span></div>
+      <div class="fin-month-row fin-month-saldo"><span class="muted">Saldo</span><b class="${inc - exp < 0 ? 'neg' : ''}">${eurSigned(inc - exp)}</b></div>
+      ${plan ? `<div class="fin-month-row fin-small"><span class="muted">Fixkosten (Plan)</span><span class="muted">${eur(Math.round(plan))}</span></div>` : ''}
+    </button>`;
+  }).join('');
+  return `<div class="muted fin-small" style="margin-bottom:8px">Beträge = tatsächlicher Geldfluss (bezahlte Buchungen). „Fixkosten (Plan)“ ist nur der rechnerische Monatsanteil der wiederkehrenden Ausgaben.</div>
+    <div class="fin-months">${tiles}</div>${finUi.month ? finMonthDetailHtml(y, finUi.month) : ''}`;
+}
+function finMonthDetailHtml(y, m) {
+  const list = finBookings.filter(b => bYear(b) === y && bMonth(b) === m).sort((a, b) => a.date.localeCompare(b.date));
+  const inc = list.filter(b => b.kind === 'income'), exp = list.filter(b => b.kind === 'expense');
+  const complete = finMonthComplete(y, m);
+  const row = finMonthRows.find(r => r.year === y && r.month === m);
+  const now = new Date();
+  const defDate = y === now.getFullYear() && m === now.getMonth() + 1 ? isoToday() : `${y}-${String(m).padStart(2, '0')}-15`;
+  const group = (title, arr, kind) => `<div class="fin-sub">${title} <span class="muted">${eur(finSum(y, m, kind))}</span></div>
+    ${arr.length ? arr.map(finBookingRowHtml).join('') : `<div class="todo-empty">Keine ${kind === 'income' ? 'Einnahmen' : 'Ausgaben'} erfasst.</div>`}`;
+  return `<div class="card" id="fin-month-detail" style="margin-top:12px">
+    <div class="fin-tab-head"><h2 style="margin:0">${FIN_MONTHS[m - 1]} ${y}</h2>
+      <button class="btn btn-sm btn-primary" onclick="openBooking('income',null,{date:'${defDate}'})">+ Einnahme</button>
+      <button class="btn btn-sm" onclick="openBooking('expense',null,{date:'${defDate}'})">+ Ausgabe</button>
+      <button class="btn btn-sm btn-ghost" onclick="exportFinCsv({year:${y},month:${m}})">CSV</button></div>
+    ${group('Einnahmen', inc, 'income')}
+    ${group('Ausgaben', exp, 'expense')}
+    <div class="fin-month-complete">
+      <label class="rev-confirm${finMonthFuture(y, m) && !complete ? ' disabled' : ''}"><input type="checkbox" ${complete ? 'checked' : ''} ${finMonthFuture(y, m) && !complete ? 'disabled' : ''} onchange="toggleFinMonthComplete(${y},${m})"> Monat vollständig erfasst</label>
+      <span class="muted fin-small">${complete && row && row.completed_at ? `markiert von ${esc(actorName(row.completed_by))} am ${formatDate(new Date(row.completed_at))}` : 'Nur vollständig erfasste Monate fließen in Durchschnittswerte und die 300-€-Regel ein. Ein Monat ohne Buchungen kann bewusst als vollständig (0 €) markiert werden.'}</span>
+    </div>
+  </div>`;
+}
+function finMonthFuture(y, m) { const n = new Date(); return y * 12 + m > n.getFullYear() * 12 + n.getMonth() + 1; }
+function toggleFinMonthComplete(y, m) {
+  const complete = !finMonthComplete(y, m);
+  if (complete && finMonthFuture(y, m)) { showToast('Ein Monat in der Zukunft kann noch nicht vollständig erfasst sein.', 'error'); renderFinance(); return; }
+  const run = () => finWrite(async () => {
+    try {
+      const rows = await apiFetch('podcast_fin_months?on_conflict=year,month', { method: 'POST', prefer: 'resolution=merge-duplicates,return=representation',
+        body: JSON.stringify({ year: y, month: m, complete, completed_by: complete ? currentActor() : null, completed_at: complete ? new Date().toISOString() : null }) });
+      finMonthRows = finMonthRows.filter(r => !(r.year === y && r.month === m)).concat(rows);
+      flashSaved();
+    } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+    finAfterChange();
+  });
+  if (complete) withActor(run); else run();
+}
+
+// ── Bookings tab ──
+function finBookingRowHtml(b) {
+  const rec = b.recurring_id ? finRecurring.find(r => r.id === b.recurring_id) : null;
+  const ep = b.episode_id ? episodes.find(e => e.id === b.episode_id) : null;
+  return `<div class="fin-row fin-booking${b.status === 'open' ? ' is-open' : ''}" onclick="openBooking('${b.kind}',${jsArg(b.id)})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')this.click()">
+    <span class="fin-row-date">${formatDate(safeParseIso(b.date))}</span>
+    <span class="fin-row-main">${esc(b.description || finCatName(b.category_id))}
+      <span class="fin-chips"><span class="chip">${esc(finCatName(b.category_id))}</span>${rec ? `<span class="chip" title="Wiederkehrender Posten">🔁 ${esc(rec.name)}</span>` : ''}${ep ? `<span class="chip">🎙 ${esc(ep.title)}</span>` : ''}${b.cooperation ? `<span class="chip">🤝 ${esc(b.cooperation)}</span>` : ''}${b.status === 'open' ? '<span class="chip chip-warn">offen – nicht gezählt</span>' : ''}${b.receipt_path ? '<span class="chip" title="Beleg vorhanden">📎</span>' : ''}</span></span>
+    <span class="fin-amt ${b.kind}">${b.kind === 'income' ? '+' : '−'}${eur(b.amount_cents)}</span>
+  </div>`;
+}
+function finFilteredBookings() {
+  const q = norm(finUi.q);
+  return finBookings.filter(b => bYear(b) === finYear
+    && (!finUi.kind || b.kind === finUi.kind)
+    && (!finUi.type || (finUi.type === 'once' ? !b.recurring_id : !!b.recurring_id))
+    && (!finUi.cat || b.category_id === finUi.cat)
+    && (!finUi.status || b.status === finUi.status)
+    && (!q || norm([b.description, b.note, b.cooperation, finCatName(b.category_id)].join(' ')).includes(q)));
+}
+function setFinFilter(k, v) { finUi[k] = v; if (k === 'kind') finUi.cat = ''; saveFinUi(); renderFinance(); }
+function finBookingsHtml() {
+  const list = finFilteredBookings();
+  const inc = list.filter(b => finPaid(b) && b.kind === 'income').reduce((a, b) => a + b.amount_cents, 0);
+  const exp = list.filter(b => finPaid(b) && b.kind === 'expense').reduce((a, b) => a + b.amount_cents, 0);
+  const cats = finUi.kind ? finCatsOf(finUi.kind, true) : finCats;
+  return `<div class="card">
+    <div class="fin-filters">
+      <input type="search" id="fin-search" placeholder="Suchen…" aria-label="Buchungen durchsuchen" value="${esc(finUi.q)}" oninput="finUi.q=this.value;renderFinance()">
+      <select onchange="setFinFilter('kind',this.value)" aria-label="Art"><option value="">Einnahmen & Ausgaben</option><option value="income"${finUi.kind === 'income' ? ' selected' : ''}>Nur Einnahmen</option><option value="expense"${finUi.kind === 'expense' ? ' selected' : ''}>Nur Ausgaben</option></select>
+      <select onchange="setFinFilter('type',this.value)" aria-label="Typ"><option value="">Einmalig & wiederkehrend</option><option value="once"${finUi.type === 'once' ? ' selected' : ''}>Nur einmalige</option><option value="recurring"${finUi.type === 'recurring' ? ' selected' : ''}>Nur aus wiederkehrenden Posten</option></select>
+      <select onchange="setFinFilter('cat',this.value)" aria-label="Kategorie"><option value="">Alle Kategorien</option>${cats.map(c => `<option value="${c.id}"${finUi.cat === c.id ? ' selected' : ''}>${c.kind === 'income' ? '＋' : '−'} ${esc(c.name)}</option>`).join('')}</select>
+      <select onchange="setFinFilter('status',this.value)" aria-label="Zahlungsstatus"><option value="">Alle Status</option><option value="paid"${finUi.status === 'paid' ? ' selected' : ''}>Bezahlt</option><option value="open"${finUi.status === 'open' ? ' selected' : ''}>Offen</option></select>
+    </div>
+    <div class="fin-tab-head" style="margin-top:4px">
+      <span class="muted fin-small">${list.length} Buchung${list.length === 1 ? '' : 'en'} in ${finYear} · bezahlt: <b class="pos">+${eur(inc)}</b> / <b class="neg">−${eur(exp)}</b></span>
+      <button class="btn btn-sm btn-ghost" style="margin-left:auto" onclick="exportFinCsv({filtered:true})">CSV (aktuelle Auswahl)</button>
+      <button class="btn btn-sm btn-ghost" onclick="openFinCategories()">Kategorien</button>
+    </div>
+    <div class="fin-list">${list.length ? list.map(finBookingRowHtml).join('') : emptyState('🧾', 'Keine Buchungen', finUi.q || finUi.kind || finUi.type || finUi.cat || finUi.status ? 'Kein Treffer für diese Filter.' : 'Mit „+ Einnahme“ oder „+ Ausgabe“ die erste Buchung erfassen.', '', true)}</div>
+  </div>
+  ${finLegacyHtml()}`;
+}
+
+// ── Change log ──
+async function loadFinLog() {
+  const box = document.getElementById('fin-log');
+  try {
+    finLog = await apiFetch('podcast_fin_booking_log?select=*&order=at.desc&limit=200');
+    if (finUi.tab !== 'log' || !document.getElementById('fin-log')) return;
+    const desc = r => r ? `${r.kind === 'income' ? '+' : '−'}${eur(r.amount_cents)} · ${esc(r.description || finCatName(r.category_id))} · ${formatDate(safeParseIso(r.date))}${r.status === 'open' ? ' (offen)' : ''}` : '';
+    const changes = (o, n) => ['amount_cents', 'date', 'description', 'category_id', 'status', 'kind', 'receipt_path', 'note', 'recurring_id', 'episode_id', 'cooperation']
+      .filter(k => JSON.stringify(o[k]) !== JSON.stringify(n[k])).map(k => ({ amount_cents: 'Betrag', date: 'Datum', description: 'Beschreibung', category_id: 'Kategorie', status: 'Status', kind: 'Art', receipt_path: 'Beleg', note: 'Notiz', recurring_id: 'Wiederkehrender Posten', episode_id: 'Folge', cooperation: 'Kooperation' })[k]);
+    document.getElementById('fin-log').innerHTML = `<h2>Änderungsprotokoll</h2>
+      <div class="muted fin-small" style="margin-bottom:8px">Jede neue, geänderte und gelöschte Buchung wird automatisch in der Datenbank protokolliert (nicht änderbar).</div>
+      ${finLog.length ? `<div class="fin-list">${finLog.map(l => `<div class="fin-row fin-log-row">
+        <span class="fin-row-date">${new Date(l.at).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+        <span class="fin-row-main"><span class="pill${l.action === 'delete' ? ' pill-warn' : ''}">${{ insert: 'Neu', update: 'Geändert', delete: 'Gelöscht' }[l.action]}</span>
+          ${l.action === 'update' ? `${desc(l.new_row)} <span class="muted">– geändert: ${changes(l.old_row, l.new_row).join(', ') || '–'}${l.old_row.amount_cents !== l.new_row.amount_cents ? ` (vorher ${eur(l.old_row.amount_cents)})` : ''}</span>` : desc(l.action === 'delete' ? l.old_row : l.new_row)}</span>
+        <span class="muted fin-small">${esc(l.actor ? actorName(l.actor) : '–')}</span></div>`).join('')}</div>` : emptyState('🗂️', 'Noch keine Änderungen', '', '', true)}`;
+  } catch (e) { if (box) box.innerHTML = errorState('Protokoll konnte nicht geladen werden.', 'loadFinLog()'); }
+}
+
+// ── Booking form ──
+let finEdit = null; // { id, kind, recurring, period_key, receipt_path }
+function openBooking(kind, id = null, defaults = {}) {
+  const b = id ? finBookings.find(x => x.id === id) : null;
+  kind = b ? b.kind : kind;
+  finEdit = { id: b ? b.id : null, kind, receipt_path: b ? b.receipt_path : null, period_key: b ? b.period_key : (defaults.period_key || null), newFile: null };
+  document.getElementById('fb-title').textContent = (b ? 'Buchung bearbeiten · ' : 'Neue ') + (kind === 'income' ? 'Einnahme' : 'Ausgabe');
+  document.getElementById('fb-amount').value = b ? eurPlain(b.amount_cents) : defaults.amount ? eurPlain(defaults.amount) : '';
+  document.getElementById('fb-date').value = b ? b.date : defaults.date || isoToday();
+  document.getElementById('fb-desc').value = b ? b.description : defaults.description || '';
+  const catSel = document.getElementById('fb-cat');
+  const cats = finCatsOf(kind).concat(b && finCat(b.category_id) && finCat(b.category_id).archived ? [finCat(b.category_id)] : []);
+  catSel.innerHTML = `<option value="">Ohne Kategorie</option>` + cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  catSel.value = b ? b.category_id || '' : defaults.category_id || (cats[0] ? cats[0].id : '');
+  document.getElementById('fb-status').value = b ? b.status : 'paid';
+  const recSel = document.getElementById('fb-rec');
+  recSel.innerHTML = `<option value="">– keiner (einmalig) –</option>` + finRecurring.filter(r => r.kind === kind).map(r => `<option value="${r.id}">${esc(r.name)} (${FIN_INTERVALS[r.billing_interval][0]})</option>`).join('');
+  recSel.value = b ? b.recurring_id || '' : defaults.recurring_id || '';
+  const epSel = document.getElementById('fb-ep');
+  epSel.innerHTML = `<option value="">– keine Folge –</option>` + [...episodes].sort((a, c) => (safeParseDate(c.date) || 0) - (safeParseDate(a.date) || 0)).map(e => `<option value="${esc(e.id)}">${esc(e.date)} · ${esc(e.title)}</option>`).join('');
+  epSel.value = b ? b.episode_id || '' : '';
+  document.getElementById('fb-coop').value = b ? b.cooperation || '' : '';
+  document.getElementById('fb-note').value = b ? b.note || '' : '';
+  document.getElementById('fb-file').value = '';
+  renderFinReceipt('fb');
+  document.getElementById('fb-delete').hidden = !b;
+  document.getElementById('fb-amount').classList.remove('invalid');
+  document.getElementById('fin-booking-bg').classList.add('open');
+  setTimeout(() => document.getElementById('fb-amount').focus(), 50);
+}
+function closeBooking() { document.getElementById('fin-booking-bg').classList.remove('open'); finEdit = null; }
+function bookRecurring(recId, dueIso) {
+  const r = finRecurring.find(x => x.id === recId);
+  if (!r) return;
+  const date = dueIso || recNextDue(r) || isoToday();
+  const key = recPeriodKey(r, date);
+  const existing = finBookings.find(b => b.recurring_id === r.id && b.period_key === key);
+  if (existing) { showToast(`Für diesen Zeitraum (${key}) ist bereits eine Buchung erfasst – sie wird geöffnet.`, 'error'); openBooking(r.kind, existing.id); return; }
+  openBooking(r.kind, null, { amount: r.amount_cents, date, description: r.name, category_id: r.category_id, recurring_id: r.id, period_key: key });
+}
+async function saveBooking() {
+  if (!finEdit) return;
+  const amountEl = document.getElementById('fb-amount');
+  const parsed = parseEuro(amountEl.value);
+  if (parsed.error || !parsed.cents) { amountEl.classList.add('invalid'); showToast(parsed.error || 'Bitte einen Betrag größer 0 eingeben.', 'error'); amountEl.focus(); return; }
+  const date = document.getElementById('fb-date').value;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) { showToast('Bitte ein Datum wählen.', 'error'); return; }
+  const recId = document.getElementById('fb-rec').value || null;
+  const rec = recId ? finRecurring.find(r => r.id === recId) : null;
+  // Period of a recurring payment: kept if the item is unchanged, otherwise derived from the date.
+  const prev = finEdit.id ? finBookings.find(b => b.id === finEdit.id) : null;
+  const period_key = rec ? (prev && prev.recurring_id === recId && prev.date === date && prev.period_key ? prev.period_key : finEdit.period_key && !prev ? finEdit.period_key : recPeriodKey(rec, date)) : null;
+  if (rec && finBookings.some(b => b.id !== finEdit.id && b.recurring_id === recId && b.period_key === period_key)) {
+    showToast(`„${rec.name}“ ist für den Zeitraum ${period_key} schon gebucht – doppelte Buchung verhindert.`, 'error'); return;
+  }
+  const row = {
+    kind: finEdit.kind, amount_cents: parsed.cents, date, description: document.getElementById('fb-desc').value.trim(),
+    category_id: document.getElementById('fb-cat').value || null, status: document.getElementById('fb-status').value,
+    recurring_id: recId, period_key, episode_id: document.getElementById('fb-ep').value || null,
+    cooperation: document.getElementById('fb-coop').value.trim() || null, note: document.getElementById('fb-note').value.trim() || null,
+    updated_by: currentActor(),
+  };
+  const btn = document.getElementById('fb-save');
+  btn.disabled = true;
+  await finWrite(async () => {
+    try {
+      let saved;
+      if (finEdit.id) {
+        saved = (await apiFetch(`podcast_fin_bookings?id=eq.${encodeURIComponent(finEdit.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(row) }))[0];
+      } else {
+        saved = (await apiFetch('podcast_fin_bookings', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, created_by: currentActor(), ...(finEdit.legacy_ref ? { legacy_ref: finEdit.legacy_ref } : {}) }) }))[0];
+      }
+      if (finEdit.newFile) saved = await uploadFinReceipt('podcast_fin_bookings', saved, finEdit.newFile) || saved;
+      // A booked recurring payment moves the item's next due date past this period.
+      if (rec && rec.next_due && rec.next_due <= date) {
+        const nd = addMonthsIso(rec.next_due, FIN_INTERVALS[rec.billing_interval][1]);
+        apiFetch(`podcast_fin_recurring?id=eq.${rec.id}`, { method: 'PATCH', body: JSON.stringify({ next_due: nd, updated_by: currentActor() }) }).then(() => { rec.next_due = nd; }).catch(() => {});
+      }
+      finBookings = finBookings.filter(b => b.id !== saved.id).concat(saved).sort((a, b) => b.date.localeCompare(a.date));
+      closeBooking();
+      flashSaved();
+      showToast(row.status === 'paid' ? 'Buchung gespeichert' : 'Als offen gespeichert – zählt noch nicht als Zahlung');
+    } catch (e) {
+      showToast((e.status === 409 ? 'Doppelte Buchung verhindert: ' : 'Speichern fehlgeschlagen: ') + e.message, 'error');
+    }
+  });
+  btn.disabled = false;
+  finAfterChange();
+}
+async function deleteBooking() {
+  if (!finEdit || !finEdit.id) return;
+  const b = finBookings.find(x => x.id === finEdit.id);
+  if (!b || !confirm(`Buchung „${b.description || finCatName(b.category_id)}“ (${eur(b.amount_cents)}) löschen? Sie bleibt im Änderungsprotokoll nachvollziehbar.`)) return;
+  await finWrite(async () => {
+    try {
+      // Record who deletes (the change log takes the actor from the last update).
+      await apiFetch(`podcast_fin_bookings?id=eq.${encodeURIComponent(b.id)}`, { method: 'PATCH', body: JSON.stringify({ updated_by: currentActor() }) });
+      await apiFetch(`podcast_fin_bookings?id=eq.${encodeURIComponent(b.id)}`, { method: 'DELETE' });
+      finBookings = finBookings.filter(x => x.id !== b.id);
+      closeBooking();
+      showToast('Buchung gelöscht');
+    } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+  });
+  finAfterChange();
+}
+
+// ── Recurring form ──
+let finRecEdit = null;
+function openRecurring(id, kind = 'expense') {
+  const r = id ? finRecurring.find(x => x.id === id) : null;
+  kind = r ? r.kind : kind;
+  finRecEdit = { id: r ? r.id : null, kind, receipt_path: r ? r.receipt_path : null, newFile: null };
+  document.getElementById('fr-title').textContent = r ? 'Wiederkehrenden Posten bearbeiten' : (kind === 'income' ? 'Neue regelmäßige Einnahme' : 'Neue regelmäßige Ausgabe');
+  document.getElementById('fr-kind').value = kind;
+  document.getElementById('fr-name').value = r ? r.name : '';
+  document.getElementById('fr-amount').value = r ? eurPlain(r.amount_cents) : '';
+  document.getElementById('fr-interval').value = r ? r.billing_interval : 'monthly';
+  document.getElementById('fr-start').value = r ? r.start_date : isoToday();
+  document.getElementById('fr-end').value = r ? r.end_date || '' : '';
+  document.getElementById('fr-next').value = r ? r.next_due || '' : '';
+  document.getElementById('fr-status').value = r ? r.status : 'active';
+  document.getElementById('fr-notes').value = r ? r.notes || '' : '';
+  document.getElementById('fr-file').value = '';
+  finFillRecCats(r ? r.category_id : null);
+  renderFinReceipt('fr');
+  updateRecMonthly();
+  document.getElementById('fr-delete').hidden = !r;
+  document.getElementById('fin-rec-bg').classList.add('open');
+  setTimeout(() => document.getElementById('fr-name').focus(), 50);
+}
+function finFillRecCats(selected) {
+  const kind = document.getElementById('fr-kind').value;
+  const cats = finCatsOf(kind);
+  const sel = document.getElementById('fr-cat');
+  sel.innerHTML = `<option value="">Ohne Kategorie</option>` + cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  sel.value = selected && cats.some(c => c.id === selected) ? selected : (cats[0] ? cats[0].id : '');
+}
+function updateRecMonthly() {
+  const p = parseEuro(document.getElementById('fr-amount').value);
+  const div = FIN_INTERVALS[document.getElementById('fr-interval').value][1];
+  document.getElementById('fr-monthly').textContent = p.cents ? `= ${eur(Math.round(p.cents / div))} pro Monat (rechnerisch)` : '';
+}
+function closeRecurring() { document.getElementById('fin-rec-bg').classList.remove('open'); finRecEdit = null; }
+async function saveRecurring() {
+  if (!finRecEdit) return;
+  const name = document.getElementById('fr-name').value.trim();
+  const p = parseEuro(document.getElementById('fr-amount').value);
+  if (!name) { showToast('Bitte einen Namen eingeben.', 'error'); document.getElementById('fr-name').focus(); return; }
+  if (p.error || !p.cents) { showToast(p.error || 'Bitte einen Betrag größer 0 eingeben.', 'error'); document.getElementById('fr-amount').focus(); return; }
+  const start = document.getElementById('fr-start').value, end = document.getElementById('fr-end').value || null;
+  if (!start) { showToast('Bitte ein Startdatum wählen.', 'error'); return; }
+  if (end && end < start) { showToast('Das Enddatum liegt vor dem Startdatum.', 'error'); return; }
+  const row = { kind: document.getElementById('fr-kind').value, name, category_id: document.getElementById('fr-cat').value || null, amount_cents: p.cents,
+    billing_interval: document.getElementById('fr-interval').value, start_date: start, end_date: end, next_due: document.getElementById('fr-next').value || null,
+    status: document.getElementById('fr-status').value, notes: document.getElementById('fr-notes').value.trim() || null, updated_by: currentActor() };
+  await finWrite(async () => {
+    try {
+      let saved = finRecEdit.id
+        ? (await apiFetch(`podcast_fin_recurring?id=eq.${encodeURIComponent(finRecEdit.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(row) }))[0]
+        : (await apiFetch('podcast_fin_recurring', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, created_by: currentActor() }) }))[0];
+      if (finRecEdit.newFile) saved = await uploadFinReceipt('podcast_fin_recurring', saved, finRecEdit.newFile) || saved;
+      finRecurring = finRecurring.filter(r => r.id !== saved.id).concat(saved);
+      finUi.recTab = saved.kind; saveFinUi();
+      closeRecurring();
+      flashSaved();
+    } catch (e) { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); }
+  });
+  finAfterChange();
+}
+async function deleteRecurring() {
+  const r = finRecEdit && finRecurring.find(x => x.id === finRecEdit.id);
+  if (!r) return;
+  const n = finBookings.filter(b => b.recurring_id === r.id).length;
+  if (!confirm(`„${r.name}“ löschen?${n ? ` Die ${n} zugehörigen Buchungen bleiben erhalten (ohne Verknüpfung). Tipp: Status „Beendet“ behält die Historie.` : ''}`)) return;
+  await finWrite(async () => {
+    try {
+      await apiFetch(`podcast_fin_recurring?id=eq.${encodeURIComponent(r.id)}`, { method: 'DELETE' });
+      finRecurring = finRecurring.filter(x => x.id !== r.id);
+      finBookings.forEach(b => { if (b.recurring_id === r.id) b.recurring_id = null; });
+      closeRecurring();
+    } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+  });
+  finAfterChange();
+}
+
+// ── Receipts (private bucket; only signed-in members) ──
+function renderFinReceipt(prefix) {
+  const edit = prefix === 'fb' ? finEdit : finRecEdit;
+  const box = document.getElementById(prefix + '-receipt');
+  const signedIn = !!session;
+  box.innerHTML = `${edit.receipt_path ? `<button type="button" class="btn btn-sm" onclick="openFinReceipt(${jsArg(edit.receipt_path)})">📎 Beleg öffnen</button><span class="muted fin-small">${esc(edit.receipt_path.split('/').pop().replace(/^\d+-/, ''))}</span>` : ''}
+    ${signedIn ? '' : '<span class="muted fin-small">Belege sind nur für angemeldete Mitglieder zugänglich – bitte zuerst anmelden.</span>'}`;
+  document.getElementById(prefix + '-file').disabled = !signedIn;
+}
+function onFinFile(prefix, input) {
+  const f = input.files[0];
+  const edit = prefix === 'fb' ? finEdit : finRecEdit;
+  if (!f || !edit) return;
+  if (f.size > 10 * 1024 * 1024) { showToast('Datei zu groß (max. 10 MB).', 'error'); input.value = ''; return; }
+  if (!/^(application\/pdf|image\/(jpeg|png|webp|heic|heif))$/.test(f.type)) { showToast('Bitte PDF oder Bild (JPG, PNG, WebP, HEIC) hochladen.', 'error'); input.value = ''; return; }
+  edit.newFile = f;
+}
+async function uploadFinReceipt(table, row, file) {
+  if (!session) { showToast('Beleg nicht hochgeladen – bitte anmelden.', 'error'); return null; }
+  const token = await getAccessToken();
+  const safe = file.name.normalize('NFD').replace(/[^\w.\-]+/g, '_').slice(-80);
+  const path = `${table === 'podcast_fin_bookings' ? 'bookings' : 'recurring'}/${row.id}/${Date.now()}-${safe}`;
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/receipts/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': file.type, 'x-upsert': 'false' }, body: file });
+  if (!r.ok) { showToast('Beleg-Upload fehlgeschlagen: ' + apiErrorText(r.status, await r.text()), 'error'); return null; }
+  const rows = await apiFetch(`${table}?id=eq.${encodeURIComponent(row.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ receipt_path: path, updated_by: currentActor() }) });
+  return rows[0];
+}
+async function openFinReceipt(path) {
+  if (!session) { showToast('Belege sind nur nach Anmeldung abrufbar.', 'error'); return; }
+  const win = window.open('', '_blank');
+  try {
+    const token = await getAccessToken();
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/receipts/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 120 }) });
+    if (!r.ok) throw new Error(apiErrorText(r.status, await r.text()));
+    const { signedURL } = await r.json();
+    const url = SUPABASE_URL + '/storage/v1' + signedURL;
+    if (win) win.location = url; else location.href = url;
+  } catch (e) { if (win) win.close(); showToast('Beleg konnte nicht geöffnet werden: ' + e.message, 'error'); }
+}
+
+// ── Categories ──
+function openFinCategories() { renderFinCategories(); document.getElementById('fin-cat-bg').classList.add('open'); }
+function closeFinCategories() { document.getElementById('fin-cat-bg').classList.remove('open'); }
+function renderFinCategories() {
+  document.getElementById('fin-cat-list').innerHTML = ['income', 'expense'].map(kind => `<div class="fin-sub">${kind === 'income' ? 'Einnahmen' : 'Ausgaben'}</div>
+    ${finCatsOf(kind, true).map(c => `<div class="guide-edit-item">
+      <input type="text" value="${esc(c.name)}" aria-label="Kategoriename" onchange="renameFinCat(${jsArg(c.id)}, this.value)" ${c.archived ? 'disabled' : ''}>
+      ${c.key ? '<span class="muted fin-small" title="Standardkategorie – wird für Diagramme und Strategie-Ziele verwendet">Standard</span>'
+        : `<button class="btn btn-sm btn-ghost" onclick="archiveFinCat(${jsArg(c.id)}, ${!c.archived})">${c.archived ? 'Reaktivieren' : 'Archivieren'}</button>`}
+    </div>`).join('')}
+    <div class="todo-input-row" style="margin:6px 0 12px"><input type="text" id="fin-newcat-${kind}" placeholder="Neue Kategorie…" aria-label="Neue Kategorie" onkeydown="if(event.key==='Enter')addFinCat('${kind}')"><button class="btn btn-sm" onclick="addFinCat('${kind}')">Hinzufügen</button></div>`).join('');
+}
+async function addFinCat(kind) {
+  const input = document.getElementById('fin-newcat-' + kind);
+  const name = input.value.trim();
+  if (!name) return;
+  if (finCats.some(c => c.kind === kind && c.name.toLowerCase() === name.toLowerCase())) { showToast('Diese Kategorie gibt es schon.', 'error'); return; }
+  try {
+    const rows = await apiFetch('podcast_fin_categories', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ kind, name, sort: 80 }) });
+    finCats = finCats.concat(rows);
+    renderFinCategories(); finAfterChange();
+  } catch (e) { showToast('Kategorie nicht angelegt: ' + e.message, 'error'); }
+}
+async function renameFinCat(id, name) {
+  name = name.trim();
+  const c = finCat(id);
+  if (!c || !name || name === c.name) { renderFinCategories(); return; }
+  try {
+    await apiFetch(`podcast_fin_categories?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ name }) });
+    c.name = name; finAfterChange(); flashSaved();
+  } catch (e) { showToast('Umbenennen fehlgeschlagen: ' + e.message, 'error'); renderFinCategories(); }
+}
+async function archiveFinCat(id, archived) {
+  try {
+    await apiFetch(`podcast_fin_categories?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ archived }) });
+    finCat(id).archived = archived; renderFinCategories(); finAfterChange();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+}
+
+// ── CSV export (semicolon, decimal comma – opens directly in German Excel) ──
+function exportFinCsv(opt = {}) {
+  let list, name;
+  if (opt.filtered) { list = finFilteredBookings(); name = `finanzen-${finYear}-auswahl`; }
+  else {
+    list = finBookings.filter(b => bYear(b) === (opt.year || finYear) && (!opt.month || bMonth(b) === opt.month) && (!opt.kind || b.kind === opt.kind));
+    name = `finanzen-${opt.year || finYear}${opt.month ? '-' + String(opt.month).padStart(2, '0') : ''}${opt.kind ? '-' + (opt.kind === 'income' ? 'einnahmen' : 'ausgaben') : ''}`;
+  }
+  list = [...list].sort((a, b) => a.date.localeCompare(b.date));
+  const cell = v => { const s = String(v ?? ''); return /[";\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const head = ['Datum', 'Art', 'Kategorie', 'Beschreibung', 'Betrag (EUR)', 'Status', 'Wiederkehrender Posten', 'Zeitraum', 'Folge', 'Kooperation', 'Notiz', 'Beleg'];
+  const rows = list.map(b => [formatDate(safeParseIso(b.date)), FIN_KIND[b.kind], finCatName(b.category_id), b.description,
+    (b.kind === 'expense' ? '-' : '') + eurPlain(b.amount_cents).replace(/\./g, ''), b.status === 'paid' ? 'bezahlt' : 'offen',
+    (finRecurring.find(r => r.id === b.recurring_id) || {}).name || '', b.period_key || '', (episodes.find(e => e.id === b.episode_id) || {}).title || '',
+    b.cooperation || '', b.note || '', b.receipt_path ? 'ja' : 'nein']);
+  const csv = '﻿' + [head, ...rows].map(r => r.map(cell).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = name + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast(`CSV mit ${list.length} Buchung${list.length === 1 ? '' : 'en'} erstellt`);
+}
+function toggleFinExportMenu() { const m = document.getElementById('fin-export-menu'); m.hidden = !m.hidden; }
+
+// ── Older finance data (previous finance tab) – shown, never imported without a click ──
+async function loadFinLegacy() {
+  try {
+    const [e, i] = await Promise.all([apiFetch('podcast_expenses?select=*&order=date.asc'), apiFetch('podcast_income?select=*&order=date.asc')]);
+    finLegacy = [...e.map(x => ({ ...x, ref: 'expenses:' + x.id, kind: 'expense' })), ...i.map(x => ({ ...x, ref: 'income:' + x.id, kind: 'income' }))];
+  } catch { finLegacy = []; }
+  if (finUi.tab === 'bookings') renderFinance();
+}
+function finLegacyHtml() {
+  if (finLegacy === null) { loadFinLegacy(); return ''; }
+  const open = finLegacy.filter(x => !finBookings.some(b => b.legacy_ref === x.ref));
+  if (!open.length) return '';
+  return `<div class="card fin-legacy">
+    <button type="button" class="fin-fix-head" onclick="finUi.legacyOpen=!finUi.legacyOpen;saveFinUi();renderFinance()" aria-expanded="${finUi.legacyOpen}">
+      <div><h2 style="margin:0">Ältere Finanzdaten (${open.length})</h2><div class="muted fin-small">Aus dem früheren Finanz-Reiter – nicht automatisch übernommen.</div></div><span class="section-toggle-icon">${finUi.legacyOpen ? '▾' : '▸'}</span></button>
+    ${finUi.legacyOpen ? `<div class="fin-list">${open.map(x => `<div class="fin-row">
+      <span class="fin-row-date">${x.date ? formatDate(safeParseIso(x.date)) : '–'}</span>
+      <span class="fin-row-main">${esc(x.name)} <span class="muted">· ${esc(x.category || x.source || '')} · ${esc(x.frequency || '')}</span></span>
+      <span class="fin-amt ${x.kind}">${x.kind === 'income' ? '+' : '−'}${eur(Math.round(Number(x.amount) * 100))}</span>
+      <button class="btn btn-sm" onclick="importFinLegacy('${x.ref}')">Als Buchung übernehmen</button></div>`).join('')}
+      <div class="muted fin-small" style="margin-top:6px">Die früheren Ausgleichszahlungen zwischen Nils und Leo sind interne Verrechnungen und keine Einnahmen/Ausgaben – sie bleiben unverändert gespeichert.</div></div>` : ''}
+  </div>`;
+}
+function importFinLegacy(ref) {
+  const x = finLegacy.find(l => l.ref === ref);
+  if (!x) return;
+  const key = x.kind === 'income' ? (/youtube/i.test(x.source + x.name) ? 'adsense' : /sponsor/i.test(x.source + x.name) ? 'sponsoring' : 'other_income') : (/tool|software/i.test(x.category) ? 'software' : 'other_expense');
+  const cat = finCats.find(c => c.key === key);
+  openBooking(x.kind, null, { amount: Math.round(Number(x.amount) * 100), date: x.date || isoToday(), description: x.name, category_id: cat && cat.id });
+  finEdit.legacy_ref = ref;
+}
+
+function finAfterChange() {
+  if (document.getElementById('page-finanzen').classList.contains('active')) renderFinance();
+  if (document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
+}
+
+// ── STRATEGIE: EINNAHMEN ─────────────────────────────────────────
+// Actual revenue comes exclusively from the finance module (paid income bookings) – nothing is
+// entered twice. Goals (podcast_revenue_goals) and the outsourcing rule (podcast_settings) stay here.
+// Month completeness = "vollständig erfasst" in Finanzen. Year totals are always computed.
+const REV_SOURCES = [['adsense', 'YouTube AdSense', 'AdSense'], ['sponsoring', 'Sponsoring', 'Sponsoring'], ['affiliate', 'Affiliate', 'Affiliate'], ['other', 'Sonstige Einnahmen', 'Sonstige']];
+const REV_MONTHS = FIN_MONTHS;
+const REV_RULE_DEFAULT = { threshold_cents: 30000, window_months: 3, milestone_done_at: null };
+const ALL_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+let revGoals = [];
+let revRule = { ...REV_RULE_DEFAULT };
+let revenueLoaded = false;
+let revOpenYears = new Set();
+try { revOpenYears = new Set(JSON.parse(localStorage.getItem('gg_rev_open') || '[]')); } catch {}
+
+async function loadRevenue() {
+  try {
+    const [ok, g, s] = await Promise.all([
+      loadFinance(),
+      apiFetch('podcast_revenue_goals?select=*&order=year.asc,scope.asc'),
+      apiFetch('podcast_settings?select=value&key=eq.revenue_outsourcing'),
+    ]);
+    if (!ok) return false;
+    revGoals = g;
+    revRule = { ...REV_RULE_DEFAULT, ...((s[0] && s[0].value) || {}) };
+    revenueLoaded = true;
+    return true;
+  } catch (err) { showToast('Einnahmen konnten nicht geladen werden: ' + err.message, 'error'); return false; }
+}
+// Paid income of a month for one source (null = month has no income booking for it).
+function revValue(y, m, src) { return finSum(y, m, 'income', b => finBucket(b) === src); }
+function revMonthTotal(y, m) { return finSum(y, m, 'income'); }
+function revSum(y, months, src) { return months.reduce((a, m) => a + (src ? revValue(y, m, src) : revMonthTotal(y, m)), 0); }
+function revGoalMonths(g) { return g.period === 'nov_dec' ? [11, 12] : ALL_MONTHS; }
+function revGoalActual(g) { return revSum(g.year, revGoalMonths(g), g.scope === 'total' ? null : 'adsense'); }
+function revGoalLabel(g) {
+  const scope = g.scope === 'total' ? 'Gesamteinnahmen (AdSense + Sponsoring + Affiliate + Sonstige)' : 'YouTube AdSense';
+  return g.period === 'nov_dec' ? `${scope} · Summe November + Dezember ${g.year}` : `${scope} · Jahresziel ${g.year}`;
+}
+function revYears() {
+  const ys = new Set([new Date().getFullYear(), ...revGoals.map(g => g.year), ...finBookings.filter(b => b.kind === 'income').map(bYear)]);
+  return [...ys].sort((a, b) => a - b);
+}
+// Outsourcing rule: average total income of the last N fully recorded calendar months (up to the current month).
+function revRuleResult() {
+  const n = Math.max(1, Math.min(12, parseInt(revRule.window_months, 10) || 3));
+  const now = new Date();
+  const used = [];
+  for (let i = 0; i < 36 && used.length < n; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    if (finMonthComplete(d.getFullYear(), d.getMonth() + 1)) used.push({ y: d.getFullYear(), m: d.getMonth() + 1 });
+  }
+  used.reverse();
+  if (used.length < n) return { n, used, missing: n - used.length };
+  const avg = Math.round(used.reduce((a, { y, m }) => a + revMonthTotal(y, m), 0) / n);
+  return { n, used, missing: 0, avg, reached: avg >= revRule.threshold_cents };
+}
+async function saveRevRule(changes) {
+  revRule = { ...revRule, ...changes };
   renderRevenue();
   try {
     await apiFetch('podcast_settings', { method: 'POST', prefer: 'resolution=merge-duplicates',
@@ -3963,11 +4982,18 @@ async function saveRevRuleWindow(value) {
     flashSaved();
   } catch (e) { showToast('Einstellung nicht gespeichert: ' + e.message, 'error'); }
 }
+function saveRevRuleWindow(value) { saveRevRule({ window_months: Math.max(1, Math.min(12, parseInt(value, 10) || 3)) }); }
+function toggleRevMilestone() {
+  const done = !revRule.milestone_done_at;
+  if (done && !confirm('Meilenstein als umgesetzt markieren? (Nur Dokumentation – es wird nichts beauftragt.)')) { renderRevenue(); return; }
+  saveRevRule({ milestone_done_at: done ? new Date().toISOString() : null, milestone_done_by: done ? currentActor() : null });
+}
 function toggleRevYear(y) {
   if (revOpenYears.has(y)) revOpenYears.delete(y); else revOpenYears.add(y);
   try { localStorage.setItem('gg_rev_open', JSON.stringify([...revOpenYears])); } catch {}
   renderRevenue();
 }
+function openFinanceMonth(y, m) { finYear = y; finUi.tab = 'months'; finUi.month = m; saveFinUi(); showPage('finanzen'); }
 
 // ── Rendering ──
 function revBarHtml(actual, target, bonus) {
@@ -3990,103 +5016,68 @@ function revGoalHtml(g) {
     ${g.note ? `<div class="muted rev-note">${esc(g.note)}</div>` : ''}
   </div>`;
 }
-function revMonthRowHtml(y, m) {
-  const st = revMonthState(y, m);
-  const total = revMonthTotal(y, m);
-  const key = `${y}-${m}`;
-  const corrs = revCorrs(y, m);
-  const lock = st.confirmed;
-  const cells = REV_SOURCES.map(([k, label, short]) => {
-    const e = revEntry(y, m, k);
-    const corr = revCorrs(y, m, k).reduce((a, c) => a + c.amount_cents, 0);
-    return `<label class="rev-cell"><span class="rev-cell-label">${short}</span>
-      <input type="text" inputmode="decimal" class="rev-input" id="rev-${y}-${m}-${k}" value="${e ? eurPlain(e.amount_cents) : ''}" placeholder="–"
-        aria-label="${label} ${REV_MONTHS[m - 1]} ${y}" ${lock ? 'readonly title="Monat bestätigt – zum Ändern Bestätigung aufheben oder Korrektur erfassen"' : ''}
-        onchange="saveRevenueCell(${y},${m},'${k}',this)" onkeydown="if(event.key==='Enter')this.blur()">
-      ${corr ? `<span class="rev-corr-hint" title="Summe der Korrekturen">${corr > 0 ? '+' : '−'}${eurPlain(Math.abs(corr))} Korr.</span>` : ''}
-    </label>`;
-  }).join('');
-  return `<div class="rev-row${lock ? ' confirmed' : ''}">
-    <div class="rev-month">${REV_MONTHS[m - 1]}</div>
-    ${cells}
-    <div class="rev-month-sum">${total === null ? '<span class="muted">nicht erfasst</span>' : eur(total)}</div>
-    <div class="rev-month-actions">
-      <label class="rev-confirm${st.complete ? '' : ' disabled'}" title="${st.complete ? 'Monat als vollständig und geprüft bestätigen' : `Erst alle drei Quellen eintragen (${st.entered}/3)`}">
-        <input type="checkbox" ${st.confirmed ? 'checked' : ''} ${st.complete || st.confirmed ? '' : 'disabled'} onchange="toggleRevMonthConfirmed(${y},${m})"> bestätigt</label>
-      <button type="button" class="link-btn" onclick="openRevCorrection(${y},${m})">± Korrektur</button>
-    </div>
-    ${corrs.length ? `<div class="rev-corr-list">${corrs.map(c => `<div>↳ ${formatDate(new Date(c.created_at))} · ${esc(actorName(c.created_by))} · ${esc((REV_SOURCES.find(s => s[0] === c.source) || [])[2] || c.source)} <b>${c.amount_cents > 0 ? '+' : '−'}${eur(Math.abs(c.amount_cents))}</b> – ${esc(c.reason)}</div>`).join('')}</div>` : ''}
-    ${revCorrForm === key ? `<div class="rev-corr-form">
-      <select id="revc-src-${key}" aria-label="Quelle">${REV_SOURCES.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select>
-      <input type="text" inputmode="decimal" id="revc-amount-${key}" placeholder="Betrag, z. B. -12,50" aria-label="Korrekturbetrag">
-      <input type="text" id="revc-reason-${key}" placeholder="Grund (Pflicht), z. B. Rückbuchung AdSense" aria-label="Grund">
-      <button type="button" class="btn btn-sm btn-primary" onclick="saveRevCorrection(${y},${m})">Korrektur speichern</button>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="openRevCorrection(${y},${m})">Abbrechen</button>
-      <div class="muted" style="flex-basis:100%;font-size:12px">Korrekturen werden mit Datum, Person und Grund protokolliert und können nicht geändert werden – Fehler bitte mit einer Gegenkorrektur ausgleichen.</div>
-    </div>` : ''}
-  </div>`;
-}
 function revYearCardHtml(y) {
   const open = revOpenYears.has(y);
-  const bySource = REV_SOURCES.map(([k, label]) => [label, revSum(y, ALL_MONTHS, k)]);
   const total = revSum(y, ALL_MONTHS, null);
-  const entered = ALL_MONTHS.filter(m => revMonthTotal(y, m) !== null);
-  const confirmed = ALL_MONTHS.filter(m => revMonthState(y, m).confirmed).length;
+  const withData = ALL_MONTHS.filter(m => finBookings.some(b => b.kind === 'income' && bYear(b) === y && bMonth(b) === m));
+  const complete = ALL_MONTHS.filter(m => finMonthComplete(y, m));
+  const avg = complete.length ? Math.round(complete.reduce((a, m) => a + revMonthTotal(y, m), 0) / complete.length) : null;
   const goals = revGoals.filter(g => g.year === y);
   const yearGoals = goals.filter(g => g.period === 'year');
   const otherGoals = goals.filter(g => g.period !== 'year');
-  const max = Math.max(1, ...ALL_MONTHS.map(m => revMonthTotal(y, m) || 0));
+  const max = Math.max(1, ...ALL_MONTHS.map(m => revMonthTotal(y, m)));
   return `<div class="card rev-card${open ? ' open' : ''}">
     <button type="button" class="rev-head" onclick="toggleRevYear(${y})" aria-expanded="${open}">
-      <div><div class="rev-year">${y}</div><div class="muted" style="font-size:12px">Jahresumsatz – automatisch aus den Monatswerten</div></div>
+      <div><div class="rev-year">${y}</div><div class="muted" style="font-size:12px">Jahresumsatz – automatisch aus den Buchungen in „Finanzen“</div></div>
       <div class="rev-total">${eur(total)}</div>
       <span class="section-toggle-icon">${open ? '▾' : '▸'}</span>
     </button>
     ${yearGoals.length ? yearGoals.map(revGoalHtml).join('') : `<div class="muted rev-note">Kein Jahresziel für ${y} festgelegt.</div>`}
     ${otherGoals.length ? `<div class="rev-sub">Separates Ziel (nicht das Jahresziel)</div>${otherGoals.map(revGoalHtml).join('')}` : ''}
-    <div class="rev-sources">${bySource.map(([l, v]) => `<span class="chip">${l}: <b>${eur(v)}</b></span>`).join('')}</div>
-    <div class="rev-meta muted">${entered.length}/12 Monate erfasst · ${confirmed} bestätigt${entered.length ? ` · Ø ${eur(Math.round(total / entered.length))} pro erfasstem Monat` : ''}</div>
-    <div class="rev-spark" aria-hidden="true">${ALL_MONTHS.map(m => { const v = revMonthTotal(y, m); return `<div class="rev-spark-col" title="${REV_MONTHS[m - 1]}: ${v === null ? 'nicht erfasst' : eur(v)}"><div class="rev-spark-bar${v === null ? ' is-none' : ''}" style="height:${v === null ? 2 : Math.max(2, v / max * 32)}px"></div><span>${REV_MONTHS[m - 1][0]}</span></div>`; }).join('')}</div>
+    <div class="rev-sources">${REV_SOURCES.map(([k, l]) => `<span class="chip">${l}: <b>${eur(revSum(y, ALL_MONTHS, k))}</b></span>`).join('')}</div>
+    <div class="rev-meta muted">${withData.length}/12 Monate mit Einnahmen · ${complete.length} vollständig erfasst${avg !== null ? ` · Ø ${eur(avg)} pro vollständig erfasstem Monat` : ''}</div>
+    <div class="rev-spark" aria-hidden="true">${ALL_MONTHS.map(m => { const v = revMonthTotal(y, m); const has = withData.includes(m) || finMonthComplete(y, m); return `<div class="rev-spark-col" title="${REV_MONTHS[m - 1]}: ${has ? eur(v) : 'keine Einnahmen erfasst'}"><div class="rev-spark-bar${has ? '' : ' is-none'}" style="height:${has ? Math.max(2, v / max * 32) : 2}px"></div><span>${REV_MONTHS[m - 1][0]}</span></div>`; }).join('')}</div>
     ${open ? `<div class="rev-months">
-      <div class="rev-row rev-row-head"><div>Monat</div>${REV_SOURCES.map(([, l]) => `<div>${l}</div>`).join('')}<div>Summe</div><div></div></div>
-      ${ALL_MONTHS.map(m => revMonthRowHtml(y, m)).join('')}
-      <div class="muted" style="font-size:12px;margin-top:8px">Leeres Feld = nicht erfasst · 0 = bewusst 0 € · Beträge in Euro mit bis zu zwei Nachkommastellen. Änderungen werden beim Verlassen des Feldes gespeichert.</div>
+      <div class="rev-row rev-row-head"><div>Monat</div>${REV_SOURCES.map(([, , s]) => `<div>${s}</div>`).join('')}<div>Summe</div><div></div></div>
+      ${ALL_MONTHS.map(m => { const has = withData.includes(m); const c = finMonthComplete(y, m); return `<div class="rev-row${c ? ' confirmed' : ''}">
+        <div class="rev-month">${REV_MONTHS[m - 1]}</div>
+        ${REV_SOURCES.map(([k, , s]) => `<div class="rev-cell"><span class="rev-cell-label">${s}</span><span class="rev-val">${has ? eurPlain(revValue(y, m, k)) : '–'}</span></div>`).join('')}
+        <div class="rev-month-sum">${has || c ? eur(revMonthTotal(y, m)) : '<span class="muted">nicht erfasst</span>'}</div>
+        <div class="rev-month-actions">${c ? '<span class="pill pill-accent">✓ vollständig</span>' : ''}<button type="button" class="link-btn" onclick="openFinanceMonth(${y},${m})">In Finanzen →</button></div>
+      </div>`; }).join('')}
+      <div class="muted" style="font-size:12px;margin-top:8px">Werte stammen aus den bezahlten Einnahme-Buchungen (Finanzen). Bearbeiten und „vollständig erfasst“ markieren nur dort – keine doppelte Erfassung.</div>
     </div>` : ''}
   </div>`;
 }
 function revRuleHtml() {
   const r = revRuleResult();
   const fmtM = ({ y, m }) => `${REV_MONTHS[m - 1].slice(0, 3)} ${y}`;
-  const range = `${fmtM(r.win[0])} – ${fmtM(r.win[r.win.length - 1])}`;
-  const status = r.missing.length
-    ? `<div class="rev-rule-status">⏳ Keine Auswertung: Für ${r.missing.map(fmtM).join(', ')} liegen noch keine vollständigen, bestätigten Monatsdaten vor.</div>`
+  const range = r.used.length ? r.used.map(fmtM).join(', ') : '–';
+  const done = !!revRule.milestone_done_at;
+  const status = r.missing
+    ? `<div class="rev-rule-status">⏳ Keine Auswertung: Es ${r.used.length === 1 ? 'ist erst 1 Monat' : `sind erst ${r.used.length} Monate`} als vollständig erfasst markiert (benötigt: ${r.n}). Monate in „Finanzen → Monate“ als vollständig markieren.</div>`
     : r.reached
-      ? `<div class="rev-rule-status ok">✅ Schwelle erreicht: Ø ${eur(r.avg)} pro Monat (${range}). Der Schnitt der Langfolgen kann jetzt extern vergeben werden.</div>`
-      : `<div class="rev-rule-status">Ø ${eur(r.avg)} pro Monat (${range}) – noch ${eur(revRule.threshold_cents - r.avg)} bis zur Schwelle.</div>`;
+      ? `<div class="rev-rule-status ok">✅ Schwelle erreicht: Ø ${eur(r.avg)} pro Monat (${range}) ≥ ${eur(revRule.threshold_cents)}.</div>`
+      : `<div class="rev-rule-status">Ø ${eur(r.avg)} pro Monat (${range}) – noch ${eur(revRule.threshold_cents - r.avg)} bis zur Schwelle von ${eur(revRule.threshold_cents)}.</div>`;
+  const milestone = done ? `✅ Umgesetzt – Schnitt ist ausgelagert (seit ${formatDate(new Date(revRule.milestone_done_at))}${revRule.milestone_done_by ? ', ' + esc(actorName(revRule.milestone_done_by)) : ''})`
+    : !r.missing && r.reached ? '🟠 Bereit zur Umsetzung – Schwelle erreicht, Auslagerung noch nicht erfolgt' : '⚪ Offen – Schwelle noch nicht nachgewiesen';
   return `<div class="card rev-rule">
-    <div class="rev-goal-head"><b>✂️ Langfolgen-Schnitt extern vergeben</b></div>
-    <div class="muted" style="font-size:13px">Regel: Sobald die Gesamteinnahmen im Monatsdurchschnitt mindestens ${eur(revRule.threshold_cents)} erreichen, wird der Schnitt der Langfolgen extern bezahlt.</div>
+    <div class="rev-goal-head"><b>✂️ Meilenstein: Langfolgen-Schnitt extern vergeben</b></div>
+    <div class="muted" style="font-size:13px">Regel: Sobald die Gesamteinnahmen im Monatsdurchschnitt mindestens <b>${eur(revRule.threshold_cents)}</b> erreichen, wird der Schnitt der Langfolgen extern bezahlt und abgegeben.</div>
     <label class="rev-rule-window">Betrachtungszeitraum: die letzten
-      <select onchange="saveRevRuleWindow(this.value)" aria-label="Anzahl Monate">${ALL_MONTHS.map(n => `<option value="${n}"${n === (parseInt(revRule.window_months, 10) || 3) ? ' selected' : ''}>${n}</option>`).join('')}</select>
-      abgeschlossenen Kalendermonate (${range})</label>
+      <select onchange="saveRevRuleWindow(this.value)" aria-label="Anzahl Monate">${ALL_MONTHS.map(n => `<option value="${n}"${n === r.n ? ' selected' : ''}>${n}</option>`).join('')}</select>
+      vollständig erfassten Kalendermonate${r.n === 3 ? ' (Standard)' : ''} · verwendet: ${range}</label>
     ${status}
+    <div class="rev-goal-head"><span>Status: <b>${milestone}</b></span>
+      <label class="rev-confirm"><input type="checkbox" ${done ? 'checked' : ''} onchange="toggleRevMilestone()"> umgesetzt</label></div>
     <div class="muted" style="font-size:12px">Nur eine Auswertung – es wird nichts automatisch beauftragt oder bezahlt.</div>
   </div>`;
 }
 function renderRevenue() {
   const box = document.getElementById('revenue-container');
   if (!box || !revenueLoaded) return;
-  // Never overwrite a field someone is typing in; re-render once they leave it.
-  const active = document.activeElement;
-  if (active && box.contains(active) && active.matches('input[type=text]') && active.value !== active.defaultValue) { revRenderPending = true; return; }
-  const focusId = active && box.contains(active) ? active.id : null;
-  revRenderPending = false;
   box.innerHTML = `${revYears().map(revYearCardHtml).join('')}${revRuleHtml()}`;
-  if (focusId) document.getElementById(focusId)?.focus();
 }
-document.addEventListener('focusout', e => {
-  if (revRenderPending && e.target.closest && e.target.closest('#revenue-container')) setTimeout(() => { if (revRenderPending) renderRevenue(); }, 0);
-});
 
 // ── VERBESSERUNG: ZIELE ─────────────────────────────────────────
 const GOAL_TABLE = 'podcast_goals';
@@ -6365,6 +7356,7 @@ function quickAction(kind) {
   if (kind === 'task') openQuickTask();
   if (kind === 'expert') openNewExpert();
   if (kind === 'event') { if (!eventsLoaded) loadEvents(); openEventEditor(null); }
+  if (kind === 'income' || kind === 'expense') (financeLoaded ? Promise.resolve(true) : loadFinance()).then(ok => { if (ok) openBooking(kind); });
 }
 function openQuickTask() {
   ['qt-title', 'qt-due'].forEach(id => { document.getElementById(id).value = ''; });
@@ -6419,6 +7411,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
   if (name === 'calendar')     loadAndRender('calendar-content', loadCalendarData, renderCalendarPage, postsLoaded && eventsLoaded);
   if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
+  if (name === 'finanzen')     loadAndRender('fin-content', loadFinance, renderFinance, financeLoaded);
   if (name === 'verbesserung') {
     loadAndRender('revenue-container', loadRevenue, renderRevenue, revenueLoaded);
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
@@ -6487,7 +7480,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
