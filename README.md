@@ -51,7 +51,9 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 - Zweiwöchentlicher Release-Rhythmus als Jahresraster (Drag & Drop) oder Kanban nach Status; Zusatzfolgen über „+“.
 - Produktionsstatus: Geplant · Gast angefragt · Aufnahme terminiert · Aufgenommen · Im Schnitt · Bereit zur Veröffentlichung · Veröffentlicht.
 - Vergangene Folgen wandern ins Archiv.
-- Folgen-Infos: Gast, Links (Riverside, Drive, Spotify, YouTube, Apple, Website), Freigaben (Folge, Reels, Cover, Social-Posts), Notizen, Transkript.
+- Folgen-Infos: Gast, verknüpfte Experten, Freigaben (Folge, Reels, Cover, Social-Posts), Notizen. Transkript und die allgemeinen Linkfelder wurden aus der Oberfläche entfernt; bereits gespeicherte Werte (`transcript`, `links`) bleiben in der Datenbank erhalten. Links in einzelnen Schritten (z. B. Fragenkatalog) bleiben.
+- **8 Reels** (Social Media → „8 Reels produzieren“): je Reel ein aufklappbarer Bereich mit Fortschritt („x/4 Texte vorhanden“) und vier Textfeldern – Hook-Ideen, Instagram-, YouTube-Shorts- und TikTok-Beschreibung – jeweils mit Autospeichern und „Kopieren“ (Zeilenumbrüche bleiben erhalten). Gespeichert in den bestehenden Feldern `tasks.reels_download.reels[i].hook/descIg/descYt/descTiktok`; ältere Felder (`transcript`, `desc`, `text`) bleiben unangetastet.
+- Reel-Produktion und -Veröffentlichung sind getrennt: Häkchen = „Produktion abgeschlossen“ (bestätigt den Reel-Leitfaden), IG / YT / TikTok = auf der Plattform veröffentlicht (`ig`, `yt`, `tiktok`). Alle drei Plattformen ⇔ Kalender-Post „Reel N“ veröffentlicht; wird der Post im Kalender zurückgesetzt, werden die Plattform-Häkchen zurückgesetzt.
 - Workflow-Checkliste (Produktion, Plattform-Upload, Social Media, LinkedIn): je Schritt Zuständigkeit, Deadline, Status, Link, Beschreibung, Inhalt, Erledigt-Datum.
 
 ### Leitfäden (SOPs) & Produktionsleitlinien
