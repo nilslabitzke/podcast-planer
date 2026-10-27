@@ -70,7 +70,9 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 ### Aufgaben
 - Eingang „Nicht zugewiesen“ → an Leo oder Nils verteilen; Spalten Leo / Nils mit einklappbaren erledigten Aufgaben.
 - Felder: Titel, Beschreibung, Verantwortlich, Priorität, Deadline, Status, Projekt/Kategorie (`podcast_task_projects`), Unteraufgaben.
-- Ansichten: Allgemeine To-dos · Folgenaufgaben (direkt aus den Folgen, keine Kopien) · Alle Aufgaben (inkl. Posts und Follow-ups).
+- Ansichten: **Allgemeine To-dos** (nur unabhängige Podcast-Aufgaben aus `podcast_todos` ohne `episode_id`) · **Folgenaufgaben** (Produktionsschritte direkt aus den Folgen, keine Kopien; Klick führt zum Schritt in der Folge) · **Alle Aufgaben** (beide Typen inkl. Posts und Follow-ups, jeweils mit Kennzeichnung „Allgemein“ / „Folge“).
+- Filter und Zähler beziehen sich immer nur auf den gewählten Tab.
+- Aufgabentyp dauerhaft über `podcast_todos.episode_id` / `step_id`: Zeilen mit `episode_id` verweisen auf einen Produktionsschritt (maßgeblich ist die Folge) und werden nicht als Aufgaben gelistet. Die 13 früheren Kopien „Lernmethoden (26.10.2026): …“ sind so ihrem Schritt zugeordnet und bleiben erhalten.
 - Filter: Alle, Nils, Leo, Nicht zugewiesen, Überfällig, Diese Woche, Erledigt.
 - Standard-Fälligkeit von Folgenaufgaben: Produktion/Upload bis Release, Social Media/LinkedIn bis Release + 13 Tage.
 
@@ -138,6 +140,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_linkedin_two_posts.sql` | kommende Folgen: 2 LinkedIn-Posts dienstags 07:45 | angewendet |
 | `20261027_ytclips.sql` | Format `ytclip` + 2 YT-Clips für kommende Folgen | angewendet |
 | `20261027_sop_production_standards.sql` | `podcast_guides.step_sections` + 4 Produktionsleitlinien v1.0 | angewendet |
+| `20261027_todo_task_type.sql` | `podcast_todos.episode_id/step_id`, 13 Folgen-Kopien zugeordnet | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
