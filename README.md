@@ -90,6 +90,7 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - **Übersicht:** gruppiertes Balkendiagramm Einnahmen vs. Ausgaben, Umsatzentwicklung (pro Monat / kumuliert / Saldo-Verlauf), Donuts Einnahmequellen und Ausgabenkategorien, Karte „Monatliche Fixkosten“ (Liste, pro Jahr, nächste Fälligkeiten, Differenz zu regelmäßigen Einnahmen). Diagramme sind schlanke SVGs ohne Bibliothek, mit Tooltips, Tastaturbedienung, Dark/Light und farbenblind-geprüfter Palette.
 - **Wiederkehrend:** Einnahmen/Ausgaben mit Betrag pro Intervall (monatlich, quartalsweise, halbjährlich, jährlich), Monatsbetrag, nächster Zahlung, Status; Summen und rechnerischer Überschuss. Fällige Zahlungen werden vorgeschlagen („Als bezahlt erfassen“) – doppelte Buchungen pro Zeitraum verhindert die Datenbank (`unique(recurring_id, period_key)`).
 - **Monate:** Jan–Dez mit Einnahmen, Ausgaben, Saldo, Fixkosten (Plan); Detailansicht mit Einzelbuchungen, Buchung hinzufügen, CSV und „Monat vollständig erfasst“ (nicht für zukünftige Monate).
+- **Nicht gebuchte Zahlungen** aus wiederkehrenden Posten (seit Startdatum) erscheinen oben in der Übersicht mit „Buchen“ / „Alle als bezahlt buchen“ und im Tab „Wiederkehrend“ als „Nachbuchen“. Option **„Wird automatisch abgebucht“** pro Posten (`auto_book`): fällige Zahlungen werden beim Laden automatisch gebucht (Protokoll: „Automatisch“, ohne Duplikate).
 - **„+ Einnahme“ / „+ Ausgabe“ mit „Wiederholung“** (einmalig, monatlich, quartalsweise, halbjährlich, jährlich): legt bei Wiederholung zugleich den wiederkehrenden Posten an; liegt die erste Zahlung in der Vergangenheit, können alle bisherigen Zahlungen per Häkchen als bezahlt gebucht werden (je Zeitraum nur einmal). Dasselbe Häkchen gibt es beim Anlegen unter „Wiederkehrend“.
 - **Buchungen:** Suche, Filter (Art, einmalig/wiederkehrend, Kategorie, Status), Bearbeiten, Löschen, Umkategorisieren, Belege, Bezug zu Folge/Kooperation. Kategorien ergänzbar/umbenennbar/archivierbar. Ältere Daten aus dem früheren Finanz-Reiter werden angezeigt und nur per Klick übernommen.
 - **Protokoll:** Jede neue, geänderte und gelöschte Buchung wird per Datenbank-Trigger in `podcast_fin_booking_log` festgehalten (für Clients nur lesbar).
@@ -170,6 +171,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_revenue.sql` | Einnahmen: Monatswerte, Korrekturen, Bestätigung, Ziele 2026–2028, 300-€-Regel | angewendet |
 | `20261027_finance.sql` | Finanzmodul: Kategorien, wiederkehrende Posten, Buchungen, Monatsstatus, Änderungsprotokoll, Beleg-Bucket | angewendet |
 | `20261027_strategy_goals.sql` | Wachstumsziele 2026–2028, Messwerte, Meilensteine als To-dos | angewendet |
+| `20261027_fin_recurring_auto_book.sql` | Option „automatisch abgebucht“ für wiederkehrende Posten | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
