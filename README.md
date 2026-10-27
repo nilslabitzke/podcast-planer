@@ -79,7 +79,7 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 
 ### Social-Media-Kalender
 - Posts (`podcast_posts`): Folge, Format, Plattformen, Datum, Uhrzeit, Zuständigkeit, Titel, Beschreibung, Medien-/Veröffentlichungslink, Status.
-- Standardvorlage (8 Reels, 3 Instagram-Karussells, 5 LinkedIn-Beiträge über 14 Tage ab Release) – automatisch für neue Folgen, für bestehende per „Standardvorlage anwenden“ ohne Duplikate (`template_key`).
+- Standardvorlage (8 Reels, 3 Instagram-Karussells über 14 Tage ab Release, 2 LinkedIn-Beiträge am 1. und 2. Dienstag nach dem Release um 07:45) – automatisch für neue Folgen, für bestehende per „Standardvorlage anwenden“ ohne Duplikate (`template_key`).
 - Woche / Monat / Liste, Filter (Plattform, Folge, Zuständigkeit), Drag & Drop, Duplizieren, Abhaken.
 - Verschieben einer Folge verschiebt ihre unveröffentlichten Posts mit; sind alle Posts eines Bereichs veröffentlicht, werden die zugehörigen Folgenaufgaben abgehakt.
 - Eigene Termine (`podcast_events`) mit Uhrzeit, Ort, Notizen.
@@ -127,6 +127,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261024_phase5_experts.sql` | Experten-CRM | angewendet |
 | `20261025_phase6_posts.sql` | `podcast_posts` (+ Übernahme aus `content_plan`) | angewendet |
 | `20261025_phase7_calendar_feed.sql` | `podcast_events`, `podcast_calendar_feeds` | angewendet |
+| `20261027_linkedin_two_posts.sql` | kommende Folgen: 2 LinkedIn-Posts dienstags 07:45 | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
