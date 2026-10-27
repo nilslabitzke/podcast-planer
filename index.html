@@ -391,6 +391,13 @@
     .open-task-assignee { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; background: var(--accent); color: var(--on-accent); font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
     .card-title-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+    .idea-pills { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; flex-shrink: 0; }
+    @media (max-width: 520px) { .idea-title-row { flex-direction: column; gap: 6px; } .idea-pills { justify-content: flex-start; } }
+    .prio-high { background: var(--red-soft); color: var(--red); }
+    .prio-medium { background: var(--yellow-soft); color: var(--yellow); }
+    .prio-low { background: var(--green-soft); color: var(--green); }
+    .idea-email-hint { font-size: 12px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
+    .idea-email-hint .todo-btn { margin-left: 4px; }
     .card-title { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
     .card-text { font-size: 13px; margin-bottom: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
     .card-meta { font-size: 12px; color: var(--muted); margin-top: 4px; overflow-wrap: anywhere; }
@@ -1106,6 +1113,7 @@
       </div>
       <button class="btn btn-primary" onclick="openIdeaModal(null)">+ Neue Idee</button>
     </div>
+    <div class="expert-toolbar" id="idea-toolbar"></div>
     <div id="ideen-container"></div>
   </div>
 
@@ -1241,6 +1249,23 @@
     <div class="form-group">
       <label>Mögliche Gäste</label>
       <input type="text" id="idea-guests" placeholder="z.B. Prof. Dr. ... (Schlafmedizin, Uniklinik ...)">
+    </div>
+    <div class="form-group">
+      <label for="idea-email">E-Mail des Experten <span class="muted">(optional)</span></label>
+      <div class="ep-link-row">
+        <input type="email" id="idea-email" placeholder="Noch nicht recherchiert – kann leer bleiben" autocomplete="off" oninput="ideaEmailDirty=true;updateIdeaEmailActions()">
+        <button type="button" class="btn btn-sm" id="idea-email-copy" onclick="copyText(document.getElementById('idea-email').value.trim())" title="E-Mail kopieren" aria-label="E-Mail kopieren" hidden>📋</button>
+        <a class="btn btn-sm" id="idea-email-mail" href="#" title="E-Mail schreiben" aria-label="E-Mail schreiben" hidden>✉</a>
+      </div>
+      <div class="idea-email-hint" id="idea-email-hint"></div>
+    </div>
+    <div class="form-group">
+      <label for="idea-priority">Priorität</label>
+      <select id="idea-priority">
+        <option value="high">▲ Hoch</option>
+        <option value="medium">● Mittel</option>
+        <option value="low">▼ Niedrig</option>
+      </select>
     </div>
     <div class="form-group">
       <label>Google Drive Link (z.B. Ordner mit Unterlagen des Gastes)</label>
@@ -1766,6 +1791,7 @@ const LI_POST_COUNT = 2;
 let ideas = [];
 let editingIdeaId = null;
 let pendingIdeaForEpisode = null;
+let ideaExpertsForEpisode = [];
 
 function ideaToEpisode() {
   if (!editingIdeaId) return;
@@ -1776,8 +1802,10 @@ function ideaToEpisode() {
   openAddModal(null);
   document.getElementById('modal-ep-title').value = idea.title || '';
   let desc = idea.content || '';
-  if (idea.guests) desc += (desc ? '\n\n' : '') + 'Gast: ' + idea.guests;
+  const email = ideaEmail(idea);
+  if (idea.guests || email) desc += (desc ? '\n\n' : '') + 'Gast: ' + [idea.guests, email && 'E-Mail: ' + email].filter(Boolean).join(' · ');
   if (idea.coreMessage) desc += (desc ? '\n\n' : '') + 'Kernaussage & G&G: ' + idea.coreMessage;
+  if (idea.priority !== 'medium') desc += (desc ? '\n\n' : '') + 'Priorität der Idee: ' + IDEA_PRIORITY_META[idea.priority].label;
   document.getElementById('modal-ep-desc').value = desc;
   showToast('Idee übernommen – bitte Datum festlegen');
 }
@@ -2314,6 +2342,8 @@ function onRemoteChange(table) {
       if (active === 'page-expert') renderExpertDetail();
       if (active === 'page-dashboard') renderDashboard();
       if (active === 'page-todos' && !todoEditingId) renderTodos();
+      if (document.getElementById('idea-modal-bg').classList.contains('open')) renderIdeaExperts();
+      else if (active === 'page-ideen') renderIdeas();
     } else if (table === 'podcast_fin') {
       if (!financeLoaded) return;
       if (finWrites > 0) { finRemotePending = true; return; }
@@ -3940,6 +3970,7 @@ async function saveEpisode() {
       if (idea.questions || idea.driveLink) {
         ep.tasks.fragenerstellung = { done: false, content: idea.questions || '', link: idea.driveLink || '' };
       }
+      ideaExpertsForEpisode = ideaLinkedExperts(idea.id);
       pendingIdeaForEpisode = null;
     }
     episodes.push(ep);
@@ -3950,13 +3981,19 @@ async function saveEpisode() {
   const isNew = !editingEpId;
   try {
     await upsertEpisode(ep);
-    if (isNew) { const n = applyTemplate(ep); showToast(`Gespeichert ✓ · ${n} Social-Media-Posts aus der Standardvorlage angelegt`); }
+    if (isNew) {
+      const n = applyTemplate(ep);
+      showToast(`Gespeichert ✓ · ${n} Social-Media-Posts aus der Standardvorlage angelegt`);
+      // Expert profiles linked to the idea are linked to the new episode as well.
+      const linked = ideaExpertsForEpisode; ideaExpertsForEpisode = [];
+      for (const x of linked) await linkExpert('episode', ep.id, x.id);
+    }
     else {
       if (shiftDays) { shiftEpisodePosts(ep.id, shiftDays); afterPostChange(ep.id); }
       showToast('Gespeichert ✓' + (shiftDays ? ' · offene Posts mit verschoben' : ''));
     }
   } catch (e) {
-    if (isNew) { episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
+    if (isNew) { ideaExpertsForEpisode = []; episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
   }
 }
 
@@ -3996,6 +4033,7 @@ async function loadIdeas() {
       guests: r.guests || '', status: r.status || 'idea',
       driveLink: r.drive_link || '', questions: r.questions || '',
       coreMessage: r.core_message || '', updatedAt: r.updated_at,
+      priority: IDEA_PRIORITY_META[r.priority] ? r.priority : 'medium', guestEmail: r.guest_email || '',
     }));
     return true;
   } catch(e) {
@@ -4005,24 +4043,69 @@ async function loadIdeas() {
 }
 
 const IDEA_STATUS_ORDER = { confirmed: 0, contacted: 1, idea: 2 };
+const IDEA_PRIORITY_META = {
+  high:   { icon: '▲', label: 'Hoch',    order: 0 },
+  medium: { icon: '●', label: 'Mittel',  order: 1 },
+  low:    { icon: '▼', label: 'Niedrig', order: 2 },
+};
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+let ideaUi = { priority: '', sort: 'priority' };
+try { Object.assign(ideaUi, JSON.parse(localStorage.getItem('gg_idea_ui')) || {}); } catch {}
+function setIdeaUi(key, value) {
+  ideaUi[key] = value;
+  try { localStorage.setItem('gg_idea_ui', JSON.stringify(ideaUi)); } catch {}
+  renderIdeas();
+}
+
+// Contact address of an idea: a linked expert profile is the central source; the idea's own
+// guest_email is used while no linked profile has an address.
+function ideaLinkedExperts(ideaId) {
+  return expertIdeaLinks.filter(l => l.idea_id === ideaId).map(l => experts.find(x => x.id === l.expert_id)).filter(Boolean);
+}
+function ideaEmail(idea) {
+  const x = ideaLinkedExperts(idea.id).find(x => x.email);
+  return x ? x.email : idea.guestEmail;
+}
 
 function renderIdeas() {
   const c = document.getElementById('ideen-container');
-  const sorted = [...ideas].sort((a, b) => (IDEA_STATUS_ORDER[a.status] ?? 99) - (IDEA_STATUS_ORDER[b.status] ?? 99));
+  if (!expertsLoaded) loadExperts().then(ok => ok && renderIdeas());
+  document.getElementById('idea-toolbar').innerHTML = ideas.length ? `
+    <select onchange="setIdeaUi('priority', this.value)" aria-label="Nach Priorität filtern">
+      <option value="">Alle Prioritäten</option>${Object.entries(IDEA_PRIORITY_META).map(([k, m]) => `<option value="${k}"${ideaUi.priority === k ? ' selected' : ''}>${m.icon} ${m.label}</option>`).join('')}
+    </select>
+    <select onchange="setIdeaUi('sort', this.value)" aria-label="Sortierung">
+      <option value="priority"${ideaUi.sort === 'priority' ? ' selected' : ''}>Sortieren: Priorität</option>
+      <option value="status"${ideaUi.sort === 'status' ? ' selected' : ''}>Sortieren: Status</option>
+      <option value="updated"${ideaUi.sort === 'updated' ? ' selected' : ''}>Sortieren: Zuletzt bearbeitet</option>
+    </select>` : '';
+  // Previous order (status, then last edited) stays the tie-breaker within a priority level.
+  const byStatus = (a, b) => (IDEA_STATUS_ORDER[a.status] ?? 99) - (IDEA_STATUS_ORDER[b.status] ?? 99);
+  const byPrio = (a, b) => IDEA_PRIORITY_META[a.priority].order - IDEA_PRIORITY_META[b.priority].order;
+  const sorted = ideas.filter(i => !ideaUi.priority || i.priority === ideaUi.priority)
+    .sort(ideaUi.sort === 'updated' ? () => 0 : ideaUi.sort === 'status' ? (a, b) => byStatus(a, b) || byPrio(a, b) : (a, b) => byPrio(a, b) || byStatus(a, b));
   if (!ideas.length) {
     c.innerHTML = `<div class="card">${emptyState('💡', 'Noch keine Ideen', 'Sammelt hier Themen, Inhalte und mögliche Gäste für künftige Folgen.', '<button class="btn btn-primary" onclick="openIdeaModal(null)">+ Neue Idee</button>')}</div>`;
     return;
   }
+  if (!sorted.length) {
+    c.innerHTML = `<div class="card">${emptyState('🔎', 'Keine Ideen mit dieser Priorität', '', `<button class="btn btn-ghost" onclick="setIdeaUi('priority','')">Filter zurücksetzen</button>`)}</div>`;
+    return;
+  }
   c.innerHTML = `<div class="card-grid">${sorted.map(idea => {
     const meta = IDEA_STATUS_META[idea.status] || IDEA_STATUS_META.idea;
+    const prio = IDEA_PRIORITY_META[idea.priority];
     const drive = safeUrl(idea.driveLink);
     return `<div class="card card-clickable" onclick="openIdeaModal(${jsArg(idea.id)})">
-      <div class="card-title-row">
+      <div class="card-title-row idea-title-row">
         <div class="card-title">${esc(idea.title)}</div>
-        <span class="pill pill-accent">${meta.icon} ${meta.label}</span>
+        <div class="idea-pills">
+          <span class="pill prio-${idea.priority}" title="Priorität">${prio.icon} ${prio.label}</span>
+          <span class="pill pill-accent">${meta.icon} ${meta.label}</span>
+        </div>
       </div>
       ${idea.content ? `<div class="card-text">${esc(idea.content)}</div>` : ''}
-      ${idea.guests ? `<div class="card-meta">👤 ${esc(idea.guests)}</div>` : ''}
+      ${idea.guests ? `<div class="card-meta">👤 ${esc(idea.guests)}${ideaEmail(idea) ? ' · ✉️ E-Mail vorhanden' : ''}</div>` : ''}
       ${drive ? `<div class="card-meta"><a href="${esc(drive)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">📁 Google Drive</a></div>` : ''}
       ${idea.questions ? `<div class="card-meta">❓ Fragen vorhanden</div>` : ''}
     </div>`;
@@ -4034,12 +4117,80 @@ function ideaToRow(i) {
     id: i.id, title: i.title, content: i.content || null,
     guests: i.guests || null, core_message: i.coreMessage || null, drive_link: i.driveLink || null,
     questions: i.questions || null, status: i.status,
+    priority: i.priority || 'medium', guest_email: i.guestEmail || null,
   };
 }
 let ideaEditBase = null;
+let ideaEmailDirty = false;
+
+// The e-mail field edits the central address of the linked expert profile when exactly one is linked,
+// otherwise the idea's own address.
+function ideaEmailExpert(ideaId) {
+  const list = ideaId ? ideaLinkedExperts(ideaId) : [];
+  return list.length === 1 ? list[0] : null;
+}
+function refreshIdeaEmailField() {
+  const idea = editingIdeaId ? ideas.find(i => i.id === editingIdeaId) : null;
+  const input = document.getElementById('idea-email');
+  const x = ideaEmailExpert(editingIdeaId);
+  if (!ideaEmailDirty) input.value = (x && x.email) || (idea ? idea.guestEmail : '');
+  const hint = document.getElementById('idea-email-hint');
+  const linked = editingIdeaId ? ideaLinkedExperts(editingIdeaId) : [];
+  const btn = (label, call) => `<button type="button" class="todo-btn" onclick="${call}">${label}</button>`;
+  if (x && x.email) {
+    hint.innerHTML = `Zentral im Expertenprofil „${esc(expertDisplayName(x))}“ gespeichert – Änderungen hier gelten auch dort.`
+      + (idea && idea.guestEmail && idea.guestEmail !== x.email ? ` Bei der Idee war zuvor ${esc(idea.guestEmail)} notiert.` : '');
+  } else if (x) {
+    hint.textContent = `Das Expertenprofil „${expertDisplayName(x)}“ hat noch keine Adresse – sie wird beim Speichern dort übernommen.`;
+  } else if (linked.length > 1) {
+    hint.innerHTML = 'Adressen der verknüpften Experten: ' + (linked.map(e => e.email
+      ? `${esc(expertDisplayName(e))}: ${esc(e.email)}${btn('📋', `copyText(${jsArg(e.email)})`)}`
+      : `${esc(expertDisplayName(e))}: –`).join(' · ')) + '. Das Feld oben gilt nur für diese Idee.';
+  } else {
+    hint.innerHTML = editingIdeaId
+      ? 'Wird bei der Idee gespeichert, solange kein Expertenprofil verknüpft ist.' + btn('📇 Als Expertenprofil übernehmen', 'ideaToExpert()')
+      : 'Wird bei der Idee gespeichert. Nach dem Speichern kann daraus ein Expertenprofil werden.';
+  }
+  updateIdeaEmailActions();
+}
+function updateIdeaEmailActions() {
+  const v = document.getElementById('idea-email').value.trim();
+  const valid = EMAIL_RE.test(v);
+  document.getElementById('idea-email-copy').hidden = !v;
+  const mail = document.getElementById('idea-email-mail');
+  mail.hidden = !valid;
+  mail.href = valid ? 'mailto:' + encodeURIComponent(v).replace(/%40/g, '@') : '#';
+}
+
+// Creates an expert profile from an idea (or links an existing one with the same name – never a duplicate).
+async function ideaToExpert() {
+  const idea = ideas.find(i => i.id === editingIdeaId);
+  if (!idea) return;
+  const suggestion = (document.getElementById('idea-guests').value || idea.guests).split(/[,(;\n]/)[0].trim();
+  const name = (prompt('Name des Experten für das Profil:', suggestion) || '').trim();
+  if (!name) return;
+  const key = s => norm(s).replace(/\b(prof|dr|med|pd|dipl)\b\.?/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  const existing = experts.find(x => key(x.name) === key(name) || key(expertDisplayName(x)) === key(name));
+  const email = document.getElementById('idea-email').value.trim() || idea.guestEmail;
+  try {
+    if (existing) {
+      if (!confirm(`„${expertDisplayName(existing)}“ gibt es bereits in der Experten-Datenbank. Mit dieser Idee verknüpfen?`)) return;
+      await linkExpert('idea', idea.id, existing.id);
+      if (email && EMAIL_RE.test(email) && !existing.email) await patchExpert(existing.id, { email });
+    } else {
+      const row = { id: newId(), name, email: email && EMAIL_RE.test(email) ? email : null };
+      const rows = await apiFetch(EXPERT_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify(row) });
+      experts.push(rows[0]);
+      await linkExpert('idea', idea.id, rows[0].id);
+    }
+    // The idea keeps its own address as well, so nothing is lost if the link is removed later.
+    showToast('📇 Expertenprofil verknüpft');
+  } catch (e) { showToast('Übernahme fehlgeschlagen: ' + e.message, 'error'); }
+}
 
 function openIdeaModal(id) {
   editingIdeaId = id;
+  ideaEmailDirty = false;
   if (expertsLoaded) renderIdeaExperts(); else loadExperts().then(renderIdeaExperts);
   const idea = id ? ideas.find(i => i.id === id) : null;
   ideaEditBase = idea ? { row: ideaToRow(idea), version: idea.updatedAt } : null;
@@ -4051,6 +4202,8 @@ function openIdeaModal(id) {
   document.getElementById('idea-drive-link').value = idea ? idea.driveLink : '';
   document.getElementById('idea-questions').value = idea ? idea.questions : '';
   document.getElementById('idea-status').value = idea ? idea.status : 'idea';
+  document.getElementById('idea-priority').value = idea ? idea.priority : 'medium';
+  refreshIdeaEmailField();
   document.getElementById('idea-delete-btn').style.display = idea ? 'inline-block' : 'none';
   document.getElementById('idea-to-planer-btn').style.display = (idea && idea.status === 'confirmed') ? 'inline-block' : 'none';
   document.getElementById('idea-modal-bg').classList.add('open');
@@ -4065,6 +4218,10 @@ function closeIdeaModal() {
 async function saveIdea() {
   const title = document.getElementById('idea-title').value.trim();
   if (!title) { showToast('Bitte einen Titel eingeben', 'error'); return; }
+  const email = document.getElementById('idea-email').value.trim();
+  if (email && !EMAIL_RE.test(email)) { showToast('Bitte eine gültige E-Mail-Adresse eingeben oder das Feld leer lassen', 'error'); document.getElementById('idea-email').focus(); return; }
+  const prev = editingIdeaId ? ideas.find(i => i.id === editingIdeaId) : null;
+  const centralExpert = ideaEmailExpert(editingIdeaId);
   const idea = {
     id: editingIdeaId || Date.now().toString(),
     title,
@@ -4074,9 +4231,13 @@ async function saveIdea() {
     driveLink: document.getElementById('idea-drive-link').value.trim(),
     questions: document.getElementById('idea-questions').value.trim(),
     status: document.getElementById('idea-status').value,
+    priority: document.getElementById('idea-priority').value,
+    // Clearing the field never deletes the central address of a linked profile.
+    guestEmail: email || (centralExpert && prev ? prev.guestEmail : ''),
   };
   try {
     await saveRowVersioned(IDEA_TABLE, ideaToRow(idea), ideaEditBase && ideaEditBase.row, ideaEditBase && ideaEditBase.version);
+    if (centralExpert && email && email !== (centralExpert.email || '')) await patchExpert(centralExpert.id, { email });
     closeIdeaModal();
     await loadIdeas();
     renderIdeas();
@@ -7267,6 +7428,7 @@ function renderIdeaExperts() {
   const box = document.getElementById('idea-experts');
   if (!box) return;
   box.innerHTML = editingIdeaId ? linkedExpertsHtml('idea', editingIdeaId) : '<span class="muted" style="font-size:13px">Nach dem ersten Speichern verknüpfbar.</span>';
+  refreshIdeaEmailField();
 }
 
 // ── MANUAL EVENTS & CALENDAR SUBSCRIPTION (ICS) ─────────────────
