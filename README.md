@@ -19,7 +19,7 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 | **Experten** | Experten-CRM mit Kontaktchronik und Follow-ups |
 | **Leitfäden** | SOPs mit Checklisten und Versionen |
 | **Kalender** | Social-Media-Kalender, eigene Termine, Apple-Kalender-Abo |
-| **Strategie** | Einnahmen-Ziele, 300-€-Meilenstein, Ziele und Verbesserungsvorschläge |
+| **Strategie** | Wachstums-, Produktions- und Finanzziele 2026–2028, Meilensteine, Verbesserungsoptionen |
 | **Finanzen** | Buchungen, wiederkehrende Posten, Monats-/Jahresübersicht, Diagramme, Belege, CSV |
 
 **Überall verfügbar**
@@ -95,12 +95,17 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - **Belege:** privater Storage-Bucket `receipts`, Zugriff nur für angemeldete Mitglieder (`is_app_user()`), Öffnen über kurzlebige signierte Links. Das wöchentliche Backup spiegelt Belege nach `backups/receipts/`.
 - Tabellen: `podcast_fin_categories`, `podcast_fin_recurring`, `podcast_fin_bookings`, `podcast_fin_months`, `podcast_fin_booking_log` (Beträge in Cent).
 
-### Strategie: Einnahmen
-- Ist-Werte kommen **ausschließlich aus den bezahlten Einnahme-Buchungen** in „Finanzen“ – keine doppelte Erfassung. Monatsansicht nur lesend mit Sprung „In Finanzen →“.
-- Pro Jahr: Jahresumsatz, Ziele mit Fortschrittsbalken (Markierung = Ziel, Ende = Bonus), Quellen (AdSense, Sponsoring, Affiliate, Sonstige – AdSense einmal gezählt), Ø pro vollständig erfasstem Monat, Jahresverlauf.
-- Ziele (`podcast_revenue_goals`, unverändert): 2026 AdSense Summe **Nov + Dez** 400 € / Bonus 600 € (kein Jahresziel), 2027 AdSense 2.400 € / 3.480 €, 2028 AdSense 3.600 € / 4.920 €, 2028 Gesamt 6.000 € / 12.000 €.
-- Meilenstein „Langfolgen-Schnitt extern vergeben“: Ø Gesamteinnahmen der letzten N vollständig erfassten Kalendermonate (Standard 3, einstellbar) vs. 300 €; Status Offen / Bereit zur Umsetzung / Umgesetzt (manuell). Keine automatische Beauftragung.
-- Die Tabellen `podcast_revenue_entries/_corrections/_months` aus der Zwischenversion bleiben leer erhalten, werden aber nicht mehr verwendet.
+### Strategie
+- Jahresauswahl **2026 | 2027 | 2028**; pro Jahr „Zielerreichung“ (Ist vs. Ziel vs. Bonus für alle Kennzahlen) und Gruppen: **Reichweite & Community**, **Podcast-Performance**, **Finanzielle Ziele**, **Strategische Meilensteine**. Darunter „Weitere Ziele“ (bisherige freie Ziele) und die Verbesserungsoptionen.
+- Jede Zielkarte: Kennzahl, Ist-Wert, Ziel, Bonus, Fortschrittsbalken, Messzeitraum, Stand/Datum, Hinweise. Verlauf als Mini-Linie, sobald mindestens zwei echte Messwerte vorliegen.
+- **Ist-Werte – je eine Quelle:**
+  - Follower/Abonnenten: „Ist-Wert erfassen“ (Wert + Messdatum) → `podcast_metric_values`; gilt plattformweit für alle Jahre.
+  - Spotify-Plays: ein Wert pro Monat (erneutes Speichern ersetzt); 2026 = Ø November + Dezember (erst mit beiden Monaten), 2027/2028 = Jahressumme.
+  - Veröffentlichte Folgen: automatisch aus dem Planer (Status „Veröffentlicht“ und Datum erreicht) im Messzeitraum.
+  - Finanzen: automatisch aus bezahlten Einnahmen in „Finanzen“; Klick auf die Karte öffnet die Finanzübersicht des Jahres.
+- Zielerreichung nur bei Messwerten **innerhalb** des Messzeitraums; Referenz- und geplante Startwerte sind reine Hinweise und zählen nie als Ist-Wert.
+- Ziel-/Bonuswerte nur über „Ziel bearbeiten“ (`podcast_strategy_goals`, Finanzziele in `podcast_revenue_goals`).
+- **Meilensteine = allgemeine To-dos** (`podcast_todos.strategy_year`, `strategy_key`) mit Chip „🎯 Strategie JJJJ“ – ein gemeinsamer Erledigt-Status in Aufgaben und Strategie. „Langfolgenschnitt auslagern“ (2028) zeigt die 300-€-Auswertung (Ø der letzten N vollständig erfassten Monate aus Finanzen, Standard 3, einstellbar) und den Status Offen / Bereit zur Umsetzung / Umgesetzt (= To-do erledigt). Keine automatische Beauftragung.
 
 ### Ideenpool
 - Titel, Themenpunkte, Kernaussage, Gast, Status (Idee → Gast angefragt → Bestätigt), Drive-Link, Fragenkatalog.
@@ -144,7 +149,7 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 ### Tabellen
 `podcast_episodes`, `podcast_ideas`, `podcast_todos`, `podcast_task_projects`, `podcast_guides`, `podcast_guide_versions`,
 `podcast_experts`, `podcast_expert_contacts`, `podcast_expert_ideas`, `podcast_expert_episodes`, `podcast_posts`,
-`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`, `podcast_fin_categories`, `podcast_fin_recurring`, `podcast_fin_bookings`, `podcast_fin_months`, `podcast_fin_booking_log`, `app_users`.
+`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`, `podcast_fin_categories`, `podcast_fin_recurring`, `podcast_fin_bookings`, `podcast_fin_months`, `podcast_fin_booking_log`, `podcast_strategy_goals`, `podcast_metric_values`, `app_users`.
 Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`; `podcast_expenses`, `podcast_income`, `podcast_settlements` (alte Finanzdaten – in „Finanzen → Buchungen“ einsehbar und einzeln übernehmbar).
 
 ### Migrationen (`supabase/migrations/`)
@@ -163,6 +168,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_todo_task_type.sql` | `podcast_todos.episode_id/step_id`, 13 Folgen-Kopien zugeordnet | angewendet |
 | `20261027_revenue.sql` | Einnahmen: Monatswerte, Korrekturen, Bestätigung, Ziele 2026–2028, 300-€-Regel | angewendet |
 | `20261027_finance.sql` | Finanzmodul: Kategorien, wiederkehrende Posten, Buchungen, Monatsstatus, Änderungsprotokoll, Beleg-Bucket | angewendet |
+| `20261027_strategy_goals.sql` | Wachstumsziele 2026–2028, Messwerte, Meilensteine als To-dos | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
