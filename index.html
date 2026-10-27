@@ -433,6 +433,9 @@
     .chip-danger { background: var(--red-soft); color: var(--red); }
     .chip-warn { background: var(--yellow-soft); color: var(--yellow); }
     .chip-accent { background: var(--accent-soft); color: var(--accent-text); }
+    .chip-type { background: var(--surface2); color: var(--text); font-weight: 600; }
+    .chip-type-ep { background: rgba(139,156,255,.16); color: #8B9CFF; }
+    body.light .chip-type-ep { color: #5563d6; }
     .chip-link { cursor: pointer; max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
     .chip-link:hover { color: var(--accent-text); }
     .todo-btn.on.leo { background: var(--leo); color: var(--on-leo); }
@@ -3047,7 +3050,7 @@ function postChipHtml(p, { showEpisode = true, draggable = true } = {}) {
     </div>
   </div>`;
 }
-function postRowHtml(item) {
+function postRowHtml(item, { showType = false } = {}) {
   const p = item.p;
   const f = POST_FORMATS[p.format] || POST_FORMATS.other;
   const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
@@ -3056,6 +3059,7 @@ function postRowHtml(item) {
     <div class="todo-main">
       <span class="todo-text" style="cursor:pointer" onclick="openPostEditor(${jsArg(p.id)})">${f.icon} ${esc(p.title || f.label)}</span>
       <div class="todo-chips">
+        ${showType ? (p.episode_id ? TYPE_CHIP.episode : TYPE_CHIP.general) : ''}
         <span class="chip">Social Media${p.time ? ' · ' + esc(p.time) : ''}</span>
         ${ep ? `<button class="chip chip-link" onclick="openDetail(${jsArg(ep.id)})">🎙 ${esc(ep.title)}</button>` : ''}
         ${dueChip(postDate(p), isPublished(p))}
@@ -4008,8 +4012,12 @@ function rowToTodo(r) {
     id: r.id, text: r.text, assignee: r.assignee, done: r.done, status: r.status || (r.done ? 'done' : 'open'),
     createdAt: r.created_at, doneAt: r.done_at, description: r.description || '', priority: r.priority || 'medium',
     dueDate: r.due_date || null, projectId: r.project_id || null, parentId: r.parent_id || null,
+    episodeId: r.episode_id || null, stepId: r.step_id || null,
   };
 }
+// General podcast task: top-level and not tied to an episode. Rows with episode_id refer to a
+// production step (source of truth: the episode) and are never listed again as tasks.
+function isGeneralTodo(t) { return !t.parentId && !t.episodeId; }
 async function loadTodos() {
   try {
     todos = (await apiFetch(TODO_TABLE + '?select=*')).map(rowToTodo);
@@ -4114,7 +4122,7 @@ async function deleteTodo(id) {
   await queueTodoWrite(id, () => apiFetch(TODO_TABLE + '?id=eq.' + encodeURIComponent(id), { method: 'DELETE' })).catch(() => {});
 }
 async function clearDoneTodos() {
-  const done = todos.filter(t => t.done && !t.parentId);
+  const done = todos.filter(t => t.done && isGeneralTodo(t));
   if (!done.length) return;
   if (!confirm(`${done.length} erledigte Aufgabe${done.length === 1 ? '' : 'n'} endgültig löschen?`)) return;
   const ids = new Set(done.map(t => t.id));
@@ -4184,6 +4192,11 @@ function episodeTaskItems() {
   });
   return items;
 }
+// Jumps to the step inside the episode (section opened, step expanded).
+function openEpisodeStep(epId, stepId) {
+  openDetail(epId);
+  openStepContent(stepId);
+}
 function toggleEpisodeStep(epId, stepId) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
@@ -4244,7 +4257,7 @@ function compareItems(a, b) {
   return ((b.t && b.t.createdAt) || '').localeCompare((a.t && a.t.createdAt) || '');
 }
 function generalItems() {
-  return todos.filter(t => !t.parentId && (!taskUi.project || t.projectId === taskUi.project)).map(todoItem);
+  return todos.filter(t => isGeneralTodo(t) && (!taskUi.project || t.projectId === taskUi.project)).map(todoItem);
 }
 
 // ── RENDERING ────────────────────────────────────────────────────
@@ -4259,7 +4272,8 @@ function dueChip(due, done) {
 function whoBadge(a) {
   return a ? `<span class="who who-${a}">${TODO_NAMES[a]}</span>` : '<span class="who who-none">Offen</span>';
 }
-function todoRowHtml(t, { showWho = false } = {}) {
+const TYPE_CHIP = { general: '<span class="chip chip-type">Allgemein</span>', episode: '<span class="chip chip-type chip-type-ep">Folge</span>' };
+function todoRowHtml(t, { showWho = false, showType = false } = {}) {
   const item = todoItem(t);
   const subs = todos.filter(x => x.parentId === t.id);
   const subsDone = subs.filter(x => x.done).length;
@@ -4273,6 +4287,7 @@ function todoRowHtml(t, { showWho = false } = {}) {
     actions = `<button class="todo-btn ${other}" onclick="setTodoAssignee(${idArg},'${other}')" title="An ${TODO_NAMES[other]} übertragen">→ ${TODO_NAMES[other]}</button><button class="todo-btn" onclick="setTodoAssignee(${idArg},null)" title="Zuordnung aufheben">↩ Offen</button>`;
   }
   const meta = [
+    showType ? TYPE_CHIP.general : '',
     showWho ? whoBadge(t.assignee) : '',
     t.priority === 'high' ? '<span class="chip chip-danger">▲ Hoch</span>' : t.priority === 'low' ? '<span class="chip">▼ Niedrig</span>' : '',
     t.status === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : '',
@@ -4295,15 +4310,17 @@ function todoRowHtml(t, { showWho = false } = {}) {
     </div>
   </div>`;
 }
-function stepRowHtml(item, { showEpisode = true } = {}) {
+function stepRowHtml(item, { showEpisode = true, showType = false } = {}) {
   const { ep, step, assignee, done, due } = item;
   const e = jsArg(ep.id);
   return `<div class="todo-row${done ? ' done' : ''}">
     <div class="task-check ${done ? 'done' : ''}" onclick="toggleEpisodeStep(${e},'${step.id}')" title="${done ? 'Wieder öffnen' : 'Erledigt'}" role="checkbox" aria-checked="${done}"></div>
     <div class="todo-main">
-      <span class="todo-text" style="cursor:default">${step.label}</span>
+      <span class="todo-text" style="cursor:pointer" onclick="openEpisodeStep(${e},'${step.id}')" title="In der Folge öffnen">${step.label}</span>
       <div class="todo-chips">
-        ${showEpisode ? `<button class="chip chip-link" onclick="openDetail(${e})" title="Folge öffnen">🎙 ${ep.num ? '#' + esc(ep.num) + ' ' : ''}${esc(ep.title)}</button>` : ''}
+        ${showType ? TYPE_CHIP.episode : ''}
+        ${showEpisode ? `<button class="chip chip-link" onclick="openEpisodeStep(${e},'${step.id}')" title="Zur Aufgabe in der Folge">🎙 ${ep.num ? '#' + esc(ep.num) + ' ' : ''}${esc(ep.title)}</button>` : ''}
+        ${assignee ? '' : '<span class="who who-none">Offen</span>'}
         <span class="chip">${SECTION_LABELS[step.section]}</span>
         ${dueChip(due, done)}
         ${stepStatus(ep, step.id) === 'in_progress' ? '<span class="chip chip-accent">In Arbeit</span>' : ''}
@@ -4350,7 +4367,7 @@ function renderTodos() {
   if (taskUi.project && !projects.find(p => p.id === taskUi.project)) taskUi.project = '';
   renderTaskControls();
   // Due expert follow-ups stay visible in every view until someone acts on them.
-  const due = taskUi.view === 'all' ? [] : dueFollowUps();
+  const due = taskUi.view === 'general' ? dueFollowUps() : [];
   document.getElementById('task-followups').innerHTML = due.length ? `<div class="card fu-banner">
       <div class="block-head"><h2>📇 Experten-Follow-ups fällig <span class="pill pill-warn">${due.length}</span></h2>
         <button class="link-btn" onclick="setTaskView('all')">In „Alle Aufgaben“ →</button></div>
@@ -4410,7 +4427,8 @@ function renderTodos() {
   const items = pool.filter(i => matchesFilter(i, filter)).sort(compareItems);
   const label = (TASK_FILTERS.find(([k]) => k === filter) || [])[1];
   box.innerHTML = items.length
-    ? `<div class="todo-list">${items.map(i => i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true }) : i.kind === 'followup' ? followUpRowHtml(i) : i.kind === 'post' ? postRowHtml(i) : stepRowHtml(i)).join('')}</div>
+    ? `<div class="todo-list">${items.map(i => { const o = { showType: view === 'all' };
+        return i.kind === 'todo' ? todoRowHtml(i.t, { showWho: true, ...o }) : i.kind === 'followup' ? followUpRowHtml(i, o) : i.kind === 'post' ? postRowHtml(i, o) : stepRowHtml(i, o); }).join('')}</div>
        ${filter === 'done' && view !== 'episode' && items.some(i => i.kind === 'todo') ? '<div style="margin-top:16px"><button class="btn btn-sm btn-danger" onclick="clearDoneTodos()">Erledigte allgemeine Aufgaben löschen</button></div>' : ''}`
     : emptyState(filter === 'overdue' ? '🎉' : '✅', filter === 'all' ? 'Keine offenen Aufgaben' : `Keine Aufgaben: ${label}`, '', '', true);
 }
@@ -5196,13 +5214,14 @@ function followUpItems() {
   return experts.map(x => ({ x, fu: expertFollowUp(x) })).filter(({ fu }) => fu && fu.due)
     .map(({ x, fu }) => ({ kind: 'followup', key: 'fu:' + x.id, x, fu, assignee: fu.responsible, done: false, due: fu.due }));
 }
-function followUpRowHtml(item) {
+function followUpRowHtml(item, { showType = false } = {}) {
   const { x, fu } = item;
   return `<div class="todo-row">
     <span class="fu-icon" title="Experten-Follow-up">📇</span>
     <div class="todo-main">
       <span class="todo-text" style="cursor:pointer" onclick="openExpert(${jsArg(x.id)})">Nachfassen: ${esc(expertDisplayName(x))}</span>
       <div class="todo-chips">
+        ${showType ? TYPE_CHIP.general : ''}
         ${expertStatusPill(x.status)}
         <span class="chip">${esc(fu.reason)}</span>
         ${dueChip(fu.due, false)}
@@ -5725,7 +5744,7 @@ function dashboardFacts() {
   const recordings = episodes.map(ep => ({ ep, d: safeParseDate(ep.recordingDate) })).filter(x => x.d && x.d >= today).sort((a, b) => a.d - b.d);
   const activeEps = withDate.filter(x => (x.ep.status || 'planned') !== 'published' && x.d >= ago14).sort((a, b) => a.d - b.d);
   const inProduction = withDate.filter(x => x.d >= ago14 && progress(x.ep).pct < 100).sort((a, b) => a.d - b.d);
-  const openTodos = todos.filter(t => !t.done && !t.parentId);
+  const openTodos = todos.filter(t => !t.done && isGeneralTodo(t));
   const overdueTodos = openTodos.filter(t => t.dueDate && t.dueDate < todayIso);
   const overdueSteps = [];
   episodes.forEach(ep => WORKFLOW_STEPS.forEach(step => {
@@ -5924,7 +5943,7 @@ function runSearch(q) {
     sub: [EXPERT_STATUS_LABEL[x.status], x.field, x.institution].filter(Boolean).join(' · '), icon: '📇', run: () => openExpert(x.id) })));
   add('Ideen', ideas.map(i => ({ score: searchScore(words, i.title, i.content, i.guests, i.coreMessage), title: i.title,
     sub: i.guests ? 'Gast: ' + i.guests : (i.content || '').slice(0, 80), icon: '💡', run: () => { showPage('ideen'); openIdeaModal(i.id); } })));
-  add('Aufgaben', todos.filter(t => !t.parentId).map(t => ({ score: searchScore(words, t.text, t.description), title: t.text,
+  add('Aufgaben', todos.filter(isGeneralTodo).map(t => ({ score: searchScore(words, t.text, t.description), title: t.text,
     sub: `${t.done ? 'Erledigt' : STATUS_META[t.status] || 'Offen'}${t.assignee ? ' · ' + TODO_NAMES[t.assignee] : ''}${t.dueDate ? ' · fällig ' + formatDate(safeParseIso(t.dueDate)) : ''}`,
     icon: t.done ? '☑️' : '✅', run: () => { goTasks('general', 'all'); openTaskModal(t.id); } })));
   const steps = [];
