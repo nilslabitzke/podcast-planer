@@ -19,7 +19,8 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 | **Experten** | Experten-CRM mit Kontaktchronik und Follow-ups |
 | **Leitfäden** | SOPs mit Checklisten und Versionen |
 | **Kalender** | Social-Media-Kalender, eigene Termine, Apple-Kalender-Abo |
-| **Strategie** | Ziele und Verbesserungsvorschläge |
+| **Strategie** | Einnahmen-Ziele, 300-€-Meilenstein, Ziele und Verbesserungsvorschläge |
+| **Finanzen** | Buchungen, wiederkehrende Posten, Monats-/Jahresübersicht, Diagramme, Belege, CSV |
 
 **Überall verfügbar**
 - 🔍 **Globale Suche** – Sidebar „Suchen“, Lupe in der mobilen Kopfzeile oder **⌘K / Strg+K**.
@@ -82,14 +83,24 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 - Kontaktchronik mit nächster Wiedervorlage; automatisches Follow-up bei „Anfrage versendet“ ohne Antwort nach N Tagen (Standard 10, einstellbar).
 - Verknüpfung mit Ideen und Folgen; Freitext-Gastnamen bleiben erhalten, passende Experten werden nur vorgeschlagen.
 
+### Finanzen
+Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlichen Bewertungen).
+- **Zwei getrennte Sichten:** *Buchungen* = tatsächlicher Geldfluss (nur Status „bezahlt“ zählt) · *Wiederkehrende Posten* = Planung (rechnerischer Monatsbetrag, z. B. 120 € jährlich = 10 €/Monat). Aus Planposten entstehen nie automatisch Buchungen.
+- **Oben:** Jahresauswahl, KPIs (Einnahmen, Ausgaben, Saldo, Ø Einnahmen/Monat – nur aus „vollständig erfassten“ Monaten –, Fixkosten/Monat als Planwert), „+ Einnahme“ / „+ Ausgabe“, CSV-Export (Jahr, nur Einnahmen, nur Ausgaben, Monat, aktuelle Filterauswahl/Kategorie). Auch über den Plus-Button erreichbar.
+- **Übersicht:** gruppiertes Balkendiagramm Einnahmen vs. Ausgaben, Umsatzentwicklung (pro Monat / kumuliert / Saldo-Verlauf), Donuts Einnahmequellen und Ausgabenkategorien, Karte „Monatliche Fixkosten“ (Liste, pro Jahr, nächste Fälligkeiten, Differenz zu regelmäßigen Einnahmen). Diagramme sind schlanke SVGs ohne Bibliothek, mit Tooltips, Tastaturbedienung, Dark/Light und farbenblind-geprüfter Palette.
+- **Wiederkehrend:** Einnahmen/Ausgaben mit Betrag pro Intervall (monatlich, quartalsweise, halbjährlich, jährlich), Monatsbetrag, nächster Zahlung, Status; Summen und rechnerischer Überschuss. Fällige Zahlungen werden vorgeschlagen („Als bezahlt erfassen“) – doppelte Buchungen pro Zeitraum verhindert die Datenbank (`unique(recurring_id, period_key)`).
+- **Monate:** Jan–Dez mit Einnahmen, Ausgaben, Saldo, Fixkosten (Plan); Detailansicht mit Einzelbuchungen, Buchung hinzufügen, CSV und „Monat vollständig erfasst“ (nicht für zukünftige Monate).
+- **Buchungen:** Suche, Filter (Art, einmalig/wiederkehrend, Kategorie, Status), Bearbeiten, Löschen, Umkategorisieren, Belege, Bezug zu Folge/Kooperation. Kategorien ergänzbar/umbenennbar/archivierbar. Ältere Daten aus dem früheren Finanz-Reiter werden angezeigt und nur per Klick übernommen.
+- **Protokoll:** Jede neue, geänderte und gelöschte Buchung wird per Datenbank-Trigger in `podcast_fin_booking_log` festgehalten (für Clients nur lesbar).
+- **Belege:** privater Storage-Bucket `receipts`, Zugriff nur für angemeldete Mitglieder (`is_app_user()`), Öffnen über kurzlebige signierte Links. Das wöchentliche Backup spiegelt Belege nach `backups/receipts/`.
+- Tabellen: `podcast_fin_categories`, `podcast_fin_recurring`, `podcast_fin_bookings`, `podcast_fin_months`, `podcast_fin_booking_log` (Beträge in Cent).
+
 ### Strategie: Einnahmen
-- Pro Jahr eine Einnahmen-Karte: Jahresumsatz (immer automatisch aus den Monaten berechnet, nie separat gespeichert), Ziele mit Fortschrittsbalken (Markierung = reguläres Ziel, Balkenende = Bonusziel), Aufschlüsselung nach Quelle, Ø pro erfasstem Monat, Jahresverlauf.
-- Karte anklicken → 12 Monate mit je **YouTube AdSense**, **Sponsoring**, **Affiliate** und Monatssumme; Speichern beim Verlassen des Feldes. Leeres Feld = nicht erfasst, 0 = bewusst 0 €. Euro, bis zu zwei Nachkommastellen, keine negativen Eingaben.
-- Negative oder nachträgliche Änderungen über „± Korrektur“ (Betrag, Quelle, Pflicht-Grund; mit Datum und Person protokolliert, unveränderlich – Fehler per Gegenkorrektur).
-- Monat „bestätigt“ (nur wenn alle drei Quellen eingetragen sind); bestätigte Monate sind gesperrt.
-- Ziele (`podcast_revenue_goals`): 2026 AdSense **Summe Nov + Dez** 400 € / Bonus 600 € (kein Jahresziel), 2027 AdSense 2.400 € / 3.480 €, 2028 AdSense 3.600 € / 4.920 € und Gesamt (AdSense + Sponsoring + Affiliate, AdSense einmal gezählt) 6.000 € / 12.000 €.
-- Regel „Langfolgen-Schnitt extern vergeben“: Ø Gesamteinnahmen ≥ 300 €/Monat über die letzten N abgeschlossenen Kalendermonate (N einstellbar, Standard 3, `podcast_settings.revenue_outsourcing`). Ausgewertet wird nur, wenn alle Monate des Zeitraums vollständig und bestätigt sind; es wird nichts automatisch beauftragt.
-- Tabellen: `podcast_revenue_entries` (eindeutig je Jahr/Monat/Quelle, Cent-Beträge), `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`. Die bisherigen Ziele (`podcast_goals`) bleiben unverändert.
+- Ist-Werte kommen **ausschließlich aus den bezahlten Einnahme-Buchungen** in „Finanzen“ – keine doppelte Erfassung. Monatsansicht nur lesend mit Sprung „In Finanzen →“.
+- Pro Jahr: Jahresumsatz, Ziele mit Fortschrittsbalken (Markierung = Ziel, Ende = Bonus), Quellen (AdSense, Sponsoring, Affiliate, Sonstige – AdSense einmal gezählt), Ø pro vollständig erfasstem Monat, Jahresverlauf.
+- Ziele (`podcast_revenue_goals`, unverändert): 2026 AdSense Summe **Nov + Dez** 400 € / Bonus 600 € (kein Jahresziel), 2027 AdSense 2.400 € / 3.480 €, 2028 AdSense 3.600 € / 4.920 €, 2028 Gesamt 6.000 € / 12.000 €.
+- Meilenstein „Langfolgen-Schnitt extern vergeben“: Ø Gesamteinnahmen der letzten N vollständig erfassten Kalendermonate (Standard 3, einstellbar) vs. 300 €; Status Offen / Bereit zur Umsetzung / Umgesetzt (manuell). Keine automatische Beauftragung.
+- Die Tabellen `podcast_revenue_entries/_corrections/_months` aus der Zwischenversion bleiben leer erhalten, werden aber nicht mehr verwendet.
 
 ### Ideenpool
 - Titel, Themenpunkte, Kernaussage, Gast, Status (Idee → Gast angefragt → Bestätigt), Drive-Link, Fragenkatalog.
@@ -128,13 +139,13 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 | Hosting | GitHub Pages |
 | Datenbank | Supabase Postgres + PostgREST, Row Level Security |
 | Realtime | Supabase Realtime (Websocket) |
-| Edge Functions | `backup` (wöchentliches JSON-Backup), `calendar-ics` (ICS-Feed) |
+| Edge Functions | `backup` (wöchentliches JSON-Backup inkl. Beleg-Spiegelung), `calendar-ics` (ICS-Feed) |
 
 ### Tabellen
 `podcast_episodes`, `podcast_ideas`, `podcast_todos`, `podcast_task_projects`, `podcast_guides`, `podcast_guide_versions`,
 `podcast_experts`, `podcast_expert_contacts`, `podcast_expert_ideas`, `podcast_expert_episodes`, `podcast_posts`,
-`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`, `app_users`.
-Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `podcast_expenses`, `podcast_income`, `podcast_settlements`.
+`podcast_events`, `podcast_calendar_feeds`, `podcast_settings`, `podcast_goals`, `podcast_improvements`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`, `podcast_revenue_goals`, `podcast_fin_categories`, `podcast_fin_recurring`, `podcast_fin_bookings`, `podcast_fin_months`, `podcast_fin_booking_log`, `app_users`.
+Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `podcast_revenue_entries`, `podcast_revenue_corrections`, `podcast_revenue_months`; `podcast_expenses`, `podcast_income`, `podcast_settlements` (alte Finanzdaten – in „Finanzen → Buchungen“ einsehbar und einzeln übernehmbar).
 
 ### Migrationen (`supabase/migrations/`)
 | Datei | Inhalt | Status |
@@ -151,6 +162,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_sop_production_standards.sql` | `podcast_guides.step_sections` + 4 Produktionsleitlinien v1.0 | angewendet |
 | `20261027_todo_task_type.sql` | `podcast_todos.episode_id/step_id`, 13 Folgen-Kopien zugeordnet | angewendet |
 | `20261027_revenue.sql` | Einnahmen: Monatswerte, Korrekturen, Bestätigung, Ziele 2026–2028, 300-€-Regel | angewendet |
+| `20261027_finance.sql` | Finanzmodul: Kategorien, wiederkehrende Posten, Buchungen, Monatsstatus, Änderungsprotokoll, Beleg-Bucket | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
