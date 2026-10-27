@@ -54,11 +54,16 @@ Die App enthält **keine KI-Generierung**: Inhalte werden separat (Claude-Skills
 - Folgen-Infos: Gast, Links (Riverside, Drive, Spotify, YouTube, Apple, Website), Freigaben (Folge, Reels, Cover, Social-Posts), Notizen, Transkript.
 - Workflow-Checkliste (Produktion, Plattform-Upload, Social Media, LinkedIn): je Schritt Zuständigkeit, Deadline, Status, Link, Beschreibung, Inhalt, Erledigt-Datum.
 
-### Leitfäden (SOPs)
-- Titel, Kategorie, Arbeitsanweisung, Checkliste mit Pflicht-/optionalen Punkten, verknüpfte Produktionsschritte.
-- Entwurf → „Freigeben“ erzeugt eine Version (`podcast_guide_versions`); nur freigegebene Versionen gelten für Folgen.
-- Pro Folge wird die verwendete Version gespeichert; ein Schritt lässt sich erst abschließen, wenn alle Pflichtpunkte erfüllt sind.
-  Abgeschlossene Schritte bleiben unverändert, offene können auf eine neue Version aktualisiert werden.
+### Leitfäden (SOPs) & Produktionsleitlinien
+- Verbindliche Produktionsstandards (v1.0): **Allgemeine Bildgestaltung**, **Videobearbeitung der Podcastfolge**, **Plattform-Upload**, **Reels und Shorts** (Kategorie „Produktionsstandards“).
+- Zuordnung: „Folge schneiden & exportieren“ → Bildgestaltung + Videobearbeitung · „Hook … + Musik“ → Abschnitte *Hook und Übergänge* / *Intro und Musik* der Videobearbeitung · „Shownotes“ → *Folgenbeschreibung* · „Kapitel“ → *Kapitel und Keywords* · „Upload“ → ganzer Upload-Leitfaden · jedes einzelne Reel → Reels und Shorts + Bildgestaltung.
+- In der Aufgabe erscheinen die Vorgaben als **lesbare Checkliste ohne einzelne Häkchen**. Ein einziges Abhaken des Schritts (bzw. jedes Reels einzeln) bestätigt die Einhaltung – Hinweis: „Mit dem Abhaken bestätigst du, dass der zugehörige Produktionsleitfaden eingehalten wurde.“ Kein zusätzlicher Dialog.
+- Gespeichert wird `sopConfirmation = {by, byEmail, at, guides:[{id, version, title, sections}]}` im jeweiligen Schritt (`tasks.<schritt>`) bzw. pro Reel (`tasks.reels_download.reels[i]`). Wieder öffnen hebt die Bestätigung auf.
+- Wer bestätigt: angemeldetes Mitglied, sonst die einmal pro Gerät gewählte Person („Wer bin ich?“ in der Seitenleiste).
+- „Alle abhaken“ und automatische Abschlüsse bestätigen keine Leitfäden – solche Schritte müssen einzeln abgehakt werden. „8 Reels vorbereiten“ wird automatisch erledigt, sobald alle 8 Reels abgehakt sind.
+- Bereits erledigte Schritte bleiben unverändert; für sie wird keine Bestätigung nachträglich erzeugt („Abgeschlossen vor Einführung des Leitfadens“).
+- Zentrale Bearbeitung unter „Leitfäden“: Vorgaben mit Überschriften gliedern, einem Leitfaden mehrere Schritte zuordnen und pro Schritt einzelne Abschnitte wählen (`step_sections`), mehrere Leitfäden pro Schritt möglich.
+- Versionierung: Entwurf → „Freigeben“ erzeugt eine unveränderliche Version (`podcast_guide_versions`). Offene Schritte zeigen immer die aktuelle Version, bestätigte Schritte den Stand zum Zeitpunkt der Bestätigung.
 
 ### Aufgaben
 - Eingang „Nicht zugewiesen“ → an Leo oder Nils verteilen; Spalten Leo / Nils mit einklappbaren erledigten Aufgaben.
@@ -130,6 +135,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261025_phase7_calendar_feed.sql` | `podcast_events`, `podcast_calendar_feeds` | angewendet |
 | `20261027_linkedin_two_posts.sql` | kommende Folgen: 2 LinkedIn-Posts dienstags 07:45 | angewendet |
 | `20261027_ytclips.sql` | Format `ytclip` + 2 YT-Clips für kommende Folgen | angewendet |
+| `20261027_sop_production_standards.sql` | `podcast_guides.step_sections` + 4 Produktionsleitlinien v1.0 | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
