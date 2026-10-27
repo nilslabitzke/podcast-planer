@@ -20,7 +20,7 @@ const STEP_LABELS: Record<string, string> = {
   li_beitraege: 'LinkedIn-Beiträge',
 };
 const FORMAT_LABELS: Record<string, string> = {
-  reel: '🎬 Reel', carousel: '🖼️ Karussell', story: '⭕ Story', linkedin: '💼 LinkedIn', short: '▶️ Short',
+  reel: '🎬 Reel', carousel: '🖼️ Karussell', story: '⭕ Story', linkedin: '💼 LinkedIn', ytclip: '📺 YT-Clip', short: '▶️ Short',
   community: '💬 Community', post: '📝 Beitrag', other: '• Post',
 };
 
@@ -178,7 +178,9 @@ Deno.serve(async (req: Request) => {
         const d = parseIso(p.date, p.time);
         if (!d || !inRange(d)) continue;
         const ep: any = p.episode_id ? epById.get(p.episode_id) : null;
-        events.push({ uid: `post-${p.id}`, summary: `${p.status === 'published' ? '✓ ' : ''}${FORMAT_LABELS[p.format] ?? 'Post'}: ${p.title || (ep ? ep.title : '')}`,
+        // Template titles ("Reel 3") only repeat the format, so show the episode instead.
+        const defaultTitle = /^(Reel|Karussell|LinkedIn-Beitrag|YT-Clip) \d+$/.test(p.title || '');
+        events.push({ uid: `post-${p.id}`, summary: `${p.status === 'published' ? '✓ ' : ''}${FORMAT_LABELS[p.format] ?? 'Post'}: ${(!defaultTitle && p.title) || (ep ? ep.title : '')}`,
           start: d, minutes: 15, allDay: d.hh === undefined,
           description: [ep ? `Folge: ${ep.title}` : '', who(p.assignee) ? `Zuständig: ${who(p.assignee)}` : '', p.description || '', `${APP_URL}#calendar`].filter(Boolean).join('\n'),
           url: `${APP_URL}#calendar`, categories: 'Social Media', updatedAt: p.updated_at });
