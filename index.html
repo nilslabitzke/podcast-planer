@@ -23,6 +23,7 @@
       --text: #F3F4F6;
       --muted: #969BA8;
       --accent: #FFA547;          /* fills: buttons, active nav, progress */
+      --new-dot: #3B82F6;         /* "new task" marker */
       --accent-text: #FFA547;     /* accent used as text/icon colour */
       --accent-soft: rgba(255,165,71,.14);
       --on-accent: #111217;       /* text on accent fills */
@@ -407,6 +408,13 @@
     .todo-input-row .todo-input { flex: 1; min-width: 0; }
     .todo-h2 { font-size: 15px; margin: 0 0 10px; }
     .todo-list { display: flex; flex-direction: column; gap: 6px; }
+    .new-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--new-dot); flex-shrink: 0; }
+    .new-dot[hidden] { display: none; }
+    .nav-item, .tab { position: relative; }
+    .tab .nav-new-dot { position: absolute; top: 8px; left: calc(50% + 9px); }
+    body.sb-collapsed .nav-item .nav-new-dot { position: absolute; top: 6px; right: 14px; }
+    .seg-btn .new-dot { margin-left: 6px; vertical-align: 1px; }
+    .todo-text > .new-dot { margin-right: 7px; vertical-align: 1px; }
     .todo-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); min-width: 0; }
     .todo-row .task-check { margin-top: 0; }
     .todo-text { flex: 1; min-width: 0; font-size: 14px; overflow-wrap: anywhere; cursor: text; }
@@ -906,7 +914,7 @@
     .person-item span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .person-item:hover span:first-child { color: var(--accent-text); }
     .dash-row .task-check { flex-shrink: 0; }
-    @media (max-width: 600px) { .person-cols { grid-template-columns: 1fr; } .alert { flex-wrap: wrap; align-items: flex-start; } .alert-main { flex-basis: calc(100% - 40px); } .alert .btn { margin-left: 30px; } }
+    @media (max-width: 600px) { .person-cols { grid-template-columns: minmax(0, 1fr); } .alert { flex-wrap: wrap; align-items: flex-start; } .alert-main { flex-basis: calc(100% - 40px); } .alert .btn { margin-left: 30px; } }
     .sb-search { display: flex; align-items: center; gap: 10px; margin: 0 10px 8px; padding: 8px 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); border-radius: var(--radius-sm); cursor: pointer; font-size: 13px; }
     .sb-search:hover { border-color: var(--accent); color: var(--text); }
     .sb-search svg { width: 16px; height: 16px; flex-shrink: 0; }
@@ -976,7 +984,7 @@
       <button class="nav-item" title="Dashboard" data-page="dashboard" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="nav-label">Dashboard</span></button>
       <button class="nav-item" title="Planer" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-label">Planer</span></button>
       <button class="nav-item" title="Zeitstrahl" data-page="zeitstrahl" onclick="showPage('zeitstrahl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg><span class="nav-label">Zeitstrahl</span></button>
-      <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span></button>
+      <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
       <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
       <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
       <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
@@ -1192,7 +1200,7 @@
 <nav class="tabbar" aria-label="Hauptnavigation">
   <button class="tab" data-page="dashboard" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Dashboard</span></button>
   <button class="tab" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Planer</span></button>
-  <button class="tab" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span>Aufgaben</span></button>
+  <button class="tab" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span>Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
   <button class="tab" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span>Ideen</span></button>
   <button class="tab" id="tab-more" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Mehr</span></button>
 </nav>
@@ -2315,7 +2323,7 @@ function realtimeUpdateToken() {
 function onRemoteChange(table) {
   if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
-  if (table === 'podcast_settings') onRemoteChange('podcast_revenue'); // revenue rule lives in the settings too
+  if (table === 'podcast_settings') { onRemoteChange('podcast_revenue'); refreshTaskSeen(); } // revenue rule and task markers live in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
   rtDebounce[table] = setTimeout(async () => {
@@ -2327,10 +2335,8 @@ function onRemoteChange(table) {
       const dashActive = document.getElementById('page-dashboard').classList.contains('active');
       const stratActive = document.getElementById('page-verbesserung').classList.contains('active');
       if (todoWritesInFlight > 0 || todoEditingId) { todoRemotePending = true; return; }
-      if (todosActive || dashActive || stratActive) {
-        await loadTodos();
-        if (todosActive) renderTodos(); else if (dashActive) renderDashboard(); else renderRevenue();
-      }
+      await loadTodos();
+      if (todosActive) renderTodos(); else if (dashActive) renderDashboard(); else if (stratActive) renderRevenue();
     } else if (table.startsWith('podcast_expert') || table === 'podcast_settings') {
       if (!expertsLoaded) return;
       if (expertWritesInFlight > 0) { expertRemotePending = true; return; }
@@ -5916,7 +5922,7 @@ function rowToTodo(r) {
     createdAt: r.created_at, doneAt: r.done_at, description: r.description || '', priority: r.priority || 'medium',
     dueDate: r.due_date || null, projectId: r.project_id || null, parentId: r.parent_id || null,
     episodeId: r.episode_id || null, stepId: r.step_id || null,
-    strategyYear: r.strategy_year || null, strategyKey: r.strategy_key || null,
+    strategyYear: r.strategy_year || null, strategyKey: r.strategy_key || null, createdBy: r.created_by || null,
   };
 }
 // General podcast task: top-level and not tied to an episode. Rows with episode_id refer to a
@@ -5924,11 +5930,54 @@ function rowToTodo(r) {
 function isGeneralTodo(t) { return !t.parentId && !t.episodeId; }
 async function loadTodos() {
   try {
-    todos = (await apiFetch(TODO_TABLE + '?select=*')).map(rowToTodo);
+    const [rows, seen] = await Promise.all([apiFetch(TODO_TABLE + '?select=*'), apiFetch('podcast_settings?select=key,value&key=like.tasks_seen_*')]);
+    todos = rows.map(rowToTodo);
+    applyTaskSeen(seen);
     todosLoaded = true;
+    syncTaskNew();
     return true;
   } catch (e) { showToast('Aufgaben konnten nicht geladen werden: ' + e.message, 'error'); return false; }
 }
+
+// New-task markers: per person, the creation time of the newest task by others they have seen is kept in
+// podcast_settings (tasks_seen_<person>), so it follows them across devices. Newer general tasks from others
+// put a dot on the nav item; opening the page clears it and marks those tasks for the current visit.
+let taskSeen = {};
+const taskNewIds = new Set();
+let actorAsked = false;
+function applyTaskSeen(rows) {
+  rows.forEach(r => {
+    const who = r.key.replace('tasks_seen_', '');
+    if (!taskSeen[who] || Date.parse(r.value) > Date.parse(taskSeen[who])) taskSeen[who] = r.value;
+  });
+}
+function unseenTasks() {
+  const me = currentActor();
+  if (!me || !taskSeen[me]) return [];
+  return todos.filter(t => isGeneralTodo(t) && !t.done && t.createdBy !== me && Date.parse(t.createdAt) > Date.parse(taskSeen[me]));
+}
+function syncTaskNew() {
+  const unseen = unseenTasks();
+  const onPage = document.getElementById('page-todos').classList.contains('active');
+  if (onPage && unseen.length) {
+    unseen.forEach(t => taskNewIds.add(t.id));
+    const newest = unseen.reduce((a, t) => Date.parse(t.createdAt) > Date.parse(a) ? t.createdAt : a, unseen[0].createdAt);
+    const me = currentActor();
+    taskSeen[me] = newest;
+    apiFetch('podcast_settings', { method: 'POST', prefer: 'resolution=merge-duplicates',
+      body: JSON.stringify({ key: 'tasks_seen_' + me, value: newest, updated_at: new Date().toISOString() }) })
+      .catch(e => showToast('Status „gesehen“ nicht gespeichert: ' + e.message, 'error'));
+  }
+  document.querySelectorAll('.nav-new-dot').forEach(d => { d.hidden = onPage || !unseen.length; });
+}
+async function refreshTaskSeen() {
+  try { applyTaskSeen(await apiFetch('podcast_settings?select=key,value&key=like.tasks_seen_*')); syncTaskNew(); } catch {}
+}
+// A click anywhere on a marked row clears its dot (capture: before the row's own handlers re-render).
+document.getElementById('tasks-content').addEventListener('click', e => {
+  const dot = e.target.closest('.todo-row') && e.target.closest('.todo-row').querySelector('.new-dot');
+  if (dot) { taskNewIds.delete(dot.dataset.id); dot.remove(); }
+}, true);
 async function loadProjects() {
   try {
     projects = await apiFetch(PROJECT_TABLE + '?select=*&order=sort.asc,name.asc');
@@ -5964,7 +6013,7 @@ function queueTodoWrite(id, write) {
 const TODO_COLUMNS = {
   text: 'text', assignee: 'assignee', done: 'done', status: 'status', doneAt: 'done_at', description: 'description',
   priority: 'priority', dueDate: 'due_date', projectId: 'project_id', parentId: 'parent_id', createdAt: 'created_at',
-  strategyYear: 'strategy_year',
+  strategyYear: 'strategy_year', createdBy: 'created_by',
 };
 function todoToRow(t, keys = Object.keys(TODO_COLUMNS)) {
   const row = {};
@@ -5987,7 +6036,7 @@ function patchTodo(id, changes) {
 function newId() { return crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random().toString(36).slice(2); }
 function newTodo(fields) {
   return { id: newId(), text: '', assignee: null, done: false, status: 'open', createdAt: new Date().toISOString(), doneAt: null,
-           description: '', priority: 'medium', dueDate: null, projectId: null, parentId: null, ...fields };
+           description: '', priority: 'medium', dueDate: null, projectId: null, parentId: null, createdBy: currentActor(), ...fields };
 }
 
 function addTodo() {
@@ -6207,7 +6256,7 @@ function todoRowHtml(t, { showWho = false, showType = false } = {}) {
   return `<div class="todo-row${t.done ? ' done' : ''}">
     <div class="task-check ${t.done ? 'done' : ''}" onclick="toggleTodoDone(${idArg})" title="${t.done ? 'Wieder öffnen' : 'Erledigt'}" role="checkbox" aria-checked="${t.done}"></div>
     <div class="todo-main">
-      <span class="todo-text" data-todo-id="${esc(t.id)}" ondblclick="startTodoEdit(${idArg})">${esc(t.text)}</span>
+      <span class="todo-text" data-todo-id="${esc(t.id)}" ondblclick="startTodoEdit(${idArg})">${taskNewIds.has(t.id) ? `<span class="new-dot" data-id="${esc(t.id)}" role="img" aria-label="Neue Aufgabe" title="Neue Aufgabe"></span>` : ''}${esc(t.text)}</span>
       ${meta ? `<div class="todo-chips">${meta}</div>` : ''}
     </div>
     <div class="todo-actions">
@@ -6257,7 +6306,7 @@ function setTaskProject(id) { taskUi.project = id; saveTaskUi(); renderTodos(); 
 
 function renderTaskControls() {
   document.getElementById('task-views').innerHTML = TASK_VIEWS.map(([k, label]) =>
-    `<button class="seg-btn${taskUi.view === k ? ' active' : ''}" onclick="setTaskView('${k}')">${label}</button>`).join('');
+    `<button class="seg-btn${taskUi.view === k ? ' active' : ''}" onclick="setTaskView('${k}')">${label}${k === 'general' && taskUi.view === 'episode' && taskNewIds.size ? '<span class="new-dot" role="img" aria-label="Neue Aufgaben"></span>' : ''}</button>`).join('');
   const counts = {};
   const pool = [...(taskUi.view !== 'episode' ? generalItems() : []), ...(taskUi.view !== 'general' ? episodeTaskItems() : []), ...(taskUi.view === 'all' ? [...followUpItems(), ...postTaskItems()] : [])];
   TASK_FILTERS.forEach(([k]) => { counts[k] = pool.filter(i => matchesFilter(i, k)).length; });
@@ -6708,6 +6757,7 @@ function chooseActor(who) {
   try { localStorage.setItem(ME_KEY, who); } catch {}
   document.getElementById('me-modal-bg').classList.remove('open');
   updateMeUi();
+  if (todosLoaded) { syncTaskNew(); if (document.getElementById('page-todos').classList.contains('active')) renderTodos(); }
   const action = pendingActorAction;
   pendingActorAction = null;
   if (action) action();
@@ -7959,6 +8009,7 @@ function showPage(name, { fromHistory = false } = {}) {
   const moreActive = !document.querySelector(`.tab[data-page="${navKey}"]`);
   document.getElementById('tab-more').classList.toggle('active', moreActive);
   closeDrawer();
+  if (name !== 'todos') taskNewIds.clear();
   const hash = pageHash(name);
   if (!fromHistory && location.hash !== hash) history.pushState(null, '', hash);
   if (changed && name !== 'detail') window.scrollTo(0, 0);
@@ -7966,7 +8017,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'dashboard')    renderDashboard();
   if (name === 'planer')       renderPlaner();
   if (name === 'zeitstrahl')   renderZeitstrahl();
-  if (name === 'todos')        { loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
+  if (name === 'todos')        { if (!currentActor() && !actorAsked) { actorAsked = true; openMeModal(); } if (todosLoaded) syncTaskNew(); loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
   if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
   if (name === 'calendar')     loadAndRender('calendar-content', loadCalendarData, renderCalendarPage, postsLoaded && eventsLoaded);
@@ -8102,7 +8153,7 @@ async function initAuth() {
   initSidebar();
   renderSyncState();
   await initAuth();
-  await Promise.all([loadEpisodes(), loadGuides(), loadExperts(), loadPosts()]);
+  await Promise.all([loadEpisodes(), loadGuides(), loadExperts(), loadPosts(), loadTodos()]);
   updateMeUi();
   routeFromHash();
   connectRealtime();
