@@ -109,6 +109,11 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - Ziel-/Bonuswerte nur über „Ziel bearbeiten“ (`podcast_strategy_goals`, Finanzziele in `podcast_revenue_goals`).
 - **Meilensteine = allgemeine To-dos** (`podcast_todos.strategy_year`, `strategy_key`) mit Chip „🎯 Strategie JJJJ“ – ein gemeinsamer Erledigt-Status in Aufgaben und Strategie. „Langfolgenschnitt auslagern“ (2028) zeigt die 300-€-Auswertung (Ø der letzten N vollständig erfassten Monate aus Finanzen, Standard 3, einstellbar) und den Status Offen / Bereit zur Umsetzung / Umgesetzt (= To-do erledigt). Keine automatische Beauftragung.
 
+### Neue Aufgaben (blauer Punkt)
+- Legt die andere Person eine allgemeine Aufgabe an, erscheint neben „Aufgaben“ (Seitenleiste und Tab-Leiste) ein blauer Punkt. Eigene Aufgaben, Unteraufgaben, erledigte Aufgaben und Produktionsschritte von Folgen lösen keinen Punkt aus.
+- Öffnen der Seite entfernt den Punkt in der Navigation; die neuen Aufgaben tragen dann selbst einen Punkt, bis man sie anklickt oder die Seite verlässt.
+- Gesehen-Stand je Person in `podcast_settings` (`tasks_seen_nils`, `tasks_seen_leo`), also geräteübergreifend; Ersteller in `podcast_todos.created_by`. Dafür muss das Gerät wissen, wer es nutzt (Anmeldung oder einmalige Abfrage „Wer bin ich?“).
+
 ### Ideenpool
 - Titel, Themenpunkte, Kernaussage, Gast, Status (Idee → Gast angefragt → Bestätigt), Drive-Link, Fragenkatalog.
 - „In Planer übernehmen“ legt aus einer Idee eine Folge an.
@@ -176,6 +181,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_strategy_goals.sql` | Wachstumsziele 2026–2028, Messwerte, Meilensteine als To-dos | angewendet |
 | `20261027_fin_recurring_auto_book.sql` | Option „automatisch abgebucht“ für wiederkehrende Posten | angewendet |
 | `20261027_idea_priority_email.sql` | Ideen: Priorität (Standard Mittel) und E-Mail des Experten | angewendet |
+| `20261102_todo_new_markers.sql` | Aufgaben: `created_by` und Gesehen-Stand je Person (blauer Punkt) | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
