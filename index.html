@@ -693,6 +693,26 @@
     .inv-st-bought { color: var(--green); background: var(--green-soft); }
     .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
+    .inv-offers { display: grid; gap: 6px; min-width: 0; }
+    .inv-offer { display: grid; gap: 2px; padding: 7px 0; border-top: 1px solid var(--border); font-size: 13px; min-width: 0; }
+    .inv-offer:first-child { border-top: 0; padding-top: 0; }
+    .inv-offer-main { min-width: 0; overflow-wrap: anywhere; }
+    .inv-offer-link { color: var(--accent-text); font-weight: 600; text-decoration: none; }
+    .inv-offer-link:hover { text-decoration: underline; }
+    .inv-offer-host { display: block; font-size: 11px; color: var(--muted); }
+    .inv-offer-side { display: flex; align-items: center; gap: 4px; justify-content: space-between; }
+    .inv-offer-price { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; min-width: 0; font-variant-numeric: tabular-nums; }
+    .inv-offer-diff { font-size: 11px; color: var(--muted); }
+    .inv-offer-side .todo-del { flex-shrink: 0; min-width: 32px; min-height: 32px; }
+    .inv-link-add { justify-self: start; }
+    .inv-link-form { display: grid; gap: 8px; padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .inv-link-form label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); margin: 0; }
+    .inv-link-form input { width: 100%; min-width: 0; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font-size: 14px; }
+    .inv-link-form-actions { display: flex; justify-content: flex-end; gap: 6px; }
+    .st-sub-links { margin: 2px 0 -2px; }
+    .st-up-buttons { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+    .st-up-buttons > span:empty { display: none; }
+    .st-up-buttons a.btn { text-decoration: none; }
     .inv-setup-edit { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
     .inv-setup-edit input { flex: 2 1 100%; min-width: 0; }
     .inv-setup-edit select { flex: 1 1 130px; min-width: 0; }
@@ -2509,7 +2529,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
+const RT_TABLES = ['podcast_investment_links', 'podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months',
@@ -2562,7 +2582,7 @@ function realtimeUpdateToken() {
 function onRemoteChange(table) {
   if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
-  if (table === 'podcast_investment_categories' || table === 'podcast_setup_items') table = 'podcast_investments';
+  if (table === 'podcast_investment_categories' || table === 'podcast_setup_items' || table === 'podcast_investment_links') table = 'podcast_investments';
   if (table === 'podcast_settings') { onRemoteChange('podcast_revenue'); refreshTaskSeen(); } // revenue rule and task markers live in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
@@ -5924,6 +5944,7 @@ const INV_FIN_CAT = { workflow: 'editing', other: 'other_expense' };
 let investments = [];
 let invCats = [];
 let setupItems = [];
+let investmentLinks = [];
 let investLoaded = false;
 let invEditId = null;
 let invEditBase = null;
@@ -5936,12 +5957,13 @@ function setInvUi(key, value) {
 }
 async function loadInvestments() {
   try {
-    const [i, c, s] = await Promise.all([
+    const [i, c, s, l] = await Promise.all([
       apiFetch(INV_TABLE + '?select=*&order=updated_at.desc'),
       apiFetch(INV_CAT_TABLE + '?select=*&order=sort.asc,name.asc'),
       apiFetch(INV_SETUP_TABLE + '?select=*&order=sort.asc,created_at.asc'),
+      apiFetch('podcast_investment_links?select=*'),
     ]);
-    investments = i; invCats = c; setupItems = s;
+    investments = i; invCats = c; setupItems = s; investmentLinks = l;
     investLoaded = true;
     return true;
   } catch (e) { showToast('Investitionen konnten nicht geladen werden: ' + e.message, 'error'); return false; }
@@ -5959,14 +5981,16 @@ function invCatOptions(selected, { empty = '' } = {}) {
 function renderInvestments() {
   const box = document.getElementById('invest-container');
   if (!box || !investLoaded) return;
-  const focusKey = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.focusKey : null;
+  const active = box.contains(document.activeElement) ? document.activeElement : null;
+  const focusKey = active && active.dataset ? active.dataset.focusKey : null;
+  const caret = active && active.type === 'text' ? active.selectionStart : null;
   const panelTop = document.getElementById('st-panel') ? document.getElementById('st-panel').scrollTop : 0;
   const tabs = `<div class="seg inv-tabs" role="tablist" aria-label="Ansicht der Investitionen">${[['list', 'Übersicht'], ['studio', 'Studio-Upgrade']].map(([k, l]) => `<button type="button" class="seg-btn${invUi.tab === k ? ' active' : ''}" role="tab" aria-selected="${invUi.tab === k}" data-focus-key="tab-${k}" onclick="setInvUi('tab','${k}')">${l}</button>`).join('')}</div>`;
   if (invUi.tab === 'studio') box.innerHTML = tabs + renderStudio();
   else box.innerHTML = tabs + renderInvestmentList();
   const panelAfter = document.getElementById('st-panel');
   if (panelAfter) panelAfter.scrollTop = panelTop;
-  if (focusKey) { const el = box.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`); if (el) el.focus({ preventScroll: true }); }
+  if (focusKey) { const el = box.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`); if (el) { el.focus({ preventScroll: true }); if (caret !== null && el.type === 'text') el.setSelectionRange(caret, caret); } }
 }
 function renderInvestmentList() {
   const openItems = investments.filter(x => !invIsBought(x));
@@ -6034,11 +6058,13 @@ function invCardHtml(x) {
   const idArg = jsArg(x.id);
   const booking = invBooking(x.id);
   const taskCount = invTodos(x.id).filter(t => !t.done).length;
+  const offers = invOffers(x.id);
   const meta = [
     `<span class="chip">${esc(invCatName(x.category_id))}</span>`,
     invTarget(x) ? `<span class="chip">🗓 ${invTarget(x)}</span>` : '',
     taskCount ? `<span class="chip">☑ ${taskCount} ${taskCount === 1 ? 'Aufgabe' : 'Aufgaben'}</span>` : '',
     booking ? `<span class="chip chip-accent">Tatsächlich: ${eur(booking.amount_cents)}</span>` : '',
+    offers.length ? `<span class="chip">${offers.length} ${offers.length === 1 ? 'Angebot' : 'Angebote'}${offers[0].offer_price_cents != null ? ` · ab ${eur(offers[0].offer_price_cents)}` : ''}</span>` : '',
   ].filter(Boolean).join('');
   const action = x.status === 'ready' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvStatus(${idArg}, 'bought')">Als gekauft markieren</button>`
     : (x.status === 'bought' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvStatus(${idArg}, 'in_use')">Im Einsatz</button>` : '')
@@ -6053,7 +6079,7 @@ function invCardHtml(x) {
     ${x.description ? `<div class="inv-desc">${esc(x.description)}</div>` : ''}
     ${x.purchase_condition && !invIsBought(x) ? `<div class="strat-note">Kaufbedingung: ${esc(x.purchase_condition)}</div>` : ''}
     <div class="todo-chips">${meta}</div>
-    ${action ? `<div class="strat-actions">${action}</div>` : ''}
+    ${action || offers.length ? `<div class="strat-actions">${action}${invProductButton(x)}</div>` : ''}
   </div>`;
 }
 
@@ -6334,9 +6360,11 @@ function studioUpgradeHtml(x) {
     <p class="st-up-text">${x.description ? esc(x.description) : '<span class="muted">Noch kein Nutzen hinterlegt.</span>'}</p>
     ${x.target_solution ? `<p class="st-up-text">Ziel-Lösung: ${esc(x.target_solution)}</p>` : ''}
     ${x.purchase_condition ? `<p class="st-up-text">Kaufbedingung: ${esc(x.purchase_condition)}</p>` : ''}
+    <div class="st-sub st-sub-links">Produktlinks</div>
+    <div data-inv-links="${esc(x.id)}">${invLinksInner(x)}</div>
     <div class="st-up-actions">
       <label class="st-check"><input type="checkbox" data-focus-key="plan-panel-${esc(x.id)}" ${x.planned_next ? 'checked' : ''} onchange="toggleStudioPlan(${jsArg(x.id)}, this.checked)"> Fürs nächste Setup</label>
-      <button type="button" class="btn btn-sm" onclick="openInvestment(${jsArg(x.id)})">Zur Investition</button>
+      <span class="st-up-buttons"><span data-inv-product="${esc(x.id)}">${invProductButton(x)}</span><button type="button" class="btn btn-sm" onclick="openInvestment(${jsArg(x.id)})">Zur Investition</button></span>
     </div>
   </li>`;
 }
@@ -6349,6 +6377,8 @@ function studioBoughtHtml(x) {
       <div><dt>Geschätzt</dt><dd>${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'}</dd></div>
       <div><dt>Tatsächlich</dt><dd>${booking ? eur(booking.amount_cents) : 'nicht in Finanzen'}</dd></div>
     </dl>
+    <div class="st-sub st-sub-links">Produktlinks</div>
+    <div data-inv-links="${esc(x.id)}">${invLinksInner(x)}</div>
     <div class="st-up-actions">
       ${x.status === 'bought' ? `<button type="button" class="btn btn-sm" onclick="markInvStatus(${jsArg(x.id)}, 'in_use')">Als im Einsatz markieren</button>` : ''}
       ${booking ? '' : `<button type="button" class="btn btn-sm" onclick="invToFinance(${jsArg(x.id)})">In Finanzen übernehmen</button>`}
@@ -6533,7 +6563,12 @@ function openInvestment(id, areaKey = null) {
 function studioAreaOptions(selected) {
   return '<option value="">Automatisch nach Kategorie</option>' + STUDIO_AREAS.map(a => `<option value="${a.key}"${a.key === selected ? ' selected' : ''}>${esc(a.label)}</option>`).join('');
 }
-function closeInvestment() { document.getElementById('inv-modal-bg').classList.remove('open'); invEditId = null; }
+function closeInvestment() {
+  document.getElementById('inv-modal-bg').classList.remove('open');
+  // An unsaved link form of this investment is discarded with the dialog.
+  if (invLinkEdit && invLinkEdit.investmentId === invEditId) { const id = invEditId; invLinkEdit = null; refreshInvLinkViews(id); }
+  invEditId = null;
+}
 function updateInvForm() {
   document.getElementById('inv-bought-row').hidden = !['bought', 'in_use'].includes(document.getElementById('inv-status').value);
   document.getElementById('inv-quarter').disabled = !document.getElementById('inv-year').value;
@@ -6592,11 +6627,18 @@ async function markInvStatus(id, status) {
 function renderInvLinks() {
   const box = document.getElementById('inv-links');
   const x = investments.find(i => i.id === invEditId);
-  if (!x) { box.innerHTML = '<div class="muted fin-small">Aufgaben und die Übernahme in Finanzen sind nach dem ersten Speichern möglich.</div>'; return; }
+  if (!x) { box.innerHTML = '<div class="muted fin-small">Produktlinks, Aufgaben und die Übernahme in Finanzen sind nach dem ersten Speichern möglich.</div>'; return; }
   const booking = invBooking(x.id);
   const tasks = invTodos(x.id);
+  // Keep focus and caret when realtime re-renders this part of an open form.
+  const active = box.contains(document.activeElement) ? document.activeElement : null;
+  const focusKey = active && active.dataset ? active.dataset.focusKey : null;
+  const caret = active && active.type === 'text' ? active.selectionStart : null;
   box.innerHTML = `
-    <div class="fin-sub">Aufgaben</div>
+    <div class="fin-sub">Produktlinks</div>
+    <div data-inv-links="${esc(x.id)}">${invLinksInner(x)}</div>
+    <div class="muted fin-small" style="margin-top:4px">Geschätzter Preis der Investition: ${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'}. Angebotspreise dienen nur dem Vergleich.</div>
+    <div class="fin-sub" style="margin-top:12px">Aufgaben</div>
     ${tasks.map(t => `<div class="inv-link-row${t.done ? ' muted' : ''}"><span>${t.done ? '✓' : '☐'} ${esc(t.text)}</span></div>`).join('')}
     <div class="todo-input-row"><input type="text" id="inv-new-task" placeholder="z. B. ${esc(x.title)}: Angebote vergleichen" aria-label="Aufgabe aus dieser Investition" onkeydown="if(event.key==='Enter')invAddTask()"><button class="btn btn-sm" onclick="invAddTask()">Aufgabe anlegen</button></div>
     <div class="fin-sub" style="margin-top:12px">Finanzen</div>
@@ -6605,6 +6647,7 @@ function renderInvLinks() {
       : invIsBought(x) ? `<div class="inv-link-row"><span class="muted">Noch nicht in Finanzen übernommen.</span><button class="link-btn" onclick="invToFinance(${jsArg(x.id)})">Neue Ausgabe anlegen</button></div>
         ${invLinkableBookings().length ? `<div class="todo-input-row"><select id="inv-link-booking" aria-label="Bestehende Buchung"><option value="">Bestehende Buchung wählen…</option>${invLinkableBookings().map(b => `<option value="${esc(b.id)}">${esc(new Date(b.date + 'T00:00').toLocaleDateString('de-DE'))} · ${eur(b.amount_cents)} · ${esc(b.description || finCatName(b.category_id))}</option>`).join('')}</select><button class="btn btn-sm" onclick="invLinkBooking(${jsArg(x.id)})">Verknüpfen</button></div>` : ''}`
       : '<div class="muted fin-small">Investitionen sind Planung und zählen nicht als Ausgabe. Nach dem Kauf (Status „Gekauft“) kann der Betrag von Hand in Finanzen übernommen oder mit einer bestehenden Buchung verknüpft werden.</div>'}`;
+  if (focusKey) { const el = box.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`); if (el) { el.focus({ preventScroll: true }); if (caret !== null && el.type === 'text') el.setSelectionRange(caret, caret); } }
 }
 function invAddTask() {
   const input = document.getElementById('inv-new-task');
@@ -6652,6 +6695,155 @@ async function invPatchBooking(bookingId, investmentId, guard) {
   finAfterChange();
 }
 function invOpenBooking(bookingId) { closeInvestment(); openBooking('expense', bookingId); }
+
+// ── Product links ──
+// One list for both views; each place showing it is a [data-inv-links] container updated in place, so the
+// page stays put. The open form lives in invLinkEdit and therefore survives a re-render from realtime.
+const INV_LINK_TABLE = 'podcast_investment_links';
+let invLinkEdit = null; // { investmentId, id, label, url, price }
+// Offers with a price first, cheapest on top; then the rest in the order they were added.
+function invOffers(id) {
+  return investmentLinks.filter(l => l.investment_id === id).sort((a, b) =>
+    (a.offer_price_cents == null) - (b.offer_price_cents == null) || (a.offer_price_cents || 0) - (b.offer_price_cents || 0) || (a.created_at || '').localeCompare(b.created_at || ''));
+}
+// Only plain http(s) addresses; a missing scheme becomes https. Anything else yields null.
+function invCleanUrl(raw) {
+  let text = String(raw || '').trim();
+  if (!text) return null;
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(text)) text = 'https://' + text;
+  try {
+    const u = new URL(text);
+    if (!['http:', 'https:'].includes(u.protocol) || !u.hostname.includes('.') || u.username || u.password) return null;
+    return u.href;
+  } catch { return null; }
+}
+function invLinkHost(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } }
+function invProductAnchor(link, cls, text, extra = '') {
+  const href = invCleanUrl(link.url);
+  return href ? `<a class="${cls}" href="${esc(href)}" target="_blank" rel="noopener noreferrer" ${extra}>${text}</a>` : `<span class="${cls} muted">${text}</span>`;
+}
+function invProductButton(x) {
+  const first = invOffers(x.id)[0];
+  return first ? invProductAnchor(first, 'btn btn-sm', 'Produkt ansehen ↗', `title="${esc(first.label)}" onclick="event.stopPropagation()"`) : '';
+}
+function invLinksInner(x) {
+  const offers = invOffers(x.id);
+  const priced = offers.filter(l => l.offer_price_cents != null);
+  const edit = invLinkEdit && invLinkEdit.investmentId === x.id ? invLinkEdit : null;
+  const rows = offers.map(l => {
+    if (edit && edit.id === l.id) return invLinkFormHtml(edit);
+    const diff = l.offer_price_cents != null && x.price_cents != null ? l.offer_price_cents - x.price_cents : null;
+    return `<div class="inv-offer">
+      <div class="inv-offer-main">
+        ${invProductAnchor(l, 'inv-offer-link', `${esc(l.label)} ↗`)}
+        <span class="inv-offer-host">${esc(invLinkHost(l.url))}</span>
+      </div>
+      <div class="inv-offer-side">
+        <div class="inv-offer-price">
+          <b>${l.offer_price_cents != null ? eur(l.offer_price_cents) : '<span class="muted">Kein Preis</span>'}</b>
+          ${priced.length > 1 && l.id === priced[0].id ? '<span class="chip chip-accent">Günstigstes</span>' : ''}
+          ${diff !== null ? `<span class="inv-offer-diff">${diff === 0 ? 'wie Schätzung' : `${diff > 0 ? '+' : '−'}${eur(Math.abs(diff))} zur Schätzung`}</span>` : ''}
+        </div>
+        <button type="button" class="todo-del" data-focus-key="link-edit-${esc(l.id)}" onclick="event.stopPropagation();editInvLink(this, ${jsArg(l.id)})" title="Link bearbeiten" aria-label="${esc(l.label)} bearbeiten">✎</button>
+        <button type="button" class="todo-del" data-focus-key="link-del-${esc(l.id)}" onclick="event.stopPropagation();deleteInvLink(this, ${jsArg(l.id)})" title="Link entfernen" aria-label="${esc(l.label)} entfernen">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="inv-offers">${rows}
+    ${edit && !edit.id ? invLinkFormHtml(edit) : `<button type="button" class="link-btn inv-link-add" data-focus-key="link-add-${esc(x.id)}" onclick="event.stopPropagation();newInvLink(this, ${jsArg(x.id)})">+ Produktlink hinzufügen</button>`}
+  </div>`;
+}
+function invLinkFormHtml(e) {
+  return `<div class="inv-link-form" onclick="event.stopPropagation()">
+    <label>Bezeichnung <input type="text" data-focus-key="link-form-label" value="${esc(e.label)}" placeholder="z. B. Amazon – Softbox" oninput="invLinkEdit.label=this.value"></label>
+    <label>URL <input type="url" inputmode="url" data-focus-key="link-form-url" value="${esc(e.url)}" placeholder="https://…" oninput="invLinkEdit.url=this.value"></label>
+    <label>Angebotspreis in € <span class="muted">(optional)</span> <input type="text" inputmode="decimal" data-focus-key="link-form-price" value="${esc(e.price)}" placeholder="0,00" oninput="invLinkEdit.price=this.value" onkeydown="if(event.key==='Enter')saveInvLink(this)"></label>
+    <div class="inv-link-form-actions">
+      <button type="button" class="btn btn-sm btn-ghost" onclick="cancelInvLink(this)">Abbrechen</button>
+      <button type="button" class="btn btn-sm btn-primary" onclick="saveInvLink(this)">Speichern</button>
+    </div>
+  </div>`;
+}
+function refreshInvLinkViews(id) {
+  const x = investments.find(i => i.id === id);
+  if (!x) return;
+  document.querySelectorAll(`[data-inv-links="${id}"]`).forEach(el => { el.innerHTML = invLinksInner(x); });
+  document.querySelectorAll(`[data-inv-product="${id}"]`).forEach(el => { el.innerHTML = invProductButton(x); });
+  if (invUi.tab === 'list') renderInvestments();
+}
+// Focus inside the container that was clicked; scrolls only a side panel, never the page.
+function focusInvLinks(container, selector) {
+  const el = container && container.querySelector(selector);
+  if (!el) return;
+  el.focus({ preventScroll: true });
+  const scroller = el.closest('.st-panel');
+  if (scroller && getComputedStyle(scroller).overflowY === 'auto') {
+    const r = el.getBoundingClientRect(), p = scroller.getBoundingClientRect();
+    if (r.bottom > p.bottom - 12) scroller.scrollTop += r.bottom - p.bottom + 60;
+  }
+}
+function openInvLinkForm(btn, edit) {
+  const container = btn.closest('[data-inv-links]');
+  const prev = invLinkEdit;
+  invLinkEdit = edit;
+  if (prev && prev.investmentId !== edit.investmentId) refreshInvLinkViews(prev.investmentId);
+  refreshInvLinkViews(edit.investmentId);
+  // A list refresh may have replaced the card, but the modal and panel containers stay.
+  focusInvLinks(container.isConnected ? container : document.querySelector(`[data-inv-links="${edit.investmentId}"]`), '[data-focus-key="link-form-label"]');
+}
+function newInvLink(btn, investmentId) { openInvLinkForm(btn, { investmentId, id: null, label: '', url: '', price: '' }); }
+function editInvLink(btn, linkId) {
+  const l = investmentLinks.find(x => x.id === linkId);
+  if (l) openInvLinkForm(btn, { investmentId: l.investment_id, id: l.id, label: l.label, url: l.url, price: l.offer_price_cents != null ? eurPlain(l.offer_price_cents) : '' });
+}
+function cancelInvLink(btn) {
+  const container = btn.closest('[data-inv-links]');
+  const id = invLinkEdit.investmentId;
+  invLinkEdit = null;
+  refreshInvLinkViews(id);
+  focusInvLinks(container, '.inv-link-add');
+}
+async function saveInvLink(btn) {
+  const e = invLinkEdit;
+  if (!e) return;
+  const container = btn.closest('[data-inv-links]');
+  const url = invCleanUrl(e.url);
+  if (!url) { showToast('Bitte eine gültige Adresse mit http:// oder https:// eingeben.', 'error'); focusInvLinks(container, '[data-focus-key="link-form-url"]'); return; }
+  const parsed = parseEuro(e.price);
+  if (parsed.error) { showToast(parsed.error, 'error'); focusInvLinks(container, '[data-focus-key="link-form-price"]'); return; }
+  if (investmentLinks.some(l => l.investment_id === e.investmentId && l.id !== e.id && l.url === url)) { showToast('Dieser Link ist bei dieser Investition schon hinterlegt.', 'error'); return; }
+  const row = { label: e.label.trim() || invLinkHost(url), url, offer_price_cents: parsed.cents, updated_by: currentActor(), updated_at: new Date().toISOString() };
+  btn.disabled = true;
+  try {
+    if (e.id) {
+      const rows = await apiFetch(`${INV_LINK_TABLE}?id=eq.${encodeURIComponent(e.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(row) });
+      if (!rows.length) throw new Error('Der Link wurde inzwischen gelöscht.');
+      investmentLinks = investmentLinks.map(l => l.id === e.id ? rows[0] : l);
+    } else {
+      const rows = await apiFetch(INV_LINK_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, investment_id: e.investmentId, created_by: currentActor() }) });
+      investmentLinks = investmentLinks.concat(rows);
+    }
+    invLinkEdit = null;
+    refreshInvLinkViews(e.investmentId);
+    focusInvLinks(container, '.inv-link-add');
+    flashSaved();
+  } catch (err) {
+    btn.disabled = false;
+    showToast('Link nicht gespeichert: ' + err.message, 'error');
+  }
+}
+async function deleteInvLink(btn, linkId) {
+  const l = investmentLinks.find(x => x.id === linkId);
+  if (!l || !confirm(`Produktlink „${l.label}“ entfernen?`)) return;
+  const container = btn.closest('[data-inv-links]');
+  try {
+    await apiFetch(`${INV_LINK_TABLE}?id=eq.${encodeURIComponent(linkId)}`, { method: 'DELETE' });
+    investmentLinks = investmentLinks.filter(x => x.id !== linkId);
+    refreshInvLinkViews(l.investment_id);
+    focusInvLinks(container, '.inv-link-add');
+    flashSaved();
+  } catch (err) { showToast('Link nicht entfernt: ' + err.message, 'error'); }
+}
 
 // ── Categories ──
 function openInvCategories() { renderInvCategories(); document.getElementById('inv-cat-bg').classList.add('open'); }
