@@ -122,6 +122,8 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - **Stufen** (Basis-Setup, Creator-Studio, Pro-Studio) sind rein visuell und nennen die zugrunde liegenden Komponenten, keine Qualitätswerte. Die Regel steht in `STUDIO_STAGES`.
 - **Finanzen:** Geschätzter und tatsächlicher Preis werden getrennt gezeigt. Gekaufte Investitionen können eine neue Ausgabe anlegen oder mit einer bestehenden Buchung verknüpft werden, nie automatisch und höchstens einmal.
 
+- **Produktlinks** (`podcast_investment_links`): beliebig viele je Investition mit Bezeichnung, URL und optionalem Angebotspreis, im Formular der Investition und im Studio-Detailpanel bearbeitbar, aus denselben Daten. Nur http(s) ohne Zugangsdaten; ohne Schema wird https ergänzt. Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"`. Angebotspreise dienen nur dem Vergleich (günstigstes Angebot, Abstand zur Schätzung) und ändern nie `price_cents`.
+
 ### Neue Aufgaben (blauer Punkt)
 - Legt die andere Person eine allgemeine Aufgabe an, erscheint neben „Aufgaben“ (Seitenleiste und Tab-Leiste) ein blauer Punkt. Eigene Aufgaben, Unteraufgaben, erledigte Aufgaben und Produktionsschritte von Folgen lösen keinen Punkt aus.
 - Öffnen der Seite entfernt den Punkt in der Navigation; die neuen Aufgaben tragen dann selbst einen Punkt, bis man sie anklickt oder die Seite verlässt.
@@ -199,6 +201,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261102_todo_new_markers.sql` | Aufgaben: `created_by` und Gesehen-Stand je Person (blauer Punkt) | angewendet |
 | `20261104_investments.sql` | Strategie: Investitionen, Kategorien, aktuelles Setup; `investment_id` an Buchungen und To-dos | angewendet |
 | `20261104_studio_upgrade.sql` | Investitionen Phase 2: `studio_area`, `planned_next`, Status „Im Einsatz“ | angewendet |
+| `20261104_investment_links.sql` | Produktlinks je Investition (`podcast_investment_links`) | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
