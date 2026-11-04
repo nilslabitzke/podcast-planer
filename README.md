@@ -116,6 +116,11 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - **Aufgaben:** Im Formular lässt sich eine allgemeine Aufgabe anlegen (`podcast_todos.investment_id`, Chip „💼 Investition“). Sie bleibt ein normales To-do und überlebt das Löschen der Investition.
 - **Späteres Upgrade-Board:** Die Kategorie ist zugleich der Setup-Bereich. Pro Bereich liegen damit aktuelles Setup (`podcast_setup_items`) und mögliche Upgrades samt Preis und Status vor; es fehlt nur noch die Grafik.
 
+- **Studio-Upgrade** (Tab neben „Übersicht“): isometrisches SVG-Studio aus denselben Datensätzen wie die Liste, ohne eigene Kopien. Bereich einer Zeile = `studio_area`, sonst aus der Kategorie abgeleitet. Solide gezeichnet wird nur, was wirklich da ist (Setup-Eintrag oder Status „Im Einsatz“), alles andere gestrichelt. „Gekauft“ zeigt ein Paket im Raum, die Komponente gilt erst mit „Im Einsatz“ als vorhanden. Jeder Bereich ist auch über die Komponentenliste wählbar.
+- **Mein nächstes Setup planen:** Auswahl in `planned_next` (für beide gleich, reine Planung). Summe nur aus bekannten Preisen, z. B. „Bekannte Kosten: 250 € + 1 Upgrade ohne Preis“.
+- **Stufen** (Basis-Setup, Creator-Studio, Pro-Studio) sind rein visuell und nennen die zugrunde liegenden Komponenten, keine Qualitätswerte. Die Regel steht in `STUDIO_STAGES`.
+- **Finanzen:** Geschätzter und tatsächlicher Preis werden getrennt gezeigt. Gekaufte Investitionen können eine neue Ausgabe anlegen oder mit einer bestehenden Buchung verknüpft werden, nie automatisch und höchstens einmal.
+
 ### Neue Aufgaben (blauer Punkt)
 - Legt die andere Person eine allgemeine Aufgabe an, erscheint neben „Aufgaben“ (Seitenleiste und Tab-Leiste) ein blauer Punkt. Eigene Aufgaben, Unteraufgaben, erledigte Aufgaben und Produktionsschritte von Folgen lösen keinen Punkt aus.
 - Öffnen der Seite entfernt den Punkt in der Navigation; die neuen Aufgaben tragen dann selbst einen Punkt, bis man sie anklickt oder die Seite verlässt.
@@ -192,6 +197,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_idea_priority_email.sql` | Ideen: Priorität (Standard Mittel) und E-Mail des Experten | angewendet |
 | `20261102_todo_new_markers.sql` | Aufgaben: `created_by` und Gesehen-Stand je Person (blauer Punkt) | angewendet |
 | `20261104_investments.sql` | Strategie: Investitionen, Kategorien, aktuelles Setup; `investment_id` an Buchungen und To-dos | angewendet |
+| `20261104_studio_upgrade.sql` | Investitionen Phase 2: `studio_area`, `planned_next`, Status „Im Einsatz“ | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
