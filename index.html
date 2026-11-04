@@ -840,15 +840,23 @@
     .strat-pill.st-progress { background: var(--accent-soft); color: var(--accent-text); }
     .strat-spark { display: block; margin-top: 2px; }
     .strat-summary { margin-bottom: 4px; display: flex; flex-direction: column; gap: 8px; }
-    .strat-sum-row { display: grid; grid-template-columns: minmax(130px, 200px) minmax(80px, 1fr) 150px 92px; gap: 12px; align-items: center; font-size: 13px; }
+    .strat-sum-row { display: grid; grid-template-columns: 250px minmax(60px, 1fr) 150px 100px; gap: 12px; align-items: center; font-size: 13px; min-height: 22px; }
+    .strat-sum-group { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .strat-sum-label { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .strat-sum-short { display: none; }
+    .strat-sum-period { font-size: 11px; margin-left: 4px; }
+    .strat-sum-row.is-none .strat-sum-label { color: var(--muted); }
+    .strat-sum-row.is-none .rev-bar { opacity: .6; }
     .strat-sum-row[role=button] { cursor: pointer; }
     .strat-sum-row .strat-pill { text-align: center; }
     .strat-sum-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
     .strat-rule { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
-    @media (max-width: 640px) {
-      .strat-sum-row { grid-template-columns: 1fr auto; gap: 4px 10px; }
-      .strat-sum-row .rev-bar { grid-column: 1 / -1; grid-row: 2; }
-      .strat-sum-row .strat-pill { display: none; }
+    @media (max-width: 720px) {
+      .strat-sum-row { grid-template-columns: 102px minmax(24px, 1fr) 92px 54px; gap: 6px; font-size: 12px; }
+      .strat-sum-full:has(+ .strat-sum-short), .strat-sum-period { display: none; }
+      .strat-sum-short { display: inline; }
+      .strat-sum-row .strat-pill { font-size: 10px; padding: 2px 4px; overflow: hidden; text-overflow: ellipsis; }
+      .strat-sum-row .rev-bar { height: 8px; }
     }
     /* Einnahmen (Strategie) */
     .rev-card { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
@@ -5791,19 +5799,50 @@ function stratFinanceCardHtml(g) {
   </div>`;
 }
 // Comparison of all numeric goals of the year: actual vs. goal (marker) vs. bonus (bar end).
+// The same eight rows in every year, in this order; a year without a goal shows a neutral row.
+const STRAT_SUMMARY_ROWS = [
+  { label: 'YouTube-Abonnenten', short: 'YouTube-Abos', metric: 'youtube_subscribers' },
+  { label: 'Spotify-Follower', metric: 'spotify_followers' },
+  { label: 'Instagram-Follower', short: 'Instagram', metric: 'instagram_followers' },
+  { label: 'TikTok-Follower', short: 'TikTok', metric: 'tiktok_followers' },
+  { label: 'Spotify-Plays', metric: 'spotify_plays', group: true },
+  { label: 'Veröffentlichte Folgen', short: 'Folgen', metric: 'episodes' },
+  { label: 'YouTube-AdSense-Umsatz', short: 'AdSense', scope: 'adsense', group: true },
+  { label: 'Gesamtumsatz', scope: 'total' },
+];
+const STRAT_MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+// Short measuring period next to the unified label, e.g. "Ø Nov–Dez" or "im Jahr".
+function stratPeriodText(g) {
+  const full = g.period_start.endsWith('-01-01') && g.period_end.endsWith('-12-31');
+  const range = `${STRAT_MONTHS_SHORT[+g.period_start.slice(5, 7) - 1]}–${STRAT_MONTHS_SHORT[+g.period_end.slice(5, 7) - 1]}`;
+  if (g.measure === 'month_avg') return `Ø ${range}`;
+  if (g.measure === 'month_sum') return full ? 'im Jahr' : range;
+  if (g.measure === 'episodes') return full ? 'im Jahr' : 'bis Jahresende';
+  return '';
+}
+// Whole euros keep the row compact; rounded down so nothing looks reached too early (exact value in the tooltip).
+function eurSummary(cents) { return Math.floor(cents / 100).toLocaleString('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }); }
 function stratSummaryHtml(y) {
-  const rows = [
-    ...stratGoals.filter(g => g.year === y).sort((a, b) => b.category.localeCompare(a.category) || a.sort - b.sort).map(g => { const a = stratActual(g); return { id: 'sg-' + g.id, label: g.title, v: a.value, t: g.target, b: g.bonus, inP: a.inPeriod, fmt: nf, note: g.confirmed_note }; }),
-    ...revGoals.filter(g => g.year === y).map(g => ({ id: null, label: revGoalLabel(g).split(' (')[0], v: revGoalActual(g), t: g.target_cents, b: g.bonus_cents, inP: isoToday() >= `${g.year}-${g.period === 'nov_dec' ? '11' : '01'}-01`, fmt: eur })),
-  ];
-  if (!rows.length) return '';
-  const done = rows.filter(r => r.v !== null && r.inP && r.v >= r.t).length;
+  const rows = STRAT_SUMMARY_ROWS.map(def => {
+    const g = def.metric ? stratGoals.find(x => x.year === y && x.metric_key === def.metric) : null;
+    const r = def.scope ? revGoals.find(x => x.year === y && x.scope === def.scope) : null;
+    if (g) { const a = stratActual(g); return { def, id: 'sg-' + g.id, period: stratPeriodText(g), tip: `${g.title}, Messzeitraum ${formatDate(safeParseIso(g.period_start))} bis ${formatDate(safeParseIso(g.period_end))}`, v: a.value, t: g.target, b: g.bonus, inP: a.inPeriod, fmt: nf, note: g.confirmed_note }; }
+    if (r) return { def, id: null, period: r.period === 'nov_dec' ? 'Nov–Dez' : 'im Jahr', tip: `${def.label}, ${r.period === 'nov_dec' ? `Summe November und Dezember ${y}` : `Januar bis Dezember ${y}`}, aus Finanzen: ${eur(revGoalActual(r))}`, v: revGoalActual(r), t: r.target_cents, b: r.bonus_cents, inP: isoToday() >= `${y}-${r.period === 'nov_dec' ? '11' : '01'}-01`, fmt: eurSummary };
+    return { def, none: true, tip: `${def.label}: für ${y} ist kein Ziel festgelegt` };
+  });
+  const defined = rows.filter(r => !r.none);
+  const done = defined.filter(r => r.v !== null && r.inP && r.v >= r.t).length;
   return `<div class="card strat-summary">
-    <div class="strat-card-head"><h2 style="margin:0;font-size:15px">Zielerreichung ${y}</h2><span class="muted strat-small">${done}/${rows.length} Ziele erreicht · Balken = Ist, Markierung = Ziel, Ende = Bonus</span></div>
-    ${rows.map(r => { const st = stratStatus(r.v, r.t, r.b, r.inP); return `<div class="strat-sum-row"${r.id ? ` role="button" tabindex="0" onclick="document.getElementById('${r.id}')?.scrollIntoView({behavior:'smooth',block:'center'})"` : ''}>
-      <span class="strat-sum-label">${esc(r.label)}</span>${stratBar(r.v, r.t, r.b)}
+    <div class="strat-card-head"><h2 style="margin:0;font-size:15px">Zielerreichung ${y}</h2><span class="muted strat-small">${done}/${defined.length} Ziele erreicht · Balken = Ist, Markierung = Ziel, Ende = Bonus</span></div>
+    ${rows.map(r => {
+      const label = `<span class="strat-sum-label"><span class="strat-sum-full">${esc(r.def.label)}</span>${r.def.short ? `<span class="strat-sum-short">${esc(r.def.short)}</span>` : ''}${r.period ? ` <small class="muted strat-sum-period">${esc(r.period)}</small>` : ''}</span>`;
+      if (r.none) return `<div class="strat-sum-row is-none${r.def.group ? ' strat-sum-group' : ''}" title="${esc(r.tip)}">${label}<div class="rev-bar" aria-hidden="true"></div><span class="strat-sum-val muted">—</span><span class="strat-pill">kein Ziel</span></div>`;
+      const st = stratStatus(r.v, r.t, r.b, r.inP);
+      return `<div class="strat-sum-row${r.def.group ? ' strat-sum-group' : ''}" title="${esc(r.tip)}"${r.id ? ` role="button" tabindex="0" onclick="document.getElementById('${r.id}')?.scrollIntoView({behavior:'smooth',block:'center'})"` : ''}>
+      ${label}${stratBar(r.v, r.t, r.b)}
       <span class="strat-sum-val">${r.v === null ? (r.note ? '✓ laut Vorgabe' : '–') : r.fmt(r.v)} <span class="muted">/ ${r.fmt(r.t)}</span></span>
-      <span class="strat-pill st-${st.key}">${st.key === 'progress' ? st.label.replace(' vom Ziel', '') : st.key === 'none' ? 'offen' : st.key === 'before' ? 'später' : st.label.replace(/^\S+ /, '')}</span></div>`; }).join('')}
+      <span class="strat-pill st-${st.key}">${st.key === 'progress' ? st.label.replace(' vom Ziel', '') : st.key === 'none' ? 'offen' : st.key === 'before' ? 'später' : `<span class="strat-sum-full">${st.label.replace(/^\S+ /, '')}</span><span class="strat-sum-short">${st.key === 'bonus' ? 'Bonus' : 'Erreicht'}</span>`}</span></div>`;
+    }).join('')}
   </div>`;
 }
 function stratMilestonesHtml(y) {
