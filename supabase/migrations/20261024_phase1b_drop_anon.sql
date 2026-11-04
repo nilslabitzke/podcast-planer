@@ -39,3 +39,4 @@ drop policy if exists anon_all_metric_values  on public.podcast_metric_values;  
 drop policy if exists anon_all_investment_categories on public.podcast_investment_categories; -- added 2026-11-04 (Investitionen)
 drop policy if exists anon_all_investments    on public.podcast_investments;             -- added 2026-11-04 (Investitionen)
 drop policy if exists anon_all_setup_items    on public.podcast_setup_items;             -- added 2026-11-04 (Investitionen)
+drop policy if exists anon_all_investment_links on public.podcast_investment_links;      -- added 2026-11-04 (Produktlinks)
