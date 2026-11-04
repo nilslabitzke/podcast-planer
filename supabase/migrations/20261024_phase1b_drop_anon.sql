@@ -36,3 +36,6 @@ drop policy if exists anon_all_fin_months          on public.podcast_fin_months;
 drop policy if exists anon_read_fin_booking_log    on public.podcast_fin_booking_log;    -- added 2026-10-27 (Finanzen)
 drop policy if exists anon_all_strategy_goals on public.podcast_strategy_goals;          -- added 2026-10-27 (Strategie)
 drop policy if exists anon_all_metric_values  on public.podcast_metric_values;           -- added 2026-10-27 (Strategie)
+drop policy if exists anon_all_investment_categories on public.podcast_investment_categories; -- added 2026-11-04 (Investitionen)
+drop policy if exists anon_all_investments    on public.podcast_investments;             -- added 2026-11-04 (Investitionen)
+drop policy if exists anon_all_setup_items    on public.podcast_setup_items;             -- added 2026-11-04 (Investitionen)
