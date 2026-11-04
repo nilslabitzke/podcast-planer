@@ -107,6 +107,7 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
   - Finanzen: automatisch aus bezahlten Einnahmen in „Finanzen“; Klick auf die Karte öffnet die Finanzübersicht des Jahres.
 - Zielerreichung nur bei Messwerten **innerhalb** des Messzeitraums; Referenz- und geplante Startwerte sind reine Hinweise und zählen nie als Ist-Wert.
 - Ziel-/Bonuswerte nur über „Ziel bearbeiten“ (`podcast_strategy_goals`, Finanzziele in `podcast_revenue_goals`).
+- **Zielerreichung (Jahresübersicht):** in jedem Jahr dieselben 8 Zeilen in fester Reihenfolge (`STRAT_SUMMARY_ROWS`), jede einzeilig. Ohne Ziel: neutrale Zeile mit „kein Ziel“. Der Messzeitraum steht klein neben dem einheitlichen Namen, das Genaue im Tooltip. Reine Darstellung, die Daten bleiben unverändert; die Karten darunter zeigen weiter die gespeicherten Zieltitel.
 - **Meilensteine = allgemeine To-dos** (`podcast_todos.strategy_year`, `strategy_key`) mit Chip „🎯 Strategie JJJJ“ – ein gemeinsamer Erledigt-Status in Aufgaben und Strategie. „Langfolgenschnitt auslagern“ (2028) zeigt die 300-€-Auswertung (Ø der letzten N vollständig erfassten Monate aus Finanzen, Standard 3, einstellbar) und den Status Offen / Bereit zur Umsetzung / Umgesetzt (= To-do erledigt). Keine automatische Beauftragung.
 
 ### Investitionen (Strategie)
