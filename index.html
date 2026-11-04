@@ -860,9 +860,25 @@
     .post-chip .task-check::after { left: 4px; top: 1px; width: 4px; height: 8px; }
     .post-chip.done { opacity: .55; }
     .post-chip.done .post-chip-title { text-decoration: line-through; }
+    .post-chip-boxes { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; margin-top: 2px; }
+    .post-chip-boxes .task-check { margin-top: 0; }
+    .post-who { width: 16px; height: 16px; border-radius: 6px; border: 2px solid var(--border); background: var(--surface); color: var(--muted); font-size: 10px; font-weight: 700; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; position: relative; transition: border-color .15s; }
+    .post-who:hover, .post-who:focus-visible { border-color: var(--accent); outline: none; }
+    .post-who-nils { background: var(--nils); border-color: var(--nils); color: var(--on-nils); }
+    .post-who-leo { background: var(--leo); border-color: var(--leo); color: var(--on-leo); }
+    @media (pointer: coarse) {
+      .post-chip .task-check, .post-who { width: 22px; height: 22px; }
+      .post-chip .task-check::after { left: 6px; top: 2px; width: 6px; height: 11px; }
+      .post-who { font-size: 12px; }
+      .post-who::before { content: ''; position: absolute; inset: -3px -8px; }
+    }
+    .post-who-menu { position: fixed; z-index: 400; min-width: 170px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 8px 24px rgba(0,0,0,.35); padding: 4px; display: flex; flex-direction: column; }
+    .post-who-menu button { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 10px; background: none; border: none; border-radius: 6px; color: var(--text); font-size: 14px; text-align: left; cursor: pointer; }
+    .post-who-menu button:hover, .post-who-menu button:focus-visible { background: var(--surface2); outline: none; }
+    .post-who-menu button.active { font-weight: 700; }
+    .post-who-menu .post-who { pointer-events: none; }
     .post-chip-body { min-width: 0; flex: 1; }
     .post-chip-meta { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-    .post-chip-meta .who { min-width: 16px; height: 16px; font-size: 9px; padding: 0 4px; }
     .post-chip-title { font-size: 12px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.35; margin-top: 2px; }
     .post-chip-title .muted { font-weight: 400; }
     .post-box-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
@@ -1445,6 +1461,7 @@
       <div class="form-group" style="flex:2"><label for="post-episode">Folge</label><select id="post-episode"></select></div>
       <div class="form-group"><label for="post-status">Status</label><select id="post-status"><option value="planned">Geplant</option><option value="in_progress">In Arbeit</option><option value="scheduled">Eingeplant</option><option value="published">Veröffentlicht</option></select></div>
     </div>
+    <div class="muted fin-small" id="post-published-meta" style="margin:-6px 0 12px" hidden></div>
     <div class="form-group"><label for="post-description">Beschreibung / Caption</label><textarea id="post-description" rows="4" placeholder="Text, Hashtags, Notizen…"></textarea></div>
     <div class="form-row">
       <div class="form-group"><label for="post-media">Medienlink</label><div class="ep-link-row"><input type="text" id="post-media" placeholder="https://… (Drive, Canva)" oninput="updatePostLinkButtons()"><a class="btn btn-sm" id="post-media-open" target="_blank" rel="noopener noreferrer" hidden title="Öffnen">↗</a></div></div>
@@ -2755,6 +2772,7 @@ function reelPlatforms(ep, idx, r) {
 function toggleReelPlatform(epId, idx, key) {
   const ep = episodes.find(e => e.id === epId);
   if (!ep) return;
+  if (!currentActor()) { withActor(() => toggleReelPlatform(epId, idx, key)); return; }
   const reels = getReels(ep);
   const next = { ...reelPlatforms(ep, idx, reels[idx]) };
   next[key] = !next[key];
@@ -2765,7 +2783,7 @@ function toggleReelPlatform(epId, idx, key) {
   const post = reelPost(ep, idx);
   const all = REEL_PLATFORMS.every(([k]) => next[k]);
   if (post && all !== isPublished(post)) {
-    patchPost(post.id, { status: all ? 'published' : 'planned' });
+    patchPost(post.id, postStatusChanges(post, all ? 'published' : 'planned'));
     afterPostChange(ep.id, !all);
   }
   rerenderDetail(epId);
@@ -3511,11 +3529,87 @@ function refreshPostViews() {
   if (active === 'page-zeitstrahl') renderZeitstrahl();
   if (active === 'page-todos' && !todoEditingId) renderTodos();
 }
+// Status change with its record: who ticked and when, only on a real transition. Responsibility
+// (assignee) is separate and stays as it is. Posts from before this record keep null ("nicht erfasst").
+function postStatusChanges(p, status) {
+  const was = !!p && isPublished(p), now = status === 'published';
+  if (was === now) return { status };
+  return now ? { status, published_at: new Date().toISOString(), published_by: currentActor() } : { status, published_at: null, published_by: null };
+}
+function postPublishedText(p) {
+  if (!isPublished(p)) return '';
+  const at = p.published_at ? new Date(p.published_at).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' Uhr' : '';
+  const by = p.published_by ? actorName(p.published_by) : '';
+  if (by && at) return `Veröffentlicht von ${by} am ${at}`;
+  if (at) return `Veröffentlicht am ${at} (abgehakt von: nicht erfasst)`;
+  return 'Veröffentlicht (Zeitpunkt und Person nicht erfasst)';
+}
+// Taking over a post: the write only applies if the assignment is still what this device showed,
+// so nobody silently overwrites a reservation made a moment earlier on another device.
+function setPostAssignee(id, who) {
+  closePostWhoMenu();
+  const p = posts.find(x => x.id === id);
+  const prev = p ? p.assignee || null : null;
+  if (!p || prev === who) return;
+  p.assignee = who;
+  refreshPostViews();
+  queuePostWrite(id, async () => {
+    const match = prev ? 'assignee=eq.' + prev : 'assignee=is.null';
+    const rows = await apiFetch(`${POST_TABLE}?id=eq.${encodeURIComponent(id)}&${match}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ assignee: who }) });
+    if (!rows.length) throw new Error('Die Zuständigkeit wurde inzwischen auf einem anderen Gerät geändert.');
+  });
+}
+const POST_WHO_OPTIONS = [['nils', 'Nils', 'N'], ['leo', 'Leo', 'L'], [null, 'Nicht zugewiesen', '–']];
+function postWhoBoxHtml(who) {
+  const opt = POST_WHO_OPTIONS.find(o => o[0] === (who || null));
+  return `<span class="post-who post-who-${who || 'none'}" aria-hidden="true">${opt[2]}</span>`;
+}
+let postWhoAnchor = null;
+function openPostWhoMenu(btn, id) {
+  const wasOpen = postWhoAnchor === btn;
+  closePostWhoMenu();
+  if (wasOpen) return;
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  const menu = document.createElement('div');
+  menu.className = 'post-who-menu';
+  menu.id = 'post-who-menu';
+  menu.setAttribute('role', 'menu');
+  menu.innerHTML = POST_WHO_OPTIONS.map(([who, label]) => `<button type="button" role="menuitem" class="${(p.assignee || null) === who ? 'active' : ''}" onclick="setPostAssignee(${jsArg(id)}, ${who ? `'${who}'` : 'null'})">${postWhoBoxHtml(who)}${label}</button>`).join('');
+  document.body.appendChild(menu);
+  // Below the box if there is room, otherwise above; always fully inside the screen.
+  const r = btn.getBoundingClientRect(), m = menu.getBoundingClientRect(), gap = 8;
+  const below = r.bottom + 4 + m.height <= innerHeight - gap;
+  menu.style.top = Math.max(gap, below ? r.bottom + 4 : r.top - 4 - m.height) + 'px';
+  menu.style.left = Math.max(gap, Math.min(r.left, innerWidth - m.width - gap)) + 'px';
+  postWhoAnchor = btn;
+  btn.setAttribute('aria-expanded', 'true');
+  menu.querySelector('button').focus({ preventScroll: true });
+}
+function closePostWhoMenu() {
+  const menu = document.getElementById('post-who-menu');
+  if (menu) menu.remove();
+  if (postWhoAnchor) postWhoAnchor.setAttribute('aria-expanded', 'false');
+  postWhoAnchor = null;
+}
+document.addEventListener('pointerdown', e => {
+  if (postWhoAnchor && !e.target.closest('#post-who-menu') && !e.target.closest('.post-who')) closePostWhoMenu();
+}, true);
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape' || !postWhoAnchor) return;
+  e.stopPropagation();
+  const btn = postWhoAnchor;
+  closePostWhoMenu();
+  if (btn.isConnected) btn.focus();
+}, true);
+window.addEventListener('scroll', e => { if (!(e.target.closest && e.target.closest('#post-who-menu'))) closePostWhoMenu(); }, true);
+window.addEventListener('resize', closePostWhoMenu);
 function togglePostDone(id) {
   const p = posts.find(x => x.id === id);
   if (!p) return;
   const unpublish = isPublished(p);
-  patchPost(id, { status: unpublish ? 'planned' : 'published' });
+  if (!unpublish && !currentActor()) { withActor(() => togglePostDone(id)); return; }
+  patchPost(id, postStatusChanges(p, unpublish ? 'planned' : 'published'));
   if (unpublish) onReelPostUnpublished(p);
   afterPostChange(p.episode_id, unpublish);
   refreshPostViews();
@@ -3537,9 +3631,12 @@ function postChipHtml(p, { showEpisode = true, draggable = true } = {}) {
   const f = POST_FORMATS[p.format] || POST_FORMATS.other;
   const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
   return `<div class="post-chip cal-type-${f.cls}${isPublished(p) ? ' done' : ''}" ${draggable ? `draggable="true" ondragstart="event.dataTransfer.setData('text/plain', ${jsArg(p.id)})"` : ''} onclick="openPostEditor(${jsArg(p.id)})" title="${esc(postLabel(p))}">
-    <div class="task-check ${isPublished(p) ? 'done' : ''}" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" role="checkbox" aria-checked="${isPublished(p)}" title="${isPublished(p) ? 'Als nicht veröffentlicht markieren' : 'Als veröffentlicht abhaken'}"></div>
+    <div class="post-chip-boxes">
+      <div class="task-check ${isPublished(p) ? 'done' : ''}" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" role="checkbox" aria-checked="${isPublished(p)}" title="${isPublished(p) ? esc(postPublishedText(p)) + ' – Klick nimmt das zurück' : 'Als veröffentlicht abhaken'}"></div>
+      <button type="button" class="post-who post-who-${p.assignee || 'none'}" onclick="event.stopPropagation();openPostWhoMenu(this, ${jsArg(p.id)})" aria-haspopup="menu" aria-expanded="false" aria-label="Zuständig: ${p.assignee ? actorName(p.assignee) : 'nicht zugewiesen'} – ändern" title="Zuständig: ${p.assignee ? actorName(p.assignee) : 'nicht zugewiesen'}">${p.assignee === 'nils' ? 'N' : p.assignee === 'leo' ? 'L' : '–'}</button>
+    </div>
     <div class="post-chip-body">
-      <div class="post-chip-meta">${p.time ? `<span class="cal-item-time">${esc(p.time)}</span>` : ''}<span class="cal-type-badge">${f.icon} ${f.label}</span>${p.assignee ? `<span class="who who-${p.assignee}">${p.assignee === 'nils' ? 'N' : 'L'}</span>` : ''}</div>
+      <div class="post-chip-meta">${p.time ? `<span class="cal-item-time">${esc(p.time)}</span>` : ''}<span class="cal-type-badge">${f.icon} ${f.label}</span></div>
       ${isDefaultPostTitle(p) ? (showEpisode && ep ? `<div class="post-chip-title"><span class="muted">${esc(ep.title)}</span></div>` : '')
         : `<div class="post-chip-title">${esc(p.title || f.label)}${showEpisode && ep ? ` <span class="muted">· ${esc(ep.title)}</span>` : ''}</div>`}
     </div>
@@ -3668,6 +3765,11 @@ function openPostEditor(id, defaults = {}) {
   document.getElementById('post-template-hint').innerHTML = p && p.template_key ? postSourceHtml(p) : '';
   renderPostPlatforms();
   updatePostLinkButtons();
+  const publishedMeta = document.getElementById('post-published-meta');
+  publishedMeta.textContent = p ? postPublishedText(p) : '';
+  publishedMeta.hidden = !publishedMeta.textContent;
+  // Only fields changed in this form are written, so a change made meanwhile on another device stays.
+  try { postEdit.base = p ? readPostForm() : null; } catch { postEdit.base = null; }
   document.getElementById('post-modal-bg').classList.add('open');
 }
 // Content written in the episode (reel texts, LinkedIn posts) shown next to the template post.
@@ -3731,13 +3833,16 @@ function savePostEditor() {
   let row;
   try { row = readPostForm(); } catch (e) { showToast(e.message, 'error'); return; }
   const p = postEdit.id ? posts.find(x => x.id === postEdit.id) : null;
+  const base = postEdit.base || p;
+  if (row.status === 'published' && (!base || base.status !== 'published') && !currentActor()) { withActor(savePostEditor); return; }
   const affected = new Set([row.episode_id, p && p.episode_id].filter(Boolean));
   if (p) {
     const changes = {};
-    Object.keys(row).forEach(k => { if (JSON.stringify(row[k]) !== JSON.stringify(p[k])) changes[k] = row[k]; });
+    Object.keys(row).forEach(k => { if (JSON.stringify(row[k]) !== JSON.stringify(base[k])) changes[k] = row[k]; });
+    if ('status' in changes) Object.assign(changes, postStatusChanges(p, changes.status));
     if (Object.keys(changes).length) patchPost(p.id, changes);
   } else {
-    insertPosts([{ id: newId(), template_key: null, ...row }]);
+    insertPosts([{ id: newId(), template_key: null, ...row, ...postStatusChanges(null, row.status) }]);
   }
   const unpublished = !!p && postEdit.wasPublished && row.status !== 'published';
   if (unpublished) onReelPostUnpublished(p);
