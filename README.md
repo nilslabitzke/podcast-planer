@@ -129,6 +129,8 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - Beim Übernehmen in den Planer kommen Gast + E-Mail und eine abweichende Priorität in die Beschreibung; verknüpfte Experten werden auch mit der neuen Folge verknüpft.
 
 ### Social-Media-Kalender
+- Jede Postkarte (zentraler Kalender und Kalender in der Folge) hat unter dem Veröffentlichungs-Häkchen ein gleich großes Kästchen für die Zuständigkeit: N (Nils), L (Leo), – (offen), gespeichert in `podcast_posts.assignee`. Klick öffnet ein Menü. Zuständigkeit und Veröffentlichung sind unabhängig. Eine Zuweisung greift nur, wenn sie noch dem angezeigten Stand entspricht, sonst kommt ein Hinweis.
+- Beim Abhaken werden `published_at` und `published_by` gespeichert (Tooltip und Post-Editor), beim Zurücknehmen geleert. Alte Posts bleiben „nicht erfasst“, es wird nichts nachgetragen.
 - Posts (`podcast_posts`): Folge, Format, Plattformen, Datum, Uhrzeit, Zuständigkeit, Titel, Beschreibung, Medien-/Veröffentlichungslink, Status.
 - Standardvorlage: 8 Reels, 3 Instagram-Karussells, 2 YouTube-Clips (Sonntag Woche 1 ~10:00, Donnerstag Woche 2 ~16:00) über 14 Tage ab Release sowie 2 LinkedIn-Beiträge am 1. und 2. Dienstag nach dem Release um 07:45
 - Vorlagen-Titel wie „Reel 3“ werden in den Kalender-Kacheln nicht wiederholt – das Format-Symbol reicht – automatisch für neue Folgen, für bestehende per „Standardvorlage anwenden“ ohne Duplikate (`template_key`).
@@ -190,6 +192,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261027_idea_priority_email.sql` | Ideen: Priorität (Standard Mittel) und E-Mail des Experten | angewendet |
 | `20261102_todo_new_markers.sql` | Aufgaben: `created_by` und Gesehen-Stand je Person (blauer Punkt) | angewendet |
 | `20261104_investments.sql` | Strategie: Investitionen, Kategorien, aktuelles Setup; `investment_id` an Buchungen und To-dos | angewendet |
+| `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
 
