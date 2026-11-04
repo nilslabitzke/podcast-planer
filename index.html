@@ -693,9 +693,129 @@
     .inv-st-bought { color: var(--green); background: var(--green-soft); }
     .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
-    .inv-setup-edit { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-    .inv-setup-edit input { flex: 2; min-width: 0; }
-    .inv-setup-edit select { flex: 1; min-width: 0; }
+    .inv-setup-edit { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .inv-setup-edit input { flex: 2 1 100%; min-width: 0; }
+    .inv-setup-edit select { flex: 1 1 130px; min-width: 0; }
+    /* Studio-Upgrade: a dark stage in both themes, so tokens are fixed locally. */
+    .st-root { container-type: inline-size; --bg: #101116; --surface: #17181E; --surface2: #21222A; --surface3: #2A2C35; --border: #30323C; --text: #F3F4F6; --muted: #A2A6B3; --accent-text: #FFB062; --accent-soft: rgba(255,165,71,.15); --on-accent: #111217; --accent2: #A99BFF; --green: #4ADE9F; --green-soft: rgba(74,222,159,.14); --yellow: #FBBF24; --yellow-soft: rgba(251,191,36,.14); --red: #F87171; --red-soft: rgba(248,113,113,.14); --st-violet: #A99BFF; color: var(--text); color-scheme: dark; background: #0C0D11; border: 1px solid #23242C; border-radius: var(--radius); padding: 14px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .st-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .st-stage-card { position: relative; border-radius: 10px; background: radial-gradient(120% 90% at 50% 15%, #1B1C25 0%, #0C0D11 70%); overflow: hidden; }
+    .st-brand { position: absolute; left: 14px; top: 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: .3px; color: var(--muted); z-index: 2; }
+    .st-brand-mark { background: var(--accent); color: var(--on-accent); font-weight: 800; font-size: 11px; padding: 3px 6px; border-radius: 6px; }
+    .st-scene { position: relative; }
+    .st-svg { display: block; width: 100%; height: auto; }
+    .st-obj { cursor: pointer; transition: opacity .15s; }
+    .st-ghost * { fill: none !important; stroke: rgba(255,255,255,.3) !important; stroke-width: 1.2 !important; stroke-dasharray: 4 4; }
+    .st-ghost text { fill: rgba(255,255,255,.22) !important; stroke: none !important; }
+    .st-holo * { fill: rgba(169,155,255,.1) !important; stroke: #A99BFF !important; stroke-width: 1.3 !important; stroke-dasharray: 5 3; }
+    .st-holo text { fill: rgba(169,155,255,.55) !important; stroke: none !important; }
+    .st-ghost:hover *, .st-ghost.selected * { stroke: rgba(255,255,255,.75) !important; }
+    .st-holo:hover *, .st-holo.selected * { stroke: #D4CCFF !important; }
+    @media (hover: hover) { .st-solid:hover { filter: brightness(1.2); } }
+    .st-solid.selected { filter: drop-shadow(0 0 5px #FFA547); }
+    .st-next { filter: drop-shadow(0 0 4px #A99BFF); }
+    .st-pin { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; cursor: pointer; color: #fff; z-index: 1; }
+    .st-pin:hover, .st-pin:focus-visible, .st-pin.selected { z-index: 3; }
+    .st-pin-dot { position: relative; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(16,17,22,.86); border: 2px solid var(--st-ring, rgba(255,255,255,.55)); color: var(--st-ring, #fff); box-shadow: 0 2px 10px rgba(0,0,0,.5); transition: transform .15s; }
+    .st-pin-dot svg { width: 18px; height: 18px; }
+    .st-pin::after { content: ''; position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; transform: translate(-50%, -50%); }
+    .st-pin:hover .st-pin-dot, .st-pin.selected .st-pin-dot { transform: scale(1.12); }
+    .st-pin:focus-visible .st-pin-dot { outline: 2px solid #fff; outline-offset: 2px; }
+    .st-pin.selected .st-pin-dot { background: var(--st-ring, #fff); color: #101116; }
+    .st-pin-none { --st-ring: rgba(255,255,255,.5); }
+    .st-pin-none .st-pin-dot { border-style: dashed; }
+    .st-pin-present { --st-ring: #F3F4F6; }
+    .st-pin-planned { --st-ring: #A99BFF; }
+    .st-pin-ready { --st-ring: #FFA547; }
+    .st-pin-bought { --st-ring: #4ADE9F; }
+    .st-pin-in_use { --st-ring: #FFD9AE; }
+    .st-pin-ready .st-pin-dot { animation: st-pulse 2.2s ease-out infinite; }
+    @keyframes st-pulse { 0% { box-shadow: 0 0 0 0 rgba(255,165,71,.55); } 70%, 100% { box-shadow: 0 0 0 12px rgba(255,165,71,0); } }
+    @media (prefers-reduced-motion: reduce) { .st-pin-ready .st-pin-dot { animation: none; } .st-pin-dot, .st-obj { transition: none; } }
+    .st-pin-count { position: absolute; right: -5px; top: -5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 99px; background: var(--st-ring, #fff); color: #101116; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .st-pin-label { position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); display: none; white-space: nowrap; font-size: 12px; font-weight: 600; background: rgba(16,17,22,.9); border: 1px solid rgba(255,255,255,.14); padding: 3px 8px; border-radius: 6px; pointer-events: none; }
+    .st-pin:hover .st-pin-label, .st-pin:focus-visible .st-pin-label, .st-pin.selected .st-pin-label { display: block; }
+    .st-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; min-width: 0; font-size: 13px; scroll-margin: 72px; }
+    .st-panel:empty { display: none; }
+    .st-eyebrow { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    .st-panel-empty p { margin: 6px 0 12px; line-height: 1.5; }
+    .st-legend { list-style: none; display: grid; gap: 7px; margin-bottom: 12px; }
+    .st-legend li { display: flex; align-items: center; gap: 8px; }
+    .st-legend-mark { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--st-ring); flex-shrink: 0; }
+    .st-legend-mark.st-pin-none { border-style: dashed; }
+    .st-panel-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .st-panel-head h3 { font-size: 16px; font-weight: 700; margin: 0; overflow-wrap: anywhere; }
+    .st-panel-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .st-panel-icon svg { width: 20px; height: 20px; }
+    .st-panel-close { margin-left: auto; min-width: 36px; min-height: 36px; }
+    .st-sub { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 14px 0 6px; }
+    .st-equip { list-style: none; display: grid; gap: 4px; margin-bottom: 2px; }
+    .st-equip li { overflow-wrap: anywhere; }
+    .st-ups { list-style: none; display: grid; gap: 8px; }
+    .st-up { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: grid; gap: 7px; min-width: 0; }
+    .st-up-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .st-up-head b { overflow-wrap: anywhere; }
+    .st-up-price { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .st-up-text { font-size: 12.5px; color: var(--muted); line-height: 1.45; overflow-wrap: anywhere; }
+    .st-up-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+    .st-check { display: flex; align-items: center; gap: 6px; font-size: 12.5px; cursor: pointer; min-height: 32px; }
+    .st-check input, .st-plan-row input { width: 18px; height: 18px; flex-shrink: 0; accent-color: #FFA547; margin: 0; }
+    .st-costs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .st-costs dt { font-size: 11px; color: var(--muted); }
+    .st-costs dd { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .st-add { margin-top: 10px; }
+    .st-stages { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; margin-top: 14px; }
+    .st-stage { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; min-width: 0; }
+    .st-stage.current { border-color: #FFA547; box-shadow: inset 0 0 0 1px rgba(255,165,71,.35); }
+    .st-stage-head { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+    .st-stage-mark { width: 10px; height: 10px; transform: rotate(45deg); border: 2px solid var(--muted); border-radius: 2px; flex-shrink: 0; }
+    .st-stage.reached .st-stage-mark { background: #FFA547; border-color: #FFA547; }
+    .st-stage-now, .st-stage-next { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; margin-left: auto; }
+    .st-stage-now { background: var(--accent-soft); color: var(--accent-text); }
+    .st-stage-next { background: rgba(169,155,255,.16); color: var(--st-violet); }
+    .st-stage ul { list-style: none; display: grid; gap: 3px; color: var(--muted); }
+    .st-stage li.yes { color: var(--text); }
+    .st-stage li.next { color: var(--st-violet); }
+    .st-note { font-size: 12px; color: var(--muted); margin: 8px 2px 0; line-height: 1.45; }
+    .st-planner { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 14px; }
+    .st-planner h3, .st-section-title { font-size: 14px; font-weight: 700; margin: 0; }
+    .st-section-title { margin: 16px 2px 8px; }
+    .st-planner-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+    .st-planner-head p { font-size: 12.5px; margin-top: 2px; }
+    .st-plan-sum { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 14px; }
+    .st-plan-sum b { font-variant-numeric: tabular-nums; }
+    .st-plan-open { flex-basis: 100%; font-size: 12.5px; }
+    .st-plan-open .st-eyebrow { margin-bottom: 2px; }
+    .st-plan-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin: 12px 0 6px; }
+    .st-plan-groups fieldset { border: none; padding: 0; margin: 0; min-width: 0; }
+    .st-plan-groups legend { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); padding: 0; margin-bottom: 4px; }
+    .st-plan-row { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 8px; border-radius: 8px; background: var(--surface2); margin-bottom: 4px; font-size: 13px; cursor: pointer; }
+    .st-plan-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .st-plan-price { color: var(--muted); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .st-slots { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+    .st-slot { width: 100%; height: 100%; min-height: 58px; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 2px 10px; align-items: center; text-align: left; padding: 9px 10px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 9px; cursor: pointer; transition: border-color .15s; }
+    .st-slot:hover, .st-slot:focus-visible { border-color: #FFA547; outline: none; }
+    .st-slot.selected { border-color: #FFA547; background: rgba(255,165,71,.08); }
+    .st-slot-icon { grid-row: span 2; width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #0C0D11; border: 1px solid var(--st-ring); color: var(--st-ring); }
+    .st-slot-icon.st-pin-none { border-style: dashed; }
+    .st-slot-icon svg { width: 19px; height: 19px; }
+    .st-slot-text { display: grid; font-size: 13px; min-width: 0; }
+    .st-slot-text span { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+    .st-slot-state { font-size: 11px; color: var(--muted); }
+    .inv-tabs { margin-bottom: 14px; }
+    .inv-st-in_use { color: #111217; background: #FFD9AE; }
+    @container (min-width: 800px) {
+      .st-layout { grid-template-columns: minmax(0, 1fr) 320px; }
+      .st-panel { max-height: 700px; overflow-y: auto; }
+    }
+    @container (max-width: 520px) {
+      .st-pin-dot { width: 34px; height: 34px; }
+      .st-pin-dot svg { width: 16px; height: 16px; }
+      .st-brand { left: 10px; top: 8px; }
+      .st-legend { grid-template-columns: 1fr 1fr; gap: 6px 10px; font-size: 12px; margin-bottom: 0; }
+      .st-panel-empty .muted { display: none; }
+    }
     .strat-group { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 22px 0 10px; }
     .strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 8px; }
     .strat-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -1682,10 +1802,11 @@
       <div class="form-group"><label for="inv-category">Kategorie</label><select id="inv-category"></select></div>
       <div class="form-group"><label for="inv-price">Geschätzter Preis in €</label><input type="text" id="inv-price" inputmode="decimal" placeholder="Noch offen" oninput="this.classList.remove('invalid')"></div>
     </div>
+    <div class="form-group"><label for="inv-area">Studio-Bereich</label><select id="inv-area"></select></div>
     <div class="form-group"><label for="inv-desc">Beschreibung / Nutzen</label><textarea id="inv-desc" rows="3" placeholder="Was bringt uns diese Anschaffung?"></textarea></div>
     <div class="form-row">
       <div class="form-group"><label for="inv-priority">Priorität</label><select id="inv-priority"><option value="high">▲ Hoch</option><option value="medium">● Mittel</option><option value="low">▼ Niedrig</option></select></div>
-      <div class="form-group"><label for="inv-status">Status</label><select id="inv-status" onchange="updateInvForm()"><option value="idea">Idee</option><option value="planned">Geplant</option><option value="watch">Beobachten</option><option value="ready">Kaufbereit</option><option value="bought">Gekauft</option></select></div>
+      <div class="form-group"><label for="inv-status">Status</label><select id="inv-status" onchange="updateInvForm()"><option value="idea">Idee</option><option value="planned">Geplant</option><option value="watch">Beobachten</option><option value="ready">Kaufbereit</option><option value="bought">Gekauft</option><option value="in_use">Im Einsatz</option></select></div>
     </div>
     <div class="form-group" id="inv-bought-row" hidden><label for="inv-bought-date">Gekauft am</label><input type="date" id="inv-bought-date"></div>
     <div class="form-row">
@@ -5751,6 +5872,7 @@ const INV_STATUS = {
   watch:   { label: 'Beobachten', order: 2 },
   ready:   { label: 'Kaufbereit', order: 3 },
   bought:  { label: 'Gekauft',    order: 4 },
+  in_use:  { label: 'Im Einsatz', order: 5 },
 };
 // Finance category suggested when a purchase is taken over (can be changed in the booking form).
 const INV_FIN_CAT = { workflow: 'editing', other: 'other_expense' };
@@ -5760,7 +5882,7 @@ let setupItems = [];
 let investLoaded = false;
 let invEditId = null;
 let invEditBase = null;
-let invUi = { category: '', priority: '', status: '', sort: 'priority' };
+let invUi = { tab: 'list', category: '', priority: '', status: '', sort: 'priority' };
 try { Object.assign(invUi, JSON.parse(localStorage.getItem('gg_invest_ui')) || {}); } catch {}
 function setInvUi(key, value) {
   invUi[key] = value;
@@ -5792,26 +5914,34 @@ function invCatOptions(selected, { empty = '' } = {}) {
 function renderInvestments() {
   const box = document.getElementById('invest-container');
   if (!box || !investLoaded) return;
-  const openItems = investments.filter(x => x.status !== 'bought');
+  const focusKey = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.focusKey : null;
+  const tabs = `<div class="seg inv-tabs" role="tablist" aria-label="Ansicht der Investitionen">${[['list', 'Übersicht'], ['studio', 'Studio-Upgrade']].map(([k, l]) => `<button type="button" class="seg-btn${invUi.tab === k ? ' active' : ''}" role="tab" aria-selected="${invUi.tab === k}" data-focus-key="tab-${k}" onclick="setInvUi('tab','${k}')">${l}</button>`).join('')}</div>`;
+  if (invUi.tab === 'studio') box.innerHTML = tabs + renderStudio();
+  else box.innerHTML = tabs + renderInvestmentList();
+  if (focusKey) { const el = box.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`); if (el) el.focus({ preventScroll: true }); }
+}
+function renderInvestmentList() {
+  const openItems = investments.filter(x => !invIsBought(x));
   // No known price yet is shown as a dash, not as 0,00 €.
   const sum = list => list.some(x => x.price_cents != null) ? eur(list.reduce((s, x) => s + (x.price_cents || 0), 0)) : '–';
   const noPrice = openItems.filter(x => x.price_cents == null).length;
   const ready = investments.filter(x => x.status === 'ready');
-  const bought = investments.filter(x => x.status === 'bought');
+  const bought = investments.filter(invIsBought);
+  const actual = bought.reduce((s, x) => s + (invBooking(x.id) ? invBooking(x.id).amount_cents : 0), 0);
   const kpi = (label, value, sub) => `<div class="inv-kpi"><div class="muted strat-small">${label}</div><div class="inv-kpi-val">${value}</div><div class="muted strat-small">${sub}</div></div>`;
   const prio = (a, b) => IDEA_PRIORITY_META[a.priority].order - IDEA_PRIORITY_META[b.priority].order;
   // Bought items move to the end; the list is loaded by last edit, so that stays the tie-breaker.
-  const doneLast = (a, b) => (a.status === 'bought') - (b.status === 'bought');
+  const doneLast = (a, b) => invIsBought(a) - invIsBought(b);
   const byPrice = (a, b) => (a.price_cents == null) - (b.price_cents == null) || (b.price_cents || 0) - (a.price_cents || 0);
   const cmp = invUi.sort === 'updated' ? (a, b) => (b.updated_at || '').localeCompare(a.updated_at || '')
     : invUi.sort === 'price' ? (a, b) => doneLast(a, b) || byPrice(a, b) : (a, b) => doneLast(a, b) || prio(a, b);
   const list = investments.filter(x => (!invUi.category || x.category_id === invUi.category) && (!invUi.priority || x.priority === invUi.priority) && (!invUi.status || x.status === invUi.status)).sort(cmp);
   const opt = (key, value, label) => `<option value="${value}"${invUi[key] === value ? ' selected' : ''}>${label}</option>`;
-  box.innerHTML = `
+  return `
     <div class="inv-kpis">
       ${kpi('Noch offen geplant', sum(openItems), `${openItems.length} ${openItems.length === 1 ? 'Investition' : 'Investitionen'}${noPrice ? ` · ${noPrice} ohne Preis` : ''}`)}
       ${kpi('Davon kaufbereit', sum(ready), `${ready.length} ${ready.length === 1 ? 'Investition' : 'Investitionen'}`)}
-      ${kpi('Gekauft (geschätzt)', sum(bought), `${bought.filter(x => invBooking(x.id)).length} von ${bought.length} in Finanzen übernommen`)}
+      ${kpi('Gekauft (geschätzt)', sum(bought), `Tatsächlich gebucht: ${eur(actual)} · ${bought.filter(x => invBooking(x.id)).length} von ${bought.length} in Finanzen`)}
     </div>
     ${invSetupHtml()}
     <div class="expert-toolbar inv-toolbar">
@@ -5834,13 +5964,13 @@ function resetInvFilters() { Object.assign(invUi, { category: '', priority: '', 
 
 // Current setup per area, with the upgrade ideas of that area (basis for a later upgrade board).
 function invSetupHtml() {
-  const areas = invCats.map(c => ({ c, items: setupItems.filter(s => s.category_id === c.id) })).filter(a => a.items.length);
+  const areas = invCats.map(c => ({ c, items: [...setupItems.filter(s => s.category_id === c.id), ...investments.filter(x => x.status === 'in_use' && x.category_id === c.id).map(x => ({ title: x.target_solution || x.title }))] })).filter(a => a.items.length);
   const loose = setupItems.filter(s => !invCat(s.category_id));
   return `<div class="card inv-setup">
     <div class="block-head"><h3 class="inv-setup-title">Aktuelles Setup</h3><button class="link-btn" onclick="openSetupEditor()">Bearbeiten</button></div>
     ${areas.length || loose.length ? `<div class="inv-setup-grid">
       ${areas.map(({ c, items }) => {
-        const ideas = investments.filter(x => x.category_id === c.id && x.status !== 'bought').length;
+        const ideas = investments.filter(x => x.category_id === c.id && !invIsBought(x)).length;
         return `<div class="inv-area">
           <div class="inv-area-name">${esc(c.name)}</div>
           <ul>${items.map(s => `<li>${esc(s.title)}</li>`).join('')}</ul>
@@ -5860,11 +5990,12 @@ function invCardHtml(x) {
     `<span class="chip">${esc(invCatName(x.category_id))}</span>`,
     invTarget(x) ? `<span class="chip">🗓 ${invTarget(x)}</span>` : '',
     taskCount ? `<span class="chip">☑ ${taskCount} ${taskCount === 1 ? 'Aufgabe' : 'Aufgaben'}</span>` : '',
-    booking ? `<span class="chip chip-accent">In Finanzen: ${eur(booking.amount_cents)}</span>` : '',
+    booking ? `<span class="chip chip-accent">Tatsächlich: ${eur(booking.amount_cents)}</span>` : '',
   ].filter(Boolean).join('');
-  const action = x.status === 'ready' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvBought(${idArg})">Als gekauft markieren</button>`
-    : x.status === 'bought' && !booking ? `<button class="btn btn-sm" onclick="event.stopPropagation();invToFinance(${idArg})">In Finanzen übernehmen</button>` : '';
-  return `<div class="card card-clickable strat-card inv-card${x.status === 'bought' ? ' inv-bought' : ''}" onclick="openInvestment(${idArg})">
+  const action = x.status === 'ready' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvStatus(${idArg}, 'bought')">Als gekauft markieren</button>`
+    : (x.status === 'bought' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvStatus(${idArg}, 'in_use')">Im Einsatz</button>` : '')
+      + (invIsBought(x) && !booking ? `<button class="btn btn-sm" onclick="event.stopPropagation();invToFinance(${idArg})">In Finanzen übernehmen</button>` : '');
+  return `<div class="card card-clickable strat-card inv-card${invIsBought(x) ? ' inv-bought' : ''}" onclick="openInvestment(${idArg})">
     <div class="strat-card-head"><div class="strat-title">${esc(x.title)}</div></div>
     <div class="inv-price">${x.price_cents != null ? eur(x.price_cents) : '<span class="muted">Preis offen</span>'}</div>
     <div class="idea-pills inv-pills">
@@ -5872,10 +6003,428 @@ function invCardHtml(x) {
       <span class="pill inv-st-${x.status}" title="Status">${st.label}</span>
     </div>
     ${x.description ? `<div class="inv-desc">${esc(x.description)}</div>` : ''}
-    ${x.purchase_condition && x.status !== 'bought' ? `<div class="strat-note">Kaufbedingung: ${esc(x.purchase_condition)}</div>` : ''}
+    ${x.purchase_condition && !invIsBought(x) ? `<div class="strat-note">Kaufbedingung: ${esc(x.purchase_condition)}</div>` : ''}
     <div class="todo-chips">${meta}</div>
     ${action ? `<div class="strat-actions">${action}</div>` : ''}
   </div>`;
+}
+
+// ── STUDIO-UPGRADE ───────────────────────────────────────────────
+// Visual view on the same investments and setup items as the list; it stores nothing of its own
+// except planned_next on the investment row. A component shows solid only if it is really there
+// (setup item or investment "Im Einsatz"); everything else stays a dashed outline.
+const STUDIO_AREAS = [
+  { key: 'mic', label: 'Mikrofon / Audio', cat: 'audio', pin: [3.3, 3.45, 4.75], at: [4.1, 4.25, 3.45] },
+  { key: 'stand', label: 'Mikrofonständer', cat: 'audio', pin: [8.75, 4.35, 2.75], at: [6.75, 4.25, 2.2], box: [8.9, 3.1] },
+  { key: 'light', label: 'Beleuchtung', cat: 'light', pin: [1.75, 6.15, 4.95], at: [1.75, 6.15, 4.1], box: [3.0, 7.0] },
+  { key: 'camera', label: 'Kamera / Smartphone', cat: 'camera', pin: [5.9, 7.7, 3.9], at: [5.9, 7.7, 2.85], box: [7.6, 7.3] },
+  { key: 'set', label: 'Hintergrund / Studio-Set', cat: 'set', pin: [9.2, 0, 4.9], at: [7.7, 0, 3.9], box: [9.3, 1.0] },
+  { key: 'acoustics', label: 'Raumakustik', cat: 'acoustics', pin: [0, 2.2, 5.15], at: [0, 3.2, 4.2], box: [0.9, 1.0] },
+  { key: 'interface', label: 'Audio-Interface', cat: 'audio', pin: [7.4, 6.2, 1.55], at: [5.5, 4.75, 1.8], box: [1.0, 3.3] },
+  { key: 'headphones', label: 'Kopfhörer', cat: 'audio', pin: [9.1, 6.0, 1.35], at: [7.45, 4.5, 1.9], optional: true },
+  { key: 'monitor', label: 'Monitor / Teleprompter', cat: 'camera', pin: [6, 2.3, 4.2], at: [5.4, 3.5, 3.1], optional: true },
+  { key: 'workflow', label: 'Schnitt / Workflow', cat: 'workflow', offRoom: true },
+  { key: 'other', label: 'Weitere Upgrades', cat: 'other', offRoom: true },
+];
+const STUDIO_AREA = Object.fromEntries(STUDIO_AREAS.map(a => [a.key, a]));
+const STUDIO_CAT_AREA = { audio: 'mic', light: 'light', camera: 'camera', set: 'set', acoustics: 'acoustics', workflow: 'workflow', other: 'other' };
+// Purely visual stages: which components are recorded, nothing about audio or video quality.
+const STUDIO_STAGES = [
+  { name: 'Basis-Setup', areas: ['mic', 'stand', 'light'] },
+  { name: 'Creator-Studio', areas: ['camera', 'set'] },
+  { name: 'Pro-Studio', areas: ['acoustics', 'interface'] },
+];
+const STUDIO_STATE = {
+  none:    { label: 'Noch nicht erfasst', cls: 'none' },
+  present: { label: 'Vorhanden', cls: 'present' },
+  planned: { label: 'Upgrade geplant', cls: 'planned' },
+  ready:   { label: 'Kaufbereit', cls: 'ready' },
+  bought:  { label: 'Gekauft', cls: 'bought' },
+  in_use:  { label: 'Upgrade im Einsatz', cls: 'in_use' },
+};
+const STUDIO_ICONS = {
+  mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/>',
+  stand: '<path d="M12 3v15M6 22l6-4 6 4M8 7h8"/>',
+  light: '<circle cx="12" cy="10" r="7"/><circle cx="12" cy="10" r="3"/><path d="M12 17v5M8 22h8"/>',
+  camera: '<rect x="3" y="7" width="13" height="10" rx="2"/><path d="M16 11l5-3v8l-5-3"/>',
+  set: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 11h18M9 4v7M15 11v9"/>',
+  acoustics: '<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',
+  interface: '<rect x="3" y="8" width="18" height="9" rx="2"/><circle cx="8" cy="12.5" r="1.6"/><circle cx="14" cy="12.5" r="1.6"/><path d="M18 11v3"/>',
+  headphones: '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',
+  monitor: '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8"/>',
+  workflow: '<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>',
+  other: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+};
+function studioIcon(key) { return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${STUDIO_ICONS[key] || STUDIO_ICONS.other}</svg>`; }
+let studioUi = { area: null, planning: false };
+
+function invIsBought(x) { return x.status === 'bought' || x.status === 'in_use'; }
+function studioAreaOf(row) {
+  if (row.studio_area && STUDIO_AREA[row.studio_area]) return row.studio_area;
+  const c = invCat(row.category_id);
+  return (c && STUDIO_CAT_AREA[c.key]) || 'other';
+}
+function studioData(key) {
+  const inv = investments.filter(x => studioAreaOf(x) === key);
+  const setup = setupItems.filter(s => studioAreaOf(s) === key);
+  const inUse = inv.filter(x => x.status === 'in_use');
+  const bought = inv.filter(x => x.status === 'bought');
+  const open = inv.filter(x => !invIsBought(x));
+  const ready = open.filter(x => x.status === 'ready');
+  const present = setup.length > 0 || inUse.length > 0;
+  const state = bought.length ? 'bought' : ready.length ? 'ready' : open.length ? 'planned' : inUse.length ? 'in_use' : present ? 'present' : 'none';
+  return { inv, setup, inUse, bought, open, ready, present, state, selected: open.filter(x => x.planned_next) };
+}
+function studioStateText(d) {
+  const parts = [d.present ? 'Vorhanden' : 'Noch nicht erfasst'];
+  if (d.inUse.length) parts.push(`${d.inUse.length} Upgrade im Einsatz`);
+  if (d.bought.length) parts.push(`${d.bought.length} gekauft, noch nicht im Einsatz`);
+  if (d.ready.length) parts.push(`${d.ready.length} kaufbereit`);
+  const planned = d.open.length - d.ready.length;
+  if (planned) parts.push(`${planned} ${planned === 1 ? 'Upgrade' : 'Upgrades'} geplant`);
+  return parts.join(', ');
+}
+
+// ── Isometric scene (world units → SVG points) ──
+const ISO = { s: 42, ox: 368, oy: 256, rx: 10.5, ry: 8.5, h: 5.6, w: 784, hPx: 684 };
+function isoP(x, y, z = 0) { return [ISO.ox + (x - y) * .866 * ISO.s, ISO.oy + (x + y) * .5 * ISO.s - z * ISO.s]; }
+function isoPts(list) { return list.map(([x, y, z]) => isoP(x, y, z).map(n => n.toFixed(1)).join(',')).join(' '); }
+function isoPoly(list, fill, extra = '') { return `<polygon points="${isoPts(list)}" fill="${fill}" ${extra}/>`; }
+function isoBox(x, y, z, w, d, h, top, left, right, extra = '') {
+  return isoPoly([[x + w, y, z + h], [x + w, y + d, z + h], [x + w, y + d, z], [x + w, y, z]], right, extra)
+    + isoPoly([[x, y + d, z + h], [x + w, y + d, z + h], [x + w, y + d, z], [x, y + d, z]], left, extra)
+    + isoPoly([[x, y, z + h], [x + w, y, z + h], [x + w, y + d, z + h], [x, y + d, z + h]], top, extra);
+}
+function isoLine(a, b, stroke, width = 2, extra = '') {
+  const [x1, y1] = isoP(...a), [x2, y2] = isoP(...b);
+  return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" ${extra}/>`;
+}
+function isoEllipse(x, y, z, r, fill, extra = '') {
+  const [cx, cy] = isoP(x, y, z);
+  return `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(r * ISO.s * 1.22).toFixed(1)}" ry="${(r * ISO.s * .61).toFixed(1)}" fill="${fill}" ${extra}/>`;
+}
+function studioDefs() {
+  return `<defs>
+    <linearGradient id="st-wall-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#383A46"/><stop offset="1" stop-color="#20212A"/></linearGradient>
+    <linearGradient id="st-wall-l" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#31333F"/><stop offset="1" stop-color="#1A1B23"/></linearGradient>
+    <linearGradient id="st-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34353F"/><stop offset="1" stop-color="#1B1C23"/></linearGradient>
+    <linearGradient id="st-metal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#23242C"/><stop offset=".45" stop-color="#7C808E"/><stop offset="1" stop-color="#2C2D36"/></linearGradient>
+    <linearGradient id="st-desk-top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8A6A4E"/><stop offset="1" stop-color="#5A4534"/></linearGradient>
+    <radialGradient id="st-glow-warm"><stop offset="0" stop-color="#FFA547" stop-opacity=".42"/><stop offset=".55" stop-color="#FFA547" stop-opacity=".1"/><stop offset="1" stop-color="#FFA547" stop-opacity="0"/></radialGradient>
+    <radialGradient id="st-glow-violet"><stop offset="0" stop-color="#8B7CFF" stop-opacity=".36"/><stop offset=".6" stop-color="#6B6CF0" stop-opacity=".09"/><stop offset="1" stop-color="#6B6CF0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="st-halo"><stop offset="0" stop-color="#FFE4C2"/><stop offset=".6" stop-color="#FFA547" stop-opacity=".55"/><stop offset="1" stop-color="#FFA547" stop-opacity="0"/></radialGradient>
+  </defs>`;
+}
+function studioRoom() {
+  const { rx, ry, h } = ISO;
+  let grid = '';
+  // Floor boards and vertical wall panelling.
+  for (let i = .75; i < ry; i += .75) grid += isoLine([0, i, 0], [rx, i, 0], 'rgba(0,0,0,.2)', 1);
+  for (let i = 1.5; i < rx; i += 1.5) grid += isoLine([i, 0, h], [i, 0, .16], 'rgba(255,255,255,.035)', 1);
+  for (let i = 1.5; i < ry; i += 1.5) grid += isoLine([0, i, h], [0, i, .16], 'rgba(255,255,255,.03)', 1);
+  const [vx, vy] = isoP(0, 4.2, 3.2), [wx, wy] = isoP(8.4, 0, 3.4);
+  return isoPoly([[rx, 0, 0], [rx, ry, 0], [rx, ry, -.4], [rx, 0, -.4]], '#0E0F13')
+    + isoPoly([[0, ry, 0], [rx, ry, 0], [rx, ry, -.4], [0, ry, -.4]], '#0A0B0E')
+    + isoLine([0, ry, -.4], [rx, ry, -.4], '#FFA547', 1.5, 'opacity=".55"') + isoLine([rx, ry, -.4], [rx, 0, -.4], '#FFA547', 1.5, 'opacity=".3"')
+    + isoPoly([[0, 0, h], [rx, 0, h], [rx, 0, 0], [0, 0, 0]], 'url(#st-wall-r)')
+    + isoPoly([[0, 0, h], [0, ry, h], [0, ry, 0], [0, 0, 0]], 'url(#st-wall-l)')
+    + `<clipPath id="st-clip-l"><polygon points="${isoPts([[0, 0, h], [0, ry, h], [0, ry, 0], [0, 0, 0]])}"/></clipPath>
+       <clipPath id="st-clip-r"><polygon points="${isoPts([[0, 0, h], [rx, 0, h], [rx, 0, 0], [0, 0, 0]])}"/></clipPath>
+       <ellipse clip-path="url(#st-clip-l)" cx="${vx.toFixed(0)}" cy="${vy.toFixed(0)}" rx="300" ry="240" fill="url(#st-glow-violet)"/>
+       <ellipse clip-path="url(#st-clip-r)" cx="${wx.toFixed(0)}" cy="${wy.toFixed(0)}" rx="290" ry="210" fill="url(#st-glow-warm)" opacity=".5"/>`
+    + isoPoly([[0, 0, 0], [rx, 0, 0], [rx, ry, 0], [0, ry, 0]], 'url(#st-floor)') + grid
+    + isoPoly([[0, 0, .16], [rx, 0, .16], [rx, 0, 0], [0, 0, 0]], '#101116') + isoPoly([[0, 0, .16], [0, ry, .16], [0, ry, 0], [0, 0, 0]], '#0D0E12')
+    + isoLine([0, 0, h], [0, 0, 0], 'rgba(0,0,0,.45)', 1.5)
+    + isoLine([0, 0, h], [rx, 0, h], 'rgba(255,255,255,.1)', 1.5) + isoLine([0, 0, h], [0, ry, h], 'rgba(255,255,255,.07)', 1.5)
+    + isoPoly([[2.3, 2.4, .01], [8.6, 2.4, .01], [8.6, 6.5, .01], [2.3, 6.5, .01]], '#26272F', 'stroke="#FFA547" stroke-opacity=".4" stroke-width="1.5"')
+    + isoPoly([[2.6, 2.7, .012], [8.3, 2.7, .012], [8.3, 6.2, .012], [2.6, 6.2, .012]], 'none', 'stroke="rgba(255,255,255,.07)" stroke-width="1"');
+}
+function studioDesk() {
+  const leg = (x, y) => isoBox(x, y, 0, .14, .14, 1.6, '#4A4C58', '#262730', '#343541');
+  const chair = (x, y) => isoEllipse(x, y, .02, .62, 'rgba(0,0,0,.35)') + isoLine([x, y, .1], [x, y, .95], '#454753', 5)
+    + isoBox(x - .48, y - .55, 1.05, .96, .12, 1.3, '#555764', '#30313B', '#3F414C')
+    + isoEllipse(x, y, 1, .5, '#3C3E4A', 'stroke="rgba(255,255,255,.14)"');
+  return chair(4.2, 2.45) + chair(6.7, 2.45)
+    + isoPoly([[3.2, 3.4, .015], [8.15, 3.4, .015], [8.15, 5.35, .015], [3.2, 5.35, .015]], 'rgba(0,0,0,.3)')
+    + leg(3.2, 3.3) + leg(7.7, 3.3) + leg(3.2, 4.85) + leg(7.7, 4.85)
+    + isoBox(3.1, 3.2, 1.6, 4.8, 1.85, .12, 'url(#st-desk-top)', '#3A2C20', '#4A3929')
+    + isoLine([3.1, 5.05, 1.72], [7.9, 5.05, 1.72], '#FFD9AE', 1, 'opacity=".55"') + isoLine([7.9, 3.2, 1.72], [7.9, 5.05, 1.72], '#FFD9AE', 1, 'opacity=".3"');
+}
+function studioMicBody(x, y, up) {
+  const [cx, cy] = isoP(x, y, 2.95);
+  return `<rect x="${(cx - 9).toFixed(1)}" y="${(cy - 21).toFixed(1)}" width="18" height="42" rx="9" fill="url(#st-metal)" stroke="rgba(255,255,255,.18)"/>
+    <path d="M${(cx - 6).toFixed(1)} ${(cy - 13).toFixed(1)}h12M${(cx - 7).toFixed(1)} ${(cy - 8).toFixed(1)}h14M${(cx - 7).toFixed(1)} ${(cy - 3).toFixed(1)}h14M${(cx - 6).toFixed(1)} ${(cy + 2).toFixed(1)}h12" stroke="rgba(255,255,255,.2)" stroke-width="1" fill="none"/>
+    <circle cx="${cx.toFixed(1)}" cy="${(cy + 11).toFixed(1)}" r="1.9" fill="#FFA547"/>
+    ${up ? `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="20" fill="none" stroke="#FFA547" stroke-width="1.5"/>` : ''}`;
+}
+function studioStandShape(x, y) {
+  return isoEllipse(x, y, 1.73, .2, '#3C3E49', 'stroke="rgba(255,255,255,.25)"') + isoLine([x, y, 1.75], [x, y, 2.55], '#8A8D9A', 3.5);
+}
+function studioLight(up) {
+  const [cx, cy] = isoP(1.75, 6.15, 3.3);
+  const halo = `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="62" ry="66" fill="url(#st-glow-warm)"/>`;
+  return isoEllipse(1.75, 6.15, .02, .52, 'rgba(0,0,0,.35)')
+    + isoLine([1.45, 6.3, .03], [1.75, 6.15, .55], '#5A5D69', 2.5) + isoLine([2.05, 6.3, .03], [1.75, 6.15, .55], '#5A5D69', 2.5) + isoLine([1.75, 5.85, .03], [1.75, 6.15, .55], '#5A5D69', 2.5)
+    + isoLine([1.75, 6.15, .5], [1.75, 6.15, 3.0], '#73768A', 3)
+    + (up ? isoBox(.75, 6.6, 2.5, 1.1, .16, 1.15, '#FFD9AE', '#3A2B1D', '#EBC79B') + isoLine([1.3, 6.68, 2.5], [1.75, 6.15, 2.2], '#4C4F5B', 2) : '')
+    + halo
+    + `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="27" ry="31" fill="none" stroke="#FFE4C2" stroke-width="7" />
+       <ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="27" ry="31" fill="none" stroke="#FFA547" stroke-width="2" />
+       <rect x="${(cx - 6).toFixed(1)}" y="${(cy - 2).toFixed(1)}" width="12" height="4" rx="2" fill="#3A3C46"/>`;
+}
+function studioCamera(up) {
+  const [x, y] = [5.9, 7.7];
+  const [cx, cy] = isoP(x, y, 2.55);
+  return isoEllipse(x, y, .02, .6, 'rgba(0,0,0,.35)')
+    + isoLine([x - .5, y + .25, .03], [x, y, 1.9], '#34363F', 2.5) + isoLine([x + .5, y + .2, .03], [x, y, 1.9], '#34363F', 2.5) + isoLine([x, y - .5, .03], [x, y, 1.9], '#34363F', 2.5)
+    + isoLine([x, y, 1.9], [x, y, 2.28], '#4C4F5B', 3)
+    + isoBox(x - .42, y - .28, 2.28, .84, .56, .52, '#3A3C47', '#191A20', '#26272F')
+    + `<ellipse cx="${(cx - 15).toFixed(1)}" cy="${(cy - 10).toFixed(1)}" rx="9" ry="10" fill="#0B0C10" stroke="#555864" stroke-width="2"/>
+       <ellipse cx="${(cx - 15).toFixed(1)}" cy="${(cy - 10).toFixed(1)}" rx="4" ry="4.5" fill="#26294A"/>
+       ${up ? `<circle cx="${(cx + 11).toFixed(1)}" cy="${(cy - 19).toFixed(1)}" r="2.5" fill="#FFA547"/>` : ''}`;
+}
+function studioSet() {
+  const shelf = (x0, x1, z) => isoBox(x0, 0, z, x1 - x0, .3, .08, '#3C3D49', '#1B1C23', '#25262E');
+  let books = '';
+  [[3.0, '#FFA547'], [3.22, '#8B7CFF'], [3.46, '#3B3D4A'], [3.68, '#55586A'], [6.3, '#3B3D4A'], [6.52, '#FFA547'], [6.76, '#8B7CFF']].forEach(([x, c]) => { books += isoBox(x, 0, 2.38, .17, .22, .46, c, c, c, 'opacity=".85"'); });
+  const [lx, ly] = isoP(5.2, 0, 3.75);
+  return isoPoly([[2.5, 0, 4.9], [8, 0, 4.9], [8, 0, 1.2], [2.5, 0, 1.2]], 'rgba(255,255,255,.035)', 'stroke="rgba(255,255,255,.08)"')
+    + shelf(2.8, 4.1, 2.3) + books + shelf(6.1, 7.4, 2.3)
+    + `<g transform="translate(${lx.toFixed(1)} ${ly.toFixed(1)}) skewY(30)"><text text-anchor="middle" y="9" font-size="30" font-weight="800" letter-spacing="1" fill="#FFA547" font-family="var(--font)">G&amp;G</text></g>`;
+}
+function studioAcoustics() {
+  let out = '';
+  for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) {
+    const y0 = 1.3 + c * 1.95, z0 = 1.5 + r * 1.65;
+    out += isoPoly([[0, y0, z0 + 1.45], [0, y0 + 1.75, z0 + 1.45], [0, y0 + 1.75, z0], [0, y0, z0]], '#30323F', 'stroke="#0F1015" stroke-width="1.5"');
+    for (let k = 1; k < 4; k++) out += isoLine([0, y0 + k * .44, z0 + .08], [0, y0 + k * .44, z0 + 1.37], 'rgba(255,255,255,.08)', 1);
+  }
+  return out;
+}
+function studioInterface() {
+  const [cx, cy] = isoP(5.42, 4.65, 2);
+  return isoBox(4.95, 4.15, 1.72, .95, .6, .24, '#2F303A', '#16171C', '#20212A')
+    + `<circle cx="${(cx - 9).toFixed(1)}" cy="${(cy + 7).toFixed(1)}" r="3.4" fill="#0D0E12" stroke="#FFA547" stroke-width="1.2"/><circle cx="${(cx + 5).toFixed(1)}" cy="${(cy + 14).toFixed(1)}" r="3.4" fill="#0D0E12" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>`;
+}
+function studioHeadphones() {
+  const [cx, cy] = isoP(7.45, 4.5, 1.72);
+  return `<path d="M${(cx - 15).toFixed(1)} ${cy.toFixed(1)}a15 15 0 0 1 30 0" fill="none" stroke="#6A6D79" stroke-width="3.2"/><rect x="${(cx - 20).toFixed(1)}" y="${(cy - 6).toFixed(1)}" width="9" height="13" rx="4" fill="#2A2B33" stroke="rgba(255,255,255,.2)"/><rect x="${(cx + 11).toFixed(1)}" y="${(cy - 6).toFixed(1)}" width="9" height="13" rx="4" fill="#2A2B33" stroke="rgba(255,255,255,.2)"/>`;
+}
+function studioMonitor() {
+  return isoLine([5.4, 3.5, 1.72], [5.4, 3.5, 2.1], '#4C4F5B', 3) + isoBox(4.6, 3.45, 2.1, 1.6, .08, 1, '#23242C', '#0B0C10', '#16171D')
+    + isoPoly([[4.68, 3.53, 3.02], [6.12, 3.53, 3.02], [6.12, 3.53, 2.18], [4.68, 3.53, 2.18]], '#1E2340');
+}
+function studioPackage(x, y) {
+  return `<g class="st-package">${isoEllipse(x + .4, y + .4, .01, .62, 'rgba(0,0,0,.4)')}${isoBox(x, y, 0, .85, .85, .62, '#B98A57', '#6E4F2F', '#8D6A42')}
+    ${isoPoly([[x + .34, y, .625], [x + .51, y, .625], [x + .51, y + .85, .625], [x + .34, y + .85, .625]], '#FFA547')}</g>`;
+}
+function studioScene() {
+  const obj = (key, inner) => {
+    const a = STUDIO_AREA[key], d = studioData(key);
+    if (a.optional && !d.setup.length && !d.inv.length) return '';
+    const look = d.present ? 'st-solid' : d.selected.length ? 'st-holo' : 'st-ghost';
+    return `<g class="st-obj ${look}${studioUi.area === key ? ' selected' : ''}${d.selected.length && d.present ? ' st-next' : ''}" data-area="${key}" onclick="selectStudioArea('${key}')">${inner(d.inUse.length > 0)}</g>`;
+  };
+  const packages = STUDIO_AREAS.filter(a => a.box && studioData(a.key).bought.length).map(a => studioPackage(a.box[0], a.box[1])).join('');
+  const [fx, fy] = isoP(3.4, 6.0, 0), [dx, dy] = isoP(5.6, 4, 1.72), [vx, vy] = isoP(2, 2, 0);
+  const lightOn = studioData('light').present;
+  const leaders = STUDIO_AREAS.filter(a => a.pin && (!a.optional || studioData(a.key).setup.length || studioData(a.key).inv.length)).map(a => {
+    const [x1, y1] = isoP(...a.pin), [x2, y2] = isoP(...a.at);
+    return `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="rgba(255,255,255,.4)" stroke-width="1"/><circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="2.5" fill="#fff" opacity=".8"/>`;
+  }).join('');
+  return `<svg class="st-svg" viewBox="0 0 ${ISO.w} ${ISO.hPx}" role="img" aria-label="Isometrische Ansicht des Podcast-Studios. Alle Bereiche sind auch über die Liste unter der Grafik wählbar.">
+    ${studioDefs()}${studioRoom()}
+    <ellipse cx="${vx.toFixed(0)}" cy="${vy.toFixed(0)}" rx="230" ry="115" fill="url(#st-glow-violet)" opacity=".7"/>
+    ${lightOn ? `<ellipse cx="${fx.toFixed(0)}" cy="${fy.toFixed(0)}" rx="270" ry="140" fill="url(#st-glow-warm)" opacity=".8"/>` : ''}
+    ${obj('set', studioSet)}${obj('acoustics', studioAcoustics)}
+    ${studioDesk()}
+    ${lightOn ? `<ellipse cx="${dx.toFixed(0)}" cy="${dy.toFixed(0)}" rx="150" ry="60" fill="url(#st-glow-warm)" opacity=".5" pointer-events="none"/>` : ''}
+    ${obj('monitor', studioMonitor)}
+    ${obj('stand', () => studioStandShape(4.1, 4.25) + studioStandShape(6.75, 4.25))}
+    ${obj('mic', up => studioMicBody(4.1, 4.25, up) + studioMicBody(6.75, 4.25, up))}
+    ${obj('interface', studioInterface)}${obj('headphones', studioHeadphones)}
+    ${obj('light', studioLight)}${obj('camera', studioCamera)}
+    ${packages}
+    <g pointer-events="none">${leaders}</g>
+  </svg>`;
+}
+function studioPinsHtml() {
+  return STUDIO_AREAS.filter(a => a.pin).map(a => {
+    const d = studioData(a.key);
+    if (a.optional && !d.setup.length && !d.inv.length) return '';
+    const [px, py] = isoP(...a.pin);
+    const st = STUDIO_STATE[d.state];
+    const count = d.open.length + d.bought.length;
+    return `<button type="button" class="st-pin st-pin-${st.cls}${studioUi.area === a.key ? ' selected' : ''}" data-focus-key="pin-${a.key}" style="left:${(px / ISO.w * 100).toFixed(2)}%;top:${(py / ISO.hPx * 100).toFixed(2)}%" onclick="selectStudioArea('${a.key}')" aria-label="${esc(a.label)}: ${esc(studioStateText(d))}" aria-pressed="${studioUi.area === a.key}">
+      <span class="st-pin-dot">${studioIcon(a.key)}${count ? `<span class="st-pin-count">${count}</span>` : ''}</span>
+      <span class="st-pin-label">${esc(a.label)}</span>
+    </button>`;
+  }).join('');
+}
+function studioStagesHtml() {
+  const has = key => studioData(key).present;
+  const planned = key => studioData(key).selected.length > 0;
+  let current = -1, withPlan = -1;
+  for (let i = 0; i < STUDIO_STAGES.length; i++) { if (current === i - 1 && STUDIO_STAGES[i].areas.every(has)) current = i; }
+  for (let i = 0; i < STUDIO_STAGES.length; i++) { if (withPlan === i - 1 && STUDIO_STAGES[i].areas.every(k => has(k) || planned(k))) withPlan = i; }
+  return `<div class="st-stages">
+    ${STUDIO_STAGES.map((s, i) => `<div class="st-stage${i <= current ? ' reached' : ''}${i === current ? ' current' : ''}">
+      <div class="st-stage-head"><span class="st-stage-mark" aria-hidden="true"></span>${s.name}${i === current ? '<span class="st-stage-now">Aktuell</span>' : i === withPlan && withPlan > current ? '<span class="st-stage-next">Mit Auswahl</span>' : ''}</div>
+      <ul>${s.areas.map(k => `<li class="${has(k) ? 'yes' : planned(k) ? 'next' : ''}"><span aria-hidden="true">${has(k) ? '✓' : planned(k) ? '◆' : '○'}</span> ${esc(STUDIO_AREA[k].label)}<span class="sr-only">: ${has(k) ? 'vorhanden' : planned(k) ? 'in der Auswahl' : 'nicht erfasst'}</span></li>`).join('')}</ul>
+    </div>`).join('')}
+  </div>
+  <p class="st-note">Die Stufen sind eine rein visuelle Einordnung: Sie zeigen nur, welche der genannten Komponenten erfasst oder im Einsatz sind (✓) oder in eurer Auswahl stehen (◆). Sie sagen nichts über die Audio- oder Videoqualität aus.</p>`;
+}
+function studioUpgradeHtml(x) {
+  const p = IDEA_PRIORITY_META[x.priority], st = INV_STATUS[x.status];
+  return `<li class="st-up">
+    <div class="st-up-head"><b>${esc(x.title)}</b><span class="st-up-price">${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'}</span></div>
+    <div class="idea-pills inv-pills">
+      <span class="pill prio-${x.priority}">${p.icon} ${p.label}</span><span class="pill inv-st-${x.status}">${st.label}</span>
+      ${invTarget(x) ? `<span class="pill">🗓 ${invTarget(x)}</span>` : ''}
+    </div>
+    <p class="st-up-text">${x.description ? esc(x.description) : '<span class="muted">Noch kein Nutzen hinterlegt.</span>'}</p>
+    ${x.target_solution ? `<p class="st-up-text">Ziel-Lösung: ${esc(x.target_solution)}</p>` : ''}
+    ${x.purchase_condition ? `<p class="st-up-text">Kaufbedingung: ${esc(x.purchase_condition)}</p>` : ''}
+    <div class="st-up-actions">
+      <label class="st-check"><input type="checkbox" data-focus-key="plan-panel-${esc(x.id)}" ${x.planned_next ? 'checked' : ''} onchange="toggleStudioPlan(${jsArg(x.id)}, this.checked)"> Fürs nächste Setup</label>
+      <button type="button" class="btn btn-sm" onclick="openInvestment(${jsArg(x.id)})">Zur Investition</button>
+    </div>
+  </li>`;
+}
+function studioBoughtHtml(x) {
+  const booking = invBooking(x.id);
+  const st = INV_STATUS[x.status];
+  return `<li class="st-up">
+    <div class="st-up-head"><b>${esc(x.title)}</b><span class="pill inv-st-${x.status}">${st.label}</span></div>
+    <dl class="st-costs">
+      <div><dt>Geschätzt</dt><dd>${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'}</dd></div>
+      <div><dt>Tatsächlich</dt><dd>${booking ? eur(booking.amount_cents) : 'nicht in Finanzen'}</dd></div>
+    </dl>
+    <div class="st-up-actions">
+      ${x.status === 'bought' ? `<button type="button" class="btn btn-sm" onclick="markInvStatus(${jsArg(x.id)}, 'in_use')">Als im Einsatz markieren</button>` : ''}
+      ${booking ? '' : `<button type="button" class="btn btn-sm" onclick="invToFinance(${jsArg(x.id)})">In Finanzen übernehmen</button>`}
+      <button type="button" class="btn btn-sm" onclick="openInvestment(${jsArg(x.id)})">Zur Investition</button>
+    </div>
+  </li>`;
+}
+function studioPanelHtml() {
+  const a = STUDIO_AREA[studioUi.area];
+  if (!a) {
+    return `<div class="st-panel-empty">
+      <div class="st-eyebrow">Studio-Inventar</div>
+      <p>Wählt eine Komponente im Studio oder in der Liste, um Equipment und mögliche Upgrades zu sehen.</p>
+      <ul class="st-legend">${['present', 'planned', 'ready', 'bought', 'in_use', 'none'].map(k => `<li><span class="st-legend-mark st-pin-${k}"></span>${STUDIO_STATE[k].label}</li>`).join('')}</ul>
+      <p class="muted">Gestrichelt gezeichnet ist alles, was noch nicht erfasst ist. Ein Paket im Raum steht für „gekauft, noch nicht im Einsatz“.</p>
+    </div>`;
+  }
+  const d = studioData(a.key);
+  return `<div class="st-panel-head">
+      <span class="st-panel-icon">${studioIcon(a.key)}</span>
+      <div><div class="st-eyebrow">Kategorie</div><h3>${esc(a.label)}</h3></div>
+      <button type="button" class="todo-del st-panel-close" data-focus-key="panel-close" onclick="selectStudioArea(null)" aria-label="Details schließen">✕</button>
+    </div>
+    <div class="st-sub">Aktuelles Equipment</div>
+    ${d.present ? `<ul class="st-equip">${d.setup.map(s => `<li>${esc(s.title)}</li>`).join('')}${d.inUse.map(x => `<li>${esc(x.target_solution || x.title)} <span class="pill inv-st-in_use">Im Einsatz</span></li>`).join('')}</ul>`
+      : '<p class="st-up-text muted">Noch nicht erfasst.</p>'}
+    <button type="button" class="link-btn" onclick="openSetupEditor()">Aktuelles Setup bearbeiten</button>
+    ${d.bought.length || d.inUse.length ? `<div class="st-sub">Gekauft</div><ul class="st-ups">${[...d.bought, ...d.inUse].map(studioBoughtHtml).join('')}</ul>` : ''}
+    <div class="st-sub">Mögliche Upgrades</div>
+    ${d.open.length ? `<ul class="st-ups">${d.open.map(studioUpgradeHtml).join('')}</ul>` : '<p class="st-up-text muted">Noch keine Investition in diesem Bereich.</p>'}
+    <button type="button" class="btn btn-sm st-add" onclick="openInvestment(null, ${jsArg(a.key)})">+ Investition für diesen Bereich</button>`;
+}
+function studioSlotsHtml(list) {
+  return `<ul class="st-slots">${list.map(a => {
+    const d = studioData(a.key), st = STUDIO_STATE[d.state];
+    const current = d.setup.map(s => s.title).concat(d.inUse.map(x => x.target_solution || x.title));
+    return `<li><button type="button" class="st-slot${studioUi.area === a.key ? ' selected' : ''}" data-focus-key="slot-${a.key}" onclick="selectStudioArea('${a.key}', true)" aria-pressed="${studioUi.area === a.key}">
+      <span class="st-slot-icon st-pin-${st.cls}">${studioIcon(a.key)}</span>
+      <span class="st-slot-text"><b>${esc(a.label)}</b><span>${current.length ? esc(current.join(' · ')) : 'Noch nicht erfasst'}</span></span>
+      <span class="st-slot-state">${esc(st.label)}${d.open.length ? ` · ${d.open.length}` : ''}</span>
+    </button></li>`;
+  }).join('')}</ul>`;
+}
+function studioPlanSum(list) {
+  const known = list.filter(x => x.price_cents != null), open = list.length - known.length;
+  const sum = known.reduce((s, x) => s + x.price_cents, 0);
+  if (!list.length) return 'Noch nichts ausgewählt';
+  if (!known.length) return `${open} ${open === 1 ? 'Upgrade' : 'Upgrades'} ohne Preis`;
+  return `Bekannte Kosten: ${eur(sum)}${open ? ` + ${open} ${open === 1 ? 'Upgrade' : 'Upgrades'} ohne Preis` : ''}`;
+}
+function studioPlannerHtml() {
+  const open = investments.filter(x => !invIsBought(x));
+  const picked = open.filter(x => x.planned_next);
+  const unpriced = picked.filter(x => x.price_cents == null);
+  const groups = STUDIO_AREAS.map(a => ({ a, list: open.filter(x => studioAreaOf(x) === a.key) })).filter(g => g.list.length);
+  return `<section class="st-planner" aria-labelledby="st-planner-title">
+    <div class="st-planner-head">
+      <div>
+        <h3 id="st-planner-title">Mein nächstes Setup planen</h3>
+        <p class="muted">Nur Planung: Die Auswahl gilt für euch beide und erzeugt keine Ausgabe.</p>
+      </div>
+      <button type="button" class="btn btn-sm${studioUi.planning ? ' btn-primary' : ''}" data-focus-key="plan-toggle" aria-expanded="${studioUi.planning}" onclick="studioUi.planning=!studioUi.planning;renderInvestments()">${studioUi.planning ? 'Auswahl schließen' : 'Upgrades auswählen'}</button>
+    </div>
+    <div class="st-plan-sum" aria-live="polite">
+      <div><span class="st-eyebrow">Ausgewählt</span><b>${picked.length} ${picked.length === 1 ? 'Upgrade' : 'Upgrades'}</b></div>
+      <div class="st-plan-total"><span class="st-eyebrow">Summe</span><b>${esc(studioPlanSum(picked))}</b></div>
+      ${unpriced.length ? `<div class="st-plan-open"><span class="st-eyebrow">Noch ohne Preis</span><span>${unpriced.map(x => esc(x.title)).join(' · ')}</span></div>` : ''}
+    </div>
+    ${studioUi.planning ? (groups.length ? `<div class="st-plan-groups">${groups.map(({ a, list }) => `<fieldset><legend>${esc(a.label)}</legend>
+      ${list.map(x => `<label class="st-plan-row"><input type="checkbox" data-focus-key="plan-${esc(x.id)}" ${x.planned_next ? 'checked' : ''} onchange="toggleStudioPlan(${jsArg(x.id)}, this.checked)"><span class="st-plan-title">${esc(x.title)}</span><span class="st-plan-price">${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'}</span></label>`).join('')}
+    </fieldset>`).join('')}</div>${picked.length ? `<button type="button" class="link-btn" onclick="clearStudioPlan()">Auswahl leeren</button>` : ''}`
+      : '<p class="muted">Keine offenen Investitionen vorhanden.</p>') : ''}
+  </section>`;
+}
+function renderStudio() {
+  const room = STUDIO_AREAS.filter(a => !a.offRoom), off = STUDIO_AREAS.filter(a => a.offRoom);
+  return `<div class="st-root">
+    <div class="st-layout">
+      <div class="st-stage-card">
+        <div class="st-brand"><span class="st-brand-mark">G&amp;G</span><span>Glans &amp; Gloria · Studio</span></div>
+        <div class="st-scene">${studioScene()}${studioPinsHtml()}</div>
+      </div>
+      <aside class="st-panel" id="st-panel" aria-live="polite">${studioPanelHtml()}</aside>
+    </div>
+    ${studioStagesHtml()}
+    ${studioPlannerHtml()}
+    <section aria-labelledby="st-inv-title">
+      <h3 class="st-section-title" id="st-inv-title">Komponenten im Raum</h3>
+      ${studioSlotsHtml(room)}
+      <h3 class="st-section-title">Außerhalb des Raums</h3>
+      ${studioSlotsHtml(off)}
+    </section>
+  </div>`;
+}
+function selectStudioArea(key, fromList = false) {
+  studioUi.area = studioUi.area === key && !fromList ? null : key;
+  renderInvestments();
+  // The panel sits below the scene on small screens, or above the list when picked from it.
+  const panel = document.getElementById('st-panel');
+  if (key && panel && (fromList || panel.getBoundingClientRect().top > innerHeight * .8)) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+async function toggleStudioPlan(id, on) {
+  const x = investments.find(i => i.id === id);
+  if (!x) return;
+  x.planned_next = on;
+  renderInvestments();
+  try {
+    await apiFetch(`${INV_TABLE}?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify({ planned_next: on }) });
+    flashSaved();
+  } catch (e) {
+    x.planned_next = !on;
+    renderInvestments();
+    showToast('Auswahl nicht gespeichert: ' + e.message, 'error');
+  }
+}
+async function clearStudioPlan() {
+  const ids = investments.filter(x => x.planned_next).map(x => x.id);
+  if (!ids.length) return;
+  try {
+    await apiFetch(`${INV_TABLE}?id=in.(${ids.join(',')})`, { method: 'PATCH', body: JSON.stringify({ planned_next: false }) });
+    investments.forEach(x => { x.planned_next = false; });
+    renderInvestments();
+    flashSaved();
+  } catch (e) { showToast('Auswahl nicht geleert: ' + e.message, 'error'); }
 }
 
 // ── Edit form ──
@@ -5883,16 +6432,18 @@ function invToRow(x) {
   return { id: x.id, title: x.title, category_id: x.category_id || null, description: x.description || null, price_cents: x.price_cents ?? null,
     priority: x.priority, status: x.status, target_year: x.target_year || null, target_quarter: x.target_quarter || null, note: x.note || null,
     current_solution: x.current_solution || null, target_solution: x.target_solution || null, purchase_condition: x.purchase_condition || null,
-    purchased_at: x.purchased_at || null };
+    purchased_at: x.purchased_at || null, studio_area: x.studio_area || null };
 }
-function openInvestment(id) {
+function openInvestment(id, areaKey = null) {
   const x = id ? investments.find(i => i.id === id) : null;
   invEditId = x ? x.id : null;
   invEditBase = x ? { row: invToRow(x), version: x.updated_at } : null;
   const val = (el, v) => { document.getElementById('inv-' + el).value = v ?? ''; };
   document.getElementById('inv-modal-title').textContent = x ? 'Investition bearbeiten' : 'Neue Investition';
   val('title', x && x.title);
-  document.getElementById('inv-category').innerHTML = invCatOptions(x ? x.category_id : invUi.category, { empty: 'Ohne Kategorie' });
+  const areaCat = areaKey && invCats.find(c => c.key === STUDIO_AREA[areaKey].cat);
+  document.getElementById('inv-category').innerHTML = invCatOptions(x ? x.category_id : areaCat ? areaCat.id : invUi.category, { empty: 'Ohne Kategorie' });
+  document.getElementById('inv-area').innerHTML = studioAreaOptions(x ? x.studio_area : areaKey);
   val('desc', x && x.description);
   val('price', x && x.price_cents != null ? eurPlain(x.price_cents) : '');
   val('priority', x ? x.priority : 'medium');
@@ -5914,9 +6465,12 @@ function openInvestment(id) {
   document.getElementById('inv-modal-bg').classList.add('open');
   setTimeout(() => document.getElementById('inv-title').focus(), 50);
 }
+function studioAreaOptions(selected) {
+  return '<option value="">Automatisch nach Kategorie</option>' + STUDIO_AREAS.map(a => `<option value="${a.key}"${a.key === selected ? ' selected' : ''}>${esc(a.label)}</option>`).join('');
+}
 function closeInvestment() { document.getElementById('inv-modal-bg').classList.remove('open'); invEditId = null; }
 function updateInvForm() {
-  document.getElementById('inv-bought-row').hidden = document.getElementById('inv-status').value !== 'bought';
+  document.getElementById('inv-bought-row').hidden = !['bought', 'in_use'].includes(document.getElementById('inv-status').value);
   document.getElementById('inv-quarter').disabled = !document.getElementById('inv-year').value;
 }
 function invFormRow() {
@@ -5925,7 +6479,7 @@ function invFormRow() {
   const year = get('year');
   return { id: invEditId || newId(), title: get('title'), category_id: get('category'), description: get('desc'), priority: get('priority'), status,
     target_year: year ? +year : null, target_quarter: year && get('quarter') ? +get('quarter') : null, note: get('note'), current_solution: get('current'),
-    target_solution: get('target'), purchase_condition: get('condition'), purchased_at: status === 'bought' ? get('bought-date') || isoToday() : null };
+    target_solution: get('target'), purchase_condition: get('condition'), purchased_at: ['bought', 'in_use'].includes(status) ? get('bought-date') || isoToday() : null, studio_area: get('area') };
 }
 async function saveInvestment() {
   const form = invFormRow();
@@ -5958,14 +6512,14 @@ async function deleteInvestment() {
     flashSaved();
   } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
 }
-async function markInvBought(id) {
+async function markInvStatus(id, status) {
   const x = investments.find(i => i.id === id);
   if (!x) return;
   try {
-    await saveRowVersioned(INV_TABLE, { ...invToRow(x), status: 'bought', purchased_at: isoToday(), updated_by: currentActor() }, { ...invToRow(x), updated_by: x.updated_by }, x.updated_at);
+    await saveRowVersioned(INV_TABLE, { ...invToRow(x), status, purchased_at: x.purchased_at || isoToday(), updated_by: currentActor() }, { ...invToRow(x), updated_by: x.updated_by }, x.updated_at);
     await loadInvestments();
     renderInvestments();
-    showToast('Als gekauft markiert – es wurde nichts in Finanzen gebucht.');
+    showToast(`Als ${status === 'in_use' ? 'im Einsatz' : 'gekauft'} markiert – es wurde nichts in Finanzen gebucht.`);
   } catch (e) { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); }
 }
 
@@ -5981,9 +6535,11 @@ function renderInvLinks() {
     ${tasks.map(t => `<div class="inv-link-row${t.done ? ' muted' : ''}"><span>${t.done ? '✓' : '☐'} ${esc(t.text)}</span></div>`).join('')}
     <div class="todo-input-row"><input type="text" id="inv-new-task" placeholder="z. B. ${esc(x.title)}: Angebote vergleichen" aria-label="Aufgabe aus dieser Investition" onkeydown="if(event.key==='Enter')invAddTask()"><button class="btn btn-sm" onclick="invAddTask()">Aufgabe anlegen</button></div>
     <div class="fin-sub" style="margin-top:12px">Finanzen</div>
-    ${booking ? `<div class="inv-link-row"><span>Gebucht: ${eur(booking.amount_cents)} am ${esc(new Date(booking.date + 'T00:00').toLocaleDateString('de-DE'))}</span><button class="link-btn" onclick="invOpenBooking(${jsArg(booking.id)})">Buchung öffnen</button></div>`
-      : x.status === 'bought' ? `<div class="inv-link-row"><span class="muted">Noch nicht in Finanzen übernommen.</span><button class="link-btn" onclick="invToFinance(${jsArg(x.id)})">In Finanzen übernehmen</button></div>`
-      : '<div class="muted fin-small">Investitionen sind Planung und zählen nicht als Ausgabe. Nach dem Kauf (Status „Gekauft“) kann der Betrag von Hand in Finanzen übernommen werden.</div>'}`;
+    ${booking ? `<div class="inv-link-row"><span>Gebucht: ${eur(booking.amount_cents)} am ${esc(new Date(booking.date + 'T00:00').toLocaleDateString('de-DE'))}</span><span><button class="link-btn" onclick="invOpenBooking(${jsArg(booking.id)})">Buchung öffnen</button> · <button class="link-btn" onclick="invUnlinkBooking(${jsArg(booking.id)})">Verknüpfung lösen</button></span></div>
+      <div class="muted fin-small">Geschätzt: ${x.price_cents != null ? eur(x.price_cents) : 'Preis noch offen'} · Tatsächlich: ${eur(booking.amount_cents)}</div>`
+      : invIsBought(x) ? `<div class="inv-link-row"><span class="muted">Noch nicht in Finanzen übernommen.</span><button class="link-btn" onclick="invToFinance(${jsArg(x.id)})">Neue Ausgabe anlegen</button></div>
+        ${invLinkableBookings().length ? `<div class="todo-input-row"><select id="inv-link-booking" aria-label="Bestehende Buchung"><option value="">Bestehende Buchung wählen…</option>${invLinkableBookings().map(b => `<option value="${esc(b.id)}">${esc(new Date(b.date + 'T00:00').toLocaleDateString('de-DE'))} · ${eur(b.amount_cents)} · ${esc(b.description || finCatName(b.category_id))}</option>`).join('')}</select><button class="btn btn-sm" onclick="invLinkBooking(${jsArg(x.id)})">Verknüpfen</button></div>` : ''}`
+      : '<div class="muted fin-small">Investitionen sind Planung und zählen nicht als Ausgabe. Nach dem Kauf (Status „Gekauft“) kann der Betrag von Hand in Finanzen übernommen oder mit einer bestehenden Buchung verknüpft werden.</div>'}`;
 }
 function invAddTask() {
   const input = document.getElementById('inv-new-task');
@@ -6008,6 +6564,27 @@ async function invToFinance(id) {
   openBooking('expense', null, { amount: x.price_cents || null, date: x.purchased_at || isoToday(), description: x.title, category_id: finC ? finC.id : '', noRepeat: true });
   finEdit.investment_id = x.id;
   if (x.price_cents) showToast('Geschätzter Preis vorausgefüllt – bitte den tatsächlichen Betrag prüfen.');
+}
+function invLinkableBookings() { return finBookings.filter(b => b.kind === 'expense' && !b.investment_id); }
+async function invLinkBooking(id) {
+  const bookingId = document.getElementById('inv-link-booking').value;
+  if (!bookingId) { document.getElementById('inv-link-booking').focus(); return; }
+  if (invBooking(id)) { showToast('Diese Investition ist bereits mit einer Buchung verknüpft.', 'error'); return; }
+  await invPatchBooking(bookingId, id, 'is.null');
+}
+function invUnlinkBooking(bookingId) { return invPatchBooking(bookingId, null, null); }
+// Only the link changes; amount, date and category of the booking stay as they are.
+async function invPatchBooking(bookingId, investmentId, guard) {
+  await finWrite(async () => {
+    try {
+      const rows = await apiFetch(`podcast_fin_bookings?id=eq.${encodeURIComponent(bookingId)}${guard ? '&investment_id=' + guard : ''}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ investment_id: investmentId, updated_by: currentActor() }) });
+      if (!rows.length) throw new Error('Die Buchung ist inzwischen anderweitig verknüpft oder gelöscht.');
+      finBookings = finBookings.map(b => b.id === rows[0].id ? rows[0] : b);
+      flashSaved();
+    } catch (e) { showToast((e.status === 409 ? 'Doppelte Verknüpfung verhindert: ' : 'Nicht gespeichert: ') + e.message, 'error'); }
+  });
+  renderInvLinks();
+  finAfterChange();
 }
 function invOpenBooking(bookingId) { closeInvestment(); openBooking('expense', bookingId); }
 
@@ -6055,6 +6632,7 @@ function renderSetupEditor() {
   document.getElementById('inv-setup-list').innerHTML = setupItems.map(s => `<div class="guide-edit-item inv-setup-edit">
       <input type="text" value="${esc(s.title)}" aria-label="Bestandteil" onchange="patchSetupItem(${jsArg(s.id)}, 'title', this.value)">
       <select aria-label="Bereich" onchange="patchSetupItem(${jsArg(s.id)}, 'category_id', this.value)">${invCatOptions(s.category_id, { empty: 'Ohne Kategorie' })}</select>
+      <select aria-label="Studio-Bereich" onchange="patchSetupItem(${jsArg(s.id)}, 'studio_area', this.value)">${studioAreaOptions(s.studio_area)}</select>
       <button class="todo-del" onclick="deleteSetupItem(${jsArg(s.id)})" title="Entfernen" aria-label="Entfernen">🗑</button>
     </div>`).join('') + `<div class="inv-setup-edit" style="margin-top:6px">
       <input type="text" id="inv-newsetup" placeholder="z. B. Kamera, Stativ…" aria-label="Neuer Bestandteil" onkeydown="if(event.key==='Enter')addSetupItem()">
