@@ -672,6 +672,30 @@
     }
 
     /* Strategie */
+    .inv-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 12px; }
+    .inv-kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; min-width: 0; }
+    .inv-kpi-val { font-size: 22px; font-weight: 700; letter-spacing: -.3px; font-variant-numeric: tabular-nums; margin: 2px 0; }
+    .inv-setup { margin-bottom: 16px; }
+    .inv-setup .block-head { margin-bottom: 8px; }
+    .inv-setup-title { font-size: 14px; font-weight: 600; margin: 0; }
+    .inv-setup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .inv-area { min-width: 0; font-size: 13px; }
+    .inv-area-name { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    .inv-area ul { margin: 0 0 4px; padding-left: 16px; }
+    .inv-area li { margin-bottom: 2px; overflow-wrap: anywhere; }
+    .inv-toolbar select { flex: 1 1 150px; }
+    .inv-price { font-size: 20px; font-weight: 700; letter-spacing: -.2px; font-variant-numeric: tabular-nums; }
+    .inv-price .muted { font-size: 14px; font-weight: 500; letter-spacing: 0; }
+    .inv-pills { justify-content: flex-start; }
+    .inv-desc { font-size: 13px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .inv-st-planned { color: var(--text); background: var(--surface2); }
+    .inv-st-ready { color: var(--accent-text); background: var(--accent-soft); }
+    .inv-st-bought { color: var(--green); background: var(--green-soft); }
+    .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
+    .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
+    .inv-setup-edit { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .inv-setup-edit input { flex: 2; min-width: 0; }
+    .inv-setup-edit select { flex: 1; min-width: 0; }
     .strat-group { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 22px 0 10px; }
     .strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 8px; }
     .strat-card { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -1130,10 +1154,23 @@
       <div>
         <h1>Strategie</h1>
         <p class="subtitle">Wachstums-, Produktions- und Finanzziele &mdash; Ist-Werte aus Messungen, Planer und Finanzen</p>
+        <button class="link-btn" onclick="document.getElementById('invest-section').scrollIntoView({ behavior: 'smooth' })">Zu den Investitionen ↓</button>
       </div>
       <div class="seg" id="strat-years" role="tablist" aria-label="Jahr" style="margin:0"></div>
     </div>
     <div id="strategy-container" style="margin-bottom:32px"></div>
+
+    <div class="block-head" id="invest-section" style="scroll-margin-top:72px">
+      <div>
+        <h2>💼 Investitionen</h2>
+        <p class="muted strat-small" style="margin:2px 0 0">Geplante Anschaffungen und Upgrades &mdash; Planung, keine Ausgaben</p>
+      </div>
+      <div class="strat-actions" style="margin:0;padding:0">
+        <button class="btn btn-sm btn-ghost" onclick="openInvCategories()">Kategorien</button>
+        <button class="btn btn-sm" onclick="openInvestment(null)">+ Investition</button>
+      </div>
+    </div>
+    <div id="invest-container" style="margin-bottom:32px"></div>
 
     <div class="block-head">
       <h2>🎯 Weitere Ziele</h2>
@@ -1617,6 +1654,56 @@
       <button class="btn btn-ghost" onclick="closeRecurring()">Abbrechen</button>
       <button class="btn btn-primary" onclick="saveRecurring()">Speichern</button>
     </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="inv-modal-bg" onclick="if(event.target===this)closeInvestment()">
+  <div class="modal" style="width:600px">
+    <h2 id="inv-modal-title">Neue Investition</h2>
+    <div class="form-group"><label for="inv-title">Titel</label><input type="text" id="inv-title" placeholder="z. B. Softbox-Set"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="inv-category">Kategorie</label><select id="inv-category"></select></div>
+      <div class="form-group"><label for="inv-price">Geschätzter Preis in €</label><input type="text" id="inv-price" inputmode="decimal" placeholder="Noch offen" oninput="this.classList.remove('invalid')"></div>
+    </div>
+    <div class="form-group"><label for="inv-desc">Beschreibung / Nutzen</label><textarea id="inv-desc" rows="3" placeholder="Was bringt uns diese Anschaffung?"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label for="inv-priority">Priorität</label><select id="inv-priority"><option value="high">▲ Hoch</option><option value="medium">● Mittel</option><option value="low">▼ Niedrig</option></select></div>
+      <div class="form-group"><label for="inv-status">Status</label><select id="inv-status" onchange="updateInvForm()"><option value="idea">Idee</option><option value="planned">Geplant</option><option value="watch">Beobachten</option><option value="ready">Kaufbereit</option><option value="bought">Gekauft</option></select></div>
+    </div>
+    <div class="form-group" id="inv-bought-row" hidden><label for="inv-bought-date">Gekauft am</label><input type="date" id="inv-bought-date"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="inv-year">Zieljahr <span class="muted">(optional)</span></label><select id="inv-year" onchange="updateInvForm()"></select></div>
+      <div class="form-group"><label for="inv-quarter">Zielquartal <span class="muted">(optional)</span></label><select id="inv-quarter"><option value="">Offen</option><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></div>
+    </div>
+    <div class="form-group"><label for="inv-condition">Kaufbedingung <span class="muted">(optional)</span></label><input type="text" id="inv-condition" placeholder="z. B. ab 300 € Monatsumsatz"></div>
+    <div class="form-row">
+      <div class="form-group"><label for="inv-current">Aktuelle Lösung <span class="muted">(optional)</span></label><input type="text" id="inv-current" placeholder="Was nutzen wir heute?"></div>
+      <div class="form-group"><label for="inv-target">Gewünschte Ziel-Lösung <span class="muted">(optional)</span></label><input type="text" id="inv-target" placeholder="Was soll es werden?"></div>
+    </div>
+    <div class="form-group"><label for="inv-note">Notiz <span class="muted">(optional)</span></label><textarea id="inv-note" rows="2"></textarea></div>
+    <div class="form-group" id="inv-links"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeInvestment()">Abbrechen</button>
+      <button class="btn btn-danger" id="inv-delete" onclick="deleteInvestment()" hidden>Löschen</button>
+      <button class="btn btn-primary" onclick="saveInvestment()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="inv-cat-bg" onclick="if(event.target===this)closeInvCategories()">
+  <div class="modal" style="width:480px">
+    <h2>Kategorien der Investitionen</h2>
+    <div id="inv-cat-list"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeInvCategories()">Fertig</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="inv-setup-bg" onclick="if(event.target===this)closeSetupEditor()">
+  <div class="modal" style="width:560px">
+    <h2>Aktuelles Setup</h2>
+    <p class="muted fin-small" style="margin:0 0 8px">Was heute im Einsatz ist, je Bereich. Änderungen werden direkt gespeichert.</p>
+    <div id="inv-setup-list"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="closeSetupEditor()">Fertig</button></div>
   </div>
 </div>
 
@@ -2270,7 +2357,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
+const RT_TABLES = ['podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months',
@@ -2323,6 +2410,7 @@ function realtimeUpdateToken() {
 function onRemoteChange(table) {
   if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
+  if (table === 'podcast_investment_categories' || table === 'podcast_setup_items') table = 'podcast_investments';
   if (table === 'podcast_settings') { onRemoteChange('podcast_revenue'); refreshTaskSeen(); } // revenue rule and task markers live in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
   clearTimeout(rtDebounce[table]);
@@ -2356,6 +2444,11 @@ function onRemoteChange(table) {
       await loadFinance();
       if (document.getElementById('page-finanzen').classList.contains('active')) renderFinance();
       if (document.getElementById('page-verbesserung').classList.contains('active')) renderRevenue();
+    } else if (table === 'podcast_investments') {
+      if (!investLoaded) return;
+      await loadInvestments();
+      if (document.getElementById('page-verbesserung').classList.contains('active')) renderInvestments();
+      if (document.getElementById('inv-modal-bg').classList.contains('open')) renderInvLinks();
     } else if (table === 'podcast_revenue') {
       if (!revenueLoaded) return;
       await loadRevenue();
@@ -2418,7 +2511,7 @@ async function reloadAllData() {
   else if (active.id === 'page-calendar') { await loadCalendarData(); renderCalendarPage(); }
   else if (active.id === 'page-ideen') { await loadIdeas(); renderIdeas(); }
   else if (active.id === 'page-finanzen') { await loadFinance(); renderFinance(); }
-  else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements(), loadRevenue()]); renderGoals(); renderImprovements(); renderRevenue(); }
+  else if (active.id === 'page-verbesserung') { await Promise.all([loadGoals(), loadImprovements(), loadRevenue(), loadInvestments()]); renderGoals(); renderImprovements(); renderRevenue(); }
   else if (changed) onEpisodesChanged(changed);
 }
 
@@ -5021,7 +5114,7 @@ async function saveBooking() {
       if (finEdit.id) {
         saved = (await apiFetch(`podcast_fin_bookings?id=eq.${encodeURIComponent(finEdit.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(row) }))[0];
       } else {
-        saved = (await apiFetch('podcast_fin_bookings', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, created_by: currentActor(), ...(finEdit.legacy_ref ? { legacy_ref: finEdit.legacy_ref } : {}) }) }))[0];
+        saved = (await apiFetch('podcast_fin_bookings', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, created_by: currentActor(), ...(finEdit.investment_id ? { investment_id: finEdit.investment_id } : {}), ...(finEdit.legacy_ref ? { legacy_ref: finEdit.legacy_ref } : {}) }) }))[0];
       }
       if (finEdit.newFile) saved = await uploadFinReceipt('podcast_fin_bookings', saved, finEdit.newFile) || saved;
       // A booked recurring payment moves the item's next due date past this period.
@@ -5537,6 +5630,361 @@ function renderRevenue() {
     ${group('💶 Finanzielle Ziele', fin.length ? `<div class="strat-grid">${fin.map(stratFinanceCardHtml).join('')}</div>
       <div class="muted strat-small" style="margin:-4px 0 0">Jahresumsatz ${y} gesamt: <b>${eur(revSum(y, ALL_MONTHS, null))}</b> · ${REV_SOURCES.map(([k, l]) => `${l} ${eur(revSum(y, ALL_MONTHS, k))}`).join(' · ')}</div>` : '')}
     ${group('🚩 Strategische Meilensteine', stratMilestonesHtml(y))}`;
+  renderInvestments();
+}
+
+// ── INVESTITIONEN ────────────────────────────────────────────────
+// Planned purchases and upgrades. Plans only: they never count as expenses. A purchase reaches finance
+// only through a manual takeover, which creates a booking with investment_id (at most one per investment).
+// The category doubles as the setup area for a later upgrade board (current setup + possible upgrades).
+const INV_TABLE = 'podcast_investments';
+const INV_CAT_TABLE = 'podcast_investment_categories';
+const INV_SETUP_TABLE = 'podcast_setup_items';
+const INV_STATUS = {
+  idea:    { label: 'Idee',       order: 0 },
+  planned: { label: 'Geplant',    order: 1 },
+  watch:   { label: 'Beobachten', order: 2 },
+  ready:   { label: 'Kaufbereit', order: 3 },
+  bought:  { label: 'Gekauft',    order: 4 },
+};
+// Finance category suggested when a purchase is taken over (can be changed in the booking form).
+const INV_FIN_CAT = { workflow: 'editing', other: 'other_expense' };
+let investments = [];
+let invCats = [];
+let setupItems = [];
+let investLoaded = false;
+let invEditId = null;
+let invEditBase = null;
+let invUi = { category: '', priority: '', status: '', sort: 'priority' };
+try { Object.assign(invUi, JSON.parse(localStorage.getItem('gg_invest_ui')) || {}); } catch {}
+function setInvUi(key, value) {
+  invUi[key] = value;
+  try { localStorage.setItem('gg_invest_ui', JSON.stringify(invUi)); } catch {}
+  renderInvestments();
+}
+async function loadInvestments() {
+  try {
+    const [i, c, s] = await Promise.all([
+      apiFetch(INV_TABLE + '?select=*&order=updated_at.desc'),
+      apiFetch(INV_CAT_TABLE + '?select=*&order=sort.asc,name.asc'),
+      apiFetch(INV_SETUP_TABLE + '?select=*&order=sort.asc,created_at.asc'),
+    ]);
+    investments = i; invCats = c; setupItems = s;
+    investLoaded = true;
+    return true;
+  } catch (e) { showToast('Investitionen konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+function invCat(id) { return invCats.find(c => c.id === id); }
+function invCatName(id) { const c = invCat(id); return c ? c.name : 'Ohne Kategorie'; }
+function invBooking(id) { return finBookings.find(b => b.investment_id === id); }
+function invTodos(id) { return todos.filter(t => t.investmentId === id); }
+function invTarget(x) { return x.target_year ? (x.target_quarter ? `Q${x.target_quarter} ` : '') + x.target_year : ''; }
+function invCatOptions(selected, { empty = '' } = {}) {
+  const list = invCats.filter(c => !c.archived || c.id === selected);
+  return `<option value="">${empty}</option>` + list.map(c => `<option value="${c.id}"${c.id === selected ? ' selected' : ''}>${esc(c.name)}</option>`).join('');
+}
+
+function renderInvestments() {
+  const box = document.getElementById('invest-container');
+  if (!box || !investLoaded) return;
+  const openItems = investments.filter(x => x.status !== 'bought');
+  // No known price yet is shown as a dash, not as 0,00 €.
+  const sum = list => list.some(x => x.price_cents != null) ? eur(list.reduce((s, x) => s + (x.price_cents || 0), 0)) : '–';
+  const noPrice = openItems.filter(x => x.price_cents == null).length;
+  const ready = investments.filter(x => x.status === 'ready');
+  const bought = investments.filter(x => x.status === 'bought');
+  const kpi = (label, value, sub) => `<div class="inv-kpi"><div class="muted strat-small">${label}</div><div class="inv-kpi-val">${value}</div><div class="muted strat-small">${sub}</div></div>`;
+  const prio = (a, b) => IDEA_PRIORITY_META[a.priority].order - IDEA_PRIORITY_META[b.priority].order;
+  // Bought items move to the end; the list is loaded by last edit, so that stays the tie-breaker.
+  const doneLast = (a, b) => (a.status === 'bought') - (b.status === 'bought');
+  const byPrice = (a, b) => (a.price_cents == null) - (b.price_cents == null) || (b.price_cents || 0) - (a.price_cents || 0);
+  const cmp = invUi.sort === 'updated' ? (a, b) => (b.updated_at || '').localeCompare(a.updated_at || '')
+    : invUi.sort === 'price' ? (a, b) => doneLast(a, b) || byPrice(a, b) : (a, b) => doneLast(a, b) || prio(a, b);
+  const list = investments.filter(x => (!invUi.category || x.category_id === invUi.category) && (!invUi.priority || x.priority === invUi.priority) && (!invUi.status || x.status === invUi.status)).sort(cmp);
+  const opt = (key, value, label) => `<option value="${value}"${invUi[key] === value ? ' selected' : ''}>${label}</option>`;
+  box.innerHTML = `
+    <div class="inv-kpis">
+      ${kpi('Noch offen geplant', sum(openItems), `${openItems.length} ${openItems.length === 1 ? 'Investition' : 'Investitionen'}${noPrice ? ` · ${noPrice} ohne Preis` : ''}`)}
+      ${kpi('Davon kaufbereit', sum(ready), `${ready.length} ${ready.length === 1 ? 'Investition' : 'Investitionen'}`)}
+      ${kpi('Gekauft (geschätzt)', sum(bought), `${bought.filter(x => invBooking(x.id)).length} von ${bought.length} in Finanzen übernommen`)}
+    </div>
+    ${invSetupHtml()}
+    <div class="expert-toolbar inv-toolbar">
+      <select onchange="setInvUi('category', this.value)" aria-label="Nach Kategorie filtern">${invCatOptions(invUi.category, { empty: 'Alle Kategorien' })}</select>
+      <select onchange="setInvUi('priority', this.value)" aria-label="Nach Priorität filtern">
+        ${opt('priority', '', 'Alle Prioritäten')}${Object.entries(IDEA_PRIORITY_META).map(([k, m]) => opt('priority', k, `${m.icon} ${m.label}`)).join('')}
+      </select>
+      <select onchange="setInvUi('status', this.value)" aria-label="Nach Status filtern">
+        ${opt('status', '', 'Alle Status')}${Object.entries(INV_STATUS).map(([k, m]) => opt('status', k, m.label)).join('')}
+      </select>
+      <select onchange="setInvUi('sort', this.value)" aria-label="Sortierung">
+        ${opt('sort', 'priority', 'Sortieren: Priorität')}${opt('sort', 'price', 'Sortieren: Preis')}${opt('sort', 'updated', 'Sortieren: Zuletzt bearbeitet')}
+      </select>
+    </div>
+    ${list.length ? `<div class="strat-grid">${list.map(invCardHtml).join('')}</div>`
+      : `<div class="card">${investments.length ? emptyState('🔎', 'Keine Investitionen mit diesen Filtern', '', `<button class="btn btn-ghost" onclick="resetInvFilters()">Filter zurücksetzen</button>`, true)
+        : emptyState('💼', 'Noch keine Investitionen', 'Plant hier Anschaffungen und Upgrades für den Podcast.', '<button class="btn btn-primary" onclick="openInvestment(null)">+ Investition</button>', true)}</div>`}`;
+}
+function resetInvFilters() { Object.assign(invUi, { category: '', priority: '', status: '' }); setInvUi('sort', invUi.sort); }
+
+// Current setup per area, with the upgrade ideas of that area (basis for a later upgrade board).
+function invSetupHtml() {
+  const areas = invCats.map(c => ({ c, items: setupItems.filter(s => s.category_id === c.id) })).filter(a => a.items.length);
+  const loose = setupItems.filter(s => !invCat(s.category_id));
+  return `<div class="card inv-setup">
+    <div class="block-head"><h3 class="inv-setup-title">Aktuelles Setup</h3><button class="link-btn" onclick="openSetupEditor()">Bearbeiten</button></div>
+    ${areas.length || loose.length ? `<div class="inv-setup-grid">
+      ${areas.map(({ c, items }) => {
+        const ideas = investments.filter(x => x.category_id === c.id && x.status !== 'bought').length;
+        return `<div class="inv-area">
+          <div class="inv-area-name">${esc(c.name)}</div>
+          <ul>${items.map(s => `<li>${esc(s.title)}</li>`).join('')}</ul>
+          ${ideas ? `<button class="link-btn" onclick="setInvUi('category', ${jsArg(c.id)})">${ideas} ${ideas === 1 ? 'mögliches Upgrade' : 'mögliche Upgrades'} →</button>` : '<span class="muted strat-small">Kein Upgrade geplant</span>'}
+        </div>`;
+      }).join('')}
+      ${loose.length ? `<div class="inv-area"><div class="inv-area-name">Ohne Kategorie</div><ul>${loose.map(s => `<li>${esc(s.title)}</li>`).join('')}</ul></div>` : ''}
+    </div>` : '<div class="muted strat-small">Noch nichts hinterlegt.</div>'}
+  </div>`;
+}
+function invCardHtml(x) {
+  const p = IDEA_PRIORITY_META[x.priority], st = INV_STATUS[x.status];
+  const idArg = jsArg(x.id);
+  const booking = invBooking(x.id);
+  const taskCount = invTodos(x.id).filter(t => !t.done).length;
+  const meta = [
+    `<span class="chip">${esc(invCatName(x.category_id))}</span>`,
+    invTarget(x) ? `<span class="chip">🗓 ${invTarget(x)}</span>` : '',
+    taskCount ? `<span class="chip">☑ ${taskCount} ${taskCount === 1 ? 'Aufgabe' : 'Aufgaben'}</span>` : '',
+    booking ? `<span class="chip chip-accent">In Finanzen: ${eur(booking.amount_cents)}</span>` : '',
+  ].filter(Boolean).join('');
+  const action = x.status === 'ready' ? `<button class="btn btn-sm" onclick="event.stopPropagation();markInvBought(${idArg})">Als gekauft markieren</button>`
+    : x.status === 'bought' && !booking ? `<button class="btn btn-sm" onclick="event.stopPropagation();invToFinance(${idArg})">In Finanzen übernehmen</button>` : '';
+  return `<div class="card card-clickable strat-card inv-card${x.status === 'bought' ? ' inv-bought' : ''}" onclick="openInvestment(${idArg})">
+    <div class="strat-card-head"><div class="strat-title">${esc(x.title)}</div></div>
+    <div class="inv-price">${x.price_cents != null ? eur(x.price_cents) : '<span class="muted">Preis offen</span>'}</div>
+    <div class="idea-pills inv-pills">
+      <span class="pill prio-${x.priority}" title="Priorität">${p.icon} ${p.label}</span>
+      <span class="pill inv-st-${x.status}" title="Status">${st.label}</span>
+    </div>
+    ${x.description ? `<div class="inv-desc">${esc(x.description)}</div>` : ''}
+    ${x.purchase_condition && x.status !== 'bought' ? `<div class="strat-note">Kaufbedingung: ${esc(x.purchase_condition)}</div>` : ''}
+    <div class="todo-chips">${meta}</div>
+    ${action ? `<div class="strat-actions">${action}</div>` : ''}
+  </div>`;
+}
+
+// ── Edit form ──
+function invToRow(x) {
+  return { id: x.id, title: x.title, category_id: x.category_id || null, description: x.description || null, price_cents: x.price_cents ?? null,
+    priority: x.priority, status: x.status, target_year: x.target_year || null, target_quarter: x.target_quarter || null, note: x.note || null,
+    current_solution: x.current_solution || null, target_solution: x.target_solution || null, purchase_condition: x.purchase_condition || null,
+    purchased_at: x.purchased_at || null };
+}
+function openInvestment(id) {
+  const x = id ? investments.find(i => i.id === id) : null;
+  invEditId = x ? x.id : null;
+  invEditBase = x ? { row: invToRow(x), version: x.updated_at } : null;
+  const val = (el, v) => { document.getElementById('inv-' + el).value = v ?? ''; };
+  document.getElementById('inv-modal-title').textContent = x ? 'Investition bearbeiten' : 'Neue Investition';
+  val('title', x && x.title);
+  document.getElementById('inv-category').innerHTML = invCatOptions(x ? x.category_id : invUi.category, { empty: 'Ohne Kategorie' });
+  val('desc', x && x.description);
+  val('price', x && x.price_cents != null ? eurPlain(x.price_cents) : '');
+  val('priority', x ? x.priority : 'medium');
+  val('status', x ? x.status : 'idea');
+  const years = [];
+  for (let y = Math.min(new Date().getFullYear(), (x && x.target_year) || 9999); y <= Math.max(new Date().getFullYear() + 5, (x && x.target_year) || 0); y++) years.push(y);
+  document.getElementById('inv-year').innerHTML = '<option value="">Offen</option>' + years.map(y => `<option>${y}</option>`).join('');
+  val('year', x && x.target_year);
+  val('quarter', x && x.target_quarter);
+  val('condition', x && x.purchase_condition);
+  val('current', x && x.current_solution);
+  val('target', x && x.target_solution);
+  val('note', x && x.note);
+  val('bought-date', (x && x.purchased_at) || isoToday());
+  document.getElementById('inv-price').classList.remove('invalid');
+  document.getElementById('inv-delete').hidden = !x;
+  updateInvForm();
+  renderInvLinks();
+  document.getElementById('inv-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('inv-title').focus(), 50);
+}
+function closeInvestment() { document.getElementById('inv-modal-bg').classList.remove('open'); invEditId = null; }
+function updateInvForm() {
+  document.getElementById('inv-bought-row').hidden = document.getElementById('inv-status').value !== 'bought';
+  document.getElementById('inv-quarter').disabled = !document.getElementById('inv-year').value;
+}
+function invFormRow() {
+  const get = el => document.getElementById('inv-' + el).value.trim();
+  const status = get('status');
+  const year = get('year');
+  return { id: invEditId || newId(), title: get('title'), category_id: get('category'), description: get('desc'), priority: get('priority'), status,
+    target_year: year ? +year : null, target_quarter: year && get('quarter') ? +get('quarter') : null, note: get('note'), current_solution: get('current'),
+    target_solution: get('target'), purchase_condition: get('condition'), purchased_at: status === 'bought' ? get('bought-date') || isoToday() : null };
+}
+async function saveInvestment() {
+  const form = invFormRow();
+  if (!form.title) { showToast('Bitte einen Titel eingeben.', 'error'); document.getElementById('inv-title').focus(); return; }
+  const priceEl = document.getElementById('inv-price');
+  const parsed = parseEuro(priceEl.value);
+  if (parsed.error) { priceEl.classList.add('invalid'); showToast(parsed.error, 'error'); priceEl.focus(); return; }
+  const row = { ...invToRow({ ...form, price_cents: parsed.cents }), updated_by: currentActor() };
+  if (!invEditId) row.created_by = currentActor();
+  const base = invEditBase && { ...invEditBase.row, updated_by: row.updated_by };
+  try {
+    await saveRowVersioned(INV_TABLE, row, base, invEditBase && invEditBase.version);
+    closeInvestment();
+    await loadInvestments();
+    renderInvestments();
+    flashSaved();
+  } catch (e) { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); }
+}
+async function deleteInvestment() {
+  const x = investments.find(i => i.id === invEditId);
+  if (!x) return;
+  const booking = invBooking(x.id);
+  if (!confirm(`„${x.title}“ löschen?${booking ? ' Die Buchung in Finanzen bleibt bestehen.' : ''}${invTodos(x.id).length ? ' Verknüpfte Aufgaben bleiben bestehen.' : ''}`)) return;
+  try {
+    await apiFetch(`${INV_TABLE}?id=eq.${encodeURIComponent(x.id)}`, { method: 'DELETE' });
+    investments = investments.filter(i => i.id !== x.id);
+    todos.forEach(t => { if (t.investmentId === x.id) t.investmentId = null; });
+    closeInvestment();
+    renderInvestments();
+    flashSaved();
+  } catch (e) { showToast('Löschen fehlgeschlagen: ' + e.message, 'error'); }
+}
+async function markInvBought(id) {
+  const x = investments.find(i => i.id === id);
+  if (!x) return;
+  try {
+    await saveRowVersioned(INV_TABLE, { ...invToRow(x), status: 'bought', purchased_at: isoToday(), updated_by: currentActor() }, { ...invToRow(x), updated_by: x.updated_by }, x.updated_at);
+    await loadInvestments();
+    renderInvestments();
+    showToast('Als gekauft markiert – es wurde nichts in Finanzen gebucht.');
+  } catch (e) { showToast('Speichern fehlgeschlagen: ' + e.message, 'error'); }
+}
+
+// ── Links: tasks and finance (both only on request) ──
+function renderInvLinks() {
+  const box = document.getElementById('inv-links');
+  const x = investments.find(i => i.id === invEditId);
+  if (!x) { box.innerHTML = '<div class="muted fin-small">Aufgaben und die Übernahme in Finanzen sind nach dem ersten Speichern möglich.</div>'; return; }
+  const booking = invBooking(x.id);
+  const tasks = invTodos(x.id);
+  box.innerHTML = `
+    <div class="fin-sub">Aufgaben</div>
+    ${tasks.map(t => `<div class="inv-link-row${t.done ? ' muted' : ''}"><span>${t.done ? '✓' : '☐'} ${esc(t.text)}</span></div>`).join('')}
+    <div class="todo-input-row"><input type="text" id="inv-new-task" placeholder="z. B. ${esc(x.title)}: Angebote vergleichen" aria-label="Aufgabe aus dieser Investition" onkeydown="if(event.key==='Enter')invAddTask()"><button class="btn btn-sm" onclick="invAddTask()">Aufgabe anlegen</button></div>
+    <div class="fin-sub" style="margin-top:12px">Finanzen</div>
+    ${booking ? `<div class="inv-link-row"><span>Gebucht: ${eur(booking.amount_cents)} am ${esc(new Date(booking.date + 'T00:00').toLocaleDateString('de-DE'))}</span><button class="link-btn" onclick="invOpenBooking(${jsArg(booking.id)})">Buchung öffnen</button></div>`
+      : x.status === 'bought' ? `<div class="inv-link-row"><span class="muted">Noch nicht in Finanzen übernommen.</span><button class="link-btn" onclick="invToFinance(${jsArg(x.id)})">In Finanzen übernehmen</button></div>`
+      : '<div class="muted fin-small">Investitionen sind Planung und zählen nicht als Ausgabe. Nach dem Kauf (Status „Gekauft“) kann der Betrag von Hand in Finanzen übernommen werden.</div>'}`;
+}
+function invAddTask() {
+  const input = document.getElementById('inv-new-task');
+  const text = input.value.trim();
+  if (!text || !invEditId) { input.focus(); return; }
+  const t = newTodo({ text, investmentId: invEditId });
+  todos.push(t);
+  insertTodo(t);
+  renderInvLinks();
+  renderInvestments();
+  showToast('Allgemeine Aufgabe angelegt (nicht zugewiesen)');
+}
+async function invToFinance(id) {
+  const x = investments.find(i => i.id === id);
+  if (!x) return;
+  if (!financeLoaded && !await loadFinance()) return;
+  if (invBooking(x.id)) { showToast('Diese Investition wurde bereits in Finanzen übernommen.', 'error'); return; }
+  const c = invCat(x.category_id);
+  const catKey = INV_FIN_CAT[c && c.key] || 'equipment';
+  const finC = finCats.find(f => f.kind === 'expense' && f.key === catKey);
+  closeInvestment();
+  openBooking('expense', null, { amount: x.price_cents || null, date: x.purchased_at || isoToday(), description: x.title, category_id: finC ? finC.id : '', noRepeat: true });
+  finEdit.investment_id = x.id;
+  if (x.price_cents) showToast('Geschätzter Preis vorausgefüllt – bitte den tatsächlichen Betrag prüfen.');
+}
+function invOpenBooking(bookingId) { closeInvestment(); openBooking('expense', bookingId); }
+
+// ── Categories ──
+function openInvCategories() { renderInvCategories(); document.getElementById('inv-cat-bg').classList.add('open'); }
+function closeInvCategories() { document.getElementById('inv-cat-bg').classList.remove('open'); }
+function renderInvCategories() {
+  document.getElementById('inv-cat-list').innerHTML = invCats.map(c => `<div class="guide-edit-item">
+      <input type="text" value="${esc(c.name)}" aria-label="Kategoriename" onchange="renameInvCat(${jsArg(c.id)}, this.value)" ${c.archived ? 'disabled' : ''}>
+      <button class="btn btn-sm btn-ghost" onclick="archiveInvCat(${jsArg(c.id)}, ${!c.archived})">${c.archived ? 'Reaktivieren' : 'Archivieren'}</button>
+    </div>`).join('') + `<div class="todo-input-row" style="margin-top:6px"><input type="text" id="inv-newcat" placeholder="Neue Kategorie…" aria-label="Neue Kategorie" onkeydown="if(event.key==='Enter')addInvCat()"><button class="btn btn-sm" onclick="addInvCat()">Hinzufügen</button></div>`;
+}
+async function addInvCat() {
+  const name = document.getElementById('inv-newcat').value.trim();
+  if (!name) return;
+  if (invCats.some(c => c.name.toLowerCase() === name.toLowerCase())) { showToast('Diese Kategorie gibt es schon.', 'error'); return; }
+  try {
+    const rows = await apiFetch(INV_CAT_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ name, sort: 80 }) });
+    invCats = invCats.concat(rows).sort((a, b) => a.sort - b.sort || a.name.localeCompare(b.name, 'de'));
+    renderInvCategories(); renderInvestments(); flashSaved();
+  } catch (e) { showToast('Kategorie nicht angelegt: ' + e.message, 'error'); }
+}
+async function renameInvCat(id, name) {
+  name = name.trim();
+  const c = invCat(id);
+  if (!c || !name || name === c.name) { renderInvCategories(); return; }
+  try {
+    await apiFetch(`${INV_CAT_TABLE}?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ name }) });
+    c.name = name; renderInvestments(); flashSaved();
+  } catch (e) { showToast('Umbenennen fehlgeschlagen: ' + e.message, 'error'); renderInvCategories(); }
+}
+async function archiveInvCat(id, archived) {
+  try {
+    await apiFetch(`${INV_CAT_TABLE}?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ archived }) });
+    invCat(id).archived = archived;
+    if (archived && invUi.category === id) invUi.category = '';
+    renderInvCategories(); renderInvestments();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+}
+
+// ── Current setup ──
+function openSetupEditor() { renderSetupEditor(); document.getElementById('inv-setup-bg').classList.add('open'); }
+function closeSetupEditor() { document.getElementById('inv-setup-bg').classList.remove('open'); }
+function renderSetupEditor() {
+  document.getElementById('inv-setup-list').innerHTML = setupItems.map(s => `<div class="guide-edit-item inv-setup-edit">
+      <input type="text" value="${esc(s.title)}" aria-label="Bestandteil" onchange="patchSetupItem(${jsArg(s.id)}, 'title', this.value)">
+      <select aria-label="Bereich" onchange="patchSetupItem(${jsArg(s.id)}, 'category_id', this.value)">${invCatOptions(s.category_id, { empty: 'Ohne Kategorie' })}</select>
+      <button class="todo-del" onclick="deleteSetupItem(${jsArg(s.id)})" title="Entfernen" aria-label="Entfernen">🗑</button>
+    </div>`).join('') + `<div class="inv-setup-edit" style="margin-top:6px">
+      <input type="text" id="inv-newsetup" placeholder="z. B. Kamera, Stativ…" aria-label="Neuer Bestandteil" onkeydown="if(event.key==='Enter')addSetupItem()">
+      <select id="inv-newsetup-cat" aria-label="Bereich">${invCatOptions('', { empty: 'Ohne Kategorie' })}</select>
+      <button class="btn btn-sm" onclick="addSetupItem()">Hinzufügen</button>
+    </div>`;
+}
+async function addSetupItem() {
+  const title = document.getElementById('inv-newsetup').value.trim();
+  if (!title) { document.getElementById('inv-newsetup').focus(); return; }
+  const sort = setupItems.reduce((m, s) => Math.max(m, s.sort), 0) + 10;
+  try {
+    const rows = await apiFetch(INV_SETUP_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ title, sort, category_id: document.getElementById('inv-newsetup-cat').value || null }) });
+    setupItems = setupItems.concat(rows);
+    renderSetupEditor(); renderInvestments(); flashSaved();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+}
+async function patchSetupItem(id, field, value) {
+  const s = setupItems.find(i => i.id === id);
+  value = value.trim() || null;
+  if (!s || (field === 'title' && !value)) { renderSetupEditor(); return; }
+  try {
+    await apiFetch(`${INV_SETUP_TABLE}?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ [field]: value }) });
+    s[field] = value;
+    renderInvestments(); flashSaved();
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); renderSetupEditor(); }
+}
+async function deleteSetupItem(id) {
+  const s = setupItems.find(i => i.id === id);
+  if (!s || !confirm(`„${s.title}“ aus dem aktuellen Setup entfernen?`)) return;
+  try {
+    await apiFetch(`${INV_SETUP_TABLE}?id=eq.${id}`, { method: 'DELETE' });
+    setupItems = setupItems.filter(i => i.id !== id);
+    renderSetupEditor(); renderInvestments(); flashSaved();
+  } catch (e) { showToast('Nicht entfernt: ' + e.message, 'error'); }
 }
 
 // ── Manual measurements ──
@@ -5922,7 +6370,7 @@ function rowToTodo(r) {
     createdAt: r.created_at, doneAt: r.done_at, description: r.description || '', priority: r.priority || 'medium',
     dueDate: r.due_date || null, projectId: r.project_id || null, parentId: r.parent_id || null,
     episodeId: r.episode_id || null, stepId: r.step_id || null,
-    strategyYear: r.strategy_year || null, strategyKey: r.strategy_key || null, createdBy: r.created_by || null,
+    strategyYear: r.strategy_year || null, strategyKey: r.strategy_key || null, createdBy: r.created_by || null, investmentId: r.investment_id || null,
   };
 }
 // General podcast task: top-level and not tied to an episode. Rows with episode_id refer to a
@@ -6013,7 +6461,7 @@ function queueTodoWrite(id, write) {
 const TODO_COLUMNS = {
   text: 'text', assignee: 'assignee', done: 'done', status: 'status', doneAt: 'done_at', description: 'description',
   priority: 'priority', dueDate: 'due_date', projectId: 'project_id', parentId: 'parent_id', createdAt: 'created_at',
-  strategyYear: 'strategy_year', createdBy: 'created_by',
+  strategyYear: 'strategy_year', createdBy: 'created_by', investmentId: 'investment_id',
 };
 function todoToRow(t, keys = Object.keys(TODO_COLUMNS)) {
   const row = {};
@@ -6249,6 +6697,7 @@ function todoRowHtml(t, { showWho = false, showType = false } = {}) {
     dueChip(item.due, t.done),
     project ? `<span class="chip">${esc(project.name)}</span>` : '',
     t.strategyYear ? `<span class="chip chip-accent" title="Strategischer Meilenstein">🎯 Strategie ${t.strategyYear}</span>` : '',
+    t.investmentId ? '<span class="chip chip-accent" title="Aus einer Investition in der Strategie angelegt">💼 Investition</span>' : '',
     subs.length ? `<span class="chip" title="Unteraufgaben">☑ ${subsDone}/${subs.length}</span>` : '',
     t.description ? '<span class="chip" title="Hat eine Beschreibung">≡</span>' : '',
     t.done && t.doneAt ? `<span class="chip">✓ ${formatDate(new Date(t.doneAt))}</span>` : '',
@@ -8025,6 +8474,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'finanzen')     loadAndRender('fin-content', loadFinance, renderFinance, financeLoaded);
   if (name === 'verbesserung') {
     loadAndRender('strategy-container', loadRevenue, renderRevenue, revenueLoaded);
+    loadAndRender('invest-container', loadInvestments, renderInvestments, investLoaded);
     loadAndRender('goals-container', loadGoals, renderGoals, goals.length > 0);
     loadAndRender('improvements-container', loadImprovements, renderImprovements, improvements.length > 0);
   }
@@ -8091,7 +8541,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); closeMetricEntry(); closeGoalEdit(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); closeMetricEntry(); closeGoalEdit(); closeInvestment(); closeInvCategories(); closeSetupEditor(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
