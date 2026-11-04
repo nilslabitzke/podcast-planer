@@ -736,7 +736,8 @@
     .st-pin-count { position: absolute; right: -5px; top: -5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 99px; background: var(--st-ring, #fff); color: #101116; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
     .st-pin-label { position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); display: none; white-space: nowrap; font-size: 12px; font-weight: 600; background: rgba(16,17,22,.9); border: 1px solid rgba(255,255,255,.14); padding: 3px 8px; border-radius: 6px; pointer-events: none; }
     .st-pin:hover .st-pin-label, .st-pin:focus-visible .st-pin-label, .st-pin.selected .st-pin-label { display: block; }
-    .st-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; min-width: 0; font-size: 13px; scroll-margin: 72px; }
+    .st-panel-wrap { min-width: 0; }
+    .st-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; min-width: 0; min-height: 220px; font-size: 13px; scroll-margin: 72px; }
     .st-panel:empty { display: none; }
     .st-eyebrow { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
     .st-panel-empty p { margin: 6px 0 12px; line-height: 1.5; }
@@ -805,9 +806,14 @@
     .st-slot-state { font-size: 11px; color: var(--muted); }
     .inv-tabs { margin-bottom: 14px; }
     .inv-st-in_use { color: #111217; background: #FFD9AE; }
+    /* Beside the scene the panel fills the scene's height and scrolls inside, so its content never changes the layout. */
+    @container (min-width: 720px) {
+      .st-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+      .st-panel-wrap { position: relative; }
+      .st-panel { position: absolute; inset: 0; overflow-y: auto; }
+    }
     @container (min-width: 800px) {
       .st-layout { grid-template-columns: minmax(0, 1fr) 320px; }
-      .st-panel { max-height: 700px; overflow-y: auto; }
     }
     @container (max-width: 520px) {
       .st-pin-dot { width: 34px; height: 34px; }
@@ -5915,9 +5921,12 @@ function renderInvestments() {
   const box = document.getElementById('invest-container');
   if (!box || !investLoaded) return;
   const focusKey = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.focusKey : null;
+  const panelTop = document.getElementById('st-panel') ? document.getElementById('st-panel').scrollTop : 0;
   const tabs = `<div class="seg inv-tabs" role="tablist" aria-label="Ansicht der Investitionen">${[['list', 'Übersicht'], ['studio', 'Studio-Upgrade']].map(([k, l]) => `<button type="button" class="seg-btn${invUi.tab === k ? ' active' : ''}" role="tab" aria-selected="${invUi.tab === k}" data-focus-key="tab-${k}" onclick="setInvUi('tab','${k}')">${l}</button>`).join('')}</div>`;
   if (invUi.tab === 'studio') box.innerHTML = tabs + renderStudio();
   else box.innerHTML = tabs + renderInvestmentList();
+  const panelAfter = document.getElementById('st-panel');
+  if (panelAfter) panelAfter.scrollTop = panelTop;
   if (focusKey) { const el = box.querySelector(`[data-focus-key="${CSS.escape(focusKey)}"]`); if (el) el.focus({ preventScroll: true }); }
 }
 function renderInvestmentList() {
@@ -6255,7 +6264,7 @@ function studioPinsHtml() {
     const [px, py] = isoP(...a.pin);
     const st = STUDIO_STATE[d.state];
     const count = d.open.length + d.bought.length;
-    return `<button type="button" class="st-pin st-pin-${st.cls}${studioUi.area === a.key ? ' selected' : ''}" data-focus-key="pin-${a.key}" style="left:${(px / ISO.w * 100).toFixed(2)}%;top:${(py / ISO.hPx * 100).toFixed(2)}%" onclick="selectStudioArea('${a.key}')" aria-label="${esc(a.label)}: ${esc(studioStateText(d))}" aria-pressed="${studioUi.area === a.key}">
+    return `<button type="button" class="st-pin st-pin-${st.cls}${studioUi.area === a.key ? ' selected' : ''}" data-area="${a.key}" data-focus-key="pin-${a.key}" style="left:${(px / ISO.w * 100).toFixed(2)}%;top:${(py / ISO.hPx * 100).toFixed(2)}%" onclick="selectStudioArea('${a.key}')" aria-label="${esc(a.label)}: ${esc(studioStateText(d))}" aria-pressed="${studioUi.area === a.key}">
       <span class="st-pin-dot">${studioIcon(a.key)}${count ? `<span class="st-pin-count">${count}</span>` : ''}</span>
       <span class="st-pin-label">${esc(a.label)}</span>
     </button>`;
@@ -6337,7 +6346,7 @@ function studioSlotsHtml(list) {
   return `<ul class="st-slots">${list.map(a => {
     const d = studioData(a.key), st = STUDIO_STATE[d.state];
     const current = d.setup.map(s => s.title).concat(d.inUse.map(x => x.target_solution || x.title));
-    return `<li><button type="button" class="st-slot${studioUi.area === a.key ? ' selected' : ''}" data-focus-key="slot-${a.key}" onclick="selectStudioArea('${a.key}', true)" aria-pressed="${studioUi.area === a.key}">
+    return `<li><button type="button" class="st-slot${studioUi.area === a.key ? ' selected' : ''}" data-area="${a.key}" data-focus-key="slot-${a.key}" onclick="selectStudioArea('${a.key}', true)" aria-pressed="${studioUi.area === a.key}">
       <span class="st-slot-icon st-pin-${st.cls}">${studioIcon(a.key)}</span>
       <span class="st-slot-text"><b>${esc(a.label)}</b><span>${current.length ? esc(current.join(' · ')) : 'Noch nicht erfasst'}</span></span>
       <span class="st-slot-state">${esc(st.label)}${d.open.length ? ` · ${d.open.length}` : ''}</span>
@@ -6383,7 +6392,7 @@ function renderStudio() {
         <div class="st-brand"><span class="st-brand-mark">G&amp;G</span><span>Glans &amp; Gloria · Studio</span></div>
         <div class="st-scene">${studioScene()}${studioPinsHtml()}</div>
       </div>
-      <aside class="st-panel" id="st-panel" aria-live="polite">${studioPanelHtml()}</aside>
+      <div class="st-panel-wrap"><aside class="st-panel" id="st-panel" aria-live="polite">${studioPanelHtml()}</aside></div>
     </div>
     ${studioStagesHtml()}
     ${studioPlannerHtml()}
@@ -6395,12 +6404,29 @@ function renderStudio() {
     </section>
   </div>`;
 }
+// Selecting only marks the component and fills the panel: scene, markers and focus stay untouched
+// and the page never scrolls. Only a pick from the list below moves to the panel, if it is out of view.
 function selectStudioArea(key, fromList = false) {
-  studioUi.area = studioUi.area === key && !fromList ? null : key;
-  renderInvestments();
-  // The panel sits below the scene on small screens, or above the list when picked from it.
+  const prev = studioUi.area;
+  studioUi.area = prev === key && !fromList ? null : key;
+  const root = document.querySelector('.st-root');
+  root.querySelectorAll('[data-area]').forEach(el => {
+    const on = el.dataset.area === studioUi.area;
+    el.classList.toggle('selected', on);
+    if (el.hasAttribute('aria-pressed')) el.setAttribute('aria-pressed', on);
+  });
   const panel = document.getElementById('st-panel');
-  if (key && panel && (fromList || panel.getBoundingClientRect().top > innerHeight * .8)) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  panel.innerHTML = studioPanelHtml();
+  panel.scrollTop = 0;
+  // Closing removes the focused button, so focus returns to the component it belonged to.
+  if (!key && prev) {
+    const target = root.querySelector(`.st-pin[data-area="${prev}"]`) || root.querySelector(`.st-slot[data-area="${prev}"]`);
+    if (target) target.focus({ preventScroll: true });
+  }
+  if (fromList) {
+    const r = panel.getBoundingClientRect();
+    if (r.top < 0 || r.top > innerHeight * .8) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 async function toggleStudioPlan(id, on) {
   const x = investments.find(i => i.id === id);
