@@ -762,6 +762,40 @@
     .acq-row-meta { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
     .acq-row-next { justify-self: end; }
     .acq-kpi-alert { border-color: var(--red); }
+    .acq-card { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); overflow: hidden; scroll-margin: 80px; }
+    .acq-card.open { border-color: var(--accent); }
+    .acq-card > .acq-row { border: 0; border-radius: 0; background: none; }
+    .acq-card > .acq-row:hover { background: var(--surface2); }
+    .acq-card > .acq-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .acq-row-next { display: inline-flex; align-items: center; gap: 8px; }
+    .acq-chev { color: var(--muted); font-size: 11px; }
+    .acq-steps { display: grid; gap: 2px; padding: 6px 12px; background: var(--surface2); border-radius: var(--radius-sm); }
+    .acq-step { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 2px 12px; min-height: 38px; }
+    .acq-step-check { display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 500; color: var(--text); margin: 0; cursor: pointer; }
+    .acq-step-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); cursor: pointer; flex: none; }
+    .acq-step-check input:disabled { cursor: default; }
+    .acq-step.done .acq-step-check { color: var(--muted); }
+    .acq-step-date { font-size: 12.5px; font-weight: 600; color: var(--green); }
+    .acq-step-due { font-size: 12.5px; font-weight: 600; }
+    .acq-step-overdue { color: var(--red); }
+    .acq-step-today { color: var(--yellow); }
+    .acq-step-later { color: var(--muted); font-weight: 500; }
+    .acq-step-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; padding: 2px 0 10px 27px; }
+    .acq-step-form label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); margin: 0; }
+    .acq-step-form input[type=date] { width: auto; min-height: 34px; padding: 5px 10px; }
+    .acq-step-after { font-size: 12.5px; color: var(--muted); padding: 8px 0 4px; border-top: 1px solid var(--border); }
+    .acq-new-card { margin-bottom: 12px; padding: 14px 16px; }
+    .acq-new-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 10px; }
+    .acq-new-head h3 { margin: 0; font-size: 15px; }
+    .acq-new-head .muted { font-size: 12.5px; }
+    .acq-new-card .sk-form { background: none; border: 0; padding: 0; }
+    .acq-new-expert { display: grid; gap: 6px; }
+    .acq-new-label { font-size: 12px; color: var(--muted); }
+    .acq-new-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 8px 12px; }
+    .acq-new-card .acq-match { background: var(--surface2); }
+    .acq-new-card .acq-who .seg { width: fit-content; }
+    .acq-hint { font-size: 11.5px; color: var(--muted); }
+    .acq-new-card .acq-warn { margin: 0; }
     .acq-stats, .acq-settings { margin-top: 12px; padding: 12px 16px; }
     .acq-stats summary, .acq-settings summary { cursor: pointer; font-weight: 600; font-size: 14px; }
     .acq-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin-top: 12px; }
@@ -786,6 +820,8 @@
       .acq-row-last { display: none; }
       .acq-row-next { grid-row: 1; grid-column: 2; }
       .acq-tl li { grid-template-columns: 1fr; gap: 0; }
+      .acq-new-grid { grid-template-columns: 1fr; }
+      .acq-step-form { padding-left: 0; }
     }
     /* Skills */
     .sk-toolbar select { flex: 1 1 160px; }
@@ -1490,11 +1526,11 @@
         <h1>Ideen &amp; Akquise</h1>
         <p class="subtitle">Gästeanfragen und Follow-ups &mdash; und die Ideen für künftige Folgen</p>
       </div>
-      <button class="btn btn-primary" onclick="openIdeaModal(null)">+ Neue Idee</button>
+      <button class="btn btn-primary" id="ideen-main-btn" onclick="openIdeaModal(null)">+ Neue Idee</button>
     </div>
     <div class="seg idea-tabs" id="idea-tabs" role="tablist" aria-label="Ideen und Akquise"></div>
     <div class="expert-toolbar" id="idea-toolbar"></div>
-    <div id="ideen-container"></div>
+    <div id="ideen-container" data-acq-root="list"></div>
   </div>
 
   <div class="page" id="page-verbesserung">
@@ -1671,7 +1707,7 @@
     </div>
     <div class="form-group">
       <div class="sk-sec-head" style="margin-bottom:6px"><label style="margin:0">Gäste &amp; Akquise</label><button type="button" class="link-btn" onclick="openAcqGuide()">📘 Akquise-Leitfaden</button></div>
-      <div id="idea-experts" style="margin-bottom:14px"></div>
+      <div id="idea-experts" data-acq-root="idea" style="margin-bottom:14px"></div>
       <label>Fragen für die Folge</label>
       <textarea id="idea-questions" rows="8" placeholder="Fragen eintragen oder einfügen..."></textarea>
     </div>
@@ -4714,6 +4750,8 @@ function renderIdeas() {
   const tab = ideaUi.tab === 'acq' ? 'acq' : 'ideas';
   document.getElementById('idea-tabs').innerHTML = [['acq', 'Akquise'], ['ideas', 'Ideen']].map(([k, l]) =>
     `<button type="button" class="seg-btn${tab === k ? ' active' : ''}" role="tab" aria-selected="${tab === k}" onclick="setIdeaUi('tab','${k}')">${l}</button>`).join('');
+  const main = document.getElementById('ideen-main-btn');
+  if (main) { main.textContent = tab === 'acq' ? '+ Anfrage erfassen' : '+ Neue Idee'; main.onclick = tab === 'acq' ? openAcqNew : () => openIdeaModal(null); }
   if (tab === 'acq') {
     document.getElementById('idea-toolbar').innerHTML = '';
     if (expertsLoaded) renderAcq(c); else c.innerHTML = loadingState();
@@ -8581,7 +8619,7 @@ function renderGuides() {
 // timeline (idea_id + kind). The next action is computed from the documented dates on every render and
 // is never stored; without a known send date there is no deadline. Nothing here sends e-mails.
 const ACQ_STATUS = [['researched', 'Recherchiert'], ['sent', 'Anfrage versendet'], ['interested', 'Interesse bekundet'], ['scheduling', 'Terminabstimmung'],
-  ['confirmed', 'Zugesagt'], ['declined', 'Abgesagt'], ['dormant', 'Ruhend'], ['do_not_contact', 'Keine Kontaktaufnahme erwünscht']];
+  ['confirmed', 'Zugesagt'], ['declined', 'Abgesagt'], ['dormant', 'Ruhend'], ['do_not_contact', 'Keine weitere Kontaktaufnahme']];
 const ACQ_ACTIVE = ['sent', 'interested', 'scheduling'];
 const ACQ_REPLIED = ['interested', 'scheduling', 'confirmed', 'declined', 'do_not_contact'];
 const ACQ_ROLES = [['wish', 'Wunschgast'], ['alt1', 'Alternative 1'], ['alt2', 'Alternative 2'], ['alt', 'Weitere Alternative']];
@@ -8619,8 +8657,20 @@ function acqEvents(r) {
 }
 function isoPlusDays(iso, n) { const d = safeParseIso(iso); d.setDate(d.getDate() + n); return isoDate(d); }
 function fmtIso(iso) { return iso ? formatDate(safeParseIso(iso)) : ''; }
-// Dates come only from documented events. Each next step is due from every known earlier send date
-// (keeping the configured spacing); the latest of these counts, so a late follow-up moves the next one.
+// Whole calendar days between two local dates (rounding absorbs the 23/25-hour days around DST changes).
+function acqDaysBetween(a, b) { return Math.round((safeParseIso(b) - safeParseIso(a)) / 86400000); }
+function acqWhen(due, today) { const n = acqDaysBetween(due, today); return { when: n > 0 ? 'overdue' : n === 0 ? 'today' : 'later', days: n }; }
+const ACQ_STEP_NAME = { fu1: 'Follow-up 1', fu2: 'Follow-up 2', alt: 'Gastalternative prüfen' };
+// Due date of a step = configured day after the first request, but never sooner than the configured spacing
+// after a send that actually happened (e.g. follow-up 1 sent late → follow-up 2 at least 17−7 = 10 days later).
+// The latest of these candidates counts. Only documented dates are used; without any date there is no deadline.
+function acqStepDue(step, d) {
+  const iv = acqIntervals;
+  return [[d.first, 'Erstanfrage', 0], [d.fu1, 'Follow-up 1', iv.fu1], [d.fu2, 'Follow-up 2', iv.fu2]]
+    .filter(([x, , off]) => x && iv[step] - off > 0)
+    .map(([x, name, off]) => ({ due: isoPlusDays(x, iv[step] - off), basis: `${name} am ${fmtIso(x)} + ${iv[step] - off} Tage` }))
+    .sort((a, b) => b.due.localeCompare(a.due))[0] || null;
+}
 function acqInfo(r) {
   const ev = acqEvents(r);
   const dates = k => ev.filter(e => e.kind === k).map(e => e.date).filter(Boolean).sort();
@@ -8629,32 +8679,37 @@ function acqInfo(r) {
   const lastOut = [first, fu1, fu2, dates('other').pop()].filter(Boolean).sort().pop() || null;
   const lastContact = ev.filter(e => ACQ_CONTACT_KINDS.includes(e.kind)).map(e => e.date).sort().pop() || null;
   const confirmedOn = ev.filter(e => e.kind === 'status' && e.status_after === 'confirmed').map(e => e.date).sort()[0] || null;
-  const today = isoToday(), st = r.contact_status, iv = acqIntervals;
+  const today = isoToday(), st = r.contact_status, d = { first, fu1, fu2 };
+  const replied = !!reply && (!lastOut || reply >= lastOut);
+  // Follow-up reminders run only while a request is "sent" and unanswered.
+  const reminding = st === 'sent' && !replied;
+  const plan = { fu1: acqStepDue('fu1', d), fu2: acqStepDue('fu2', d), alt: acqStepDue('alt', d) };
   let action = null;
   if (st === 'researched') action = { label: 'Erstanfrage vorbereiten', level: 'info', rank: 3 };
   else if (st === 'sent') {
-    if (reply && (!lastOut || reply >= lastOut)) action = { label: 'Antwort bearbeiten', level: 'act', rank: 3, basis: `Antwort am ${fmtIso(reply)}` };
-    else if (!first && !fu1 && !fu2) action = { label: 'Versanddatum fehlt', level: 'warn', rank: 3, basis: 'Ohne dokumentiertes Versanddatum wird keine Frist berechnet.' };
+    if (replied) action = { label: 'Antwort bearbeiten', level: 'act', rank: 2, basis: `Antwort am ${fmtIso(reply)}` };
+    else if (!first && !fu1 && !fu2) action = { label: 'Versanddatum ergänzen', level: 'warn', rank: 3, basis: 'Ohne dokumentiertes Versanddatum wird keine Frist berechnet.' };
     else {
       const step = !fu1 && !fu2 ? 'fu1' : !fu2 ? 'fu2' : 'alt';
-      const from = [[first, 'Erstanfrage', 0], [fu1, 'Follow-up 1', iv.fu1], [fu2, 'Follow-up 2', iv.fu2]]
-        .filter(([d, , off]) => d && iv[step] - off > 0).map(([d, name, off]) => ({ due: isoPlusDays(d, iv[step] - off), basis: `${name} am ${fmtIso(d)} + ${iv[step] - off} Tage` }));
-      const best = from.sort((a, b) => b.due.localeCompare(a.due))[0];
-      if (best) {
-        const when = best.due < today ? 'overdue' : best.due === today ? 'today' : 'later';
-        const name = { fu1: 'Follow-up 1', fu2: 'Follow-up 2', alt: 'Alternative prüfen' }[step];
-        action = { step, label: name + (step === 'alt' ? '' : when === 'overdue' ? ' überfällig' : when === 'today' ? ' fällig' : ''), due: best.due, when, basis: best.basis,
-          level: when === 'later' ? 'info' : when === 'today' ? 'today' : 'overdue', rank: when === 'overdue' ? 0 : when === 'today' ? 1 : 3 };
+      const p = plan[step];
+      if (p) {
+        const { when, days } = acqWhen(p.due, today);
+        const name = ACQ_STEP_NAME[step], late = `${days} ${days === 1 ? 'Tag' : 'Tage'}`;
+        if (when === 'later') action = { step, label: 'Antwort ausstehend', sub: `${step === 'alt' ? 'Alternative prüfen' : name} ab ${fmtIso(p.due)}`, due: p.due, when, basis: p.basis, level: 'info', rank: 4 };
+        else if (step === 'alt') action = { step, label: name, long: `${name} – seit ${fmtIso(p.due)} keine Antwort`, due: p.due, when, basis: p.basis, level: 'act', rank: 2 };
+        else action = { step, label: when === 'today' ? `${name} – heute` : `${name} – ${late} überfällig`,
+          long: when === 'today' ? `${name} heute fällig` : `${name} seit ${days} ${days === 1 ? 'Tag' : 'Tagen'} überfällig`,
+          due: p.due, when, basis: p.basis, level: when, rank: when === 'overdue' ? 0 : 1 };
       }
     }
-  } else if (st === 'interested') action = { label: 'Antwort bearbeiten', level: 'act', rank: 3 };
+  } else if (st === 'interested') action = { label: 'Antwort bearbeiten', level: 'act', rank: 2 };
   else if (st === 'scheduling') action = { label: 'Termin vereinbaren', level: 'act', rank: 2 };
   else if (st === 'confirmed' && !r.episode_id) action = { label: 'In Planer übernehmen', level: 'info', rank: 3 };
-  return { ev, first, fu1, fu2, reply, lastContact, confirmedOn, action };
+  return { ev, first, fu1, fu2, reply, replied, reminding, lastContact, confirmedOn, plan, action };
 }
 function acqActionHtml(a, withBasis = false) {
   if (!a) return '';
-  return `<span class="acq-action acq-action-${a.level}" title="${esc(a.basis || '')}">${esc(a.label)}${a.due ? ` · ${fmtIso(a.due)}` : ''}</span>${withBasis && a.basis ? `<span class="muted acq-basis">${esc(a.basis)}</span>` : ''}`;
+  return `<span class="acq-action acq-action-${a.level}" title="${esc(a.basis || '')}">${esc(withBasis && a.long ? a.long : a.label)}${a.sub ? ` · ${esc(a.sub)}` : ''}</span>${withBasis && a.basis ? `<span class="muted acq-basis">Grundlage: ${esc(a.basis)}</span>` : ''}`;
 }
 function acqStatusBadge(st) { return `<span class="pill acq-st acq-st-${st}">${esc(acqLabel(ACQ_STATUS, st))}</span>`; }
 // Compact summary for the idea card: Wunschgast, most advanced status, most urgent action.
@@ -8710,7 +8765,8 @@ async function setAcqStatus(reqId, status, sel) {
 async function setAcqAssignee(reqId, who) {
   const r = acqReq(reqId);
   if (!r) return;
-  const next = r.assignee === who ? null : who;
+  const next = who && r.assignee !== who ? who : null;
+  if (next === (r.assignee || null)) return;
   try {
     await acqPatchRequest(r, { assignee: next });
     await acqAddEvent(r, { kind: 'assignee', summary: next ? `Zuständig: ${TODO_NAMES[next]}` : 'Zuständigkeit aufgehoben' });
@@ -8749,7 +8805,7 @@ async function removeAcqRequest(reqId) {
   refreshAcqViews();
 }
 function refreshAcqViews() {
-  if (document.getElementById('idea-modal-bg').classList.contains('open')) renderIdeaExperts();
+  if (document.getElementById('idea-modal-bg').classList.contains('open') && editingIdeaId) renderIdeaExperts();
   if (document.getElementById('page-ideen').classList.contains('active')) renderIdeas();
   if (document.getElementById('page-expert').classList.contains('active')) renderExpertDetail();
 }
@@ -8768,58 +8824,148 @@ function renderIdeaGuests() {
     ${conflict ? `<div class="acq-warn">⚠️ Mehrere Zusagen für diese Folgenidee (${reqs.filter(r => r.contact_status === 'confirmed').map(acqName).map(esc).join(', ')}) – bitte manuell entscheiden.</div>` : ''}
     ${legacy ? `<div class="acq-legacy"><span>Wunschgast laut bisherigem Freitext: <b>${esc(idea.guests)}</b>${idea.status === 'contacted' ? ' · „Gast angefragt“ (Datum unbekannt)' : ''}</span>
       ${draft && draft.kind === 'add' ? '' : `<button type="button" class="link-btn" onclick="openAcqAdd(true)">Als Wunschgast übernehmen</button>`}</div>` : ''}
-    <div class="acq-reqs">${reqs.map(r => acqRequestHtml(r, draft)).join('') || (legacy ? '' : '<div class="muted" style="font-size:13px">Noch kein Gast zugeordnet.</div>')}</div>
+    <div class="acq-reqs">${reqs.map(r => acqRequestHtml(r)).join('') || (legacy ? '' : '<div class="muted" style="font-size:13px">Noch kein Gast zugeordnet.</div>')}</div>
     ${draft && draft.kind === 'add' ? acqAddFormHtml(draft) : `<button type="button" class="btn btn-sm" data-focus-key="acq-add-btn" onclick="openAcqAdd(false)">+ Gast hinzufügen</button>`}`);
 }
 function toggleAcqReq(reqId) {
   acqUi.open = acqUi.open.includes(reqId) ? acqUi.open.filter(x => x !== reqId) : acqUi.open.concat(reqId);
   saveAcqUi();
-  renderIdeaExperts();
+  refreshAcqViews();
 }
-function acqRequestHtml(r, draft) {
+function acqRequestHtml(r) {
   const x = acqExpert(r), info = acqInfo(r), open = acqUi.open.includes(r.id);
-  const idArg = jsArg(r.id);
-  const openTodo = todos.find(t => t.acqRequestId === r.id && !t.done);
-  const email = x.email && EMAIL_RE.test(x.email) ? x.email : '';
-  const web = safeUrl(x.website);
   return `<div class="acq-req${open ? ' open' : ''}" id="acq-req-${esc(r.id)}">
-    <button type="button" class="acq-req-head" data-focus-key="acq-head-${esc(r.id)}" aria-expanded="${open}" onclick="toggleAcqReq(${idArg})">
+    <button type="button" class="acq-req-head" data-focus-key="acq-head-${esc(r.id)}" aria-expanded="${open}" onclick="toggleAcqReq(${jsArg(r.id)})">
       <span class="acq-req-name"><b>${esc(expertDisplayName(x))}</b><span class="muted">${esc(acqLabel(ACQ_ROLES, r.role))}${x.institution ? ' · ' + esc(x.institution) : ''}</span></span>
       <span class="acq-req-badges">${acqStatusBadge(r.contact_status)}${r.assignee ? whoBadge(r.assignee) : ''}${acqActionHtml(info.action)}</span>
     </button>
-    ${open ? `<div class="acq-req-body">
-      <div class="acq-facts">
-        ${x.field ? `<span>${esc(x.field)}</span>` : ''}
-        ${email ? `<span>✉ <a href="mailto:${esc(email)}">${esc(email)}</a> <button type="button" class="todo-del" onclick="copyText(${jsArg(email)})" title="E-Mail kopieren" aria-label="E-Mail kopieren">📋</button></span>` : '<span class="muted">Keine E-Mail hinterlegt</span>'}
-        ${x.phone ? `<span>☎ ${esc(x.phone)}</span>` : ''}
-        ${web ? `<span><a href="${esc(web)}" target="_blank" rel="noopener noreferrer">Website ↗</a></span>` : ''}
-        <button type="button" class="link-btn" onclick="closeIdeaModal();openExpert(${jsArg(x.id)})">Expertenprofil öffnen</button>
-      </div>
-      <div class="acq-controls">
-        <label>Rolle <select data-focus-key="acq-role-${esc(r.id)}" onchange="setAcqRole(${idArg}, this.value)">${ACQ_ROLES.map(([k, l]) => `<option value="${k}"${r.role === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
-        <label>Kontaktstatus <select data-focus-key="acq-status-${esc(r.id)}" onchange="setAcqStatus(${idArg}, this.value, this)">${ACQ_STATUS.map(([k, l]) => `<option value="${k}"${r.contact_status === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
-        <div class="acq-who"><span>Zuständig</span><div class="seg seg-sm">
-          <button type="button" class="seg-btn${r.assignee === 'nils' ? ' active' : ''}" data-focus-key="acq-who-n-${esc(r.id)}" onclick="setAcqAssignee(${idArg},'nils')">Nils</button>
-          <button type="button" class="seg-btn${r.assignee === 'leo' ? ' active' : ''}" data-focus-key="acq-who-l-${esc(r.id)}" onclick="setAcqAssignee(${idArg},'leo')">Leo</button></div></div>
-      </div>
-      <div class="acq-next">
-        <div><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '<span class="muted">–</span>'}</div>
-        <div><span class="acq-k">Nächste Aktion</span>${info.action ? acqActionHtml(info.action, true) : '<span class="muted">Keine – Anfrage abgeschlossen</span>'}</div>
-      </div>
-      <label class="acq-notes">Notizen <textarea rows="2" data-focus-key="acq-notes-${esc(r.id)}" oninput="scheduleAcqNotes(${idArg}, this.value)">${esc(r.notes || '')}</textarea></label>
-      <div class="acq-buttons">
-        <button type="button" class="btn btn-sm btn-primary" onclick="openAcqMail(${idArg})">E-Mail erstellen</button>
-        <button type="button" class="btn btn-sm" data-focus-key="acq-event-${esc(r.id)}" onclick="openAcqEvent(${idArg})">Kontakt dokumentieren</button>
-        ${openTodo ? `<button type="button" class="chip chip-link" onclick="openTaskModal(${jsArg(openTodo.id)})">☑ Aufgabe offen</button>`
-          : ACQ_ACTIVE.includes(r.contact_status) || r.contact_status === 'researched' ? `<button type="button" class="btn btn-sm btn-ghost" onclick="createAcqTodo(${idArg})">Als Aufgabe übernehmen</button>` : ''}
-        ${r.contact_status === 'confirmed' ? (r.episode_id ? '<span class="chip">🎙 In Planer übernommen</span>' : `<button type="button" class="btn btn-sm" onclick="ideaToEpisode(${idArg})">In Planer übernehmen</button>`) : ''}
-        ${info.ev.length ? '' : `<button type="button" class="link-btn" onclick="removeAcqRequest(${idArg})">Entfernen</button>`}
-      </div>
-      ${draft && draft.kind === 'event' && draft.reqId === r.id ? acqEventFormHtml(draft) : ''}
-      <div class="acq-tl-title">Kontaktverlauf</div>
-      ${acqTimelineHtml(info.ev)}
-    </div>` : ''}
+    ${open ? acqBodyHtml(r, info, 'idea') : ''}
   </div>`;
+}
+// Collapsible request card of the central Akquise list.
+function acqCardHtml(r, idea, info) {
+  const open = acqUi.open.includes(r.id), prio = IDEA_PRIORITY_META[idea.priority];
+  return `<div class="acq-card acq-row-${info.action ? info.action.level : 'none'}${open ? ' open' : ''}" id="acq-card-${esc(r.id)}">
+    <button type="button" class="acq-row" data-focus-key="acq-card-head-${esc(r.id)}" aria-expanded="${open}" onclick="toggleAcqReq(${jsArg(r.id)})">
+      <span class="acq-row-main"><b>${esc(acqName(r))}</b><span class="muted">${esc(idea.title)}</span></span>
+      <span class="acq-row-meta"><span class="pill prio-${idea.priority}" title="Themenpriorität">${prio.icon} ${prio.label}</span>${r.assignee ? whoBadge(r.assignee) : '<span class="who who-none" title="Nicht zugewiesen">Offen</span>'}${acqStatusBadge(r.contact_status)}</span>
+      <span class="acq-row-last"><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '–'}</span>
+      <span class="acq-row-next">${info.action ? acqActionHtml(info.action) : '<span class="muted">Keine offene Aktion</span>'}<span class="acq-chev" aria-hidden="true">${open ? '▴' : '▾'}</span></span>
+    </button>
+    ${open ? acqBodyHtml(r, info, 'list') : ''}
+  </div>`;
+}
+// Shared detail body (Akquise list and idea dialog): send checklist, status, assignee, notes, timeline.
+function acqBodyHtml(r, info, ctx) {
+  const x = acqExpert(r), idArg = jsArg(r.id), rid = esc(r.id);
+  const openTodo = todos.find(t => t.acqRequestId === r.id && !t.done);
+  const email = x.email && EMAIL_RE.test(x.email) ? x.email : '';
+  const web = safeUrl(x.website);
+  const draft = acqDraft && acqDraft.kind === 'event' && acqDraft.reqId === r.id ? acqDraft : null;
+  const who = [['nils', 'Nils'], ['leo', 'Leo'], ['', '–']];
+  return `<div class="acq-req-body">
+    ${acqStepsHtml(r, info)}
+    <div class="acq-controls">
+      <label>Kontaktstatus <select data-focus-key="acq-status-${rid}" onchange="setAcqStatus(${idArg}, this.value, this)">${ACQ_STATUS.map(([k, l]) => `<option value="${k}"${r.contact_status === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+      <div class="acq-who"><span>Zuständig</span><div class="seg seg-sm">${who.map(([k, l]) => `<button type="button" class="seg-btn${(r.assignee || '') === k ? ' active' : ''}" data-focus-key="acq-who-${k || 'none'}-${rid}" onclick="setAcqAssignee(${idArg},'${k}')"${k ? '' : ' title="Nicht zugewiesen" aria-label="Nicht zugewiesen"'}>${l}</button>`).join('')}</div></div>
+      <label>Rolle <select data-focus-key="acq-role-${rid}" onchange="setAcqRole(${idArg}, this.value)">${ACQ_ROLES.map(([k, l]) => `<option value="${k}"${r.role === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+    </div>
+    <div class="acq-next">
+      <div><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '<span class="muted">–</span>'}</div>
+      <div><span class="acq-k">Nächste Aktion</span>${info.action ? acqActionHtml(info.action, true) : '<span class="muted">Keine – Anfrage abgeschlossen</span>'}</div>
+    </div>
+    <div class="acq-facts">
+      ${x.field ? `<span>${esc(x.field)}</span>` : ''}
+      ${email ? `<span>✉ <a href="mailto:${esc(email)}">${esc(email)}</a> <button type="button" class="todo-del" onclick="copyText(${jsArg(email)})" title="E-Mail kopieren" aria-label="E-Mail kopieren">📋</button></span>` : '<span class="muted">Keine E-Mail hinterlegt</span>'}
+      ${x.phone ? `<span>☎ ${esc(x.phone)}</span>` : ''}
+      ${web ? `<span><a href="${esc(web)}" target="_blank" rel="noopener noreferrer">Website ↗</a></span>` : ''}
+      ${ctx === 'list' ? `<button type="button" class="link-btn" onclick="openIdeaFromAcq(${jsArg(r.idea_id)}, ${idArg})">Folgenidee öffnen</button>` : ''}
+      <button type="button" class="link-btn" onclick="${ctx === 'idea' ? 'closeIdeaModal();' : ''}openExpert(${jsArg(x.id)})">Expertenprofil öffnen</button>
+    </div>
+    <label class="acq-notes">Kontaktnotizen <textarea rows="2" data-focus-key="acq-notes-${rid}" oninput="scheduleAcqNotes(${idArg}, this.value)">${esc(r.notes || '')}</textarea></label>
+    <div class="acq-buttons">
+      <button type="button" class="btn btn-sm btn-primary" onclick="openAcqMail(${idArg})">E-Mail erstellen</button>
+      <button type="button" class="btn btn-sm" data-focus-key="acq-event-${rid}" onclick="openAcqEvent(${idArg}, this)">Antwort / Kontakt dokumentieren</button>
+      ${openTodo ? `<button type="button" class="chip chip-link" onclick="openTaskModal(${jsArg(openTodo.id)})">☑ Aufgabe offen</button>`
+        : ACQ_ACTIVE.includes(r.contact_status) || r.contact_status === 'researched' ? `<button type="button" class="btn btn-sm btn-ghost" onclick="createAcqTodo(${idArg})">Als Aufgabe übernehmen</button>` : ''}
+      ${r.contact_status === 'confirmed' ? (r.episode_id ? '<span class="chip">🎙 In Planer übernommen</span>' : `<button type="button" class="btn btn-sm" onclick="ideaToEpisode(${idArg})">In Planer übernehmen</button>`) : ''}
+      ${info.ev.length ? '' : `<button type="button" class="link-btn" onclick="removeAcqRequest(${idArg})">Entfernen</button>`}
+    </div>
+    ${draft ? acqEventFormHtml(draft) : ''}
+    <div class="acq-tl-title">Kontakt-Timeline</div>
+    ${acqTimelineHtml(info.ev)}
+  </div>`;
+}
+
+// ── Send checklist: Erstanfrage / Follow-up 1 / Follow-up 2 ──
+// A box is ticked only by a saved send event with its real date; ticking first opens a date field
+// (today pre-filled, changeable). Events are never overwritten.
+let acqStep = null; // { reqId, kind, date }
+const ACQ_STEPS = [['first_request', 'Erstanfrage'], ['followup1', 'Follow-up 1'], ['followup2', 'Follow-up 2']];
+function acqDueNote(p, earliest) {
+  const { when, days } = acqWhen(p.due, isoToday());
+  const txt = earliest ? `frühestens ${fmtIso(p.due)}` : when === 'overdue' ? `seit ${days} ${days === 1 ? 'Tag' : 'Tagen'} überfällig · fällig war ${fmtIso(p.due)}`
+    : when === 'today' ? `heute fällig · ${fmtIso(p.due)}` : `fällig am ${fmtIso(p.due)}`;
+  return `<span class="acq-step-due acq-step-${earliest ? 'later' : when}" title="${esc(p.basis)}">${txt}</span>`;
+}
+function acqStepsHtml(r, info) {
+  const st = r.contact_status, done = { first_request: info.first, followup1: info.fu1, followup2: info.fu2 };
+  const rows = ACQ_STEPS.map(([kind, name]) => {
+    const date = done[kind], key = `acq-step-${kind}-${r.id}`;
+    const blocked = !date && kind !== 'first_request' && st === 'researched';
+    let note;
+    if (date) note = `<span class="acq-step-date">✓ am ${fmtIso(date)}</span>`;
+    else if (kind === 'first_request') note = st === 'researched' ? '<span class="muted">noch nicht versendet</span>' : '<span class="acq-action acq-action-warn">Versanddatum ergänzen</span>';
+    else if (blocked) note = '<span class="muted">nach der Erstanfrage</span>';
+    else if (kind === 'followup1' && info.fu2) note = '<span class="muted">nicht dokumentiert</span>';
+    else if (!info.reminding) note = `<span class="muted">keine Erinnerung · ${esc(info.replied ? 'Antwort erhalten' : acqLabel(ACQ_STATUS, st))}</span>`;
+    else {
+      const p = info.plan[kind === 'followup1' ? 'fu1' : 'fu2'];
+      note = p ? acqDueNote(p, kind === 'followup2' && !info.fu1) : '<span class="muted">Frist erst mit dem Versanddatum der Erstanfrage</span>';
+    }
+    const form = acqStep && acqStep.reqId === r.id && acqStep.kind === kind ? `<div class="acq-step-form">
+      <label>Tatsächliches Versanddatum <input type="date" max="${isoToday()}" data-focus-key="acq-step-date-${esc(r.id)}" value="${esc(acqStep.date)}" oninput="acqStep.date=this.value" onchange="acqStep.date=this.value"></label>
+      <button type="button" class="btn btn-sm btn-primary" data-focus-key="acq-step-save-${esc(r.id)}" onclick="saveAcqStep(this)">Als versendet speichern</button>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="acqStep=null;refreshAcqViews()">Abbrechen</button>
+    </div>` : '';
+    return `<div class="acq-step${date ? ' done' : ''}">
+      <label class="acq-step-check"><input type="checkbox" data-focus-key="${esc(key)}"${date ? ' checked disabled' : blocked ? ' disabled' : ''} onclick="event.preventDefault();openAcqStep(${jsArg(r.id)},'${kind}',this)"><span>${name} versendet</span></label>
+      ${note}
+    </div>${form}`;
+  }).join('');
+  const after = info.fu2 && info.reminding && info.plan.alt ? `<div class="acq-step-after">Keine weiteren Standard-Follow-ups. ${acqWhen(info.plan.alt.due, isoToday()).when === 'later'
+    ? `Gastalternative prüfen ab ${fmtIso(info.plan.alt.due)}.` : '<b>Gastalternative prüfen.</b>'}</div>` : '';
+  return `<div class="acq-steps">${rows}${after}</div>`;
+}
+function acqRootFocus(el, key) {
+  const root = el && el.closest('[data-acq-root]');
+  const scope = root ? document.querySelector(`[data-acq-root="${root.dataset.acqRoot}"]`) : document;
+  const t = scope && scope.querySelector(`[data-focus-key="${CSS.escape(key)}"]`);
+  if (t) t.focus({ preventScroll: true });
+}
+function openAcqStep(reqId, kind, el) {
+  acqStep = { reqId, kind, date: isoToday() };
+  refreshAcqViews();
+  acqRootFocus(el, 'acq-step-date-' + reqId);
+}
+async function saveAcqStep(btn) {
+  const s = acqStep, r = s && acqReq(s.reqId);
+  if (!r) { acqStep = null; refreshAcqViews(); return; }
+  const info = acqInfo(r), name = acqLabel(ACQ_STEPS, s.kind);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s.date || '')) { showToast('Bitte das tatsächliche Versanddatum wählen.', 'error'); return; }
+  if (s.date > isoToday()) { showToast('Das Versanddatum kann nicht in der Zukunft liegen.', 'error'); return; }
+  if ({ first_request: info.first, followup1: info.fu1, followup2: info.fu2 }[s.kind]) { showToast(`${name} ist bereits dokumentiert.`, 'error'); acqStep = null; refreshAcqViews(); return; }
+  const before = s.kind === 'followup1' ? info.first : s.kind === 'followup2' ? [info.first, info.fu1].filter(Boolean).sort().pop() : null;
+  if (before && s.date < before) { showToast(`${name} kann nicht vor dem ${fmtIso(before)} versendet worden sein.`, 'error'); return; }
+  const later = s.kind === 'first_request' ? [info.fu1, info.fu2].filter(Boolean).sort()[0] : s.kind === 'followup1' ? info.fu2 : null;
+  if (later && s.date > later) { showToast(`${name} kann nicht nach dem ${fmtIso(later)} versendet worden sein.`, 'error'); return; }
+  btn.disabled = true;
+  const ok = await acqLogEvent(r, { kind: s.kind, date: s.date, channel: 'email', summary: '' });
+  if (!ok) { btn.disabled = false; return; }
+  acqStep = null;
+  flashSaved();
+  showToast(`${name} am ${fmtIso(s.date)} als versendet gespeichert`);
+  refreshAcqViews();
 }
 function acqTimelineHtml(ev) {
   if (!ev.length) return '<div class="muted" style="font-size:12.5px">Noch kein Eintrag. Einträge entstehen nur durch ausdrückliches Dokumentieren.</div>';
@@ -8840,14 +8986,15 @@ function acqEventFormHtml(d) {
     <label>Neuer Status <select onchange="acqDraft.status=this.value"><option value="">unverändert</option>${ACQ_STATUS.map(([k, l]) => `<option value="${k}"${d.status === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
     <label class="sk-form-wide">Rückmeldung / Inhalt <textarea rows="2" data-focus-key="acq-ev-summary" oninput="acqDraft.summary=this.value">${esc(d.summary)}</textarea></label>
     <label class="sk-form-wide">Nächste Aktion <span class="muted">(optional)</span> <input type="text" data-focus-key="acq-ev-next" value="${esc(d.next_action)}" oninput="acqDraft.next_action=this.value"></label>
-    <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="acqDraft=null;renderIdeaExperts()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="saveAcqEvent(this)">Speichern</button></div>
+    <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="acqDraft=null;refreshAcqViews()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="saveAcqEvent(this)">Speichern</button></div>
   </div>`;
 }
-function openAcqEvent(reqId) {
-  acqDraft = { kind: 'event', ideaId: editingIdeaId, reqId, kindOfEvent: 'reply', date: isoToday(), channel: 'email', status: '', summary: '', next_action: '' };
-  renderIdeaExperts();
-  const el = document.querySelector('#idea-experts [data-focus-key="acq-ev-kind"]');
-  if (el) el.focus({ preventScroll: true });
+function openAcqEvent(reqId, el) {
+  const r = acqReq(reqId);
+  if (!r) return;
+  acqDraft = { kind: 'event', ideaId: r.idea_id, reqId, kindOfEvent: 'reply', date: isoToday(), channel: 'email', status: '', summary: '', next_action: '' };
+  refreshAcqViews();
+  acqRootFocus(el, 'acq-ev-kind');
 }
 async function saveAcqEvent(btn) {
   const d = acqDraft, r = acqReq(d.reqId);
@@ -8881,8 +9028,8 @@ function openAcqAdd(fromLegacy) {
   const el = document.querySelector('#idea-experts [data-focus-key="acq-add-q"]');
   if (el) el.focus({ preventScroll: true });
 }
-function acqMatches(q) {
-  const linked = new Set(acqRequests(editingIdeaId).map(r => r.expert_id));
+function acqMatches(q, ideaId = editingIdeaId) {
+  const linked = new Set(ideaId ? acqRequests(ideaId).map(r => r.expert_id) : []);
   const words = norm(q).split(/[\s,.]+/).filter(w => w.length >= 3 && !['prof', 'med', 'dipl'].includes(w));
   if (!words.length) return [];
   return experts.filter(x => !linked.has(x.id) && words.every(w => norm([x.title, x.name, x.institution, x.field].join(' ')).includes(w))).slice(0, 6);
@@ -8957,11 +9104,25 @@ async function createAcqTodo(reqId) {
   } catch (e) { showToast((e.status === 409 ? 'Für diese Anfrage gibt es bereits eine offene Aufgabe. ' : 'Aufgabe nicht angelegt: ') + e.message, 'error'); }
   refreshAcqViews();
 }
-function openAcqFromTodo(reqId) {
+function openAcqFromTodo(reqId) { openAcqCard(reqId); }
+// Opens a request directly in the Akquise list (expanded and visible regardless of the filters).
+function openAcqCard(reqId) {
   const r = acqReq(reqId);
   if (!r) { showToast('Die Anfrage existiert nicht mehr.', 'error'); return; }
+  if (!acqUi.open.includes(reqId)) acqUi.open.push(reqId);
+  acqUi.focus = reqId;
+  saveAcqUi();
+  if (document.getElementById('idea-modal-bg').classList.contains('open')) closeIdeaModal();
+  ideaUi.tab = 'acq';
+  try { localStorage.setItem('gg_idea_ui', JSON.stringify(ideaUi)); } catch {}
   showPage('ideen');
-  openIdeaWithRequest(r.idea_id, r.id);
+  renderIdeas();
+  acqScrollToCard(reqId);
+}
+function acqScrollToCard(reqId, tries = 12) {
+  const el = document.getElementById('acq-card-' + reqId);
+  if (el) el.scrollIntoView({ block: 'nearest' });
+  else if (tries > 0) setTimeout(() => acqScrollToCard(reqId, tries - 1), 120);
 }
 function openIdeaWithRequest(ideaId, reqId) {
   if (reqId && !acqUi.open.includes(reqId)) { acqUi.open.push(reqId); saveAcqUi(); }
@@ -9029,19 +9190,148 @@ async function markAcqMailSent(btn) {
   refreshAcqViews();
 }
 
+// ── "+ Anfrage erfassen": request documented directly in the Akquise ──
+// Reuses existing ideas and expert profiles; new ones only on explicit choice. Each created row is
+// remembered in the draft, so a retry after an error never creates an idea or profile twice.
+let acqNew = null;
+function openAcqNew() {
+  acqNew = { ideaId: '', ideaTitle: '', q: '', expertId: '', newExpert: false, title: '', name: '', email: '',
+    assignee: currentActor() || '', status: 'sent', date: isoToday(), note: '' };
+  if (ideaUi.tab !== 'acq') setIdeaUi('tab', 'acq'); else renderIdeas();
+  const el = document.querySelector('#ideen-container [data-focus-key="acq-new-idea"]');
+  if (el) el.focus({ preventScroll: true });
+  const card = document.querySelector('#ideen-container .acq-new-card');
+  if (card) card.scrollIntoView({ block: 'nearest' });
+}
+function acqNewSet(k, v, rerender) { acqNew[k] = v; if (rerender) renderIdeas(); }
+function acqNewPickExpert(id) {
+  const x = experts.find(e => e.id === id);
+  if (!x) return;
+  acqNew.expertId = id; acqNew.newExpert = false;
+  if (x.email) acqNew.email = x.email;
+  renderIdeas();
+}
+function acqNewNewExpert() {
+  const p = acqParseGuestText(acqNew.q);
+  Object.assign(acqNew, { newExpert: true, expertId: '', title: p.title, name: p.name, email: acqNew.email || p.email });
+  renderIdeas();
+  const el = document.querySelector('#ideen-container [data-focus-key="acq-new-name"]');
+  if (el) el.focus({ preventScroll: true });
+}
+function acqNewHtml(d) {
+  const idea = d.ideaId && d.ideaId !== '__new' ? ideas.find(i => i.id === d.ideaId) : null;
+  const x = d.expertId ? experts.find(e => e.id === d.expertId) : null;
+  const dup = idea && x ? expertIdeaLinks.find(l => l.idea_id === idea.id && l.expert_id === x.id) : null;
+  const matches = !x && !d.newExpert ? acqMatches(d.q, null) : [];
+  const sub = e => [e.field, e.institution].filter(Boolean).join(', ');
+  const sorted = [...ideas].sort((a, b) => a.title.localeCompare(b.title, 'de'));
+  const undated = d.status === 'researched';
+  return `<div class="card acq-new-card">
+    <div class="acq-new-head"><h3>Anfrage erfassen</h3><span class="muted">Auch bereits versendete Anfragen – mit dem tatsächlichen Versanddatum.</span></div>
+    <div class="sk-form">
+      <label class="sk-form-wide">Folgenidee <select data-focus-key="acq-new-idea" onchange="acqNewSet('ideaId', this.value, true)">
+        <option value="">Bitte wählen …</option><option value="__new"${d.ideaId === '__new' ? ' selected' : ''}>+ Neue Folgenidee anlegen</option>
+        ${sorted.map(i => `<option value="${esc(i.id)}"${d.ideaId === i.id ? ' selected' : ''}>${esc(i.title)}</option>`).join('')}</select></label>
+      ${d.ideaId === '__new' ? `<label class="sk-form-wide">Titel der neuen Folgenidee <input type="text" data-focus-key="acq-new-idea-title" value="${esc(d.ideaTitle)}" oninput="acqNew.ideaTitle=this.value"></label>` : ''}
+      <div class="sk-form-wide acq-new-expert"><span class="acq-new-label">Experte</span>
+        ${x ? `<div class="acq-match"><span><b>${esc(expertDisplayName(x))}</b>${sub(x) ? `<span class="muted"> · ${esc(sub(x))}</span>` : ''}</span><button type="button" class="link-btn" data-focus-key="acq-new-change" onclick="acqNew.expertId='';renderIdeas()">Ändern</button></div>`
+        : d.newExpert ? `<div class="acq-new-grid">
+            <label>Akad. Titel <input type="text" data-focus-key="acq-new-title" value="${esc(d.title)}" placeholder="Prof. Dr." oninput="acqNew.title=this.value"></label>
+            <label>Name <input type="text" data-focus-key="acq-new-name" value="${esc(d.name)}" placeholder="Vor- und Nachname" oninput="acqNew.name=this.value"></label></div>
+            <button type="button" class="link-btn" onclick="acqNew.newExpert=false;renderIdeas()">Doch ein vorhandenes Profil suchen</button>`
+        : `<input type="search" data-focus-key="acq-new-q" value="${esc(d.q)}" placeholder="Vorhandenes Profil suchen: Name, Institution, Fachgebiet" oninput="acqNew.q=this.value;renderIdeas()">
+            ${matches.length ? `<div class="acq-matches">${matches.map(m => `<div class="acq-match"><span><b>${esc(expertDisplayName(m))}</b>${sub(m) ? `<span class="muted"> · ${esc(sub(m))}</span>` : ''}</span>
+              <button type="button" class="btn btn-sm" onclick="acqNewPickExpert(${jsArg(m.id)})">Auswählen</button></div>`).join('')}</div>`
+              : d.q.trim().length >= 3 ? '<div class="muted acq-hint">Kein passendes Profil gefunden.</div>' : ''}
+            <button type="button" class="link-btn" onclick="acqNewNewExpert()">+ Neues Expertenprofil anlegen</button>`}
+      </div>
+      ${dup ? `<div class="sk-form-wide acq-warn">Für diese Folgenidee gibt es bereits eine Anfrage an ${esc(expertDisplayName(x))}. <button type="button" class="link-btn" onclick="acqNew=null;openAcqCard(${jsArg(dup.id)})">Diese Anfrage öffnen</button></div>` : ''}
+      <label>E-Mail-Adresse des Experten <input type="email" data-focus-key="acq-new-email" value="${esc(d.email)}" oninput="acqNew.email=this.value"></label>
+      <div class="acq-who"><span>Zuständig</span><div class="seg seg-sm">${[['nils', 'Nils'], ['leo', 'Leo'], ['', 'Nicht zugewiesen']].map(([k, l]) =>
+        `<button type="button" class="seg-btn${d.assignee === k ? ' active' : ''}" data-focus-key="acq-new-who-${k || 'none'}" onclick="acqNewSet('assignee','${k}',true)">${l}</button>`).join('')}</div></div>
+      <label>Kontaktstatus <select data-focus-key="acq-new-status" onchange="acqNewSet('status', this.value, true)">${ACQ_STATUS.map(([k, l]) => `<option value="${k}"${d.status === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+      <label>Datum der versendeten Erstanfrage <input type="date" max="${isoToday()}" data-focus-key="acq-new-date" value="${esc(undated ? '' : d.date)}"${undated ? ' disabled' : ''} oninput="acqNew.date=this.value" onchange="acqNew.date=this.value">
+        <span class="acq-hint">${undated ? 'Noch nicht versendet – kein Datum' : 'Frei wählbar, auch Wochen zurück · leer lassen, wenn unbekannt'}</span></label>
+      <label class="sk-form-wide">Notiz (optional)<textarea rows="2" data-focus-key="acq-new-note" oninput="acqNew.note=this.value">${esc(d.note)}</textarea></label>
+      <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="acqNew=null;renderIdeas()">Abbrechen</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="saveAcqNew(this)"${dup ? ' disabled' : ''}>Anfrage speichern</button></div>
+    </div>
+  </div>`;
+}
+async function saveAcqNew(btn) {
+  const d = acqNew;
+  if (!d) return;
+  const err = m => showToast(m, 'error');
+  const email = d.email.trim(), today = isoToday(), isNewIdea = d.ideaId === '__new';
+  if (!d.ideaId) return err('Bitte eine Folgenidee wählen oder neu anlegen.');
+  if (isNewIdea && !d.ideaTitle.trim()) return err('Bitte einen Titel für die neue Folgenidee eingeben.');
+  if (!d.expertId && !(d.newExpert && d.name.trim())) return err('Bitte einen vorhandenen Experten auswählen oder ein neues Profil mit Namen anlegen.');
+  if (email && !EMAIL_RE.test(email)) return err('Bitte eine gültige E-Mail-Adresse eingeben oder das Feld leer lassen.');
+  const date = d.status === 'researched' ? '' : (d.date || '').trim();
+  if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) return err('Bitte ein gültiges Versanddatum wählen oder das Feld leer lassen.');
+  if (date > today) return err('Das Versanddatum kann nicht in der Zukunft liegen.');
+  if (!isNewIdea && d.expertId && expertIdeaLinks.some(l => l.idea_id === d.ideaId && l.expert_id === d.expertId)) return err('Für diese Folgenidee gibt es bereits eine Anfrage an diesen Experten.');
+  if (!isNewIdea && !acqConfirmChange({ id: null, idea_id: d.ideaId, contact_status: 'researched' }, d.status)) return;
+  if (!d.expertId) {
+    // Same surname already known? Never merged automatically – the user decides.
+    const last = norm(d.name.trim().split(/\s+/).pop());
+    const similar = experts.filter(x => norm(x.name.trim().split(/\s+/).pop()) === last);
+    if (similar.length && !confirm(`Es gibt bereits ${similar.map(expertDisplayName).join(', ')}. Trotzdem ein neues Profil für „${d.name.trim()}“ anlegen?`)) return;
+  }
+  const known = d.expertId && experts.find(e => e.id === d.expertId);
+  const setEmail = known && email && email !== (known.email || '') && (!known.email || confirm(`Im Profil von ${expertDisplayName(known)} ist ${known.email} hinterlegt. Durch ${email} ersetzen?`));
+  btn.disabled = true;
+  let r;
+  try {
+    if (isNewIdea) {
+      const idea = { id: Date.now().toString(), title: d.ideaTitle.trim(), content: '', guests: '', coreMessage: '', keyQuestion: '', driveLink: '', questions: '', status: 'idea', priority: 'medium', guestEmail: '' };
+      const row = await saveRowVersioned(IDEA_TABLE, ideaToRow(idea), null, null);
+      ideas.unshift({ ...idea, updatedAt: row && row.updated_at });
+      d.ideaId = idea.id;
+    }
+    if (!d.expertId) {
+      const rows = await apiFetch(EXPERT_TABLE, { method: 'POST', prefer: 'return=representation',
+        body: JSON.stringify({ id: newId(), name: d.name.trim(), title: d.title.trim() || null, email: email || null }) });
+      experts.push(rows[0]);
+      experts.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+      d.expertId = rows[0].id; d.newExpert = false;
+    } else if (setEmail) await patchExpert(known.id, { email });
+    const taken = acqRequests(d.ideaId);
+    const role = ['wish', 'alt1', 'alt2'].find(k => !taken.some(x => x.role === k)) || 'alt';
+    const rows = await queueExpertWrite('links:' + d.expertId, () => apiFetch('podcast_expert_ideas', { method: 'POST', prefer: 'return=representation',
+      body: JSON.stringify({ expert_id: d.expertId, idea_id: d.ideaId, role, contact_status: d.status, assignee: d.assignee || null, notes: d.note.trim() || null, created_by: currentActor() }) }));
+    r = rows[0];
+    expertIdeaLinks.push(r);
+  } catch (e) { btn.disabled = false; renderIdeas(); err('Nicht gespeichert: ' + e.message); return; }
+  // The request exists from here on; a failed history entry is reported and can be added in the card.
+  try {
+    if (date) await acqAddEvent(r, { kind: 'first_request', date, status_after: 'sent', summary: date < today ? 'Nachträglich erfasst' : '' });
+    if (!['researched', 'sent'].includes(d.status)) await acqAddEvent(r, { kind: 'status', status_after: d.status, summary: `Erfasst mit Status ${acqLabel(ACQ_STATUS, d.status)}` });
+    showToast(`Anfrage an ${acqName(r)} gespeichert${date ? ` · Erstanfrage ${fmtIso(date)}` : ''}`);
+  } catch (e) { err('Anfrage gespeichert, der Verlauf aber nicht: ' + e.message + ' – bitte in der Karte nachtragen.'); }
+  acqNew = null;
+  flashSaved();
+  if (!acqUi.open.includes(r.id)) acqUi.open.push(r.id);
+  acqUi.focus = r.id;
+  saveAcqUi();
+  refreshAcqViews();
+  acqScrollToCard(r.id);
+}
+
 // ── Ideen → Akquise ──
 function acqAllRows() {
   return expertIdeaLinks.filter(r => ideas.some(i => i.id === r.idea_id) && acqExpert(r)).map(r => ({ r, idea: ideas.find(i => i.id === r.idea_id), info: acqInfo(r) }));
 }
-function setAcqUi(k, v) { acqUi[k] = v; saveAcqUi(); renderIdeas(); }
+function setAcqUi(k, v) { acqUi[k] = v; acqUi.focus = null; saveAcqUi(); renderIdeas(); }
 function renderAcq(c) {
   const rows = acqAllRows(), today = isoToday();
   const active = rows.filter(x => ACQ_ACTIVE.includes(x.r.contact_status));
-  const fuToday = rows.filter(x => x.info.action && x.info.action.step && x.info.action.when === 'today');
+  const dueToday = rows.filter(x => x.info.action && x.info.action.when === 'today');
   const overdue = rows.filter(x => x.info.action && x.info.action.when === 'overdue');
   const st = acqStats(rows);
   const weekEnd = isoPlusDays(today, 7);
   const list = rows.filter(({ r, idea, info }) => {
+    if (r.id === acqUi.focus) return true;
     if (acqUi.who === 'none' ? r.assignee : acqUi.who && r.assignee !== acqUi.who) return false;
     if (acqUi.status === 'all') { /* everything */ } else if (acqUi.status) { if (r.contact_status !== acqUi.status) return false; }
     else if (['declined', 'dormant', 'do_not_contact'].includes(r.contact_status) || (r.contact_status === 'confirmed' && r.episode_id)) return false;
@@ -9051,7 +9341,7 @@ function renderAcq(c) {
     if (acqUi.due === 'today' && !(a && a.when === 'today')) return false;
     if (acqUi.due === 'week' && !(a && a.due && a.due <= weekEnd)) return false;
     return true;
-  }).sort((a, b) => (a.info.action ? a.info.action.rank : 4) - (b.info.action ? b.info.action.rank : 4)
+  }).sort((a, b) => (a.info.action ? a.info.action.rank : 5) - (b.info.action ? b.info.action.rank : 5)
     || (a.info.action && a.info.action.due || '9').localeCompare(b.info.action && b.info.action.due || '9')
     || IDEA_PRIORITY_META[a.idea.priority].order - IDEA_PRIORITY_META[b.idea.priority].order);
   const conflicts = ideas.filter(i => acqRequests(i.id).filter(r => r.contact_status === 'confirmed').length > 1);
@@ -9060,11 +9350,12 @@ function renderAcq(c) {
   swapHtmlKeepFocus(c, `
     <div class="inv-kpis">
       ${kpi('Aktive Anfragen', active.length, 'versendet, Interesse, Termin')}
-      ${kpi('Heute fällige Follow-ups', fuToday.length, 'laut dokumentierten Daten')}
-      ${kpi('Überfällige Aktionen', overdue.length, overdue.length ? 'bitte bearbeiten' : 'alles im Plan', overdue.length ? ' acq-kpi-alert' : '')}
+      ${kpi('Heute fällig', dueToday.length, 'Follow-ups und Prüfungen')}
+      ${kpi('Überfällig', overdue.length, overdue.length ? 'bitte bearbeiten' : 'alles im Plan', overdue.length ? ' acq-kpi-alert' : '')}
+      ${kpi('Terminabstimmungen', rows.filter(x => x.r.contact_status === 'scheduling').length, 'Termin vereinbaren')}
       ${kpi('Zusagen', rows.filter(x => x.r.contact_status === 'confirmed').length, `${rows.filter(x => x.r.contact_status === 'confirmed' && !x.r.episode_id).length} noch nicht im Planer`)}
-      ${kpi('Antwortquote', st.sent ? Math.round(st.replied / st.sent * 100) + ' %' : '–', st.sent ? `${st.replied} von ${st.sent} Erstanfragen` : 'noch keine datierte Erstanfrage')}
     </div>
+    ${acqNew ? acqNewHtml(acqNew) : ''}
     ${conflicts.length ? `<div class="acq-warn">⚠️ Mehrere Zusagen bei: ${conflicts.map(i => `<button type="button" class="link-btn" onclick="openIdeaWithRequest(${jsArg(i.id)})">${esc(i.title)}</button>`).join(', ')} – bitte manuell entscheiden.</div>` : ''}
     <div class="expert-toolbar acq-toolbar">
       <select onchange="setAcqUi('who', this.value)" aria-label="Zuständig">${opt('who', '', 'Alle Zuständigen')}${opt('who', 'nils', 'Nils')}${opt('who', 'leo', 'Leo')}${opt('who', 'none', 'Nicht zugewiesen')}</select>
@@ -9073,13 +9364,8 @@ function renderAcq(c) {
       <select onchange="setAcqUi('due', this.value)" aria-label="Fälligkeit">${opt('due', '', 'Jede Fälligkeit')}${opt('due', 'overdue', 'Überfällig')}${opt('due', 'today', 'Heute fällig')}${opt('due', 'week', 'Nächste 7 Tage')}</select>
       <button type="button" class="btn btn-sm btn-ghost" onclick="openAcqGuide()">📘 Akquise-Leitfaden</button>
     </div>
-    ${list.length ? `<div class="acq-list">${list.map(({ r, idea, info }) => `<button type="button" class="acq-row acq-row-${info.action ? info.action.level : 'none'}" onclick="openIdeaFromAcq(${jsArg(idea.id)}, ${jsArg(r.id)})">
-      <span class="acq-row-main"><b>${esc(acqName(r))}</b><span class="muted">${esc(idea.title)}</span></span>
-      <span class="acq-row-meta"><span class="pill prio-${idea.priority}">${IDEA_PRIORITY_META[idea.priority].icon} ${IDEA_PRIORITY_META[idea.priority].label}</span>${r.assignee ? whoBadge(r.assignee) : '<span class="who who-none">Offen</span>'}${acqStatusBadge(r.contact_status)}</span>
-      <span class="acq-row-last"><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '–'}</span>
-      <span class="acq-row-next">${info.action ? acqActionHtml(info.action) : '<span class="muted">–</span>'}</span>
-    </button>`).join('')}</div>`
-      : `<div class="card">${emptyState('📨', rows.length ? 'Keine Anfragen mit diesen Filtern' : 'Noch keine Gästeanfragen', rows.length ? '' : 'Gäste ordnet ihr in einer Folgenidee über „Gäste verwalten“ zu.', '', true)}</div>`}
+    ${list.length ? `<div class="acq-list">${list.map(({ r, idea, info }) => acqCardHtml(r, idea, info)).join('')}</div>`
+      : `<div class="card">${emptyState('📨', rows.length ? 'Keine Anfragen mit diesen Filtern' : 'Noch keine Gästeanfragen', rows.length ? '' : 'Mit „+ Anfrage erfassen“ tragt ihr eine Anfrage direkt hier ein – auch rückwirkend.', '', true)}</div>`}
     <details class="card acq-stats"${acqUi.statsOpen ? ' open' : ''} ontoggle="acqUi.statsOpen=this.open;saveAcqUi()"><summary>Akquise-Statistik</summary>${acqStatsHtml(st)}</details>
     <details class="card acq-settings"${acqUi.settingsOpen ? ' open' : ''} ontoggle="acqUi.settingsOpen=this.open;saveAcqUi()"><summary>Fristen &amp; E-Mail-Vorlagen</summary>${acqSettingsHtml()}</details>`);
 }
@@ -10167,7 +10453,7 @@ function expertRequestsHtml(x) {
   if (!reqs.length) return '';
   return `<div class="card x-card">
     <h2>Anfragen <span class="pill">${reqs.length}</span></h2>
-    <div class="acq-list">${reqs.map(r => { const idea = ideas.find(i => i.id === r.idea_id), info = acqInfo(r); return `<button type="button" class="acq-row acq-row-${info.action ? info.action.level : 'none'}" onclick="showPage('ideen');openIdeaWithRequest(${jsArg(idea.id)}, ${jsArg(r.id)})">
+    <div class="acq-list">${reqs.map(r => { const idea = ideas.find(i => i.id === r.idea_id), info = acqInfo(r); return `<button type="button" class="acq-row acq-row-${info.action ? info.action.level : 'none'}" onclick="openAcqCard(${jsArg(r.id)})">
       <span class="acq-row-main"><b>${esc(idea.title)}</b><span class="muted">${esc(acqLabel(ACQ_ROLES, r.role))}</span></span>
       <span class="acq-row-meta">${acqStatusBadge(r.contact_status)}${r.assignee ? whoBadge(r.assignee) : ''}</span>
       <span class="acq-row-last"><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '–'}</span>
@@ -10519,7 +10805,7 @@ function alertsHtml(f) {
   const acqLate = expertsLoaded ? acqAllRows().filter(x => x.info.action && x.info.action.when === 'overdue') : [];
   if (acqLate.length) alerts.push({ level: 'warn', icon: '📨', title: `${acqLate.length} Akquise-Aktion${acqLate.length === 1 ? '' : 'en'} überfällig`,
     text: acqLate.slice(0, 3).map(({ r, info }) => `${acqName(r)} (${info.action.label})`).join(' · '),
-    action: acqLate.length === 1 ? `showPage('ideen');openIdeaFromAcq(${jsArg(acqLate[0].idea.id)}, ${jsArg(acqLate[0].r.id)})` : `showPage('ideen')`, cta: 'Öffnen' });
+    action: acqLate.length === 1 ? `openAcqCard(${jsArg(acqLate[0].r.id)})` : `showPage('ideen')`, cta: 'Öffnen' });
   if (f.overduePosts.length) alerts.push({ level: 'warn', icon: '📱', title: `${f.overduePosts.length} Social-Media-Post${f.overduePosts.length === 1 ? '' : 's'} überfällig (letzte 14 Tage)`,
     text: f.overduePosts.slice(0, 3).map(p => `${postLabel(p)} · ${formatDate(postDate(p))}`).join(' · ') + ' – veröffentlicht? Dann abhaken.',
     action: 'goCalendarList()', cta: 'Im Kalender' });
@@ -10639,7 +10925,7 @@ function renderDashboard() {
     ${card('Aufgaben nach Person', `<button class="link-btn" onclick="goTasks('general','all')">Alle →</button>`,
       `<div class="person-cols">${personCol('nils', 'Nils')}${personCol('leo', 'Leo')}${personCol(null, 'Nicht zugewiesen')}</div>`)}
     ${card('Gästeakquise', `<button class="link-btn" onclick="showPage('ideen')">Akquise →</button>`,
-      acqNext.length || fuList.length ? `<div class="dash-list">${acqNext.slice(0, 6).map(({ r, idea, info }) => `<div class="dash-row" onclick="showPage('ideen');openIdeaFromAcq(${jsArg(idea.id)}, ${jsArg(r.id)})">
+      acqNext.length || fuList.length ? `<div class="dash-list">${acqNext.slice(0, 6).map(({ r, idea, info }) => `<div class="dash-row" onclick="openAcqCard(${jsArg(r.id)})">
         ${info.action.due ? dateTile(safeParseIso(info.action.due)) : ''}
         <div class="dash-row-main"><div class="dash-row-title">${esc(acqName(r))}</div>
           <div class="dash-row-sub">${esc(idea.title)} · ${acqActionHtml(info.action)}</div></div>
