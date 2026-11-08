@@ -124,6 +124,15 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 
 - **Produktlinks** (`podcast_investment_links`): beliebig viele je Investition mit Bezeichnung, URL und optionalem Angebotspreis, im Formular der Investition und im Studio-Detailpanel bearbeitbar, aus denselben Daten. Nur http(s) ohne Zugangsdaten; ohne Schema wird https ergänzt. Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"`. Angebotspreise dienen nur dem Vergleich (günstigstes Angebot, Abstand zur Schätzung) und ändern nie `price_cents`.
 
+### Leitfäden & Skills
+- Menüpunkt „Leitfäden & Skills“ mit den Tabs „Produktionsleitfäden“ (unverändert) und „Skills“.
+- **Skills** (`podcast_skills`): Name, Zweck, Kategorie, aktuelle Version, Status (Idee bis Archiviert), Verantwortlich (Nils/Leo/gemeinsam), Link (nur http/https), Datei, Notizen. Skills werden archiviert, nicht gelöscht. Die Startstruktur (8 Einträge, Status „Idee“) ist nur ein Vorschlag zur Bestandsaufnahme.
+- **Versionen** (`podcast_skill_versions`) bleiben als Verlauf erhalten, die Nummer ist je Skill eindeutig. Eine neue, höhere Nummer wird zur aktuellen Version, ältere lassen sich nachtragen.
+- **Geplante Optimierungen** (`podcast_skill_optimizations`): Titel, Beschreibung, Priorität, Status (Offen/In Arbeit/Umgesetzt), Verantwortlich, Umsetzungsdatum. Umgesetzte bleiben sichtbar.
+- **Aufgaben:** Pro Optimierung höchstens eine allgemeine Aufgabe, neu angelegt oder verknüpft (Unique-Index auf `todo_id`). Der Status wird in der Datenbank per Trigger in beide Richtungen abgeglichen. Lösen der Verknüpfung lässt die Aufgabe bestehen.
+- **Dateien** liegen im privaten Bucket `skills` (nur angemeldete Mitglieder, max. 20 MB) und werden vom Backup nach `backups/skills/` gespiegelt.
+- Nur Dokumentation: Die App führt keine Skills aus und ändert sie nicht.
+
 ### Neue Aufgaben (blauer Punkt)
 - Legt die andere Person eine allgemeine Aufgabe an, erscheint neben „Aufgaben“ (Seitenleiste und Tab-Leiste) ein blauer Punkt. Eigene Aufgaben, Unteraufgaben, erledigte Aufgaben und Produktionsschritte von Folgen lösen keinen Punkt aus.
 - Öffnen der Seite entfernt den Punkt in der Navigation; die neuen Aufgaben tragen dann selbst einen Punkt, bis man sie anklickt oder die Seite verlässt.
@@ -202,6 +211,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261104_investments.sql` | Strategie: Investitionen, Kategorien, aktuelles Setup; `investment_id` an Buchungen und To-dos | angewendet |
 | `20261104_studio_upgrade.sql` | Investitionen Phase 2: `studio_area`, `planned_next`, Status „Im Einsatz“ | angewendet |
 | `20261104_investment_links.sql` | Produktlinks je Investition (`podcast_investment_links`) | angewendet |
+| `20261108_skills.sql` | Skills: `podcast_skills`, `podcast_skill_versions`, `podcast_skill_optimizations`, Status-Abgleich mit To-dos (Trigger), Bucket `skills` | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
 Alle Migrationen sind additiv; es wurden keine produktiven Tabellen gelöscht oder zurückgesetzt.
