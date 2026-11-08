@@ -14,18 +14,18 @@ async function listTables(): Promise<string[]> {
   return Object.keys(spec.definitions || {}).sort();
 }
 
-// Receipts (private bucket "receipts") are mirrored into backups/receipts/<path>.
+// Files in private buckets are mirrored into backups/<bucket>/<path>: receipts and skill files.
 // Files are immutable (new upload = new path), so already copied files are skipped.
-async function mirrorReceipts(data: Record<string, unknown>) {
+async function mirrorFiles(data: Record<string, unknown>, bucket: string, sources: [string, string][]) {
   const paths = new Set<string>();
-  for (const t of ['podcast_fin_bookings', 'podcast_fin_recurring']) {
-    for (const row of (data[t] as { receipt_path?: string }[] | undefined) || []) if (row.receipt_path) paths.add(row.receipt_path);
+  for (const [t, col] of sources) {
+    for (const row of (data[t] as Record<string, string | null>[] | undefined) || []) if (row[col]) paths.add(row[col] as string);
   }
   let copied = 0, failed = 0;
   for (const p of paths) {
     const r = await fetch(`${URL_}/storage/v1/object/copy`, {
       method: 'POST', headers: { ...H, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bucketId: 'receipts', sourceKey: p, destinationBucket: BUCKET, destinationKey: `receipts/${p}` }),
+      body: JSON.stringify({ bucketId: bucket, sourceKey: p, destinationBucket: BUCKET, destinationKey: `${bucket}/${p}` }),
     });
     if (r.ok) copied++;
     else if (!/already exists|Duplicate|409/i.test(await r.text())) failed++;
@@ -50,7 +50,8 @@ Deno.serve(async () => {
       body: JSON.stringify({ created_at: new Date().toISOString(), data }),
     });
     if (!up.ok) throw new Error('upload: ' + await up.text());
-    const receipts = await mirrorReceipts(data);
+    const receipts = await mirrorFiles(data, 'receipts', [['podcast_fin_bookings', 'receipt_path'], ['podcast_fin_recurring', 'receipt_path']]);
+    const skillFiles = await mirrorFiles(data, 'skills', [['podcast_skills', 'file_path'], ['podcast_skill_versions', 'file_path']]);
 
     const ls = await fetch(`${URL_}/storage/v1/object/list/${BUCKET}`, {
       method: 'POST',
@@ -67,7 +68,7 @@ Deno.serve(async () => {
       });
     }
     const counts = Object.fromEntries(Object.entries(data).map(([k, v]) => [k, (v as unknown[]).length]));
-    return new Response(JSON.stringify({ ok: true, file: name, counts, receipts, pruned: old.length }), { headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ ok: true, file: name, counts, receipts, skillFiles, pruned: old.length }), { headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
