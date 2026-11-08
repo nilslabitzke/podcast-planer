@@ -124,6 +124,12 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 
 - **Produktlinks** (`podcast_investment_links`): beliebig viele je Investition mit Bezeichnung, URL und optionalem Angebotspreis, im Formular der Investition und im Studio-Detailpanel bearbeitbar, aus denselben Daten. Nur http(s) ohne Zugangsdaten; ohne Schema wird https ergänzt. Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"`. Angebotspreise dienen nur dem Vergleich (günstigstes Angebot, Abstand zur Schätzung) und ändern nie `price_cents`.
 
+### Navigation & Dashboard
+- Seitenleiste in Gruppen: Dashboard · **Produktion** (Planer, Kalender) · **Gäste** (Ideen & Akquise, Experten) · **Team** (Aufgaben, Leitfäden & Skills) · **Business** (Strategie, Finanzen).
+- Der Zeitstrahl ist die dritte Ansicht im Planer (Raster / Kanban / Zeitstrahl); `#zeitstrahl` funktioniert weiter.
+- Dashboard mit vier Kennzahlen: nächste Veröffentlichung, nächste Aufnahme, offene Aufgaben (inkl. überfälliger), fällige Gästeakquise. Die Liste „Gästeakquise“ zeigt überfällige und heute fällige Aktionen sowie Terminabstimmungen; fällige allgemeine Experten-Wiedervorlagen stehen weiter darunter. Überfällige Akquise erscheint auch unter „Handlungsbedarf“.
+- Überschriften nutzen Linien-Icons (`icon()`) statt Emojis.
+
 ### Gästeakquise (Ideen & Akquise)
 - Menüpunkt „Ideen & Akquise“ mit den Tabs **Akquise** (Standard beim Öffnen über das Menü) und **Ideen**. Wer eine bestimmte Idee öffnet – aus der Akquise-Liste, einem Expertenprofil, der Suche oder einer Aufgabe –, landet direkt in der Idee und im Tab „Ideen“. Aus der Akquise geöffnet, führt „← Zurück zur Akquise“ zurück.
 - Keine eigene Gästetabelle; die bestehenden Strukturen werden erweitert:
