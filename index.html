@@ -84,6 +84,8 @@
     .sb-nav { flex: 1; overflow-y: auto; padding: 4px 10px; display: flex; flex-direction: column; gap: 2px; }
     .nav-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 10px; border: none; background: none; color: var(--muted); font-size: 14px; font-weight: 500; border-radius: var(--radius-sm); cursor: pointer; text-align: left; transition: background .15s, color .15s; white-space: nowrap; }
     .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-group { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); opacity: .75; padding: 14px 10px 4px; }
+    body.sb-collapsed .nav-group { font-size: 0; padding: 8px 0 4px; margin: 6px 14px 0; border-top: 1px solid var(--border); }
     .nav-item.active { background: var(--accent-soft); color: var(--accent-text); font-weight: 600; }
     .nav-item.active svg { color: var(--accent-text); }
     .sb-foot { border-top: 1px solid var(--border); padding: 10px; display: flex; flex-direction: column; gap: 2px; }
@@ -137,6 +139,9 @@
     h2 { font-size: 16px; font-weight: 600; letter-spacing: -.1px; }
     h3 { font-size: 14px; font-weight: 600; }
     .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .ico { width: 16px; height: 16px; flex-shrink: 0; vertical-align: -3px; }
+    h2 .ico, .strat-group .ico { margin-right: 6px; color: var(--accent-text); }
+    .kpi-label .ico { width: 14px; height: 14px; margin-right: 5px; vertical-align: -2px; }
     .section-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
     .section-header .subtitle { margin-bottom: 16px; }
     .block-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -1198,7 +1203,7 @@
     .calp-label { font-weight: 700; margin-left: 6px; }
     .calp-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
     .calp-filters select { width: auto; min-height: 34px; font-size: 13px; padding: 4px 10px; max-width: 220px; }
-    .calp-week { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+    .calp-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; padding-bottom: 6px; }
     .calp-day { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px; min-height: 140px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
     .calp-day.is-today { border-color: var(--accent); background: var(--accent-soft); }
     .calp-day.is-outside { opacity: .45; }
@@ -1330,13 +1335,16 @@
   <button class="sb-search" onclick="openSearch()" title="Suchen (⌘K / Strg+K)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="sb-label">Suchen</span><kbd class="sb-label">⌘K</kbd></button>
   <nav class="sb-nav">
       <button class="nav-item" title="Dashboard" data-page="dashboard" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="nav-label">Dashboard</span></button>
+      <div class="nav-group" aria-hidden="true">Produktion</div>
       <button class="nav-item" title="Planer" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-label">Planer</span></button>
-      <button class="nav-item" title="Zeitstrahl" data-page="zeitstrahl" onclick="showPage('zeitstrahl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg><span class="nav-label">Zeitstrahl</span></button>
-      <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
+      <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
+      <div class="nav-group" aria-hidden="true">Gäste</div>
       <button class="nav-item" title="Ideen &amp; Akquise" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen &amp; Akquise</span></button>
       <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
+      <div class="nav-group" aria-hidden="true">Team</div>
+      <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
       <button class="nav-item" title="Leitfäden &amp; Skills" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden &amp; Skills</span></button>
-      <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
+      <div class="nav-group" aria-hidden="true">Business</div>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
       <button class="nav-item" title="Finanzen" data-page="finanzen" onclick="showPage('finanzen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7a7 7 0 1 0 0 10"/><path d="M4 10h10M4 14h10"/></svg><span class="nav-label">Finanzen</span></button>
   </nav>
@@ -1374,7 +1382,7 @@
     <div class="section-header">
       <div>
         <h1>Planer</h1>
-        <p class="subtitle">Alle 2 Wochen eine neue Folge &mdash; Slot anklicken zum Bearbeiten, ziehen zum Verschieben</p>
+        <p class="subtitle">Alle 2 Wochen eine neue Folge &mdash; anklicken zum Bearbeiten, ziehen zum Verschieben</p>
       </div>
       <button class="btn btn-primary" onclick="openAddModal(null)">+ Neue Folge</button>
     </div>
@@ -1382,10 +1390,11 @@
       <button class="btn btn-sm" onclick="changePlannerYear(-1)" title="Vorheriges Jahr" aria-label="Vorheriges Jahr">&#8592;</button>
       <span id="planner-year-label" class="year"></span>
       <button class="btn btn-sm" onclick="changePlannerYear(1)" title="Nächstes Jahr" aria-label="Nächstes Jahr">&#8594;</button>
-      <button class="filter-btn" id="archive-toggle-btn" onclick="toggleArchive()">📦 Archiv anzeigen</button>
+      <button class="filter-btn" id="archive-toggle-btn" onclick="toggleArchive()">Archiv anzeigen</button>
       <div class="seg seg-sm" id="planer-view-toggle" style="margin:0">
         <button class="seg-btn" data-view="grid" onclick="setPlanerView('grid')">Raster</button>
         <button class="seg-btn" data-view="kanban" onclick="setPlanerView('kanban')">Kanban</button>
+        <button class="seg-btn" onclick="showPage('zeitstrahl')">Zeitstrahl</button>
       </div>
     </div>
     <div id="today-widget"></div>
@@ -1394,8 +1403,20 @@
   </div>
 
   <div class="page" id="page-zeitstrahl">
-    <h1>Zeitstrahl</h1>
-    <p class="subtitle">Die nächsten 4 Wochen &mdash; Aufnahmen, Releases &amp; offene Content-Termine</p>
+    <div class="section-header">
+      <div>
+        <h1>Planer</h1>
+        <p class="subtitle">Zeitstrahl der nächsten 4 Wochen &mdash; Aufnahmen, Releases und offene Content-Termine</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal(null)">+ Neue Folge</button>
+    </div>
+    <div class="planer-toolbar">
+      <div class="seg seg-sm" style="margin:0">
+        <button class="seg-btn" onclick="setPlanerView('grid');showPage('planer')">Raster</button>
+        <button class="seg-btn" onclick="setPlanerView('kanban');showPage('planer')">Kanban</button>
+        <button class="seg-btn active" aria-current="page">Zeitstrahl</button>
+      </div>
+    </div>
     <div id="zeitstrahl-container"></div>
   </div>
 
@@ -1403,9 +1424,9 @@
     <div class="section-header">
       <div>
         <h1>Aufgaben</h1>
-        <p class="subtitle">Sammeln, verteilen, abhaken &mdash; allgemeine To-dos und Produktionsschritte der Folgen</p>
+        <p class="subtitle">Allgemeine To-dos und Produktionsschritte der Folgen</p>
       </div>
-      <button class="btn btn-sm" onclick="openProjectsModal()">Kategorien bearbeiten</button>
+      <button class="btn btn-ghost" onclick="openProjectsModal()">Kategorien bearbeiten</button>
     </div>
     <div class="todo-input-row">
       <input type="text" id="todo-input" class="todo-input" placeholder="Was muss erledigt werden?" aria-label="Neue Aufgabe" onkeydown="if(event.key==='Enter')addTodo()">
@@ -1421,11 +1442,11 @@
     <div class="section-header">
       <div>
         <h1>Kalender</h1>
-        <p class="subtitle">Social Media, Releases, Aufnahmen &amp; Termine &mdash; ziehen zum Verschieben, Haken setzen nach dem Posten</p>
+        <p class="subtitle">Posts, Releases, Aufnahmen und Termine &mdash; ziehen zum Verschieben</p>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn" onclick="openFeedsModal()" title="Kalender in Apple Kalender abonnieren">📲 Abonnieren</button>
-        <button class="btn" onclick="openEventEditor(null)">+ Termin</button>
+        <button class="btn btn-ghost" onclick="openFeedsModal()" title="Kalender in Apple Kalender abonnieren"><span data-icon="phone"></span> Abonnieren</button>
+        <button class="btn btn-ghost" onclick="openEventEditor(null)">+ Termin</button>
         <button class="btn btn-primary" onclick="openPostEditor(null)">+ Post</button>
       </div>
     </div>
@@ -1437,7 +1458,7 @@
     <div class="section-header">
       <div>
         <h1>Experten</h1>
-        <p class="subtitle">Wunschgäste, Anfragen &amp; Kontakte &mdash; mit Kontaktchronik und Wiedervorlagen</p>
+        <p class="subtitle">Kontaktdaten, Anfragen und Kontaktverlauf aller Gäste</p>
       </div>
       <button class="btn btn-primary" onclick="openNewExpert()">+ Neuer Experte</button>
     </div>
@@ -1480,7 +1501,7 @@
     <div class="section-header">
       <div>
         <h1>Strategie</h1>
-        <p class="subtitle">Wachstums-, Produktions- und Finanzziele &mdash; Ist-Werte aus Messungen, Planer und Finanzen</p>
+        <p class="subtitle">Ziele, Investitionen und Verbesserungen &mdash; Ist-Werte aus Messungen, Planer und Finanzen</p>
         <button class="link-btn" onclick="document.getElementById('invest-section').scrollIntoView({ behavior: 'smooth' })">Zu den Investitionen ↓</button>
       </div>
       <div class="seg" id="strat-years" role="tablist" aria-label="Jahr" style="margin:0"></div>
@@ -1489,7 +1510,7 @@
 
     <div class="block-head" id="invest-section" style="scroll-margin-top:72px">
       <div>
-        <h2>💼 Investitionen</h2>
+        <h2><span data-icon="briefcase"></span>Investitionen</h2>
         <p class="muted strat-small" style="margin:2px 0 0">Geplante Anschaffungen und Upgrades &mdash; Planung, keine Ausgaben</p>
       </div>
       <div class="strat-actions" style="margin:0;padding:0">
@@ -1500,13 +1521,13 @@
     <div id="invest-container" style="margin-bottom:32px"></div>
 
     <div class="block-head">
-      <h2>🎯 Weitere Ziele</h2>
+      <h2><span data-icon="target"></span>Weitere Ziele</h2>
       <button class="btn btn-sm" onclick="openGoalModal(null)">+ Neues Ziel</button>
     </div>
     <div id="goals-container" style="margin-bottom:32px"></div>
 
     <div class="block-head">
-      <h2>📈 Verbesserungsoptionen</h2>
+      <h2><span data-icon="trend"></span>Verbesserungsoptionen</h2>
       <button class="btn btn-sm" onclick="openImprovementModal(null)">+ Neue Option</button>
     </div>
     <div id="improvements-container"></div>
@@ -2306,6 +2327,27 @@ function ideaToEpisode(reqId = null) {
 
 let currentSlotDate = null;
 
+// ── ICONS ────────────────────────────────────────────────────────
+// Line icons in the style of the navigation, used instead of emojis in headings and key figures.
+const ICON_PATHS = {
+  rocket: '<path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2.1-.1-2.9a2.2 2.2 0 0 0-2.9-.1z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.9A12.9 12.9 0 0 1 22 2c0 2.7-.8 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/>',
+  mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/>',
+  check: '<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  megaphone: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>',
+  headphones: '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',
+  euro: '<path d="M18 7a6 6 0 1 0 0 10M4 10h10M4 14h10"/>',
+  flag: '<path d="M4 22V4M4 4h12l-2 4 2 4H4"/>',
+  briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  archive: '<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
+  phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+};
+function icon(name) { return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`; }
+
 // ── HTML / URL SAFETY ───────────────────────────────────────────
 function esc(v) {
   return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -2992,7 +3034,7 @@ function toggleArchive() {
   showArchive = !showArchive;
   const btn = document.getElementById('archive-toggle-btn');
   if (btn) {
-    btn.textContent = showArchive ? '📦 Archiv ausblenden' : '📦 Archiv anzeigen';
+    btn.innerHTML = icon('archive') + (showArchive ? ' Archiv ausblenden' : ' Archiv anzeigen');
     btn.classList.toggle('active', showArchive);
   }
   renderPlaner();
@@ -4082,7 +4124,7 @@ function renderEpisodePosts(ep) {
   const idArg = jsArg(ep.id);
   return `<div class="card collapsed" id="content-calendar-box" style="margin-bottom:12px">
     <h2 style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:15px;margin:0;flex-wrap:wrap" onclick="toggleCalendarBox()">
-      📅 Social Media <span class="pill">ab Veröffentlichung</span>
+      ${icon('calendar')}Social Media <span class="pill">ab Veröffentlichung</span>
       <span class="pill pill-accent">${published}/${list.length} veröffentlicht</span>
       <span id="calendar-toggle-icon" style="margin-left:auto;color:var(--muted)">▸</span>
     </h2>
@@ -6183,11 +6225,11 @@ function renderRevenue() {
   const fin = revGoals.filter(g => g.year === y);
   const group = (title, html) => html ? `<h2 class="strat-group">${title}</h2>${html}` : '';
   box.innerHTML = `${stratSummaryHtml(y)}
-    ${group('📣 Reichweite & Community', reach.length ? `<div class="strat-grid">${reach.map(stratCardHtml).join('')}</div>` : '')}
-    ${group('🎧 Podcast-Performance', perf.length ? `<div class="strat-grid">${perf.map(stratCardHtml).join('')}</div>` : '')}
-    ${group('💶 Finanzielle Ziele', fin.length ? `<div class="strat-grid">${fin.map(stratFinanceCardHtml).join('')}</div>
+    ${group(icon('megaphone') + 'Reichweite & Community', reach.length ? `<div class="strat-grid">${reach.map(stratCardHtml).join('')}</div>` : '')}
+    ${group(icon('headphones') + 'Podcast-Performance', perf.length ? `<div class="strat-grid">${perf.map(stratCardHtml).join('')}</div>` : '')}
+    ${group(icon('euro') + 'Finanzielle Ziele', fin.length ? `<div class="strat-grid">${fin.map(stratFinanceCardHtml).join('')}</div>
       <div class="muted strat-small" style="margin:-4px 0 0">Jahresumsatz ${y} gesamt: <b>${eur(revSum(y, ALL_MONTHS, null))}</b> · ${REV_SOURCES.map(([k, l]) => `${l} ${eur(revSum(y, ALL_MONTHS, k))}`).join(' · ')}</div>` : '')}
-    ${group('🚩 Strategische Meilensteine', stratMilestonesHtml(y))}`;
+    ${group(icon('flag') + 'Strategische Meilensteine', stratMilestonesHtml(y))}`;
   renderInvestments();
 }
 
@@ -8228,7 +8270,7 @@ function episodeInfoHtml(ep) {
   let open = true;
   try { open = localStorage.getItem('gg_epinfo_open') !== '0'; } catch {}
   return `<div class="card ep-info${open ? '' : ' collapsed'}" id="ep-info-box">
-    <h2 onclick="toggleEpInfo()">ℹ️ Folgen-Infos
+    <h2 onclick="toggleEpInfo()">${icon('info')}Folgen-Infos
       ${ep.guest ? `<span class="pill">👤 ${esc(ep.guest)}</span>` : ''}
       ${pending ? `<span class="pill pill-warn">${pending} Freigabe${pending === 1 ? '' : 'n'} offen</span>` : ''}
       <span class="section-toggle-icon">${open ? '▾' : '▸'}</span></h2>
@@ -10474,6 +10516,10 @@ function alertsHtml(f) {
   if (f.followUpsDue.length) alerts.push({ level: 'warn', icon: '📇', title: `${f.followUpsDue.length} Experten-Follow-up${f.followUpsDue.length === 1 ? '' : 's'} fällig`,
     text: f.followUpsDue.slice(0, 3).map(({ x, fu }) => `${expertDisplayName(x)} (${fu.reason})`).join(' · '),
     action: f.followUpsDue.length === 1 ? `openExpert(${jsArg(f.followUpsDue[0].x.id)})` : `showPage('experts')`, cta: 'Öffnen' });
+  const acqLate = expertsLoaded ? acqAllRows().filter(x => x.info.action && x.info.action.when === 'overdue') : [];
+  if (acqLate.length) alerts.push({ level: 'warn', icon: '📨', title: `${acqLate.length} Akquise-Aktion${acqLate.length === 1 ? '' : 'en'} überfällig`,
+    text: acqLate.slice(0, 3).map(({ r, info }) => `${acqName(r)} (${info.action.label})`).join(' · '),
+    action: acqLate.length === 1 ? `showPage('ideen');openIdeaFromAcq(${jsArg(acqLate[0].idea.id)}, ${jsArg(acqLate[0].r.id)})` : `showPage('ideen')`, cta: 'Öffnen' });
   if (f.overduePosts.length) alerts.push({ level: 'warn', icon: '📱', title: `${f.overduePosts.length} Social-Media-Post${f.overduePosts.length === 1 ? '' : 's'} überfällig (letzte 14 Tage)`,
     text: f.overduePosts.slice(0, 3).map(p => `${postLabel(p)} · ${formatDate(postDate(p))}`).join(' · ') + ' – veröffentlicht? Dann abhaken.',
     action: 'goCalendarList()', cta: 'Im Kalender' });
@@ -10509,15 +10555,16 @@ function renderDashboard() {
   const overdueCount = f.overdueTodos.length + f.overdueSteps.length;
   const kpi = (label, value, sub, action, cls = '') => `<div class="kpi${action ? ' clickable' : ''}${cls}" ${action ? `onclick="${action}"` : ''}>
       <div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`;
+  // Four key figures; posts and production have their own lists below.
+  const acqRows = acqAllRows();
+  const acqDue = acqRows.filter(x => x.info.action && (x.info.action.when === 'overdue' || x.info.action.when === 'today'));
+  const acqOverdue = acqDue.filter(x => x.info.action.when === 'overdue').length;
+  const acqScheduling = acqRows.filter(x => x.r.contact_status === 'scheduling').length;
   const kpis = `<div class="dash-kpis">
-    ${kpi('🚀 Nächste Veröffentlichung', next ? relativeDay(next.d) : '–', next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant', next ? `openDetail(${jsArg(next.ep.id)})` : '')}
-    ${kpi('🎙️ Nächste Aufnahme', nextRec ? relativeDay(nextRec.d) : '–', nextRec ? esc(nextRec.ep.recordingDate + ' · ' + nextRec.ep.title) : 'Kein Termin eingetragen', nextRec ? `openDetail(${jsArg(nextRec.ep.id)})` : '')}
-    ${kpi('🎬 Aktive Folgen', f.activeEps.length, f.activeEps.length ? esc(f.activeEps.map(x => x.ep.title).slice(0, 3).join(' · ')) : 'Keine in Produktion', `setPlanerView('kanban');showPage('planer')`)}
-    ${kpi('✅ Offene Aufgaben', f.openTodos.length, `Nils ${byWho('nils').length} · Leo ${byWho('leo').length} · offen ${byWho(null).length}`, `goTasks('general','all')`)}
-    ${kpi('⏰ Überfällige Aufgaben', overdueCount, overdueCount ? 'mit gesetzter Deadline' : 'Alles im Plan', `goTasks('all','overdue')`, overdueCount ? ' kpi-danger' : '')}
-    ${kpi('📩 Offene Expertenanfragen', f.openRequests.length, f.openRequests.length ? esc(f.openRequests.map(x => x.name).slice(0, 2).join(' · ')) : 'Keine Anfrage offen', `setExpertUi('status','request_sent');showPage('experts')`)}
-    ${kpi('📇 Follow-ups fällig', f.followUpsDue.length, `${dueFollowUps(7).length} in den nächsten 7 Tagen`, `showPage('experts')`, f.followUpsDue.length ? ' kpi-warn' : '')}
-    ${kpi('📱 Nächster Post', f.nextPosts[0] ? relativeDay(postDate(f.nextPosts[0])) : '–', f.nextPosts[0] ? esc(postLabel(f.nextPosts[0]) + (f.nextPosts[0].time ? ' · ' + f.nextPosts[0].time : '')) : 'Keine Posts geplant', `showPage('calendar')`)}
+    ${kpi(icon('rocket') + 'Nächste Veröffentlichung', next ? relativeDay(next.d) : '–', next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant', next ? `openDetail(${jsArg(next.ep.id)})` : '')}
+    ${kpi(icon('mic') + 'Nächste Aufnahme', nextRec ? relativeDay(nextRec.d) : '–', nextRec ? esc(nextRec.ep.recordingDate + ' · ' + nextRec.ep.title) : 'Kein Termin eingetragen', nextRec ? `openDetail(${jsArg(nextRec.ep.id)})` : '')}
+    ${kpi(icon('check') + 'Offene Aufgaben', f.openTodos.length, overdueCount ? `${overdueCount} überfällig · Nils ${byWho('nils').length} · Leo ${byWho('leo').length}` : `Nils ${byWho('nils').length} · Leo ${byWho('leo').length} · offen ${byWho(null).length}`, overdueCount ? `goTasks('all','overdue')` : `goTasks('general','all')`, overdueCount ? ' kpi-danger' : '')}
+    ${kpi(icon('mail') + 'Gästeakquise fällig', acqDue.length, acqDue.length ? `${acqOverdue} überfällig${acqScheduling ? ` · ${acqScheduling} Terminabstimmung` : ''}` : acqScheduling ? `${acqScheduling} Terminabstimmung` : 'Keine Aktion fällig', `showPage('ideen')`, acqOverdue ? ' kpi-danger' : acqDue.length ? ' kpi-warn' : '')}
   </div>`;
 
   const card = (title, action, body) => `<div class="card"><div class="block-head"><h2>${title}</h2>${action}</div>${body}</div>`;
@@ -10577,6 +10624,8 @@ function renderDashboard() {
     </div>`;
   };
   const fuList = dueFollowUps(7);
+  const acqNext = acqRows.filter(x => x.info.action && x.info.action.rank <= 2)
+    .sort((a, b) => a.info.action.rank - b.info.action.rank || (a.info.action.due || '9').localeCompare(b.info.action.due || '9'));
 
   box.innerHTML = alertsHtml(f) + kpis + `<div class="dash-grid">
     ${card('Nächste Veröffentlichungen', `<button class="link-btn" onclick="showPage('planer')">Planer →</button>`,
@@ -10589,13 +10638,18 @@ function renderDashboard() {
       recordingRows ? `<div class="dash-list">${recordingRows}</div>` : emptyState('🎙️', 'Keine Aufnahme terminiert', 'Aufnahmetermine werden in der Folge unter „Bearbeiten“ eingetragen.', '', true))}
     ${card('Aufgaben nach Person', `<button class="link-btn" onclick="goTasks('general','all')">Alle →</button>`,
       `<div class="person-cols">${personCol('nils', 'Nils')}${personCol('leo', 'Leo')}${personCol(null, 'Nicht zugewiesen')}</div>`)}
-    ${card('Experten-Follow-ups', `<button class="link-btn" onclick="showPage('experts')">Experten →</button>`,
-      fuList.length ? `<div class="dash-list">${fuList.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
+    ${card('Gästeakquise', `<button class="link-btn" onclick="showPage('ideen')">Akquise →</button>`,
+      acqNext.length || fuList.length ? `<div class="dash-list">${acqNext.slice(0, 6).map(({ r, idea, info }) => `<div class="dash-row" onclick="showPage('ideen');openIdeaFromAcq(${jsArg(idea.id)}, ${jsArg(r.id)})">
+        ${info.action.due ? dateTile(safeParseIso(info.action.due)) : ''}
+        <div class="dash-row-main"><div class="dash-row-title">${esc(acqName(r))}</div>
+          <div class="dash-row-sub">${esc(idea.title)} · ${acqActionHtml(info.action)}</div></div>
+        ${r.assignee ? whoBadge(r.assignee) : ''}
+      </div>`).join('')}${fuList.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
         ${dateTile(fu.due)}
         <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
           <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= f.today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
         ${fu.responsible ? whoBadge(fu.responsible) : ''}
-      </div>`).join('')}</div>` : emptyState('📇', 'Keine Follow-ups fällig', 'In den nächsten 7 Tagen muss bei keinem Experten nachgefasst werden.', '', true))}
+      </div>`).join('')}</div>` : emptyState('📨', 'Keine Akquise-Aktion fällig', 'Überfällige und heute fällige Follow-ups sowie Terminabstimmungen erscheinen hier.', '', true))}
   </div>`;
 }
 
@@ -10728,7 +10782,7 @@ function saveQuickTask() {
 
 // ── NAV & ROUTING ────────────────────────────────────────────────
 // Detail pages belong to the Planer in the navigation.
-const NAV_PARENT = { detail: 'planer', expert: 'experts' };
+const NAV_PARENT = { detail: 'planer', expert: 'experts', zeitstrahl: 'planer' };
 function pageHash(name) {
   if (name === 'detail' && editingEpId) return '#folge/' + encodeURIComponent(editingEpId);
   if (name === 'expert' && editingExpertId) return '#experte/' + encodeURIComponent(editingExpertId);
@@ -10888,6 +10942,7 @@ async function initAuth() {
 }
 
 (async () => {
+  document.querySelectorAll('[data-icon]').forEach(el => { el.outerHTML = icon(el.dataset.icon); });
   initTheme();
   initSidebar();
   renderSyncState();
