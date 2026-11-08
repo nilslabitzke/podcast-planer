@@ -136,8 +136,22 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
   - `podcast_experts`: Stammdaten (+ Telefon, Anrede für E-Mails). Ein Experte existiert nur einmal.
   - `podcast_expert_ideas`: genau eine **Anfrage** je Experte und Idee, mit Rolle (Wunschgast / Alternative 1 / 2 / weitere), tatsächlichem Kontaktstatus, Zuständigkeit, Notizen und ggf. übernommener Folge.
   - `podcast_expert_contacts`: **Kontakt-Timeline**, mit `idea_id` und Ereignistyp (Erstanfrage, Follow-up 1/2, Antwort, Sonstiges, Notiz, Status, Zuständigkeit). Erscheint auch in der Kontaktchronik des Experten; Einträge einer Anfrage sind dort nicht löschbar.
-- **Nächste Aktion** wird bei jedem Rendern aus den dokumentierten Daten berechnet, nie gespeichert. Fristen aus `podcast_settings.acq_intervals` (Standard 7/17/24 Tage). Ohne Versanddatum gibt es keine Frist. Ein später versendetes Follow-up verschiebt die nächste Frist: Es zählt das späteste Datum aus allen bekannten Versanddaten mit dem jeweiligen Abstand. Antwort, Interesse, Termin, Zusage, Absage, „Ruhend“ und „Keine Kontaktaufnahme erwünscht“ beenden die Follow-ups.
+- **Nächste Aktion** wird bei jedem Rendern aus den dokumentierten Daten berechnet, nie gespeichert. Fristen aus `podcast_settings.acq_intervals` (Standard 7/17/24 Tage). Ohne Versanddatum gibt es keine Frist. Ein später versendetes Follow-up verschiebt die nächste Frist: Es zählt das späteste Datum aus allen bekannten Versanddaten mit dem jeweiligen Abstand. Antwort, Interesse, Termin, Zusage, Absage, „Ruhend“ und „Keine weitere Kontaktaufnahme“ beenden die Follow-ups.
 - **Warnungen statt Sperren:** bei einer zweiten aktiven Anfrage zur selben Idee und bei mehreren Zusagen (Hinweis in Idee und Übersicht).
+- **Direkt in der Akquise bedienbar:**
+  - **„+ Anfrage erfassen“** (Hauptbutton im Akquise-Tab) mit Folgenidee (vorhanden oder neu), Experte (vorhandenes Profil suchen oder neu anlegen), E-Mail, Zuständigkeit, Kontaktstatus, frei wählbarem Datum der Erstanfrage (auch rückwirkend; leer = unbekannt → „Versanddatum ergänzen“) und Notiz.
+  - Doppelte Anfragen (gleicher Experte und gleiche Idee) werden verhindert. Eine bereits angelegte Idee oder ein neues Profil wird bei einem erneuten Versuch nicht noch einmal angelegt.
+  - Jede Anfrage ist eine **aufklappbare Karte**. Eingeklappt: Experte, Idee, Status, Zuständigkeit, letzter Kontakt, nächste Aktion und Fälligkeit. Aufgeklappt:
+    - **Versand-Checkliste** (Erstanfrage, Follow-up 1, Follow-up 2) mit Fälligkeit („heute fällig“, „seit X Tagen überfällig“, „fällig am …“);
+    - Kontaktstatus, Zuständigkeit (Nils / Leo / –), Rolle, Kontaktnotizen, E-Mail-Vorlage, „Antwort / Kontakt dokumentieren“ und die Kontakt-Timeline.
+  - Die Karte im Ideen-Dialog ist dieselbe. Expertenprofil, Dashboard und Aufgaben öffnen die Karte direkt in der Akquise.
+  - **Abhaken:** Ein Klick auf die Checkbox öffnet ein Datumsfeld (heute vorbelegt, änderbar). Erst nach erfolgreichem Speichern ist der Haken gesetzt; er bleibt dauerhaft und lässt sich nicht überschreiben. Unplausible Daten werden abgelehnt: in der Zukunft, ein Follow-up vor der Erstanfrage oder vor Follow-up 1.
+  - **Fristen:**
+    - Follow-up 1 = Erstanfrage + 7 Tage.
+    - Follow-up 2 = Erstanfrage + 17 Tage, mindestens aber 10 Tage nach dem tatsächlichen Follow-up 1.
+    - „Gastalternative prüfen“ = Erstanfrage + 24 Tage, mindestens 17 Tage nach Follow-up 1 bzw. 7 Tage nach Follow-up 2.
+    - Bis dahin steht „Antwort ausstehend“.
+  - Kennzahlen: Aktive Anfragen, Heute fällig, Überfällig, Terminabstimmungen, Zusagen. Die Liste ist nach Dringlichkeit sortiert, überfällige Follow-ups zuerst.
 - **E-Mail-Vorlagen** (`podcast_settings.acq_templates`, im Akquise-Tab bearbeitbar) mit Platzhaltern. Kopieren und Mailprogramm dokumentieren nichts; erst „Als versendet markieren“ mit tatsächlichem Datum.
 - **Statistik:** nur Anfragen mit datierter Erstanfrage im Nenner; Anfragen ohne Datum werden ausgewiesen.
 - **Aufgaben:** „Als Aufgabe übernehmen“ legt höchstens eine offene allgemeine Aufgabe je Anfrage an (`podcast_todos.acq_request_id`, Unique-Index). Erledigen der Aufgabe dokumentiert keinen Versand.
