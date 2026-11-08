@@ -124,7 +124,8 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 
 - **Produktlinks** (`podcast_investment_links`): beliebig viele je Investition mit Bezeichnung, URL und optionalem Angebotspreis, im Formular der Investition und im Studio-Detailpanel bearbeitbar, aus denselben Daten. Nur http(s) ohne Zugangsdaten; ohne Schema wird https ergänzt. Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"`. Angebotspreise dienen nur dem Vergleich (günstigstes Angebot, Abstand zur Schätzung) und ändern nie `price_cents`.
 
-### Gästeakquise (Ideen → Akquise)
+### Gästeakquise (Ideen & Akquise)
+- Menüpunkt „Ideen & Akquise“ mit den Tabs **Akquise** (Standard beim Öffnen über das Menü) und **Ideen**. Wer eine bestimmte Idee öffnet – aus der Akquise-Liste, einem Expertenprofil, der Suche oder einer Aufgabe –, landet direkt in der Idee und im Tab „Ideen“. Aus der Akquise geöffnet, führt „← Zurück zur Akquise“ zurück.
 - Keine eigene Gästetabelle; die bestehenden Strukturen werden erweitert:
   - `podcast_experts`: Stammdaten (+ Telefon, Anrede für E-Mails). Ein Experte existiert nur einmal.
   - `podcast_expert_ideas`: genau eine **Anfrage** je Experte und Idee, mit Rolle (Wunschgast / Alternative 1 / 2 / weitere), tatsächlichem Kontaktstatus, Zuständigkeit, Notizen und ggf. übernommener Folge.
