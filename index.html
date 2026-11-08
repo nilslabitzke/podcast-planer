@@ -693,6 +693,71 @@
     .inv-st-bought { color: var(--green); background: var(--green-soft); }
     .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
+    /* Skills */
+    .sk-toolbar select { flex: 1 1 160px; }
+    .sk-list { display: flex; flex-direction: column; gap: 8px; }
+    .sk-card { padding: 0; overflow: hidden; }
+    .sk-card.open { border-color: var(--accent); }
+    .sk-archived { opacity: .7; }
+    .sk-head { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto 18px; gap: 6px 14px; align-items: center; padding: 13px 16px; background: none; border: 0; color: var(--text); text-align: left; cursor: pointer; font: inherit; }
+    .sk-head:hover { background: var(--surface2); }
+    .sk-head:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .sk-title { display: grid; min-width: 0; }
+    .sk-title b { font-size: 15px; overflow-wrap: anywhere; }
+    .sk-sub { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+    .sk-badges { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+    .sk-chevron { font-size: 20px; color: var(--muted); transition: transform .15s; text-align: center; }
+    .sk-card.open .sk-chevron { transform: rotate(90deg); }
+    .sk-ver { font-variant-numeric: tabular-nums; }
+    .sk-open { background: var(--accent-soft); color: var(--accent-text); }
+    .sk-st-dev { background: rgba(139,156,255,.16); color: var(--leo); }
+    .sk-st-active { background: var(--green-soft); color: var(--green); }
+    .sk-st-optimizing { background: var(--accent-soft); color: var(--accent-text); }
+    .sk-st-paused { background: var(--yellow-soft); color: var(--yellow); }
+    .sk-st-archived { border: 1px dashed var(--border); }
+    .sk-body { border-top: 1px solid var(--border); padding: 14px 16px 16px; display: grid; gap: 16px; }
+    .sk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .sk-sec { display: grid; gap: 6px; align-content: start; min-width: 0; }
+    .sk-sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .sk-sec-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 0; }
+    .sk-text { font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
+    .sk-small { font-size: 12px; }
+    .sk-sec > .link-btn, .sk-sec > .btn { justify-self: start; }
+    .sk-file { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .sk-version-now { display: flex; align-items: baseline; gap: 8px; font-size: 15px; }
+    .sk-history summary { cursor: pointer; font-size: 13px; color: var(--accent-text); font-weight: 600; }
+    .sk-history ol { list-style: none; display: grid; gap: 8px; margin: 8px 0 0; padding: 0 0 0 10px; border-left: 2px solid var(--border); }
+    .sk-history li { display: grid; gap: 3px; }
+    .sk-opts { display: grid; gap: 8px; }
+    .sk-opt { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .sk-opt-in_progress { border-left: 3px solid var(--leo); }
+    .sk-opt-done { opacity: .72; }
+    .sk-opt-done .sk-opt-title b { text-decoration: line-through; text-decoration-color: var(--muted); }
+    .sk-opt-main { flex: 1; min-width: 0; display: grid; gap: 4px; }
+    .sk-opt-title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 14px; }
+    .sk-opt-title b { overflow-wrap: anywhere; }
+    .sk-opt-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+    .sk-opt-side { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .sk-opt-status { width: auto; min-height: 32px; padding: 4px 8px; font-size: 12.5px; }
+    .sk-link-form { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; }
+    .sk-link-form select { flex: 1 1 220px; min-width: 0; }
+    .sk-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .sk-form label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); margin: 0; min-width: 0; }
+    .sk-form input, .sk-form textarea, .sk-form select { width: 100%; min-width: 0; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font-size: 14px; font-family: inherit; }
+    .sk-form input[type=file] { padding: 5px; font-size: 12.5px; }
+    .sk-form-wide { grid-column: 1 / -1; }
+    .sk-form-actions { display: flex; justify-content: flex-end; gap: 6px; }
+    .sk-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; border-top: 1px solid var(--border); padding-top: 12px; }
+    @media (max-width: 640px) {
+      .sk-head { grid-template-columns: minmax(0, 1fr) 18px; padding: 12px 14px; }
+      .sk-badges { grid-column: 1; grid-row: 2; justify-content: flex-start; }
+      .sk-chevron { grid-column: 2; grid-row: 1 / span 2; }
+      .sk-body { padding: 12px 14px 14px; }
+      .sk-opt { flex-direction: column; gap: 8px; }
+      .sk-opt-side { align-self: stretch; }
+      .sk-opt-status { flex: 1; }
+      .sk-form { grid-template-columns: 1fr; }
+    }
     .inv-offers { display: grid; gap: 6px; min-width: 0; }
     .inv-offer { display: grid; gap: 2px; padding: 7px 0; border-top: 1px solid var(--border); font-size: 13px; min-width: 0; }
     .inv-offer:first-child { border-top: 0; padding-top: 0; }
@@ -1181,7 +1246,7 @@
       <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
       <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
       <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
-      <button class="nav-item" title="Leitfäden" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden</span></button>
+      <button class="nav-item" title="Leitfäden &amp; Skills" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden &amp; Skills</span></button>
       <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
       <button class="nav-item" title="Strategie" data-page="verbesserung" onclick="showPage('verbesserung')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span class="nav-label">Strategie</span></button>
       <button class="nav-item" title="Finanzen" data-page="finanzen" onclick="showPage('finanzen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7a7 7 0 1 0 0 10"/><path d="M4 10h10M4 14h10"/></svg><span class="nav-label">Finanzen</span></button>
@@ -1299,12 +1364,14 @@
   <div class="page" id="page-guides">
     <div class="section-header">
       <div>
-        <h1>Leitfäden</h1>
-        <p class="subtitle">Verbindliche Arbeitsanweisungen für wiederkehrende Produktionsschritte &mdash; versioniert</p>
+        <h1>Leitfäden &amp; Skills</h1>
+        <p class="subtitle" id="guides-subtitle">Verbindliche Arbeitsanweisungen für wiederkehrende Produktionsschritte &ndash; versioniert</p>
       </div>
-      <button class="btn btn-primary" onclick="openGuideEditor(null)">+ Neuer Leitfaden</button>
+      <button class="btn btn-primary" id="guides-new-btn" onclick="newGuideOrSkill()">+ Neuer Leitfaden</button>
     </div>
+    <div class="seg" id="guide-tabs" role="tablist" aria-label="Leitfäden und Skills"></div>
     <div id="guides-container"></div>
+    <div id="skills-container" hidden></div>
   </div>
 
   <div class="page" id="page-ideen">
@@ -1876,6 +1943,32 @@
     <p class="muted fin-small" style="margin:0 0 8px">Was heute im Einsatz ist, je Bereich. Änderungen werden direkt gespeichert.</p>
     <div id="inv-setup-list"></div>
     <div class="modal-actions"><button class="btn btn-primary" onclick="closeSetupEditor()">Fertig</button></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="sk-modal-bg" onclick="if(event.target===this)closeSkillEditor()">
+  <div class="modal" style="width:580px">
+    <h2 id="sk-modal-title">Neuer Skill</h2>
+    <div class="form-group"><label for="sk-name">Name</label><input type="text" id="sk-name" placeholder="z. B. Reel-Produktion"></div>
+    <div class="form-group"><label for="sk-desc">Beschreibung / Zweck</label><textarea id="sk-desc" rows="3" placeholder="Wofür ist der Skill da?"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label for="sk-category">Kategorie</label><select id="sk-category"></select></div>
+      <div class="form-group"><label for="sk-status">Status</label><select id="sk-status"></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label for="sk-owner">Verantwortlich</label><select id="sk-owner"></select></div>
+      <div class="form-group"><label for="sk-version">Aktuelle Version <span class="muted">(optional)</span></label><input type="text" id="sk-version" placeholder="z. B. 1.0"></div>
+    </div>
+    <div class="form-group"><label for="sk-link">Link <span class="muted">(GitHub, Claude-Projekt, Speicherort – optional)</span></label><input type="url" id="sk-link" inputmode="url" placeholder="https://…"></div>
+    <div class="form-group"><label for="sk-file">Skill-Datei / Skill-Kit <span class="muted">(optional, max. 20 MB)</span></label>
+      <input type="file" id="sk-file" accept=".zip,.skill,.md,.txt,.json,.yaml,.yml,.pdf" onchange="skillPickFile(this, 'editor')">
+      <div class="sk-file" id="sk-file-info"></div></div>
+    <div class="form-group"><label for="sk-notes">Notizen</label><textarea id="sk-notes" rows="3"></textarea></div>
+    <p class="muted fin-small" style="margin:0 0 4px">Neue Versionen mit Änderungsbeschreibung legt ihr in der Detailansicht an; dort bleibt der Verlauf erhalten.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSkillEditor()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveSkillEditor()">Speichern</button>
+    </div>
   </div>
 </div>
 
@@ -2529,7 +2622,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_investment_links', 'podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
+const RT_TABLES = ['podcast_skills', 'podcast_skill_versions', 'podcast_skill_optimizations', 'podcast_investment_links', 'podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months',
@@ -2582,6 +2675,7 @@ function realtimeUpdateToken() {
 function onRemoteChange(table) {
   if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
+  if (table.startsWith('podcast_skill')) table = 'podcast_skills';
   if (table === 'podcast_investment_categories' || table === 'podcast_setup_items' || table === 'podcast_investment_links') table = 'podcast_investments';
   if (table === 'podcast_settings') { onRemoteChange('podcast_revenue'); refreshTaskSeen(); } // revenue rule and task markers live in the settings too
   if (table.startsWith('podcast_expert') || table === 'podcast_settings') table = 'podcast_experts';
@@ -2596,6 +2690,7 @@ function onRemoteChange(table) {
       const stratActive = document.getElementById('page-verbesserung').classList.contains('active');
       if (todoWritesInFlight > 0 || todoEditingId) { todoRemotePending = true; return; }
       await loadTodos();
+      if (skillsLoaded) onRemoteChange('podcast_skills');
       if (todosActive) renderTodos(); else if (dashActive) renderDashboard(); else if (stratActive) renderRevenue();
     } else if (table.startsWith('podcast_expert') || table === 'podcast_settings') {
       if (!expertsLoaded) return;
@@ -2632,6 +2727,11 @@ function onRemoteChange(table) {
       if (postWritesInFlight > 0) { postRemotePending = true; return; }
       await loadPosts();
       refreshPostViews();
+    } else if (table === 'podcast_skills') {
+      if (!skillsLoaded) return;
+      await loadSkills();
+      if (document.getElementById('page-guides').classList.contains('active') && guideTab === 'skills') renderSkills();
+      if (document.getElementById('page-todos').classList.contains('active') && !todoEditingId) renderTodos();
     } else if (table === 'podcast_guides') {
       await loadGuides();
       if (document.getElementById('page-guides').classList.contains('active') && !document.getElementById('guide-modal-bg').classList.contains('open')) renderGuides();
@@ -4237,6 +4337,7 @@ function copyContent(taskId) {
 async function exportAllData() {
   flushEdits();
   const tables = ['podcast_episodes', 'podcast_ideas', 'podcast_todos', 'podcast_task_projects', 'podcast_guides', 'podcast_guide_versions',
+                  'podcast_skills', 'podcast_skill_versions', 'podcast_skill_optimizations',
                   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events', 'podcast_goals', 'podcast_improvements',
                   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
                   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months', 'podcast_fin_booking_log',
@@ -7373,7 +7474,8 @@ async function loadProjects() {
   } catch (e) { showToast('Kategorien konnten nicht geladen werden: ' + e.message, 'error'); return false; }
 }
 async function loadTasksData() {
-  const [a, b] = await Promise.all([loadTodos(), loadProjects(), loadExperts()]);
+  // Skills only add the chip for tasks linked to an optimization.
+  const [a, b] = await Promise.all([loadTodos(), loadProjects(), loadExperts(), skillsLoaded ? true : loadSkills()]);
   return a && b;
 }
 
@@ -7638,6 +7740,7 @@ function todoRowHtml(t, { showWho = false, showType = false } = {}) {
     project ? `<span class="chip">${esc(project.name)}</span>` : '',
     t.strategyYear ? `<span class="chip chip-accent" title="Strategischer Meilenstein">🎯 Strategie ${t.strategyYear}</span>` : '',
     t.investmentId ? '<span class="chip chip-accent" title="Aus einer Investition in der Strategie angelegt">💼 Investition</span>' : '',
+    skillsLoaded && skillOptForTodo(t.id) ? `<span class="chip chip-accent" title="Verknüpft mit einer Skill-Optimierung – der Status wird abgeglichen">🧩 Skill-Optimierung</span>` : '',
     subs.length ? `<span class="chip" title="Unteraufgaben">☑ ${subsDone}/${subs.length}</span>` : '',
     t.description ? '<span class="chip" title="Hat eine Beschreibung">≡</span>' : '',
     t.done && t.doneAt ? `<span class="chip">✓ ${formatDate(new Date(t.doneAt))}</span>` : '',
@@ -8261,6 +8364,481 @@ function renderGuides() {
         ${steps.length ? `<div class="todo-chips" style="margin-top:8px">${steps.map(l => `<span class="chip">${esc(l)}</span>`).join('')}</div>` : '<div class="card-meta">Mit keinem Produktionsschritt verknüpft</div>'}
       </div>`;
     }).join('')}</div>`).join('');
+}
+
+// ── SKILLS ───────────────────────────────────────────────────────
+// Documentation of our own Claude skills: nothing here runs or changes a skill. Versions and
+// optimizations are their own rows; an optimization can be linked to one general task, and the
+// database keeps the two statuses in sync (triggers on both tables).
+const SKILL_CATEGORIES = [['planning', 'Podcastplanung'], ['interview', 'Interviewvorbereitung'], ['reels', 'Reels & Shorts'], ['youtube', 'YouTube'], ['spotify', 'Spotify'], ['blog', 'Blog & SEO'], ['community', 'Community-Management'], ['design', 'Design & Visuals'], ['other', 'Sonstiges']];
+const SKILL_STATUS = [['idea', 'Idee'], ['dev', 'In Entwicklung'], ['active', 'Aktiv'], ['optimizing', 'In Optimierung'], ['paused', 'Pausiert'], ['archived', 'Archiviert']];
+const SKILL_OWNERS = [['nils', 'Nils'], ['leo', 'Leo'], ['both', 'Gemeinsam']];
+const OPT_STATUS = [['open', 'Offen'], ['in_progress', 'In Arbeit'], ['done', 'Umgesetzt']];
+const SKILL_FILE_EXT = /\.(zip|skill|md|txt|json|ya?ml|pdf)$/i;
+function pairLabel(list, key) { return (list.find(p => p[0] === key) || [])[1] || ''; }
+let skills = [], skillVersions = [], skillOpts = [];
+let skillsLoaded = false;
+let guideTab = 'guides';
+try { guideTab = localStorage.getItem('gg_guide_tab') === 'skills' ? 'skills' : 'guides'; } catch {}
+let skillUi = { q: '', category: '', status: '', owner: '', sort: 'updated', open: [] };
+try { Object.assign(skillUi, JSON.parse(localStorage.getItem('gg_skill_ui')) || {}); } catch {}
+function saveSkillUi() { try { localStorage.setItem('gg_skill_ui', JSON.stringify(skillUi)); } catch {} }
+// Open inline form (optimization, version or task link); kept here so realtime re-renders keep the input.
+let skillDraft = null;
+let skillEdit = null; // { id, base, version, newFile }
+
+async function loadSkills() {
+  try {
+    const [s, v, o] = await Promise.all([
+      apiFetch('podcast_skills?select=*&order=name.asc'),
+      apiFetch('podcast_skill_versions?select=*&order=released_on.desc,created_at.desc'),
+      apiFetch('podcast_skill_optimizations?select=*&order=created_at.asc'),
+    ]);
+    skills = s; skillVersions = v; skillOpts = o;
+    skillsLoaded = true;
+    return true;
+  } catch (e) { showToast('Skills konnten nicht geladen werden: ' + e.message, 'error'); return false; }
+}
+function setGuideTab(tab) {
+  guideTab = tab;
+  try { localStorage.setItem('gg_guide_tab', tab); } catch {}
+  renderGuidesPage();
+}
+function renderGuidesPage() {
+  const skillsTab = guideTab === 'skills';
+  document.getElementById('guide-tabs').innerHTML = [['guides', 'Produktionsleitfäden'], ['skills', 'Skills']].map(([k, l]) =>
+    `<button type="button" class="seg-btn${guideTab === k ? ' active' : ''}" role="tab" aria-selected="${guideTab === k}" onclick="setGuideTab('${k}')">${l}</button>`).join('');
+  document.getElementById('guides-container').hidden = skillsTab;
+  document.getElementById('skills-container').hidden = !skillsTab;
+  const btn = document.getElementById('guides-new-btn');
+  btn.textContent = skillsTab ? '+ Neuer Skill' : '+ Neuer Leitfaden';
+  document.getElementById('guides-subtitle').textContent = skillsTab
+    ? 'Unsere eigenen Claude-Skills – Versionen, geplante Optimierungen und Notizen. Nur Dokumentation, nichts wird ausgeführt.'
+    : 'Verbindliche Arbeitsanweisungen für wiederkehrende Produktionsschritte – versioniert';
+  if (skillsTab) loadAndRender('skills-container', loadSkills, renderSkills, skillsLoaded);
+  else loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
+}
+function newGuideOrSkill() { if (guideTab === 'skills') openSkillEditor(null); else openGuideEditor(null); }
+
+function skillOptsOf(id) {
+  const order = { in_progress: 0, open: 1, done: 2 };
+  return skillOpts.filter(o => o.skill_id === id).sort((a, b) => order[a.status] - order[b.status]
+    || IDEA_PRIORITY_META[a.priority].order - IDEA_PRIORITY_META[b.priority].order || (a.created_at || '').localeCompare(b.created_at || ''));
+}
+function skillVersionsOf(id) { return skillVersions.filter(v => v.skill_id === id); }
+function skillOpenOpts(id) { return skillOpts.filter(o => o.skill_id === id && o.status !== 'done'); }
+function skillTopPriority(id) {
+  const open = skillOpenOpts(id);
+  return open.length ? open.reduce((a, o) => IDEA_PRIORITY_META[o.priority].order < IDEA_PRIORITY_META[a].order ? o.priority : a, 'low') : null;
+}
+// Last change to the skill itself, a version or an optimization.
+function skillLastActivity(s) {
+  return [s.updated_at, ...skillVersionsOf(s.id).map(v => v.created_at), ...skillOpts.filter(o => o.skill_id === s.id).map(o => o.updated_at)]
+    .filter(Boolean).sort().pop() || '';
+}
+function skillOptForTodo(todoId) { return skillOpts.find(o => o.todo_id === todoId); }
+function fmtSkillVersion(v) { return v ? 'v' + String(v).replace(/^v/i, '') : ''; }
+function skillVersionCompare(a, b) {
+  const pa = String(a || '').replace(/^v/i, '').split(/[.\-]/).map(n => parseInt(n, 10) || 0), pb = String(b || '').replace(/^v/i, '').split(/[.\-]/).map(n => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) { const d = (pa[i] || 0) - (pb[i] || 0); if (d) return d; }
+  return 0;
+}
+// Re-renders a container but keeps focus and caret of the field being edited.
+function swapHtmlKeepFocus(box, html) {
+  const active = box.contains(document.activeElement) ? document.activeElement : null;
+  const key = active && active.dataset ? active.dataset.focusKey : null;
+  const caret = active && /^(text|search|url)$|^textarea$/.test(active.type) ? [active.selectionStart, active.selectionEnd] : null;
+  box.innerHTML = html;
+  if (!key) return;
+  const el = box.querySelector(`[data-focus-key="${CSS.escape(key)}"]`);
+  if (!el) return;
+  el.focus({ preventScroll: true });
+  if (caret && el.setSelectionRange) try { el.setSelectionRange(caret[0], caret[1]); } catch {}
+}
+function setSkillUi(key, value) { skillUi[key] = value; saveSkillUi(); renderSkills(); }
+function toggleSkill(id) {
+  skillUi.open = skillUi.open.includes(id) ? skillUi.open.filter(x => x !== id) : skillUi.open.concat(id);
+  saveSkillUi();
+  renderSkills();
+}
+
+function renderSkills() {
+  const box = document.getElementById('skills-container');
+  if (!box || !skillsLoaded) return;
+  const q = norm(skillUi.q).trim();
+  const list = skills.filter(s => (!q || norm(s.name + ' ' + (s.description || '')).includes(q))
+    && (skillUi.category ? s.category === skillUi.category : true)
+    && (skillUi.status ? s.status === skillUi.status : s.status !== 'archived')
+    && (!skillUi.owner || s.owner === skillUi.owner));
+  const prioRank = s => { const p = skillTopPriority(s.id); return p ? IDEA_PRIORITY_META[p].order : 9; };
+  if (skillUi.sort === 'priority') list.sort((a, b) => prioRank(a) - prioRank(b) || skillOpenOpts(b.id).length - skillOpenOpts(a.id).length || skillLastActivity(b).localeCompare(skillLastActivity(a)));
+  else list.sort((a, b) => skillLastActivity(b).localeCompare(skillLastActivity(a)) || a.name.localeCompare(b.name, 'de'));
+  const live = skills.filter(s => s.status !== 'archived');
+  const openAll = skillOpts.filter(o => o.status !== 'done' && live.some(s => s.id === o.skill_id));
+  const kpi = (label, value, sub) => `<div class="inv-kpi"><div class="muted strat-small">${label}</div><div class="inv-kpi-val">${value}</div><div class="muted strat-small">${sub}</div></div>`;
+  const opt = (key, value, label) => `<option value="${value}"${skillUi[key] === value ? ' selected' : ''}>${label}</option>`;
+  const archived = skills.length - live.length;
+  swapHtmlKeepFocus(box, `
+    <div class="inv-kpis">
+      ${kpi('Skills', live.length, `${live.filter(s => s.status === 'active').length} aktiv · ${live.filter(s => s.status === 'dev' || s.status === 'optimizing').length} in Arbeit`)}
+      ${kpi('Offene Optimierungen', openAll.length, `${openAll.filter(o => o.priority === 'high').length} mit hoher Priorität`)}
+      ${kpi('In Arbeit', openAll.filter(o => o.status === 'in_progress').length, 'Optimierungen')}
+      ${kpi('Umgesetzt', skillOpts.filter(o => o.status === 'done').length, 'Optimierungen insgesamt')}
+    </div>
+    <div class="expert-toolbar sk-toolbar">
+      <input type="search" class="expert-search" data-focus-key="sk-search" placeholder="Skill suchen…" value="${esc(skillUi.q)}" oninput="skillUi.q=this.value;saveSkillUi();renderSkills()" aria-label="Skill suchen">
+      <select onchange="setSkillUi('category', this.value)" aria-label="Kategorie">${opt('category', '', 'Alle Kategorien')}${SKILL_CATEGORIES.map(([k, l]) => opt('category', k, l)).join('')}</select>
+      <select onchange="setSkillUi('status', this.value)" aria-label="Status">${opt('status', '', 'Alle Status (ohne Archiv)')}${SKILL_STATUS.map(([k, l]) => opt('status', k, l)).join('')}</select>
+      <select onchange="setSkillUi('owner', this.value)" aria-label="Verantwortlich">${opt('owner', '', 'Alle Verantwortlichen')}${SKILL_OWNERS.map(([k, l]) => opt('owner', k, l)).join('')}</select>
+      <select onchange="setSkillUi('sort', this.value)" aria-label="Sortierung">${opt('sort', 'updated', 'Sortieren: Letzte Aktualisierung')}${opt('sort', 'priority', 'Sortieren: Priorität offener Optimierungen')}</select>
+    </div>
+    ${list.length ? `<div class="sk-list">${list.map(skillCardHtml).join('')}</div>`
+      : `<div class="card">${skills.length ? emptyState('🔎', 'Keine Skills mit diesen Filtern', archived && !skillUi.status ? `${archived} archivierte Skills sind ausgeblendet.` : '', `<button class="btn btn-ghost" onclick="resetSkillFilters()">Filter zurücksetzen</button>`, true)
+        : emptyState('🧩', 'Noch keine Skills', 'Erfasst hier eure Claude-Skills mit Versionen und geplanten Optimierungen.', '<button class="btn btn-primary" onclick="openSkillEditor(null)">+ Neuer Skill</button>', true)}</div>`}`);
+}
+function resetSkillFilters() { Object.assign(skillUi, { q: '', category: '', status: '', owner: '' }); saveSkillUi(); renderSkills(); }
+
+function skillCardHtml(s) {
+  const open = skillUi.open.includes(s.id);
+  const openOpts = skillOpenOpts(s.id), top = skillTopPriority(s.id);
+  const last = skillLastActivity(s);
+  return `<article class="card sk-card${open ? ' open' : ''}${s.status === 'archived' ? ' sk-archived' : ''}">
+    <button type="button" class="sk-head" data-focus-key="sk-head-${esc(s.id)}" aria-expanded="${open}" onclick="toggleSkill(${jsArg(s.id)})">
+      <span class="sk-title"><b>${esc(s.name)}</b>
+        <span class="sk-sub">${esc(pairLabel(SKILL_CATEGORIES, s.category))}${s.owner ? ' · ' + esc(pairLabel(SKILL_OWNERS, s.owner)) : ''}${last ? ' · aktualisiert ' + formatDate(new Date(last)) : ''}</span></span>
+      <span class="sk-badges">
+        <span class="pill sk-ver">${s.version ? esc(fmtSkillVersion(s.version)) : 'ohne Version'}</span>
+        <span class="pill sk-st-${s.status}">${esc(pairLabel(SKILL_STATUS, s.status))}</span>
+        <span class="pill${openOpts.length ? ' sk-open' : ''}" title="Offene Optimierungen">${openOpts.length} offen</span>
+        ${top ? `<span class="pill prio-${top}" title="Höchste offene Priorität">${IDEA_PRIORITY_META[top].icon} ${IDEA_PRIORITY_META[top].label}</span>` : ''}
+      </span>
+      <span class="sk-chevron" aria-hidden="true">›</span>
+    </button>
+    ${open ? skillBodyHtml(s) : ''}
+  </article>`;
+}
+function skillFileButton(path, label = 'Datei öffnen') {
+  return `<button type="button" class="btn btn-sm" onclick="openSkillFile(${jsArg(path)})">📎 ${label}</button><span class="muted sk-small">${esc(path.split('/').pop().replace(/^\d+-/, ''))}</span>`;
+}
+function skillBodyHtml(s) {
+  const idArg = jsArg(s.id);
+  const versions = skillVersionsOf(s.id);
+  const opts = skillOptsOf(s.id);
+  const draft = skillDraft && skillDraft.skillId === s.id ? skillDraft : null;
+  const link = s.link_url && invCleanUrl(s.link_url);
+  return `<div class="sk-body">
+    <section class="sk-sec">
+      <h3 class="sk-sec-title">Beschreibung</h3>
+      <p class="sk-text">${s.description ? esc(s.description) : '<span class="muted">Noch keine Beschreibung.</span>'}</p>
+    </section>
+    <div class="sk-grid">
+      <section class="sk-sec">
+        <h3 class="sk-sec-title">Link & Datei</h3>
+        ${link ? `<a class="inv-offer-link" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${esc(invLinkHost(link))} ↗</a>` : '<p class="sk-text muted">Kein Link hinterlegt.</p>'}
+        <div class="sk-file">${s.file_path ? skillFileButton(s.file_path) : '<span class="muted sk-small">Keine Datei hinterlegt.</span>'}</div>
+      </section>
+      <section class="sk-sec">
+        <h3 class="sk-sec-title">Version</h3>
+        <div class="sk-version-now">${s.version ? `<b>${esc(fmtSkillVersion(s.version))}</b>` : '<span class="muted">Noch keine Version</span>'}${versions[0] ? `<span class="muted sk-small">seit ${formatDate(safeParseIso(versions[0].released_on))}</span>` : ''}</div>
+        ${versions.length ? `<details class="sk-history"><summary>Versionsverlauf (${versions.length})</summary><ol>${versions.map(v => `<li>
+          <div><b>${esc(fmtSkillVersion(v.version))}</b> <span class="muted sk-small">${formatDate(safeParseIso(v.released_on))}</span></div>
+          ${v.changes ? `<div class="sk-text">${esc(v.changes)}</div>` : ''}
+          ${v.file_path ? `<div class="sk-file">${skillFileButton(v.file_path, 'Datei')}</div>` : ''}</li>`).join('')}</ol></details>` : ''}
+        ${draft && draft.kind === 'version' ? skillVersionFormHtml(draft) : `<button type="button" class="link-btn" data-focus-key="sk-newver-${esc(s.id)}" onclick="openSkillDraft('version', ${idArg})">+ Neue Version anlegen</button>`}
+      </section>
+    </div>
+    <section class="sk-sec">
+      <div class="sk-sec-head"><h3 class="sk-sec-title">Geplante Optimierungen</h3>
+        <span class="muted sk-small">${opts.filter(o => o.status !== 'done').length} offen · ${opts.filter(o => o.status === 'done').length} umgesetzt</span></div>
+      ${draft && draft.kind === 'opt' && !draft.id ? skillOptFormHtml(draft) : `<button type="button" class="btn btn-sm" data-focus-key="sk-newopt-${esc(s.id)}" onclick="openSkillDraft('opt', ${idArg})">+ Optimierung</button>`}
+      ${opts.length ? `<div class="sk-opts">${opts.map(o => draft && draft.kind === 'opt' && draft.id === o.id ? skillOptFormHtml(draft) : skillOptHtml(o, draft)).join('')}</div>` : '<p class="sk-text muted">Noch keine Optimierung geplant.</p>'}
+    </section>
+    <section class="sk-sec">
+      <h3 class="sk-sec-title">Notizen</h3>
+      <p class="sk-text">${s.notes ? esc(s.notes) : '<span class="muted">Keine Notizen.</span>'}</p>
+    </section>
+    <div class="sk-actions">
+      <button type="button" class="btn btn-sm" onclick="openSkillEditor(${idArg})">Skill bearbeiten</button>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="setSkillStatus(${idArg}, '${s.status === 'archived' ? 'idea' : 'archived'}')">${s.status === 'archived' ? 'Wiederherstellen (als Idee)' : 'Archivieren'}</button>
+    </div>
+  </div>`;
+}
+function skillOptHtml(o, draft) {
+  const p = IDEA_PRIORITY_META[o.priority];
+  const todo = o.todo_id ? todos.find(t => t.id === o.todo_id) : null;
+  const linking = draft && draft.kind === 'link' && draft.id === o.id;
+  const linkable = linking ? todos.filter(t => isGeneralTodo(t) && !t.done && !skillOptForTodo(t.id)) : [];
+  return `<div class="sk-opt sk-opt-${o.status}">
+    <div class="sk-opt-main">
+      <div class="sk-opt-title"><b>${esc(o.title)}</b>
+        <span class="pill prio-${o.priority}">${p.icon} ${p.label}</span>
+        ${o.assignee ? whoBadge(o.assignee) : ''}</div>
+      ${o.description ? `<p class="sk-text">${esc(o.description)}</p>` : ''}
+      <div class="sk-opt-meta">
+        ${o.status === 'done' ? `<span class="muted sk-small">Umgesetzt${o.done_on ? ' am ' + formatDate(safeParseIso(o.done_on)) : ''}</span>` : ''}
+        ${todo ? `<button type="button" class="chip chip-link" onclick="openTaskModal(${jsArg(todo.id)})" title="Verknüpfte allgemeine Aufgabe öffnen">☑ Aufgabe: ${esc(STATUS_META[todo.status] || '')}</button><button type="button" class="link-btn sk-small" onclick="unlinkSkillTodo(${jsArg(o.id)})">Verknüpfung lösen</button>`
+          : o.status !== 'done' && !linking ? `<button type="button" class="link-btn sk-small" onclick="createSkillTodo(${jsArg(o.id)})">Aufgabe anlegen</button><button type="button" class="link-btn sk-small" onclick="openSkillDraft('link', ${jsArg(o.skill_id)}, ${jsArg(o.id)})">Mit Aufgabe verknüpfen</button>` : ''}
+      </div>
+      ${linking ? `<div class="sk-link-form">
+        <select data-focus-key="sk-link-select" aria-label="Allgemeine Aufgabe" onchange="skillDraft.todoId=this.value"><option value="">Offene allgemeine Aufgabe wählen…</option>${linkable.map(t => `<option value="${esc(t.id)}"${skillDraft.todoId === t.id ? ' selected' : ''}>${esc(t.text)}</option>`).join('')}</select>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeSkillDraft()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="linkSkillTodo()">Verknüpfen</button>
+      </div>` : ''}
+    </div>
+    <div class="sk-opt-side">
+      <select class="sk-opt-status" data-focus-key="sk-opt-st-${esc(o.id)}" aria-label="Status von ${esc(o.title)}" onchange="setSkillOptStatus(${jsArg(o.id)}, this.value)">${OPT_STATUS.map(([k, l]) => `<option value="${k}"${o.status === k ? ' selected' : ''}>${l}</option>`).join('')}</select>
+      <button type="button" class="todo-del" onclick="openSkillDraft('opt', ${jsArg(o.skill_id)}, ${jsArg(o.id)})" title="Bearbeiten" aria-label="${esc(o.title)} bearbeiten">✎</button>
+      ${o.status !== 'done' ? `<button type="button" class="todo-del" onclick="deleteSkillOpt(${jsArg(o.id)})" title="Löschen" aria-label="${esc(o.title)} löschen">🗑</button>` : ''}
+    </div>
+  </div>`;
+}
+function skillOptFormHtml(d) {
+  const sel = (field, list, empty) => `<select data-focus-key="sk-f-${field}" onchange="skillDraft.${field}=this.value">${empty !== undefined ? `<option value="">${empty}</option>` : ''}${list.map(([k, l]) => `<option value="${k}"${d[field] === k ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
+  return `<div class="sk-form">
+    <label class="sk-form-wide">Titel <input type="text" data-focus-key="sk-f-title" value="${esc(d.title)}" placeholder="z. B. Bessere Hook-Auswahl" oninput="skillDraft.title=this.value"></label>
+    <label class="sk-form-wide">Beschreibung <textarea rows="3" data-focus-key="sk-f-description" placeholder="Was soll besser werden?" oninput="skillDraft.description=this.value">${esc(d.description)}</textarea></label>
+    <label>Priorität ${sel('priority', Object.entries(IDEA_PRIORITY_META).map(([k, m]) => [k, m.label]))}</label>
+    <label>Status ${sel('status', OPT_STATUS)}</label>
+    <label>Verantwortlich ${sel('assignee', [['nils', 'Nils'], ['leo', 'Leo']], '–')}</label>
+    <label>Umgesetzt am <input type="date" data-focus-key="sk-f-done_on" value="${esc(d.done_on)}" onchange="skillDraft.done_on=this.value"></label>
+    <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="closeSkillDraft()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="saveSkillOpt(this)">Speichern</button></div>
+  </div>`;
+}
+function skillVersionFormHtml(d) {
+  return `<div class="sk-form">
+    <label>Versionsnummer <input type="text" data-focus-key="sk-f-version" value="${esc(d.version)}" placeholder="z. B. 1.1" oninput="skillDraft.version=this.value"></label>
+    <label>Veröffentlicht am <input type="date" data-focus-key="sk-f-released_on" value="${esc(d.released_on)}" onchange="skillDraft.released_on=this.value"></label>
+    <label class="sk-form-wide">Änderungen <textarea rows="2" data-focus-key="sk-f-changes" placeholder="Was ist neu?" oninput="skillDraft.changes=this.value">${esc(d.changes)}</textarea></label>
+    <label class="sk-form-wide">Skill-Datei <span class="muted">(optional, nur angemeldet)</span>
+      <input type="file" accept=".zip,.skill,.md,.txt,.json,.yaml,.yml,.pdf" ${session ? '' : 'disabled'} onchange="skillPickFile(this, 'draft')">
+      ${d.file ? `<span class="muted sk-small">${esc(d.file.name)}</span>` : ''}</label>
+    <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="closeSkillDraft()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="saveSkillVersion(this)">Version speichern</button></div>
+  </div>`;
+}
+function openSkillDraft(kind, skillId, id = null) {
+  const s = skills.find(x => x.id === skillId);
+  if (kind === 'opt') {
+    const o = id ? skillOpts.find(x => x.id === id) : null;
+    skillDraft = { kind, skillId, id, title: o ? o.title : '', description: o ? o.description || '' : '', priority: o ? o.priority : 'medium', status: o ? o.status : 'open', assignee: o ? o.assignee || '' : '', done_on: o ? o.done_on || '' : '' };
+  } else if (kind === 'version') {
+    const next = s && s.version ? String(s.version).replace(/^v/i, '').replace(/(\d+)$/, n => +n + 1) : '1.0';
+    skillDraft = { kind, skillId, version: next, released_on: isoToday(), changes: '', file: null };
+  } else skillDraft = { kind, skillId, id, todoId: '' };
+  renderSkills();
+  const first = { opt: 'sk-f-title', version: 'sk-f-version', link: 'sk-link-select' }[kind];
+  const el = document.querySelector(`#skills-container [data-focus-key="${first}"]`);
+  if (el) el.focus({ preventScroll: true });
+}
+function closeSkillDraft() { skillDraft = null; renderSkills(); }
+function skillPickFile(input, target) {
+  const f = input.files[0];
+  if (!f) return;
+  if (f.size > 20 * 1024 * 1024) { showToast('Datei zu groß (max. 20 MB).', 'error'); input.value = ''; return; }
+  if (!SKILL_FILE_EXT.test(f.name)) { showToast('Bitte eine Skill-Datei hochladen (.zip, .skill, .md, .txt, .json, .yaml oder .pdf).', 'error'); input.value = ''; return; }
+  if (target === 'draft') { skillDraft.file = f; renderSkills(); } else skillEdit.newFile = f;
+}
+async function uploadSkillFile(folder, id, file) {
+  if (!session) { showToast('Datei nicht hochgeladen – bitte anmelden.', 'error'); return null; }
+  const token = await getAccessToken();
+  const safe = file.name.normalize('NFD').replace(/[^\w.\-]+/g, '_').slice(-80);
+  const path = `${folder}/${id}/${Date.now()}-${safe}`;
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/skills/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': file.type || 'application/octet-stream', 'x-upsert': 'false' }, body: file });
+  if (!r.ok) { showToast('Datei-Upload fehlgeschlagen: ' + apiErrorText(r.status, await r.text()), 'error'); return null; }
+  return path;
+}
+async function openSkillFile(path) {
+  if (!session) { showToast('Skill-Dateien sind nur nach Anmeldung abrufbar.', 'error'); return; }
+  const win = window.open('', '_blank');
+  try {
+    const token = await getAccessToken();
+    const r = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/skills/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 300 }) });
+    if (!r.ok) throw new Error(apiErrorText(r.status, await r.text()));
+    const { signedURL } = await r.json();
+    const url = SUPABASE_URL + '/storage/v1' + signedURL + '&download=' + encodeURIComponent(path.split('/').pop().replace(/^\d+-/, ''));
+    if (win) win.location = url; else location.href = url;
+  } catch (e) { if (win) win.close(); showToast('Datei konnte nicht geöffnet werden: ' + e.message, 'error'); }
+}
+
+// ── Optimizations ──
+async function saveSkillOpt(btn) {
+  const d = skillDraft;
+  if (!d.title.trim()) { showToast('Bitte einen Titel eingeben.', 'error'); return; }
+  const row = { title: d.title.trim(), description: d.description.trim() || null, priority: d.priority, status: d.status, assignee: d.assignee || null,
+    done_on: d.done_on || (d.status === 'done' ? isoToday() : null), updated_by: currentActor(), updated_at: new Date().toISOString() };
+  btn.disabled = true;
+  try {
+    if (d.id) {
+      const rows = await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(d.id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(row) });
+      if (!rows.length) throw new Error('Die Optimierung wurde inzwischen gelöscht.');
+      skillOpts = skillOpts.map(o => o.id === d.id ? rows[0] : o);
+      syncLocalTodo(rows[0]);
+    } else {
+      const rows = await apiFetch('podcast_skill_optimizations', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ ...row, skill_id: d.skillId, created_by: currentActor() }) });
+      skillOpts = skillOpts.concat(rows);
+    }
+    skillDraft = null;
+    renderSkills();
+    flashSaved();
+  } catch (e) { btn.disabled = false; showToast('Optimierung nicht gespeichert: ' + e.message, 'error'); }
+}
+// The database already updates the linked task; this only mirrors it locally until realtime reloads.
+function syncLocalTodo(o) {
+  const t = o.todo_id && todos.find(x => x.id === o.todo_id);
+  if (t && t.status !== o.status) Object.assign(t, { status: o.status, done: o.status === 'done', doneAt: o.status === 'done' ? (t.doneAt || new Date().toISOString()) : null });
+}
+async function setSkillOptStatus(id, status) {
+  const o = skillOpts.find(x => x.id === id);
+  if (!o || o.status === status) return;
+  const body = { status, done_on: status === 'done' ? (o.done_on || isoToday()) : null, updated_by: currentActor(), updated_at: new Date().toISOString() };
+  try {
+    const rows = await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(body) });
+    if (!rows.length) throw new Error('Die Optimierung wurde inzwischen gelöscht.');
+    skillOpts = skillOpts.map(x => x.id === id ? rows[0] : x);
+    syncLocalTodo(rows[0]);
+    renderSkills();
+    flashSaved();
+  } catch (e) { showToast('Status nicht gespeichert: ' + e.message, 'error'); renderSkills(); }
+}
+async function deleteSkillOpt(id) {
+  const o = skillOpts.find(x => x.id === id);
+  if (!o || !confirm(`Optimierung „${o.title}“ löschen?${o.todo_id ? ' Die verknüpfte Aufgabe bleibt bestehen.' : ''}`)) return;
+  try {
+    await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+    skillOpts = skillOpts.filter(x => x.id !== id);
+    renderSkills();
+    flashSaved();
+  } catch (e) { showToast('Nicht gelöscht: ' + e.message, 'error'); }
+}
+// One task per optimization: the link is only set if the optimization has none yet; if someone was
+// faster, the task created here is removed again instead of leaving a duplicate.
+async function createSkillTodo(optId) {
+  const o = skillOpts.find(x => x.id === optId), s = o && skills.find(x => x.id === o.skill_id);
+  if (!o || !s) return;
+  if (o.todo_id && todos.some(t => t.id === o.todo_id)) { showToast('Zu dieser Optimierung gibt es bereits eine Aufgabe.', 'error'); return; }
+  const t = newTodo({ text: `${s.name}: ${o.title}`, description: o.description || '', assignee: o.assignee || null, priority: o.priority, status: o.status });
+  try {
+    await apiFetch(TODO_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ id: t.id, ...todoToRow(t) }) });
+    const rows = await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(o.id)}&todo_id=is.null`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ todo_id: t.id, updated_at: new Date().toISOString() }) });
+    if (!rows.length) {
+      await apiFetch(`${TODO_TABLE}?id=eq.${encodeURIComponent(t.id)}`, { method: 'DELETE' });
+      showToast('Zu dieser Optimierung wurde inzwischen schon eine Aufgabe angelegt.', 'error');
+      await loadSkills(); renderSkills();
+      return;
+    }
+    todos.push(t);
+    skillOpts = skillOpts.map(x => x.id === o.id ? rows[0] : x);
+    renderSkills();
+    showToast(`Allgemeine Aufgabe angelegt${t.assignee ? ' für ' + TODO_NAMES[t.assignee] : ''}`);
+  } catch (e) { showToast('Aufgabe nicht angelegt: ' + e.message, 'error'); }
+}
+async function linkSkillTodo() {
+  const d = skillDraft, o = d && skillOpts.find(x => x.id === d.id);
+  if (!o || !d.todoId) { showToast('Bitte eine Aufgabe wählen.', 'error'); return; }
+  try {
+    // The task takes over the optimization's status (the trigger does this on the link change).
+    const rows = await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(o.id)}&todo_id=is.null`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ todo_id: d.todoId, updated_at: new Date().toISOString() }) });
+    if (!rows.length) throw new Error('Die Optimierung ist inzwischen schon verknüpft.');
+    skillOpts = skillOpts.map(x => x.id === o.id ? rows[0] : x);
+    syncLocalTodo(rows[0]);
+    skillDraft = null;
+    renderSkills();
+    flashSaved();
+  } catch (e) { showToast((e.status === 409 ? 'Diese Aufgabe gehört schon zu einer anderen Optimierung. ' : 'Nicht verknüpft: ') + e.message, 'error'); }
+}
+async function unlinkSkillTodo(optId) {
+  try {
+    const rows = await apiFetch(`podcast_skill_optimizations?id=eq.${encodeURIComponent(optId)}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ todo_id: null, updated_at: new Date().toISOString() }) });
+    skillOpts = skillOpts.map(x => x.id === optId ? rows[0] : x);
+    renderSkills();
+    showToast('Verknüpfung gelöst – die Aufgabe bleibt bestehen.');
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
+}
+
+// ── Versions ──
+async function saveSkillVersion(btn) {
+  const d = skillDraft, s = skills.find(x => x.id === d.skillId);
+  const version = d.version.trim().replace(/^v/i, '');
+  if (!version) { showToast('Bitte eine Versionsnummer eingeben.', 'error'); return; }
+  if (skillVersionsOf(d.skillId).some(v => v.version === version)) { showToast(`Version ${fmtSkillVersion(version)} gibt es schon.`, 'error'); return; }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d.released_on)) { showToast('Bitte ein Datum wählen.', 'error'); return; }
+  btn.disabled = true;
+  try {
+    let [v] = await apiFetch('podcast_skill_versions', { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ skill_id: d.skillId, version, released_on: d.released_on, changes: d.changes.trim() || null, created_by: currentActor() }) });
+    if (d.file) {
+      const path = await uploadSkillFile('versions', v.id, d.file);
+      if (path) [v] = await apiFetch(`podcast_skill_versions?id=eq.${v.id}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ file_path: path }) });
+    }
+    skillVersions = [v, ...skillVersions].sort((a, b) => b.released_on.localeCompare(a.released_on) || b.created_at.localeCompare(a.created_at));
+    // Only a newer number becomes the current version (older ones can be documented afterwards).
+    if (s && (!s.version || skillVersionCompare(version, s.version) > 0)) {
+      const [row] = await apiFetch(`podcast_skills?id=eq.${s.id}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ version, updated_by: currentActor(), updated_at: new Date().toISOString() }) });
+      Object.assign(s, row);
+    }
+    skillDraft = null;
+    renderSkills();
+    flashSaved();
+  } catch (e) { btn.disabled = false; showToast((e.status === 409 ? 'Diese Version gibt es schon. ' : 'Version nicht gespeichert: ') + e.message, 'error'); }
+}
+
+// ── Skill form ──
+function skillToRow(s) {
+  return { id: s.id, name: s.name, description: s.description || null, category: s.category, version: s.version || null, status: s.status,
+    owner: s.owner || null, link_url: s.link_url || null, notes: s.notes || null, file_path: s.file_path || null };
+}
+function openSkillEditor(id) {
+  const s = id ? skills.find(x => x.id === id) : null;
+  skillEdit = { id: s ? s.id : null, base: s ? skillToRow(s) : null, version: s ? s.updated_at : null, newFile: null, filePath: s ? s.file_path : null };
+  const val = (k, v) => { document.getElementById('sk-' + k).value = v ?? ''; };
+  document.getElementById('sk-modal-title').textContent = s ? 'Skill bearbeiten' : 'Neuer Skill';
+  val('name', s && s.name); val('desc', s && s.description); val('version', s && s.version); val('link', s && s.link_url); val('notes', s && s.notes);
+  document.getElementById('sk-category').innerHTML = SKILL_CATEGORIES.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
+  document.getElementById('sk-status').innerHTML = SKILL_STATUS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
+  document.getElementById('sk-owner').innerHTML = '<option value="">–</option>' + SKILL_OWNERS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
+  val('category', s ? s.category : 'other'); val('status', s ? s.status : 'idea'); val('owner', s && s.owner);
+  document.getElementById('sk-file').value = '';
+  renderSkillEditorFile();
+  document.getElementById('sk-modal-bg').classList.add('open');
+  setTimeout(() => document.getElementById('sk-name').focus(), 50);
+}
+function renderSkillEditorFile() {
+  document.getElementById('sk-file').disabled = !session;
+  document.getElementById('sk-file-info').innerHTML = (skillEdit.filePath ? `${skillFileButton(skillEdit.filePath)} <button type="button" class="link-btn" onclick="skillEdit.filePath=null;renderSkillEditorFile()">Entfernen</button>` : '')
+    + (session ? '' : '<span class="muted sk-small">Dateien sind nur für angemeldete Mitglieder zugänglich – bitte zuerst anmelden.</span>');
+}
+function closeSkillEditor() { document.getElementById('sk-modal-bg').classList.remove('open'); skillEdit = null; }
+async function saveSkillEditor() {
+  if (!skillEdit) return;
+  const get = k => document.getElementById('sk-' + k).value.trim();
+  if (!get('name')) { showToast('Bitte einen Namen eingeben.', 'error'); document.getElementById('sk-name').focus(); return; }
+  const rawLink = get('link');
+  const link = rawLink ? invCleanUrl(rawLink) : null;
+  if (rawLink && !link) { showToast('Bitte einen gültigen Link mit http:// oder https:// eingeben.', 'error'); document.getElementById('sk-link').focus(); return; }
+  const row = { ...skillToRow({ id: skillEdit.id || newId(), name: get('name'), description: get('desc'), category: get('category'), version: get('version').replace(/^v/i, ''),
+    status: get('status'), owner: get('owner'), link_url: link, notes: get('notes'), file_path: skillEdit.filePath }), updated_by: currentActor() };
+  if (!skillEdit.id) row.created_by = currentActor();
+  const base = skillEdit.base && { ...skillEdit.base, updated_by: row.updated_by };
+  try {
+    let saved = await saveRowVersioned('podcast_skills', row, base, skillEdit.version);
+    if (skillEdit.newFile) {
+      const path = await uploadSkillFile('skills', saved.id, skillEdit.newFile);
+      if (path) [saved] = await apiFetch(`podcast_skills?id=eq.${saved.id}`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ file_path: path, updated_at: new Date().toISOString() }) });
+    }
+    if (!skillEdit.id && !skillUi.open.includes(saved.id)) { skillUi.open.push(saved.id); saveSkillUi(); }
+    closeSkillEditor();
+    await loadSkills();
+    renderSkills();
+    flashSaved();
+  } catch (e) { showToast('Skill nicht gespeichert: ' + e.message, 'error'); }
+}
+async function setSkillStatus(id, status) {
+  const s = skills.find(x => x.id === id);
+  if (!s) return;
+  if (status === 'archived' && !confirm(`„${s.name}“ archivieren? Versionen und Optimierungen bleiben erhalten; der Skill ist über den Statusfilter „Archiviert“ weiter erreichbar.`)) return;
+  try {
+    await saveRowVersioned('podcast_skills', { ...skillToRow(s), status, updated_by: currentActor() }, { ...skillToRow(s), updated_by: s.updated_by }, s.updated_at);
+    await loadSkills();
+    renderSkills();
+    showToast(status === 'archived' ? 'Skill archiviert' : 'Skill wiederhergestellt');
+  } catch (e) { showToast('Nicht gespeichert: ' + e.message, 'error'); }
 }
 
 // Everything a guide can be linked to: production steps plus every single reel.
@@ -9408,7 +9986,7 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'zeitstrahl')   renderZeitstrahl();
   if (name === 'todos')        { if (!currentActor() && !actorAsked) { actorAsked = true; openMeModal(); } if (todosLoaded) syncTaskNew(); loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
-  if (name === 'guides')       loadAndRender('guides-container', loadGuides, renderGuides, guidesLoaded);
+  if (name === 'guides')       renderGuidesPage();
   if (name === 'calendar')     loadAndRender('calendar-content', loadCalendarData, renderCalendarPage, postsLoaded && eventsLoaded);
   if (name === 'experts')      { if (expertsLoaded) renderExperts(); loadAndRender('experts-container', loadExperts, renderExperts, expertsLoaded); }
   if (name === 'finanzen')     loadAndRender('fin-content', loadFinance, renderFinance, financeLoaded);
@@ -9481,7 +10059,7 @@ function errorState(text, retryCall) {
 document.getElementById('modal-bg').addEventListener('click', e => {
   if (e.target === document.getElementById('modal-bg')) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); closeMetricEntry(); closeGoalEdit(); closeInvestment(); closeInvCategories(); closeSetupEditor(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !todoEditingId) { closeModal(); closeIdeaModal(); closeLogin(); closeTaskModal(); closeProjectsModal(); closeNewExpert(); if (postEdit) closePostEditor(); if (guideEdit) closeGuideEditor(); closeEventEditor(); closeFeedsModal(); closeQuickTask(); closeQuickMenu(); closeMeModal(); if (finEdit) closeBooking(); if (finRecEdit) closeRecurring(); closeFinCategories(); closeMetricEntry(); closeGoalEdit(); closeInvestment(); closeInvCategories(); closeSetupEditor(); if (skillEdit) closeSkillEditor(); } });
 ['event-modal-bg', 'feeds-modal-bg'].forEach(bgId => document.getElementById(bgId).addEventListener('click', e => {
   if (e.target.id === bgId) { if (bgId === 'event-modal-bg') closeEventEditor(); else closeFeedsModal(); }
 }));
