@@ -695,6 +695,7 @@
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
     /* Gästeakquise */
     .idea-tabs { margin-bottom: 12px; }
+    .tab-label-2 { line-height: 1.1; text-align: center; font-size: 10px; }
     .acq-card-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12.5px; margin-top: 8px; }
     .acq-card-line .who { min-width: 18px; height: 18px; font-size: 10px; }
     .acq-guests-btn { margin-top: 8px; }
@@ -1332,7 +1333,7 @@
       <button class="nav-item" title="Planer" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span class="nav-label">Planer</span></button>
       <button class="nav-item" title="Zeitstrahl" data-page="zeitstrahl" onclick="showPage('zeitstrahl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg><span class="nav-label">Zeitstrahl</span></button>
       <button class="nav-item" title="Aufgaben" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span class="nav-label">Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
-      <button class="nav-item" title="Ideen" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen</span></button>
+      <button class="nav-item" title="Ideen &amp; Akquise" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="nav-label">Ideen &amp; Akquise</span></button>
       <button class="nav-item" title="Experten" data-page="experts" onclick="showPage('experts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-label">Experten</span></button>
       <button class="nav-item" title="Leitfäden &amp; Skills" data-page="guides" onclick="showPage('guides')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg><span class="nav-label">Leitfäden &amp; Skills</span></button>
       <button class="nav-item" title="Kalender" data-page="calendar" onclick="showPage('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span class="nav-label">Kalender</span></button>
@@ -1465,8 +1466,8 @@
   <div class="page" id="page-ideen">
     <div class="section-header">
       <div>
-        <h1>Ideen</h1>
-        <p class="subtitle">Ideen für künftige Folgen &mdash; Themen, Inhalte, mögliche Gäste</p>
+        <h1>Ideen &amp; Akquise</h1>
+        <p class="subtitle">Gästeanfragen und Follow-ups &mdash; und die Ideen für künftige Folgen</p>
       </div>
       <button class="btn btn-primary" onclick="openIdeaModal(null)">+ Neue Idee</button>
     </div>
@@ -1564,7 +1565,7 @@
   <button class="tab" data-page="dashboard" onclick="showPage('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Dashboard</span></button>
   <button class="tab" data-page="planer" onclick="showPage('planer')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Planer</span></button>
   <button class="tab" data-page="todos" onclick="showPage('todos')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span>Aufgaben</span><span class="new-dot nav-new-dot" role="img" aria-label="Neue Aufgaben" title="Neue Aufgaben" hidden></span></button>
-  <button class="tab" data-page="ideen" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span>Ideen</span></button>
+  <button class="tab" data-page="ideen" aria-label="Ideen &amp; Akquise" onclick="showPage('ideen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg><span class="tab-label-2">Ideen &amp;<br>Akquise</span></button>
   <button class="tab" id="tab-more" onclick="openDrawer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Mehr</span></button>
 </nav>
 
@@ -1604,6 +1605,7 @@
 
 <div class="modal-bg" id="idea-modal-bg">
   <div class="modal">
+    <button type="button" class="link-btn" id="idea-back-acq" onclick="backToAcq()" hidden>← Zurück zur Akquise</button>
     <h2 id="idea-modal-title">Neue Idee</h2>
     <div class="form-group">
       <label>Titel / Thema</label>
@@ -4668,7 +4670,7 @@ function renderIdeas() {
   const c = document.getElementById('ideen-container');
   if (!expertsLoaded) loadExperts().then(ok => ok && renderIdeas());
   const tab = ideaUi.tab === 'acq' ? 'acq' : 'ideas';
-  document.getElementById('idea-tabs').innerHTML = [['ideas', 'Ideen'], ['acq', 'Akquise']].map(([k, l]) =>
+  document.getElementById('idea-tabs').innerHTML = [['acq', 'Akquise'], ['ideas', 'Ideen']].map(([k, l]) =>
     `<button type="button" class="seg-btn${tab === k ? ' active' : ''}" role="tab" aria-selected="${tab === k}" onclick="setIdeaUi('tab','${k}')">${l}</button>`).join('');
   if (tab === 'acq') {
     document.getElementById('idea-toolbar').innerHTML = '';
@@ -4803,6 +4805,8 @@ async function ideaToExpert() {
 }
 
 function openIdeaModal(id) {
+  if (id && ideaUi.tab !== 'ideas') { ideaUi.tab = 'ideas'; if (document.getElementById('page-ideen').classList.contains('active')) renderIdeas(); }
+  document.getElementById('idea-back-acq').hidden = !ideaReturnToAcq;
   editingIdeaId = id;
   ideaEmailDirty = false;
   if (expertsLoaded) renderIdeaExperts(); else loadExperts().then(renderIdeaExperts);
@@ -4826,7 +4830,12 @@ function openIdeaModal(id) {
   setTimeout(() => document.getElementById('idea-title').focus(), 50);
 }
 
+// Set when an idea is opened from the Akquise list, so the dialog offers the way back.
+let ideaReturnToAcq = false;
+function backToAcq() { ideaReturnToAcq = false; closeIdeaModal(); setIdeaUi('tab', 'acq'); }
+function openIdeaFromAcq(ideaId, reqId) { ideaReturnToAcq = true; openIdeaWithRequest(ideaId, reqId); }
 function closeIdeaModal() {
+  ideaReturnToAcq = false;
   document.getElementById('idea-modal-bg').classList.remove('open');
   editingIdeaId = null;
 }
@@ -9022,7 +9031,7 @@ function renderAcq(c) {
       <select onchange="setAcqUi('due', this.value)" aria-label="Fälligkeit">${opt('due', '', 'Jede Fälligkeit')}${opt('due', 'overdue', 'Überfällig')}${opt('due', 'today', 'Heute fällig')}${opt('due', 'week', 'Nächste 7 Tage')}</select>
       <button type="button" class="btn btn-sm btn-ghost" onclick="openAcqGuide()">📘 Akquise-Leitfaden</button>
     </div>
-    ${list.length ? `<div class="acq-list">${list.map(({ r, idea, info }) => `<button type="button" class="acq-row acq-row-${info.action ? info.action.level : 'none'}" onclick="openIdeaWithRequest(${jsArg(idea.id)}, ${jsArg(r.id)})">
+    ${list.length ? `<div class="acq-list">${list.map(({ r, idea, info }) => `<button type="button" class="acq-row acq-row-${info.action ? info.action.level : 'none'}" onclick="openIdeaFromAcq(${jsArg(idea.id)}, ${jsArg(r.id)})">
       <span class="acq-row-main"><b>${esc(acqName(r))}</b><span class="muted">${esc(idea.title)}</span></span>
       <span class="acq-row-meta"><span class="pill prio-${idea.priority}">${IDEA_PRIORITY_META[idea.priority].icon} ${IDEA_PRIORITY_META[idea.priority].label}</span>${r.assignee ? whoBadge(r.assignee) : '<span class="who who-none">Offen</span>'}${acqStatusBadge(r.contact_status)}</span>
       <span class="acq-row-last"><span class="acq-k">Letzter Kontakt</span>${info.lastContact ? fmtIso(info.lastContact) : '–'}</span>
@@ -10745,6 +10754,8 @@ function showPage(name, { fromHistory = false } = {}) {
   if (name === 'planer')       renderPlaner();
   if (name === 'zeitstrahl')   renderZeitstrahl();
   if (name === 'todos')        { if (!currentActor() && !actorAsked) { actorAsked = true; openMeModal(); } if (todosLoaded) syncTaskNew(); loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
+  // The menu always starts with Akquise; links to a specific idea switch to "Ideen" when they open it.
+  if (name === 'ideen' && changed) ideaUi.tab = 'acq';
   if (name === 'ideen')        loadAndRender('ideen-container', loadIdeas, renderIdeas, ideas.length > 0);
   if (name === 'guides')       renderGuidesPage();
   if (name === 'calendar')     loadAndRender('calendar-content', loadCalendarData, renderCalendarPage, postsLoaded && eventsLoaded);
