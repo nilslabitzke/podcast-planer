@@ -124,6 +124,20 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 
 - **Produktlinks** (`podcast_investment_links`): beliebig viele je Investition mit Bezeichnung, URL und optionalem Angebotspreis, im Formular der Investition und im Studio-Detailpanel bearbeitbar, aus denselben Daten. Nur http(s) ohne Zugangsdaten; ohne Schema wird https ergänzt. Links öffnen in einem neuen Tab mit `rel="noopener noreferrer"`. Angebotspreise dienen nur dem Vergleich (günstigstes Angebot, Abstand zur Schätzung) und ändern nie `price_cents`.
 
+### Gästeakquise (Ideen → Akquise)
+- Keine eigene Gästetabelle; die bestehenden Strukturen werden erweitert:
+  - `podcast_experts`: Stammdaten (+ Telefon, Anrede für E-Mails). Ein Experte existiert nur einmal.
+  - `podcast_expert_ideas`: genau eine **Anfrage** je Experte und Idee, mit Rolle (Wunschgast / Alternative 1 / 2 / weitere), tatsächlichem Kontaktstatus, Zuständigkeit, Notizen und ggf. übernommener Folge.
+  - `podcast_expert_contacts`: **Kontakt-Timeline**, mit `idea_id` und Ereignistyp (Erstanfrage, Follow-up 1/2, Antwort, Sonstiges, Notiz, Status, Zuständigkeit). Erscheint auch in der Kontaktchronik des Experten; Einträge einer Anfrage sind dort nicht löschbar.
+- **Nächste Aktion** wird bei jedem Rendern aus den dokumentierten Daten berechnet, nie gespeichert. Fristen aus `podcast_settings.acq_intervals` (Standard 7/17/24 Tage). Ohne Versanddatum gibt es keine Frist. Ein später versendetes Follow-up verschiebt die nächste Frist: Es zählt das späteste Datum aus allen bekannten Versanddaten mit dem jeweiligen Abstand. Antwort, Interesse, Termin, Zusage, Absage, „Ruhend“ und „Keine Kontaktaufnahme erwünscht“ beenden die Follow-ups.
+- **Warnungen statt Sperren:** bei einer zweiten aktiven Anfrage zur selben Idee und bei mehreren Zusagen (Hinweis in Idee und Übersicht).
+- **E-Mail-Vorlagen** (`podcast_settings.acq_templates`, im Akquise-Tab bearbeitbar) mit Platzhaltern. Kopieren und Mailprogramm dokumentieren nichts; erst „Als versendet markieren“ mit tatsächlichem Datum.
+- **Statistik:** nur Anfragen mit datierter Erstanfrage im Nenner; Anfragen ohne Datum werden ausgewiesen.
+- **Aufgaben:** „Als Aufgabe übernehmen“ legt höchstens eine offene allgemeine Aufgabe je Anfrage an (`podcast_todos.acq_request_id`, Unique-Index). Erledigen der Aufgabe dokumentiert keinen Versand.
+- **Planer:** Ein zugesagter Gast wird mit Name, Kontakt und Profil-Verknüpfung in eine **neue** Folge übernommen; bestehende Folgen werden nicht überschrieben.
+- **Altdaten:** Gast-Freitexte bleiben unverändert. Automatisch verknüpft wurde nur bei eindeutig gleichnamigem Profil (derzeit keins). Sonst „Als Wunschgast übernehmen“ in der Idee: Name, Titel und E-Mail werden vorgeschlagen, „Gast angefragt“ wird zu „Anfrage versendet“ ohne Datum.
+- Der Leitfaden „Gästeakquise – Standardprozess“ (Leitfäden & Skills) ist aus der Idee und der Akquise-Übersicht aufrufbar.
+
 ### Leitfäden & Skills
 - Menüpunkt „Leitfäden & Skills“ mit den Tabs „Produktionsleitfäden“ (unverändert) und „Skills“.
 - **Skills** (`podcast_skills`): Name, Zweck, Kategorie, aktuelle Version, Status (Idee bis Archiviert), Verantwortlich (Nils/Leo/gemeinsam), Link (nur http/https), Datei, Notizen. Skills werden archiviert, nicht gelöscht. Die Startstruktur (8 Einträge, Status „Idee“) ist nur ein Vorschlag zur Bestandsaufnahme.
@@ -211,6 +225,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261104_investments.sql` | Strategie: Investitionen, Kategorien, aktuelles Setup; `investment_id` an Buchungen und To-dos | angewendet |
 | `20261104_studio_upgrade.sql` | Investitionen Phase 2: `studio_area`, `planned_next`, Status „Im Einsatz“ | angewendet |
 | `20261104_investment_links.sql` | Produktlinks je Investition (`podcast_investment_links`) | angewendet |
+| `20261108_guest_acquisition.sql` | Gästeakquise: Spalten an Experten, Ideen, `podcast_expert_ideas` (Anfrage) und `podcast_expert_contacts` (Timeline), `podcast_todos.acq_request_id`, Einstellungen, Leitfaden „Gästeakquise – Standardprozess“ v1.0 | angewendet |
 | `20261108_skills.sql` | Skills: `podcast_skills`, `podcast_skill_versions`, `podcast_skill_optimizations`, Status-Abgleich mit To-dos (Trigger), Bucket `skills` | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
