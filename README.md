@@ -130,6 +130,27 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - Dashboard mit vier Kennzahlen: nächste Veröffentlichung, nächste Aufnahme, offene Aufgaben (inkl. überfälliger), fällige Gästeakquise. Die Liste „Gästeakquise“ zeigt überfällige und heute fällige Aktionen sowie Terminabstimmungen; fällige allgemeine Experten-Wiedervorlagen stehen weiter darunter. Überfällige Akquise erscheint auch unter „Handlungsbedarf“.
 - Überschriften nutzen Linien-Icons (`icon()`) statt Emojis.
 
+### Persönliches Dashboard (Widgets)
+- **„Dashboard anpassen“** startet den Bearbeitungsmodus. Darin lassen sich Widgets verschieben, ausblenden (✕) und vergrößern bzw. verkleinern (Klein / Mittel / Groß, je nach Widget), und über „+ Widget hinzufügen“ kommen neue aus der Bibliothek dazu. „Standardlayout wiederherstellen“ fragt vorher nach. „Fertig“ beendet den Modus.
+- **Verschieben:** per Ziehen am Griff ⠿ (Maus, Stift und Touch über Pointer-Events, nur im Bearbeitungsmodus; ein Platzhalter zeigt die Zielposition). Alternativ mit den Buttons ↑/↓ oder den Pfeiltasten auf dem Griff. Die Inhalte sind im Bearbeitungsmodus inaktiv (`inert`), damit beim Ziehen nichts ungewollt angeklickt wird.
+- **Bibliothek mit festen Widget-IDs:**
+  - Überblick: Handlungsbedarf.
+  - Produktion: nächste Veröffentlichung, nächste Aufnahme, aktive Folgen, Produktionsfortschritt, anstehende Produktionsaufgaben.
+  - Gäste: Gästeakquise, fällige Follow-ups, Terminabstimmungen.
+  - Aufgaben: meine Aufgaben, alle offenen, überfällige, Teamübersicht.
+  - Social Media: nächste Posts, Kalender für 7 Tage.
+  - Strategie: YouTube- und Spotify-Ziel, Meilensteine, geplante Studio-Upgrades.
+  - Finanzen: Einnahmen, Ausgaben und Saldo des Monats, Finanzübersicht.
+- **Datenquellen:** Alle Widgets nutzen die bestehenden Datenfunktionen (`dashboardFacts`, `alertsHtml`, `acqAllRows`, `stratActual`, `finSum` …). Fehlt ein Ziel, steht dort „kein Ziel festgelegt“; ein Wert wird nie geschätzt. Finanz-, Strategie- und Investitionsdaten werden nur geladen, wenn ein entsprechendes Widget sichtbar ist.
+- **Standardlayout:** Handlungsbedarf, Meine Aufgaben, Gästeakquise, Nächste Veröffentlichungen, Nächste Aufnahmen, Social-Media-Posts, Produktionsfortschritt.
+- **Speicherung:** Tabelle `podcast_user_preferences` mit `user_id` (Supabase-Auth-ID aus dem JWT, `sub`), `dashboard_layout` (JSON `{v, widgets:[{id,size}]}`) und `updated_at`.
+  - Jede Änderung wird nach kurzer Pause gespeichert. „✓ Gespeichert“ erscheint erst nach Bestätigung durch den Server, ein Fehler wird mit „Erneut speichern“ angezeigt.
+  - Beim Öffnen des Dashboards und vor jeder Bearbeitung wird die aktuelle Version geladen, damit ein anderes Gerät nicht überschrieben wird.
+  - Unbekannte IDs aus älteren Layouts werden ignoriert, und neue Widgets erscheinen automatisch in der Bibliothek.
+- **RLS:** nur `authenticated` und nur die eigene Zeile (`user_id = auth.uid()`), zusätzlich `is_app_user()`. `anon` hat keine Rechte auf die Tabelle.
+- **Ohne Anmeldung:** Gespeichert wird nur bei einer geprüften Anmeldung (`app_users`), nie über „Wer bin ich?“, eine Geräte-ID oder localStorage. Ohne Anmeldung erscheint das Standardlayout, und „Dashboard anpassen“ verweist auf die Anmeldung.
+- „Meine Aufgaben“ nimmt die Person aus `app_users.name` des angemeldeten Kontos, sonst – nur zur Anzeige – aus „Wer bin ich?“.
+
 ### Gästeakquise (Ideen & Akquise)
 - Menüpunkt „Ideen & Akquise“ mit den Tabs **Akquise** (Standard beim Öffnen über das Menü) und **Ideen**. Wer eine bestimmte Idee öffnet – aus der Akquise-Liste, einem Expertenprofil, der Suche oder einer Aufgabe –, landet direkt in der Idee und im Tab „Ideen“. Aus der Akquise geöffnet, führt „← Zurück zur Akquise“ zurück.
 - Keine eigene Gästetabelle; die bestehenden Strukturen werden erweitert:
@@ -247,6 +268,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261104_studio_upgrade.sql` | Investitionen Phase 2: `studio_area`, `planned_next`, Status „Im Einsatz“ | angewendet |
 | `20261104_investment_links.sql` | Produktlinks je Investition (`podcast_investment_links`) | angewendet |
 | `20261108_guest_acquisition.sql` | Gästeakquise: Spalten an Experten, Ideen, `podcast_expert_ideas` (Anfrage) und `podcast_expert_contacts` (Timeline), `podcast_todos.acq_request_id`, Einstellungen, Leitfaden „Gästeakquise – Standardprozess“ v1.0 | angewendet |
+| `20261109_user_preferences.sql` | Persönliche Einstellungen je Supabase-Auth-Nutzer (`podcast_user_preferences`, Dashboard-Layout); RLS: nur eigene Zeile und nur Mitglieder, kein `anon` | angewendet |
 | `20261108_skills.sql` | Skills: `podcast_skills`, `podcast_skill_versions`, `podcast_skill_optimizations`, Status-Abgleich mit To-dos (Trigger), Bucket `skills` | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
