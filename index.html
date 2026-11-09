@@ -698,6 +698,75 @@
     .inv-st-bought { color: var(--green); background: var(--green-soft); }
     .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
+    /* Personal dashboard (widgets) */
+    .dash-head-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .dw-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .dw { min-width: 0; grid-column: span 2; display: flex; flex-direction: column; }
+    .dw-S { grid-column: span 1; } .dw-M { grid-column: span 2; } .dw-L { grid-column: 1 / -1; }
+    .dw-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .dw-content > .card, .dw-content > .kpi { flex: 1; margin: 0; min-width: 0; }
+    .dw-kpi.clickable { cursor: pointer; }
+    .kpi-ok .kpi-value { color: var(--green); }
+    .dw-of { font-size: 14px; font-weight: 500; }
+    .dw-sub { font-size: 12px; font-weight: 400; margin-bottom: 6px; }
+    .dw-todos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    .dw-todos .person-item > span:first-child { flex: 1; }
+    .dw-done span:first-child { color: var(--muted); text-decoration: line-through; }
+    .dw.editing { outline: 2px dashed var(--border); outline-offset: 3px; border-radius: var(--radius); }
+    .dw.editing .dw-content { opacity: .82; pointer-events: none; user-select: none; }
+    .dw-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 0 8px; min-width: 0; }
+    .dw-handle { width: 34px; height: 34px; flex: none; border: 1px solid var(--border); border-radius: 8px; background: var(--surface2); color: var(--muted); cursor: grab; touch-action: none; font-size: 18px; line-height: 1; }
+    .dw-handle:active { cursor: grabbing; }
+    .dw-name { flex: 1; min-width: 0; font-size: 12.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dw-sizes .seg-btn { min-width: 30px; padding: 4px 8px; }
+    .dw-fixed { font-size: 11.5px; }
+    .dw-icon { width: 30px; height: 30px; flex: none; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); cursor: pointer; font: inherit; }
+    .dw-icon:disabled { opacity: .35; cursor: default; }
+    .dw-x:hover { color: var(--red); border-color: var(--red); }
+    .dw-dragging { z-index: 1000; pointer-events: none; box-shadow: 0 18px 40px rgba(0,0,0,.35); opacity: .95; transform: rotate(.6deg); }
+    .dw-ph { border: 2px dashed var(--accent); border-radius: var(--radius); background: var(--accent-soft); min-height: 80px; }
+    .dw-new { animation: dwIn .5s ease; }
+    @keyframes dwIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .dw-toolbar { position: sticky; top: 8px; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; margin-bottom: 14px; background: var(--surface); border: 1px solid var(--accent); border-radius: var(--radius); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+    .dw-mode { font-weight: 600; font-size: 13.5px; }
+    .dw-save { font-size: 12.5px; color: var(--muted); }
+    .dw-save.ok { color: var(--green); } .dw-save.err { color: var(--red); font-weight: 600; }
+    .dw-toolbar-sp { flex: 1; }
+    .dw-lib { margin-bottom: 14px; }
+    .dw-lib-group { margin-top: 10px; }
+    .dw-lib-cat { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 6px; }
+    .dw-lib-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dw-lib-item .muted { font-size: 11px; margin-left: 4px; }
+    .dw-notice { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 13.5px; }
+    .dw-notice-btns { display: flex; gap: 6px; }
+    .dw-goal { cursor: pointer; display: grid; gap: 8px; }
+    .dw-goal-val b { font-size: 22px; }
+    .dw-goal-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12px; }
+    .dw-fin { cursor: pointer; display: grid; gap: 4px; margin-bottom: 8px; }
+    .dw-fin-row { display: grid; grid-template-columns: minmax(0, 1.1fr) repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 13px; font-variant-numeric: tabular-nums; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .dw-fin-row > :not(:first-child) { text-align: right; }
+    .dw-fin-head { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding-top: 0; }
+    .dw-neg { color: var(--red); }
+    .dw-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+    .dw-cal-day { min-width: 0; display: grid; align-content: start; gap: 4px; padding: 6px; border-radius: var(--radius-sm); background: var(--surface2); min-height: 90px; }
+    .dw-cal-day.today { outline: 1px solid var(--accent); }
+    .dw-cal-head { font-size: 11.5px; color: var(--muted); }
+    .dw-cal-post { display: block; width: 100%; text-align: left; font: inherit; font-size: 11.5px; padding: 4px 6px; border: 0; border-radius: 6px; background: var(--surface); color: var(--text); cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dw-cal-post.done { opacity: .55; text-decoration: line-through; }
+    .dw-cal-none { font-size: 12px; }
+    @media (max-width: 1000px) {
+      .dw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dw-M, .dw-L { grid-column: 1 / -1; }
+    }
+    @media (max-width: 700px) {
+      .dw-grid { gap: 12px; }
+      .dw-cal { grid-template-columns: 1fr; }
+      .dw-cal-day { min-height: 0; grid-template-columns: 64px minmax(0, 1fr); }
+      .dw-cal-day > :not(.dw-cal-head) { grid-column: 2; }
+      .dw-cal-head { grid-row: 1 / span 9; }
+      .dw-name { display: none; }
+      .dw-toolbar-sp { display: none; }
+    }
     /* Gästeakquise */
     .idea-tabs { margin-bottom: 12px; }
     .tab-label-2 { line-height: 1.1; text-align: center; font-size: 10px; }
@@ -1410,7 +1479,8 @@
         <h1 id="dash-title">Dashboard</h1>
         <p class="subtitle" id="dash-subtitle">Was als Nächstes ansteht</p>
       </div>
-      <button class="btn btn-primary" onclick="openAddModal(null)">+ Neue Folge</button>
+      <div class="dash-head-btns"><button class="btn btn-ghost" id="dash-edit-btn" onclick="toggleDashEdit()" aria-pressed="false">Dashboard anpassen</button>
+      <button class="btn btn-primary" onclick="openAddModal(null)">+ Neue Folge</button></div>
     </div>
     <div id="dashboard-content"><div class="loading"><div class="spinner"></div> Lade Daten…</div></div>
   </div>
@@ -2544,6 +2614,8 @@ async function afterLogin() {
     setLoginMsg((email || 'Diese E-Mail') + ' ist nicht für Glans & Gloria freigeschaltet.', 'error');
     return;
   }
+  authMember = true;
+  dashResetPrefs();
   try {
     const rows = await apiFetch('app_users?select=name&email=eq.' + encodeURIComponent(session.email));
     currentUserName = (rows[0] && rows[0].name) || '';
@@ -2558,6 +2630,8 @@ async function logout(silent) {
   const token = session && session.access_token;
   storeSession(null);
   currentUserName = '';
+  authMember = false;
+  dashResetPrefs();
   updateAuthUi();
   if (token) authRequest('logout', {}, token).catch(() => {});
   if (silent) return;
@@ -10818,16 +10892,461 @@ function alertsHtml(f) {
     </div>`).join('')}</div></div>`;
 }
 
+// ── PERSONAL DASHBOARD ───────────────────────────────────────────
+// Widgets are views on the shared podcast data (same facts and helpers as before); only the personal
+// arrangement – which widgets, order, size – is stored per Supabase Auth user in podcast_user_preferences
+// (RLS: own row only, members only). Without a verified sign-in the default layout is shown and nothing is saved.
+// Widget ids are stable keys of the stored layout; unknown ids from older layouts are ignored.
+const DASH_SIZE_LABEL = { S: 'Klein', M: 'Mittel', L: 'Groß' };
+const DASH_CATS = [['overview', 'Überblick'], ['production', 'Produktion'], ['guests', 'Gäste'], ['tasks', 'Aufgaben'], ['social', 'Social Media'], ['strategy', 'Strategie'], ['finance', 'Finanzen']];
+const DASH_DEFAULT = [['alerts', 'L'], ['my_tasks', 'M'], ['acquisition', 'M'], ['next_release', 'M'], ['next_recording', 'M'], ['next_posts', 'M'], ['production_progress', 'M']];
+let dashLayout = null;                                   // personal layout [{ id, size }] or null = default
+let dashPrefs = { state: 'idle', uid: null, at: 0, error: '' }; // idle | loading | ready | error
+let dashEdit = false, dashLibOpen = false, dashNotice = '';
+let dashSave = { state: '', msg: '', timer: null, seq: 0, chain: Promise.resolve() };
+let dashDrag = null;
+const dashLoads = {};
+let authMember = false;
+
+function sessionUserId() {
+  if (!session || !session.access_token) return null;
+  try { const sub = JSON.parse(atob(session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub; return /^[0-9a-f-]{36}$/i.test(sub || '') ? sub : null; } catch { return null; }
+}
+// Personal storage only for a verified member session – never for "Wer bin ich?" or an anonymous session.
+function dashUid() { return session && authMember ? sessionUserId() : null; }
+function dashDefault() { return DASH_DEFAULT.map(([id, size]) => ({ id, size })); }
+function dashNormalize(raw) {
+  if (!raw || !Array.isArray(raw.widgets)) return null;
+  const seen = new Set(), out = [];
+  raw.widgets.forEach(w => {
+    const def = w && DASH_W[w.id];
+    if (!def || seen.has(w.id)) return;
+    seen.add(w.id);
+    out.push({ id: w.id, size: def.sizes.includes(w.size) ? w.size : def.size });
+  });
+  return out;
+}
+function dashCurrent() { return dashLayout || dashDefault(); }
+function dashMe() {
+  const n = norm(currentUserName || '').split(/\s+/)[0];
+  if (dashUid() && TODO_NAMES[n]) return n;
+  return currentActor() || null;
+}
+function dashResetPrefs() { dashLayout = null; dashPrefs = { state: 'idle', uid: null, at: 0, error: '' }; dashEdit = false; dashLibOpen = false; dashNotice = ''; }
+
+async function loadDashPrefs() {
+  const uid = dashUid();
+  if (!uid) { dashResetPrefs(); return false; }
+  const first = dashPrefs.uid !== uid || dashPrefs.state !== 'ready';
+  if (first) dashPrefs = { state: 'loading', uid, at: 0, error: '' };
+  try {
+    const rows = await apiFetch(`podcast_user_preferences?select=dashboard_layout,updated_at&user_id=eq.${encodeURIComponent(uid)}`);
+    if (dashUid() !== uid) return false;
+    // A local change not yet saved, or an open editor, is never replaced by an older server copy.
+    if (dashSave.timer || dashSave.state === 'saving' || (!first && dashEdit)) return false;
+    const next = rows[0] ? dashNormalize(rows[0].dashboard_layout) : null;
+    const changed = JSON.stringify(next) !== JSON.stringify(dashLayout);
+    dashLayout = next;
+    dashPrefs = { state: 'ready', uid, at: Date.now(), error: '' };
+    return changed || first;
+  } catch (e) {
+    if (first) { dashPrefs = { state: 'error', uid, at: 0, error: e.message }; return true; }
+    return false; // background refresh failed: keep the loaded layout
+  }
+}
+function dashRerender() { if (document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); }
+// On every visit: fetch the latest layout of this account in the background (another device may have changed it).
+function refreshDashPrefs() {
+  if (!dashUid() || dashEdit || dashPrefs.state === 'loading') return;
+  if (dashPrefs.state === 'ready' && Date.now() - dashPrefs.at < 10000) return;
+  loadDashPrefs().then(changed => { if (changed) dashRerender(); });
+}
+
+function scheduleDashSave() {
+  clearTimeout(dashSave.timer);
+  dashSave.state = 'pending';
+  dashSave.timer = setTimeout(() => { dashSave.timer = null; saveDashPrefs(); }, 600);
+  updateDashSaveUi();
+}
+function saveDashPrefs() {
+  const seq = ++dashSave.seq;
+  dashSave.chain = dashSave.chain.then(async () => {
+    const uid = dashUid();
+    if (!uid || uid !== dashPrefs.uid) { dashSave.state = 'error'; dashSave.msg = 'Nicht angemeldet – nicht gespeichert'; updateDashSaveUi(); return; }
+    if (seq !== dashSave.seq) return; // a newer save follows with the latest layout
+    dashSave.state = 'saving'; updateDashSaveUi();
+    try {
+      await apiFetch('podcast_user_preferences?on_conflict=user_id', { method: 'POST', prefer: 'resolution=merge-duplicates,return=minimal',
+        body: JSON.stringify({ user_id: uid, dashboard_layout: { v: 1, widgets: dashCurrent() }, updated_at: new Date().toISOString() }) });
+      if (seq === dashSave.seq) { dashSave.state = 'saved'; dashSave.msg = ''; dashPrefs.at = Date.now(); flashSaved(); }
+    } catch (e) {
+      if (seq === dashSave.seq) { dashSave.state = 'error'; dashSave.msg = e.message; showToast('Dashboard-Layout nicht gespeichert: ' + e.message, 'error'); }
+    }
+    updateDashSaveUi();
+  });
+}
+function dashSaveText() {
+  return { pending: 'Änderungen werden gespeichert …', saving: 'Speichert …', saved: '✓ Gespeichert', error: '⚠️ Nicht gespeichert' + (dashSave.msg ? ': ' + dashSave.msg : '') }[dashSave.state] || 'Änderungen werden automatisch gespeichert';
+}
+function updateDashSaveUi() {
+  const el = document.getElementById('dw-save');
+  if (!el) return;
+  el.textContent = dashSaveText();
+  el.className = 'dw-save' + (dashSave.state === 'error' ? ' err' : dashSave.state === 'saved' ? ' ok' : '');
+  const retry = document.getElementById('dw-save-retry');
+  if (retry) retry.hidden = dashSave.state !== 'error';
+}
+function dashSetLayout(list) { dashLayout = list; renderDashboard(); scheduleDashSave(); }
+
+async function toggleDashEdit() {
+  if (dashEdit) { dashEdit = false; dashLibOpen = false; renderDashboard(); return; }
+  if (!dashUid()) { dashNotice = 'login'; renderDashboard(); return; }
+  if (dashPrefs.state !== 'ready') {
+    await loadDashPrefs();
+    if (dashPrefs.state !== 'ready') { showToast('Dein Layout konnte nicht geladen werden – bitte später erneut versuchen.', 'error'); renderDashboard(); return; }
+  } else await loadDashPrefs(); // latest version before editing, so another device's change is not overwritten
+  dashEdit = true; dashNotice = '';
+  renderDashboard();
+}
+function dashResize(id, size) { dashSetLayout(dashCurrent().map(w => w.id === id ? { ...w, size } : w)); }
+function dashRemove(id) { dashSetLayout(dashCurrent().filter(w => w.id !== id)); }
+function dashAdd(id) {
+  if (dashCurrent().some(w => w.id === id) || !DASH_W[id]) return;
+  dashSetLayout(dashCurrent().concat({ id, size: DASH_W[id].size }));
+  const el = document.querySelector(`.dw[data-wid="${id}"]`);
+  if (el) { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); el.classList.add('dw-new'); }
+}
+function dashMove(id, dir) {
+  const list = dashCurrent().slice(), i = list.findIndex(w => w.id === id), j = i + dir;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  dashSetLayout(list);
+}
+function dashResetDefault() {
+  if (!confirm('Standardlayout wiederherstellen? Deine Anordnung, Größen und ausgeblendeten Widgets werden zurückgesetzt. Podcastdaten bleiben unverändert.')) return;
+  dashSetLayout(dashDefault());
+  showToast('Standardlayout wiederhergestellt');
+}
+function dashRetryLoad(need) { delete dashLoads[need]; renderDashboard(); }
+function dashRetryPrefs() { dashPrefs = { state: 'idle', uid: null, at: 0, error: '' }; renderDashboard(); }
+
+// Data beyond the core lists is loaded only when a visible widget needs it.
+function dashEnsure(need) {
+  if (!need) return 'ok';
+  const ok = need === 'finance' ? financeLoaded : need === 'revenue' ? revenueLoaded : investLoaded;
+  if (ok) return 'ok';
+  if (dashLoads[need]) return dashLoads[need];
+  dashLoads[need] = 'loading';
+  (need === 'finance' ? loadFinance : need === 'revenue' ? loadRevenue : loadInvestments)().then(done => {
+    dashLoads[need] = done ? null : 'error';
+    if (done && need === 'revenue') dashLoads.finance = null;
+    dashRerender();
+  });
+  return 'loading';
+}
+
+// ── Drag & drop (pointer events: mouse, pen and touch; only via the handle in edit mode) ──
+function dashDragStart(e, id) {
+  if (!dashEdit || dashDrag || (e.pointerType === 'mouse' && e.button !== 0)) return;
+  const handle = e.currentTarget, el = handle.closest('.dw'), grid = el.parentElement;
+  e.preventDefault();
+  const r = el.getBoundingClientRect();
+  const ph = document.createElement('div');
+  ph.className = 'dw-ph ' + [...el.classList].find(c => /^dw-[SML]$/.test(c));
+  ph.style.height = r.height + 'px';
+  grid.insertBefore(ph, el);
+  el.classList.add('dw-dragging');
+  Object.assign(el.style, { position: 'fixed', left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px' });
+  dashDrag = { id, el, ph, grid, handle, dx: e.clientX - r.left, dy: e.clientY - r.top, x: e.clientX, y: e.clientY, raf: 0, pending: false };
+  try { handle.setPointerCapture(e.pointerId); } catch {}
+  handle.addEventListener('pointermove', dashDragMove);
+  handle.addEventListener('pointerup', dashDragEnd);
+  handle.addEventListener('pointercancel', dashDragEnd);
+  dashDrag.raf = requestAnimationFrame(dashAutoScroll);
+}
+function dashDragMove(e) {
+  const d = dashDrag;
+  if (!d) return;
+  d.x = e.clientX; d.y = e.clientY;
+  d.el.style.left = (d.x - d.dx) + 'px';
+  d.el.style.top = (d.y - d.dy) + 'px';
+  dashDragPlace();
+}
+function dashAutoScroll() {
+  const d = dashDrag;
+  if (!d) return;
+  const edge = 70, speed = d.y < edge ? -(edge - d.y) / 4 : d.y > innerHeight - edge ? (d.y - innerHeight + edge) / 4 : 0;
+  if (speed) { window.scrollBy(0, speed); dashDragPlace(); }
+  d.raf = requestAnimationFrame(dashAutoScroll);
+}
+function dashDragPlace() {
+  const d = dashDrag;
+  const hit = document.elementFromPoint(d.x, d.y);
+  const target = hit && hit.closest('.dw');
+  if (!target || target === d.el || target.parentElement !== d.grid) return;
+  const r = target.getBoundingClientRect();
+  // Wide widgets: upper/lower half; narrower ones: left/right half (reading order of the grid).
+  const before = r.width > d.grid.clientWidth * 0.6 ? d.y < r.top + r.height / 2 : d.x < r.left + r.width / 2;
+  const ref = before ? target : target.nextSibling;
+  if (ref === d.ph || (ref && ref.previousSibling === d.ph && !before) || d.ph.nextSibling === ref) return;
+  const items = [...d.grid.children].filter(c => c !== d.el);
+  const first = new Map(items.map(c => [c, c.getBoundingClientRect()]));
+  d.grid.insertBefore(d.ph, ref);
+  items.forEach(c => { // FLIP: neighbours glide to their new place
+    const a = first.get(c), b = c.getBoundingClientRect();
+    if (!a || (a.left === b.left && a.top === b.top) || c === d.ph) return;
+    c.style.transition = 'none';
+    c.style.transform = `translate(${a.left - b.left}px, ${a.top - b.top}px)`;
+    requestAnimationFrame(() => { c.style.transition = 'transform .18s ease'; c.style.transform = ''; });
+  });
+}
+function dashDragEnd(e) {
+  const d = dashDrag;
+  if (!d) return;
+  cancelAnimationFrame(d.raf);
+  d.handle.removeEventListener('pointermove', dashDragMove);
+  d.handle.removeEventListener('pointerup', dashDragEnd);
+  d.handle.removeEventListener('pointercancel', dashDragEnd);
+  const order = [...d.grid.children].map(c => c === d.ph ? d.id : c === d.el ? null : c.dataset.wid).filter(Boolean);
+  dashDrag = null;
+  const cur = dashCurrent();
+  const next = order.map(id => cur.find(w => w.id === id)).filter(Boolean);
+  if (e.type === 'pointerup' && next.length === cur.length && next.some((w, i) => w.id !== cur[i].id)) dashSetLayout(next);
+  else renderDashboard();
+}
+function dashHandleKey(e, id) {
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); dashMove(id, -1); }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); dashMove(id, 1); }
+}
+
+// ── Widget building blocks (markup of the previous dashboard) ──
+const dwCard = (title, action, body, cls = '') => `<div class="card dw-card${cls}"><div class="block-head"><h2>${title}</h2>${action || ''}</div>${body}</div>`;
+const dwKpi = (label, value, sub, action, cls = '') => `<div class="kpi dw-kpi${action ? ' clickable' : ''}${cls}"${action ? ` role="button" tabindex="0" onclick="${action}" onkeydown="if(event.key==='Enter')this.click()"` : ''}>
+  <div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`;
+const dwLink = (label, action) => `<button class="link-btn" onclick="${action}">${label} →</button>`;
+const dwList = rows => `<div class="dash-list">${rows}</div>`;
+function dwRelease({ ep, d }) {
+  const p = progress(ep);
+  return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">${dateTile(d)}
+    <div class="dash-row-main"><div class="dash-row-title">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.title)}</div>
+      <div class="dash-row-sub">${statusPill(ep.status)} ${relativeDay(d)} · ${p.done}/${p.total} Schritte</div>
+      <div class="progress${p.pct === 100 ? ' done' : ''}"><div style="width:${p.pct}%"></div></div></div></div>`;
+}
+function dwRecording({ ep, d }) {
+  const time = (ep.recordingDate.split(' ')[1] || '').trim();
+  return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">${dateTile(d)}
+    <div class="dash-row-main"><div class="dash-row-title">${esc(ep.title)}</div>
+      <div class="dash-row-sub">${relativeDay(d)}${time ? ' · ' + esc(time) + ' Uhr' : ''} · ${taskDone(ep, 'fragenerstellung') ? 'Fragen fertig' : 'Fragen noch offen'}${ep.guest ? ' · ' + esc(ep.guest) : ''}</div></div></div>`;
+}
+function dwProduction({ ep }) {
+  const p = progress(ep), step = nextOpenStep(ep);
+  return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})"><div class="dash-row-main">
+      <div class="dash-row-title">${esc(ep.title)}</div>
+      <div class="dash-row-sub">${statusPill(ep.status)} ${esc(ep.date)} · Nächster Schritt: ${esc(step || '–')}</div>
+      <div class="progress"><div style="width:${p.pct}%"></div></div></div><span class="pill">${p.pct}%</span></div>`;
+}
+function dwPost(p) {
+  const fm = POST_FORMATS[p.format] || POST_FORMATS.other;
+  const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
+  return `<div class="dash-row" onclick="openPostEditor(${jsArg(p.id)})">${dateTile(postDate(p))}
+    <div class="dash-row-main"><div class="dash-row-title">${fm.icon} ${esc(p.title || fm.label)}</div>
+      <div class="dash-row-sub">${p.time ? esc(p.time) + ' · ' : ''}${ep ? esc(ep.title) : 'ohne Folge'}</div></div>
+    ${p.assignee ? whoBadge(p.assignee) : ''}
+    <div class="task-check" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" title="Als veröffentlicht abhaken"></div></div>`;
+}
+function dwTodo(t, todayIso) {
+  return `<div class="person-item" onclick="goTasks('general','all');setTimeout(()=>openTaskModal(${jsArg(t.id)}),50)">
+    <span>${esc(t.text)}</span>${t.assignee ? whoBadge(t.assignee) : ''}${t.dueDate ? `<span class="chip${t.dueDate < todayIso ? ' chip-danger' : ''}">${formatDate(safeParseIso(t.dueDate)).slice(0, 6)}</span>` : ''}</div>`;
+}
+function dwAcq({ r, idea, info }) {
+  return `<div class="dash-row" onclick="openAcqCard(${jsArg(r.id)})">${info.action && info.action.due ? dateTile(safeParseIso(info.action.due)) : ''}
+    <div class="dash-row-main"><div class="dash-row-title">${esc(acqName(r))}</div>
+      <div class="dash-row-sub">${esc(idea.title)}${info.action ? ' · ' + acqActionHtml(info.action) : ''}</div></div>
+    ${r.assignee ? whoBadge(r.assignee) : ''}</div>`;
+}
+function dwLoading(title, state, need) {
+  return state === 'error' ? dwCard(title, '', `<div class="todo-empty">Daten konnten nicht geladen werden. <button class="link-btn" onclick="dashRetryLoad('${need}')">Erneut versuchen</button></div>`)
+    : dwCard(title, '', loadingState('Lädt …'));
+}
+function openStratGoal(id, y) {
+  if (STRAT_YEARS.includes(y)) { stratYear = y; try { localStorage.setItem('gg_strat_year', String(y)); } catch {} }
+  showPage('verbesserung');
+  dashScrollTo('sg-' + id);
+}
+function openStudioUpgrade() {
+  invUi.tab = 'studio';
+  try { localStorage.setItem('gg_invest_ui', JSON.stringify(invUi)); } catch {}
+  showPage('verbesserung');
+  dashScrollTo('invest-container');
+}
+function dashScrollTo(elId, tries = 20) {
+  const el = document.getElementById(elId);
+  if (el && el.offsetHeight) el.scrollIntoView({ block: 'start' });
+  else if (tries > 0) setTimeout(() => dashScrollTo(elId, tries - 1), 150);
+}
+function dwGoal(key, label, size, c) {
+  const y = new Date().getFullYear();
+  const g = stratGoals.find(x => x.year === y && x.metric_key === key);
+  if (!g) return size === 'S' ? dwKpi(icon('flag') + label, '–', `Für ${y} ist kein Ziel festgelegt`, `showPage('verbesserung')`)
+    : dwCard(`${label} ${y}`, dwLink('Strategie', `showPage('verbesserung')`), `<div class="todo-empty">Für ${y} ist kein Ziel festgelegt.</div>`);
+  const a = stratActual(g), st = stratStatus(a.value, g.target, g.bonus, a.inPeriod), open = `openStratGoal(${jsArg(g.id)}, ${y})`;
+  const val = a.value === null ? '–' : nf(a.value);
+  if (size === 'S') return dwKpi(icon('flag') + label, `${val} <span class="muted dw-of">/ ${nf(g.target)}</span>`, esc(st.label), open, st.key === 'reached' || st.key === 'bonus' ? ' kpi-ok' : '');
+  return dwCard(`${esc(g.title)}`, dwLink('Ziel öffnen', open), `<div class="dw-goal" onclick="${open}">
+    <div class="dw-goal-val"><b>${val}</b> <span class="muted">/ ${nf(g.target)}${g.bonus ? ` · Bonus ${nf(g.bonus)}` : ''}</span></div>
+    ${stratBar(a.value, g.target, g.bonus)}
+    <div class="dw-goal-meta"><span class="strat-pill st-${st.key}">${esc(st.label)}</span><span class="muted">${esc(a.info || '')}</span></div></div>`);
+}
+
+const DASH_W = {
+  alerts: { cat: 'overview', title: 'Handlungsbedarf', sizes: ['M', 'L'], size: 'L', render: c => alertsHtml(c.f) },
+  next_release: { cat: 'production', title: 'Nächste Veröffentlichung', sizes: ['S', 'M', 'L'], size: 'M', render: (c, s) => {
+    const next = c.f.upcoming[0];
+    if (s === 'S') return dwKpi(icon('rocket') + 'Nächste Veröffentlichung', next ? relativeDay(next.d) : '–', next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant', next ? `openDetail(${jsArg(next.ep.id)})` : '');
+    const rows = c.f.upcoming.slice(0, s === 'L' ? 8 : 4).map(dwRelease).join('');
+    return dwCard('Nächste Veröffentlichungen', dwLink('Planer', `showPage('planer')`), rows ? dwList(rows) : emptyState('🚀', 'Keine Veröffentlichungen geplant', '', `<button class="btn btn-sm" onclick="openAddModal(null)">+ Neue Folge</button>`, true));
+  } },
+  next_recording: { cat: 'production', title: 'Nächste Aufnahme', sizes: ['S', 'M', 'L'], size: 'M', render: (c, s) => {
+    const n = c.f.recordings[0];
+    if (s === 'S') return dwKpi(icon('mic') + 'Nächste Aufnahme', n ? relativeDay(n.d) : '–', n ? esc(n.ep.recordingDate + ' · ' + n.ep.title) : 'Kein Termin eingetragen', n ? `openDetail(${jsArg(n.ep.id)})` : '');
+    const rows = c.f.recordings.slice(0, s === 'L' ? 8 : 4).map(dwRecording).join('');
+    return dwCard('Nächste Aufnahmen', '', rows ? dwList(rows) : emptyState('🎙️', 'Keine Aufnahme terminiert', 'Aufnahmetermine werden in der Folge unter „Bearbeiten“ eingetragen.', '', true));
+  } },
+  active_episodes: { cat: 'production', title: 'Aktive Folgen', sizes: ['S', 'M'], size: 'S', render: (c, s) => {
+    const list = c.f.activeEps;
+    if (s === 'S') return dwKpi(icon('mic') + 'Aktive Folgen', list.length, 'noch nicht veröffentlicht', `showPage('planer')`);
+    const rows = list.slice(0, 6).map(({ ep, d }) => `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">${dateTile(d)}<div class="dash-row-main"><div class="dash-row-title">${esc(ep.title)}</div><div class="dash-row-sub">${statusPill(ep.status)} ${relativeDay(d)}</div></div></div>`).join('');
+    return dwCard('Aktive Folgen', `<span class="pill">${list.length}</span>`, rows ? dwList(rows) : emptyState('🎬', 'Keine aktive Folge', '', '', true));
+  } },
+  production_progress: { cat: 'production', title: 'Produktionsfortschritt', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const rows = c.f.inProduction.slice(0, s === 'L' ? 10 : 5).map(dwProduction).join('');
+    return dwCard('Produktionsfortschritt', `<span class="pill">${c.f.inProduction.length} Folge${c.f.inProduction.length === 1 ? '' : 'n'}</span>`, rows ? dwList(rows) : emptyState('🎬', 'Keine Folge in Produktion', 'Alle aktuellen Folgen sind fertig.', '', true));
+  } },
+  production_tasks: { cat: 'production', title: 'Anstehende Produktionsaufgaben', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const list = [];
+    episodes.forEach(ep => WORKFLOW_STEPS.forEach(step => {
+      const due = taskField(ep, step.id, 'due');
+      if (due && !taskDone(ep, step.id)) list.push({ ep, step, due });
+    }));
+    list.sort((a, b) => a.due.localeCompare(b.due));
+    const rows = list.slice(0, s === 'L' ? 12 : 6).map(({ ep, step, due }) => `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)});openStepContent(${jsArg(step.id)})">${dateTile(safeParseIso(due))}
+      <div class="dash-row-main"><div class="dash-row-title">${esc(step.label)}</div><div class="dash-row-sub">${esc(ep.title)}${due < c.f.todayIso ? ' · <b style="color:var(--red)">überfällig</b>' : ''}</div></div></div>`).join('');
+    return dwCard('Anstehende Produktionsaufgaben', `<span class="pill">${list.length}</span>`, rows ? dwList(rows) : emptyState('✅', 'Keine offenen Schritte mit Termin', 'Hier erscheinen Produktionsschritte, für die ein Fälligkeitsdatum eingetragen ist.', '', true));
+  } },
+  acquisition: { cat: 'guests', title: 'Gästeakquise', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const n = s === 'L' ? 12 : 6;
+    const next = c.acqRows.filter(x => x.info.action && x.info.action.rank <= 2)
+      .sort((a, b) => a.info.action.rank - b.info.action.rank || (a.info.action.due || '9').localeCompare(b.info.action.due || '9'));
+    const fu = dueFollowUps(7);
+    const body = next.length || fu.length ? dwList(next.slice(0, n).map(dwAcq).join('') + fu.slice(0, n).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">${dateTile(fu.due)}
+        <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
+          <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= c.f.today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
+        ${fu.responsible ? whoBadge(fu.responsible) : ''}</div>`).join(''))
+      : emptyState('📨', 'Keine Akquise-Aktion fällig', 'Überfällige und heute fällige Follow-ups sowie Terminabstimmungen erscheinen hier.', '', true);
+    return dwCard('Gästeakquise', dwLink('Akquise', `showPage('ideen')`), body);
+  } },
+  acq_followups: { cat: 'guests', title: 'Fällige Follow-ups', sizes: ['S', 'M'], size: 'S', render: (c, s) => {
+    const list = c.acqRows.filter(x => x.info.action && x.info.action.step && ['fu1', 'fu2'].includes(x.info.action.step) && x.info.action.when !== 'later')
+      .sort((a, b) => a.info.action.due.localeCompare(b.info.action.due));
+    const late = list.filter(x => x.info.action.when === 'overdue').length;
+    if (s === 'S') return dwKpi(icon('mail') + 'Fällige Follow-ups', list.length, list.length ? `${late} überfällig` : 'Keines fällig', `showPage('ideen')`, late ? ' kpi-danger' : list.length ? ' kpi-warn' : '');
+    return dwCard('Fällige Follow-ups', dwLink('Akquise', `showPage('ideen')`), list.length ? dwList(list.slice(0, 8).map(dwAcq).join('')) : emptyState('📨', 'Kein Follow-up fällig', '', '', true));
+  } },
+  acq_scheduling: { cat: 'guests', title: 'Laufende Terminabstimmungen', sizes: ['S', 'M'], size: 'S', render: (c, s) => {
+    const list = c.acqRows.filter(x => x.r.contact_status === 'scheduling');
+    if (s === 'S') return dwKpi(icon('calendar') + 'Terminabstimmungen', list.length, list.length ? 'Termin vereinbaren' : 'Keine laufend', `showPage('ideen')`);
+    return dwCard('Laufende Terminabstimmungen', dwLink('Akquise', `showPage('ideen')`), list.length ? dwList(list.slice(0, 8).map(dwAcq).join('')) : emptyState('📅', 'Keine Terminabstimmung', '', '', true));
+  } },
+  my_tasks: { cat: 'tasks', title: 'Meine Aufgaben', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const me = c.me;
+    if (!me) return dwCard('Meine Aufgaben', '', `<div class="todo-empty">Wer bist du? <button class="link-btn" onclick="openMeModal()">Auswählen</button> – dann erscheinen hier deine Aufgaben.</div>`);
+    const list = c.byWho(me).map(todoItem).sort(compareItems);
+    const n = s === 'L' ? 12 : 6;
+    return dwCard(`Meine Aufgaben <span class="muted dw-sub">${esc(TODO_NAMES[me])}</span>`, dwLink('Alle', `goTasks('general','${me}')`),
+      list.length ? `<div class="dw-todos">${list.slice(0, n).map(({ t }) => dwTodo(t, c.f.todayIso)).join('')}</div>${list.length > n ? `<button class="link-btn" onclick="goTasks('general','${me}')">+${list.length - n} weitere</button>` : ''}`
+        : '<div class="todo-empty">Nichts offen 🎉</div>');
+  } },
+  open_tasks: { cat: 'tasks', title: 'Alle offenen Aufgaben', sizes: ['S', 'M', 'L'], size: 'S', render: (c, s) => {
+    const f = c.f, overdue = f.overdueTodos.length + f.overdueSteps.length;
+    if (s === 'S') return dwKpi(icon('check') + 'Offene Aufgaben', f.openTodos.length, overdue ? `${overdue} überfällig · Nils ${c.byWho('nils').length} · Leo ${c.byWho('leo').length}` : `Nils ${c.byWho('nils').length} · Leo ${c.byWho('leo').length} · offen ${c.byWho(null).length}`, overdue ? `goTasks('all','overdue')` : `goTasks('general','all')`, overdue ? ' kpi-danger' : '');
+    const list = f.openTodos.map(todoItem).sort(compareItems), n = s === 'L' ? 14 : 7;
+    return dwCard('Alle offenen Aufgaben', dwLink('Alle', `goTasks('general','all')`), list.length ? `<div class="dw-todos">${list.slice(0, n).map(({ t }) => dwTodo(t, f.todayIso)).join('')}</div>${list.length > n ? `<button class="link-btn" onclick="goTasks('general','all')">+${list.length - n} weitere</button>` : ''}` : '<div class="todo-empty">Nichts offen 🎉</div>');
+  } },
+  overdue_tasks: { cat: 'tasks', title: 'Überfällige Aufgaben', sizes: ['S', 'M'], size: 'S', render: (c, s) => {
+    const f = c.f, n = f.overdueTodos.length + f.overdueSteps.length;
+    if (s === 'S') return dwKpi(icon('info') + 'Überfällige Aufgaben', n, n ? 'Aufgaben und Produktionsschritte' : 'Nichts überfällig', `goTasks('all','overdue')`, n ? ' kpi-danger' : '');
+    const rows = f.overdueTodos.map(t => dwTodo(t, f.todayIso)).join('') + f.overdueSteps.slice(0, 8).map(({ ep, step, due }) => `<div class="person-item" onclick="openDetail(${jsArg(ep.id)});openStepContent(${jsArg(step.id)})"><span>${esc(step.label)} · ${esc(ep.title)}</span><span class="chip chip-danger">${formatDate(safeParseIso(due)).slice(0, 6)}</span></div>`).join('');
+    return dwCard('Überfällige Aufgaben', dwLink('Anzeigen', `goTasks('all','overdue')`), rows ? `<div class="dw-todos">${rows}</div>` : '<div class="todo-empty">Nichts überfällig ✅</div>');
+  } },
+  team_tasks: { cat: 'tasks', title: 'Teamübersicht Nils / Leo', sizes: ['M', 'L'], size: 'L', render: c => {
+    const col = (who, label) => {
+      const list = c.byWho(who).map(todoItem).sort(compareItems);
+      return `<div class="person-col"><div class="person-head">${who ? whoBadge(who) : '<span class="who who-none">Offen</span>'} <b>${label}</b> <span class="muted">${list.length}</span></div>
+        ${list.slice(0, 4).map(({ t }) => `<div class="person-item" onclick="goTasks('general','all');setTimeout(()=>openTaskModal(${jsArg(t.id)}),50)"><span>${esc(t.text)}</span>${t.dueDate ? `<span class="chip${t.dueDate < c.f.todayIso ? ' chip-danger' : ''}">${formatDate(safeParseIso(t.dueDate)).slice(0, 6)}</span>` : ''}</div>`).join('') || '<div class="todo-empty" style="padding:4px 0">Nichts offen</div>'}
+        ${list.length > 4 ? `<button class="link-btn" onclick="goTasks('general','${who || 'none'}')">+${list.length - 4} weitere</button>` : ''}</div>`;
+    };
+    return dwCard('Aufgaben nach Person', dwLink('Alle', `goTasks('general','all')`), `<div class="person-cols">${col('nils', 'Nils')}${col('leo', 'Leo')}${col(null, 'Nicht zugewiesen')}</div>`);
+  } },
+  next_posts: { cat: 'social', title: 'Nächste Social-Media-Posts', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const list = s === 'L' ? sortPosts(posts.filter(p => !isPublished(p) && p.date >= c.f.todayIso)).slice(0, 12) : c.f.nextPosts;
+    return dwCard('Nächste Social-Media-Posts', dwLink('Kalender', `showPage('calendar')`), list.length ? dwList(list.map(dwPost).join('')) : emptyState('📱', 'Keine Posts geplant', '', '', true));
+  } },
+  social_calendar: { cat: 'social', title: 'Social-Media-Kalender kompakt', sizes: ['L'], size: 'L', render: c => {
+    const days = Array.from({ length: 7 }, (_, i) => addDays(c.f.today, i));
+    const cols = days.map(d => {
+      const iso = isoDate(d), list = sortPosts(posts.filter(p => p.date === iso));
+      return `<div class="dw-cal-day${iso === c.f.todayIso ? ' today' : ''}"><div class="dw-cal-head">${d.toLocaleDateString('de-DE', { weekday: 'short' })} <b>${d.getDate()}.</b></div>
+        ${list.map(p => { const fm = POST_FORMATS[p.format] || POST_FORMATS.other; return `<button type="button" class="dw-cal-post${isPublished(p) ? ' done' : ''}" onclick="openPostEditor(${jsArg(p.id)})" title="${esc(p.title || fm.label)}">${fm.icon} ${esc(p.title || fm.label)}</button>`; }).join('') || '<span class="muted dw-cal-none">–</span>'}</div>`;
+    }).join('');
+    return dwCard('Social-Media · nächste 7 Tage', dwLink('Kalender', `showPage('calendar')`), `<div class="dw-cal">${cols}</div>`);
+  } },
+  goal_youtube: { cat: 'strategy', title: 'YouTube-Zielerreichung', sizes: ['S', 'M'], size: 'M', need: 'revenue', render: (c, s) => dwGoal('youtube_subscribers', 'YouTube-Abonnenten', s, c) },
+  goal_spotify: { cat: 'strategy', title: 'Spotify-Zielerreichung', sizes: ['S', 'M'], size: 'M', need: 'revenue', render: (c, s) => dwGoal('spotify_followers', 'Spotify-Follower', s, c) },
+  strategy_milestones: { cat: 'strategy', title: 'Strategische Meilensteine', sizes: ['M', 'L'], size: 'M', render: (c, s) => {
+    const y = new Date().getFullYear();
+    const list = todos.filter(t => t.strategyYear === y && !t.parentId).sort((a, b) => (a.done - b.done) || (a.dueDate || '9').localeCompare(b.dueDate || '9'));
+    const open = list.filter(t => !t.done);
+    const rows = list.slice(0, s === 'L' ? 12 : 6).map(t => `<div class="person-item${t.done ? ' dw-done' : ''}" onclick="openTaskModal(${jsArg(t.id)})"><span>${t.done ? '✓ ' : ''}${esc(t.text)}</span>${t.assignee ? whoBadge(t.assignee) : ''}${t.dueDate && !t.done ? `<span class="chip${t.dueDate < c.f.todayIso ? ' chip-danger' : ''}">${formatDate(safeParseIso(t.dueDate)).slice(0, 6)}</span>` : ''}</div>`).join('');
+    return dwCard(`Strategische Meilensteine ${y}`, dwLink('Strategie', `showPage('verbesserung')`), rows ? `<div class="muted dw-sub">${open.length} offen · ${list.length - open.length} erledigt</div><div class="dw-todos">${rows}</div>` : `<div class="todo-empty">Keine Meilensteine für ${y}.</div>`);
+  } },
+  studio_upgrades: { cat: 'strategy', title: 'Geplante Studio-Upgrades', sizes: ['M', 'L'], size: 'M', need: 'invest', render: (c, s) => {
+    const list = investments.filter(x => x.planned_next || ['planned', 'ready'].includes(x.status)).filter(x => !['bought', 'in_use'].includes(x.status))
+      .sort((a, b) => (b.planned_next ? 1 : 0) - (a.planned_next ? 1 : 0) || INV_STATUS[b.status].order - INV_STATUS[a.status].order);
+    const sum = list.filter(x => x.planned_next && x.price_cents != null).reduce((a, x) => a + x.price_cents, 0);
+    const rows = list.slice(0, s === 'L' ? 10 : 5).map(x => `<div class="person-item" onclick="openStudioUpgrade()"><span>${esc(x.title)}${x.planned_next ? ' <span class="chip chip-accent">Nächstes Setup</span>' : ''}</span><span class="muted">${esc(INV_STATUS[x.status].label)} · ${x.price_cents != null ? eur(x.price_cents) : 'Preis offen'}</span></div>`).join('');
+    return dwCard('Geplante Studio-Upgrades', dwLink('Studio-Upgrade', 'openStudioUpgrade()'), rows ? `${sum ? `<div class="muted dw-sub">Nächstes Setup: ${eur(sum)} (nur bekannte Preise)</div>` : ''}<div class="dw-todos">${rows}</div>` : '<div class="todo-empty">Keine geplanten Upgrades.</div>');
+  } },
+  fin_income: { cat: 'finance', title: 'Einnahmen aktueller Monat', sizes: ['S'], size: 'S', need: 'finance', render: c => dwKpi(icon('euro') + 'Einnahmen ' + c.monthName, eur(finSum(c.y, c.m, 'income')), 'bezahlte Buchungen', `showPage('finanzen')`) },
+  fin_expense: { cat: 'finance', title: 'Ausgaben aktueller Monat', sizes: ['S'], size: 'S', need: 'finance', render: c => dwKpi(icon('euro') + 'Ausgaben ' + c.monthName, eur(finSum(c.y, c.m, 'expense')), 'bezahlte Buchungen', `showPage('finanzen')`) },
+  fin_balance: { cat: 'finance', title: 'Saldo aktueller Monat', sizes: ['S'], size: 'S', need: 'finance', render: c => {
+    const v = finSum(c.y, c.m, 'income') - finSum(c.y, c.m, 'expense');
+    return dwKpi(icon('euro') + 'Saldo ' + c.monthName, eur(v), 'Einnahmen − Ausgaben, bezahlt', `showPage('finanzen')`, v < 0 ? ' kpi-danger' : '');
+  } },
+  fin_overview: { cat: 'finance', title: 'Finanzübersicht', sizes: ['M'], size: 'M', need: 'finance', render: c => {
+    const mi = finSum(c.y, c.m, 'income'), me = finSum(c.y, c.m, 'expense'), yi = finSum(c.y, 0, 'income'), ye = finSum(c.y, 0, 'expense');
+    const row = (l, i, e) => `<div class="dw-fin-row"><span>${l}</span><span>${eur(i)}</span><span>${eur(e)}</span><b class="${i - e < 0 ? 'dw-neg' : ''}">${eur(i - e)}</b></div>`;
+    return dwCard('Finanzübersicht', dwLink('Finanzen', `showPage('finanzen')`), `<div class="dw-fin" onclick="showPage('finanzen')">
+      <div class="dw-fin-row dw-fin-head"><span></span><span>Einnahmen</span><span>Ausgaben</span><span>Saldo</span></div>
+      ${row(c.monthName, mi, me)}${row('Jahr ' + c.y, yi, ye)}</div>
+      <div class="muted dw-sub">Nur bezahlte Buchungen${finMonthComplete(c.y, c.m) ? ' · Monat vollständig erfasst' : ' · Monat noch nicht als vollständig markiert'}</div>`);
+  } },
+};
+
 function renderDashboard() {
   const box = document.getElementById('dashboard-content');
+  if (dashDrag) { dashDrag.pending = true; return; } // never re-render under a dragged widget
   if (!episodesLoadOk) { box.innerHTML = errorState('Folgen konnten nicht geladen werden.', 'reloadAllData()'); return; }
   const missing = [];
   if (!todosLoaded) missing.push(loadTodos());
   if (!expertsLoaded) missing.push(loadExperts());
   if (!postsLoaded) missing.push(loadPosts());
-  if (missing.length) {
-    if (!box.querySelector('.dash-kpis')) box.innerHTML = loadingState('Lade Dashboard…');
-    Promise.all(missing).then(r => { if (r.every(Boolean) && document.getElementById('page-dashboard').classList.contains('active')) renderDashboard(); });
+  const uid = dashUid();
+  if (!uid && dashPrefs.uid) dashResetPrefs();
+  if (uid && dashPrefs.uid !== uid) dashPrefs = { state: 'idle', uid: null, at: 0, error: '' };
+  if (uid && dashPrefs.state === 'idle') missing.push(loadDashPrefs().then(() => true));
+  if (missing.length || (uid && dashPrefs.state === 'loading')) {
+    if (!box.querySelector('.dw-grid')) box.innerHTML = loadingState('Lade Dashboard…');
+    Promise.all(missing).then(r => { if (r.every(Boolean)) dashRerender(); });
     return;
   }
   const f = dashboardFacts();
@@ -10835,108 +11354,50 @@ function renderDashboard() {
   const greet = hour < 11 ? 'Guten Morgen' : hour < 18 ? 'Hallo' : 'Guten Abend';
   document.getElementById('dash-title').textContent = currentUserName ? `${greet}, ${currentUserName}` : 'Dashboard';
   document.getElementById('dash-subtitle').textContent = f.today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const editBtn = document.getElementById('dash-edit-btn');
+  if (editBtn) { editBtn.textContent = dashEdit ? 'Fertig' : 'Dashboard anpassen'; editBtn.className = 'btn ' + (dashEdit ? 'btn-primary' : 'btn-ghost'); editBtn.setAttribute('aria-pressed', dashEdit); }
 
-  const byWho = w => f.openTodos.filter(t => (t.assignee || null) === w);
-  const next = f.upcoming[0], nextRec = f.recordings[0];
-  const overdueCount = f.overdueTodos.length + f.overdueSteps.length;
-  const kpi = (label, value, sub, action, cls = '') => `<div class="kpi${action ? ' clickable' : ''}${cls}" ${action ? `onclick="${action}"` : ''}>
-      <div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-sub">${sub}</div></div>`;
-  // Four key figures; posts and production have their own lists below.
-  const acqRows = acqAllRows();
-  const acqDue = acqRows.filter(x => x.info.action && (x.info.action.when === 'overdue' || x.info.action.when === 'today'));
-  const acqOverdue = acqDue.filter(x => x.info.action.when === 'overdue').length;
-  const acqScheduling = acqRows.filter(x => x.r.contact_status === 'scheduling').length;
-  const kpis = `<div class="dash-kpis">
-    ${kpi(icon('rocket') + 'Nächste Veröffentlichung', next ? relativeDay(next.d) : '–', next ? esc(next.ep.date + ' · ' + next.ep.title) : 'Keine geplant', next ? `openDetail(${jsArg(next.ep.id)})` : '')}
-    ${kpi(icon('mic') + 'Nächste Aufnahme', nextRec ? relativeDay(nextRec.d) : '–', nextRec ? esc(nextRec.ep.recordingDate + ' · ' + nextRec.ep.title) : 'Kein Termin eingetragen', nextRec ? `openDetail(${jsArg(nextRec.ep.id)})` : '')}
-    ${kpi(icon('check') + 'Offene Aufgaben', f.openTodos.length, overdueCount ? `${overdueCount} überfällig · Nils ${byWho('nils').length} · Leo ${byWho('leo').length}` : `Nils ${byWho('nils').length} · Leo ${byWho('leo').length} · offen ${byWho(null).length}`, overdueCount ? `goTasks('all','overdue')` : `goTasks('general','all')`, overdueCount ? ' kpi-danger' : '')}
-    ${kpi(icon('mail') + 'Gästeakquise fällig', acqDue.length, acqDue.length ? `${acqOverdue} überfällig${acqScheduling ? ` · ${acqScheduling} Terminabstimmung` : ''}` : acqScheduling ? `${acqScheduling} Terminabstimmung` : 'Keine Aktion fällig', `showPage('ideen')`, acqOverdue ? ' kpi-danger' : acqDue.length ? ' kpi-warn' : '')}
-  </div>`;
-
-  const card = (title, action, body) => `<div class="card"><div class="block-head"><h2>${title}</h2>${action}</div>${body}</div>`;
-  const releaseRows = f.upcoming.slice(0, 4).map(({ ep, d }) => {
-    const p = progress(ep);
-    return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
-      ${dateTile(d)}
-      <div class="dash-row-main">
-        <div class="dash-row-title">${ep.num ? '#' + esc(ep.num) + ' · ' : ''}${esc(ep.title)}</div>
-        <div class="dash-row-sub">${statusPill(ep.status)} ${relativeDay(d)} · ${p.done}/${p.total} Schritte</div>
-        <div class="progress${p.pct === 100 ? ' done' : ''}"><div style="width:${p.pct}%"></div></div>
-      </div>
-    </div>`;
-  }).join('');
-  const recordingRows = f.recordings.slice(0, 4).map(({ ep, d }) => {
-    const time = (ep.recordingDate.split(' ')[1] || '').trim();
-    return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
-      ${dateTile(d)}
-      <div class="dash-row-main">
-        <div class="dash-row-title">${esc(ep.title)}</div>
-        <div class="dash-row-sub">${relativeDay(d)}${time ? ' · ' + esc(time) + ' Uhr' : ''} · ${taskDone(ep, 'fragenerstellung') ? 'Fragen fertig' : 'Fragen noch offen'}${ep.guest ? ' · ' + esc(ep.guest) : ''}</div>
-      </div>
-    </div>`;
-  }).join('');
-  const prodRows = f.inProduction.slice(0, 5).map(({ ep }) => {
-    const p = progress(ep);
-    const step = nextOpenStep(ep);
-    return `<div class="dash-row" onclick="openDetail(${jsArg(ep.id)})">
-      <div class="dash-row-main">
-        <div class="dash-row-title">${esc(ep.title)}</div>
-        <div class="dash-row-sub">${statusPill(ep.status)} ${esc(ep.date)} · Nächster Schritt: ${esc(step || '–')}</div>
-        <div class="progress"><div style="width:${p.pct}%"></div></div>
-      </div>
-      <span class="pill">${p.pct}%</span>
-    </div>`;
-  }).join('');
-  const postRows = f.nextPosts.map(p => {
-    const fm = POST_FORMATS[p.format] || POST_FORMATS.other;
-    const ep = p.episode_id ? episodes.find(e => e.id === p.episode_id) : null;
-    return `<div class="dash-row" onclick="openPostEditor(${jsArg(p.id)})">
-      ${dateTile(postDate(p))}
-      <div class="dash-row-main">
-        <div class="dash-row-title">${fm.icon} ${esc(p.title || fm.label)}</div>
-        <div class="dash-row-sub">${p.time ? esc(p.time) + ' · ' : ''}${ep ? esc(ep.title) : 'ohne Folge'}</div>
-      </div>
-      ${p.assignee ? whoBadge(p.assignee) : ''}
-      <div class="task-check" onclick="event.stopPropagation();togglePostDone(${jsArg(p.id)})" title="Als veröffentlicht abhaken"></div>
-    </div>`;
-  }).join('');
-  const personCol = (who, label) => {
-    const list = byWho(who).map(todoItem).sort(compareItems);
-    return `<div class="person-col">
-      <div class="person-head">${who ? whoBadge(who) : '<span class="who who-none">Offen</span>'} <b>${label}</b> <span class="muted">${list.length}</span></div>
-      ${list.slice(0, 4).map(({ t }) => `<div class="person-item" onclick="goTasks('general','all');setTimeout(()=>openTaskModal(${jsArg(t.id)}),50)">
-        <span>${esc(t.text)}</span>${t.dueDate ? `<span class="chip${t.dueDate < f.todayIso ? ' chip-danger' : ''}">${formatDate(safeParseIso(t.dueDate)).slice(0, 6)}</span>` : ''}</div>`).join('') || '<div class="todo-empty" style="padding:4px 0">Nichts offen</div>'}
-      ${list.length > 4 ? `<button class="link-btn" onclick="goTasks('general','${who || 'none'}')">+${list.length - 4} weitere</button>` : ''}
-    </div>`;
+  const now = new Date();
+  const c = { f, byWho: w => f.openTodos.filter(t => (t.assignee || null) === w), acqRows: acqAllRows(), me: dashMe(),
+    y: now.getFullYear(), m: now.getMonth() + 1, monthName: FIN_MONTHS[now.getMonth()] };
+  const layout = dashCurrent();
+  const used = new Set(layout.map(w => w.id));
+  const widgetHtml = (w, i) => {
+    const def = DASH_W[w.id];
+    let inner;
+    const st = dashEnsure(def.need);
+    if (st !== 'ok') inner = dwLoading(def.title, st, def.need);
+    else { try { inner = def.render(c, w.size); } catch (e) { console.error(e); inner = dwCard(def.title, '', '<div class="todo-empty">Dieses Widget konnte nicht angezeigt werden.</div>'); } }
+    const id = w.id;
+    const bar = dashEdit ? `<div class="dw-bar">
+      <button type="button" class="dw-handle" data-focus-key="dw-h-${id}" aria-label="${esc(def.title)} verschieben (Pfeiltasten oder ziehen)" title="Ziehen zum Verschieben" onpointerdown="dashDragStart(event,'${id}')" onkeydown="dashHandleKey(event,'${id}')">⠿</button>
+      <span class="dw-name">${esc(def.title)}</span>
+      ${def.sizes.length > 1 ? `<div class="seg seg-sm dw-sizes" role="group" aria-label="Größe">${def.sizes.map(s => `<button type="button" class="seg-btn${w.size === s ? ' active' : ''}" data-focus-key="dw-s-${id}-${s}" aria-pressed="${w.size === s}" title="${DASH_SIZE_LABEL[s]}" onclick="dashResize('${id}','${s}')">${s}</button>`).join('')}</div>` : `<span class="muted dw-fixed">${DASH_SIZE_LABEL[w.size]}</span>`}
+      <button type="button" class="dw-icon" data-focus-key="dw-u-${id}" aria-label="Nach vorne" title="Nach vorne" ${i === 0 ? 'disabled' : ''} onclick="dashMove('${id}',-1)">↑</button>
+      <button type="button" class="dw-icon" data-focus-key="dw-d-${id}" aria-label="Nach hinten" title="Nach hinten" ${i === layout.length - 1 ? 'disabled' : ''} onclick="dashMove('${id}',1)">↓</button>
+      <button type="button" class="dw-icon dw-x" aria-label="${esc(def.title)} ausblenden" title="Ausblenden" onclick="dashRemove('${id}')">✕</button>
+    </div>` : '';
+    return `<section class="dw dw-${w.size}${dashEdit ? ' editing' : ''}" data-wid="${id}">${bar}<div class="dw-content"${dashEdit ? ' inert' : ''}>${inner}</div></section>`;
   };
-  const fuList = dueFollowUps(7);
-  const acqNext = acqRows.filter(x => x.info.action && x.info.action.rank <= 2)
-    .sort((a, b) => a.info.action.rank - b.info.action.rank || (a.info.action.due || '9').localeCompare(b.info.action.due || '9'));
-
-  box.innerHTML = alertsHtml(f) + kpis + `<div class="dash-grid">
-    ${card('Nächste Veröffentlichungen', `<button class="link-btn" onclick="showPage('planer')">Planer →</button>`,
-      releaseRows ? `<div class="dash-list">${releaseRows}</div>` : emptyState('🚀', 'Keine Veröffentlichungen geplant', '', `<button class="btn btn-sm" onclick="openAddModal(null)">+ Neue Folge</button>`, true))}
-    ${card('Nächste Social-Media-Posts', `<button class="link-btn" onclick="showPage('calendar')">Kalender →</button>`,
-      postRows ? `<div class="dash-list">${postRows}</div>` : emptyState('📱', 'Keine Posts geplant', '', '', true))}
-    ${card('Produktionsfortschritt', `<span class="pill">${f.inProduction.length} Folge${f.inProduction.length === 1 ? '' : 'n'}</span>`,
-      prodRows ? `<div class="dash-list">${prodRows}</div>` : emptyState('🎬', 'Keine Folge in Produktion', 'Alle aktuellen Folgen sind fertig.', '', true))}
-    ${card('Nächste Aufnahmen', '',
-      recordingRows ? `<div class="dash-list">${recordingRows}</div>` : emptyState('🎙️', 'Keine Aufnahme terminiert', 'Aufnahmetermine werden in der Folge unter „Bearbeiten“ eingetragen.', '', true))}
-    ${card('Aufgaben nach Person', `<button class="link-btn" onclick="goTasks('general','all')">Alle →</button>`,
-      `<div class="person-cols">${personCol('nils', 'Nils')}${personCol('leo', 'Leo')}${personCol(null, 'Nicht zugewiesen')}</div>`)}
-    ${card('Gästeakquise', `<button class="link-btn" onclick="showPage('ideen')">Akquise →</button>`,
-      acqNext.length || fuList.length ? `<div class="dash-list">${acqNext.slice(0, 6).map(({ r, idea, info }) => `<div class="dash-row" onclick="openAcqCard(${jsArg(r.id)})">
-        ${info.action.due ? dateTile(safeParseIso(info.action.due)) : ''}
-        <div class="dash-row-main"><div class="dash-row-title">${esc(acqName(r))}</div>
-          <div class="dash-row-sub">${esc(idea.title)} · ${acqActionHtml(info.action)}</div></div>
-        ${r.assignee ? whoBadge(r.assignee) : ''}
-      </div>`).join('')}${fuList.slice(0, 6).map(({ x, fu }) => `<div class="dash-row" onclick="openExpert(${jsArg(x.id)})">
-        ${dateTile(fu.due)}
-        <div class="dash-row-main"><div class="dash-row-title">${esc(expertDisplayName(x))}</div>
-          <div class="dash-row-sub">${esc(EXPERT_STATUS_LABEL[x.status])} · ${esc(fu.reason)}${fu.due <= f.today ? ' · <b style="color:var(--red)">fällig</b>' : ''}</div></div>
-        ${fu.responsible ? whoBadge(fu.responsible) : ''}
-      </div>`).join('')}</div>` : emptyState('📨', 'Keine Akquise-Aktion fällig', 'Überfällige und heute fällige Follow-ups sowie Terminabstimmungen erscheinen hier.', '', true))}
-  </div>`;
+  const lib = dashEdit && dashLibOpen ? `<div class="card dw-lib"><div class="block-head"><h2>Widget-Bibliothek</h2><button class="link-btn" onclick="dashLibOpen=false;renderDashboard()">Schließen</button></div>
+    ${DASH_CATS.map(([cat, label]) => {
+      const free = Object.entries(DASH_W).filter(([id, d]) => d.cat === cat && !used.has(id));
+      return free.length ? `<div class="dw-lib-group"><div class="dw-lib-cat">${label}</div><div class="dw-lib-items">${free.map(([id, d]) => `<button type="button" class="chip chip-link dw-lib-item" data-focus-key="dw-add-${id}" onclick="dashAdd('${id}')">+ ${esc(d.title)} <span class="muted">${d.sizes.map(s => DASH_SIZE_LABEL[s]).join(' / ')}</span></button>`).join('')}</div></div>` : '';
+    }).join('') || '<div class="todo-empty">Alle Widgets sind bereits auf deinem Dashboard.</div>'}</div>` : '';
+  const toolbar = dashEdit ? `<div class="dw-toolbar">
+      <span class="dw-mode">Bearbeitungsmodus</span><span id="dw-save" class="dw-save" role="status" aria-live="polite"></span>
+      <button type="button" class="link-btn" id="dw-save-retry" hidden onclick="saveDashPrefs()">Erneut speichern</button>
+      <span class="dw-toolbar-sp"></span>
+      <button type="button" class="btn btn-sm" data-focus-key="dw-lib-btn" onclick="dashLibOpen=!dashLibOpen;renderDashboard()">${dashLibOpen ? 'Bibliothek schließen' : '+ Widget hinzufügen'}</button>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="dashResetDefault()">Standardlayout wiederherstellen</button>
+      <button type="button" class="btn btn-sm btn-primary" onclick="toggleDashEdit()">Fertig</button></div>` : '';
+  const notice = dashNotice === 'login' ? `<div class="card dw-notice"><span>Das Dashboard lässt sich anpassen, sobald du angemeldet bist. Dein Layout wird dann an dein Konto gebunden und auf allen deinen Geräten geladen.</span>
+      <span class="dw-notice-btns"><button class="btn btn-sm btn-primary" onclick="openLogin()">Anmelden</button><button class="btn btn-sm btn-ghost" onclick="dashNotice='';renderDashboard()">Schließen</button></span></div>`
+    : uid && dashPrefs.state === 'error' ? `<div class="card dw-notice"><span>⚠️ Dein persönliches Layout konnte nicht geladen werden (${esc(dashPrefs.error)}). Angezeigt wird das Standardlayout – es wird nichts überschrieben.</span>
+      <span class="dw-notice-btns"><button class="btn btn-sm" onclick="dashRetryPrefs()">Erneut laden</button></span></div>` : '';
+  swapHtmlKeepFocus(box, notice + toolbar + lib + (layout.length ? `<div class="dw-grid${dashEdit ? ' editing' : ''}">${layout.map(widgetHtml).join('')}</div>`
+    : `<div class="card">${emptyState('🧩', 'Keine Widgets eingeblendet', 'Über „Dashboard anpassen“ → „+ Widget hinzufügen“ stellst du dein Dashboard zusammen.', dashEdit ? '' : '<button class="btn btn-sm" onclick="toggleDashEdit()">Dashboard anpassen</button>', true)}</div>`));
+  updateDashSaveUi();
 }
 
 // ── GLOBAL SEARCH (⌘K / Strg+K) ──────────────────────────────────
@@ -11090,7 +11551,8 @@ function showPage(name, { fromHistory = false } = {}) {
   if (!fromHistory && location.hash !== hash) history.pushState(null, '', hash);
   if (changed && name !== 'detail') window.scrollTo(0, 0);
 
-  if (name === 'dashboard')    renderDashboard();
+  if (name !== 'dashboard' && dashEdit) { dashEdit = false; dashLibOpen = false; }
+  if (name === 'dashboard')    { refreshDashPrefs(); renderDashboard(); }
   if (name === 'planer')       renderPlaner();
   if (name === 'zeitstrahl')   renderZeitstrahl();
   if (name === 'todos')        { if (!currentActor() && !actorAsked) { actorAsked = true; openMeModal(); } if (todosLoaded) syncTaskNew(); loadAndRender('tasks-content', loadTasksData, renderTodos, todosLoaded && projects.length > 0); if (!('ontouchstart' in window)) setTimeout(() => document.getElementById('todo-input').focus(), 0); }
@@ -11214,7 +11676,7 @@ async function initAuth() {
     try {
       const rows = await apiFetch('app_users?select=name&email=eq.' + encodeURIComponent(session.email));
       if (!session) { /* expired while checking; refreshSession already told the user */ }
-      else if (rows.length) currentUserName = rows[0].name;
+      else if (rows.length) { currentUserName = rows[0].name; authMember = true; }
       else {
         await logout(true);
         showToast('Deine E-Mail ist nicht für Glans & Gloria freigeschaltet.', 'error');
