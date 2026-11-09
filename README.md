@@ -130,6 +130,36 @@ Interne Finanzübersicht (ersetzt keine steuerliche Buchhaltung, keine steuerlic
 - Dashboard mit vier Kennzahlen: nächste Veröffentlichung, nächste Aufnahme, offene Aufgaben (inkl. überfälliger), fällige Gästeakquise. Die Liste „Gästeakquise“ zeigt überfällige und heute fällige Aktionen sowie Terminabstimmungen; fällige allgemeine Experten-Wiedervorlagen stehen weiter darunter. Überfällige Akquise erscheint auch unter „Handlungsbedarf“.
 - Überschriften nutzen Linien-Icons (`icon()`) statt Emojis.
 
+### Interview-Briefings (Idee und Folge)
+- **Erstellung:** mit dem eigenen Claude-Skill, Export als Markdown und Import hier. In der App gibt es keine KI, keine Claude-API und keine automatische Synchronisierung.
+- **Wo:** als kompakte Karte im Ideen-Dialog (Bereich „Interview-Briefing“) und in der Folgendetailansicht (unter „Folgen-Infos“), kein eigener Menüpunkt. Optional erscheint eine Liste im Expertenprofil.
+- **Import:**
+  - „Briefing importieren“ nimmt eine `.md`-Datei (UTF-8 wird streng geprüft, max. 3 MB, BOM und CRLF werden normalisiert). „Text einfügen“ übernimmt direkt aus Claude kopiertes Markdown.
+  - Der Titel kommt aus der ersten Überschrift. Dazu kommen eine Änderungsnotiz, optional „Original in Claude“ (nur https-Links, reine Referenz) und optional ein PDF-Anhang.
+- **Versionen:** Ein neuer Import bei bestehendem Briefing fragt „Neue Version des bestehenden Briefings speichern?“ und legt v2, v3 … mit Datum, Ersteller und Notiz an.
+  - Versionen sind unveränderlich (DB-Trigger), ältere bleiben über die Versionsauswahl lesbar.
+  - Speichern zwei Geräte gleichzeitig, nimmt die zweite automatisch die nächste freie Nummer.
+- **Leseansicht:** große Ansicht innerhalb der App mit Inhaltsverzeichnis aus den echten Überschriften (Desktop seitlich, Mobile einklappbar), ruhiger Typografie, Tabellen, Literaturlinks (DOI/PMID werden verlinkt), Dark und Light Mode.
+  - Aktionen: Markdown herunterladen, Text kopieren, In Claude öffnen, PDF ansehen oder herunterladen, Neue Version, Angaben.
+  - Die Seite dahinter scrollt nicht mit; Esc schließt.
+- **Sicherheit der Darstellung:** Markdown → `marked` 12.0.2 → `DOMPurify` 3.1.6, beide von cdnjs mit SRI-Prüfsumme und erst beim Öffnen geladen.
+  - Roh-HTML im Markdown wird als Text gezeigt, nie ausgeführt.
+  - Erlaubt sind nur Text-, Listen-, Tabellen- und Link-Tags; Bilder werden nicht übernommen.
+  - Links nur http(s)/mailto, extern mit `noopener noreferrer`; `javascript:`-Links werden entfernt.
+  - Ohne CDN wird der Text unformatiert angezeigt.
+- **Interviewnotizen:** eigene Zeilen (Text, Autor, erstellt, geändert). Bearbeiten und Entfernen gehen für beide, mit Konfliktprüfung über `updated_at`. Der Briefingtext bleibt unberührt.
+- **Datenmodell:**
+  - `podcast_briefings` (`idea_id`, `episode_id`, `expert_id`, `title`, `current_version_id`, `claude_url` …), je höchstens ein Briefing pro Idee und pro Folge.
+  - `podcast_briefing_versions` (`markdown_content` als Text, `pdf_path`/`pdf_name`).
+  - `podcast_briefing_notes`.
+- **Übernahme in den Planer:** Dieselbe Briefing-Zeile bekommt zusätzlich die `episode_id`, es entsteht keine Kopie. Ist eine Folge ohne Anmeldung aus einer Idee entstanden, bietet die Folge „Briefing der Idee übernehmen“ an (gleicher Titel).
+- **Zugriff:** nur angemeldete Mitglieder (`is_app_user()`), keine `anon`-Rechte. Ohne Anmeldung zeigt die Karte „vertraulich – bitte anmelden“.
+  - PDFs liegen im privaten Bucket `briefings` (nur PDF, max. 25 MB). Mitglieder dürfen lesen und hochladen, nicht überschreiben oder löschen.
+  - Geöffnet wird ein PDF über eine signierte URL mit 10 Minuten Gültigkeit.
+- **Backup:**
+  - Das Server-Backup sichert die drei Tabellen automatisch und spiegelt die PDFs nach `backups/briefings/…` (Edge Function v6).
+  - Der manuelle JSON-Export enthält die Tabellen und vermerkt unter `notes`, dass binäre Anhänge separat gesichert werden. Ohne Anmeldung sind die Briefing-Daten im Export leer.
+
 ### Persönliches Dashboard (Widgets)
 - **„Dashboard anpassen“** startet den Bearbeitungsmodus. Darin lassen sich Widgets verschieben, ausblenden (✕) und vergrößern bzw. verkleinern (Klein / Mittel / Groß, je nach Widget), und über „+ Widget hinzufügen“ kommen neue aus der Bibliothek dazu. „Standardlayout wiederherstellen“ fragt vorher nach. „Fertig“ beendet den Modus.
 - **Verschieben:** per Ziehen am Griff ⠿ (Maus, Stift und Touch über Pointer-Events, nur im Bearbeitungsmodus; ein Platzhalter zeigt die Zielposition). Alternativ mit den Buttons ↑/↓ oder den Pfeiltasten auf dem Griff. Die Inhalte sind im Bearbeitungsmodus inaktiv (`inert`), damit beim Ziehen nichts ungewollt angeklickt wird.
@@ -269,6 +299,7 @@ Nicht mehr in der App genutzt, aber unverändert erhalten: `podcast_prompts`, `p
 | `20261104_investment_links.sql` | Produktlinks je Investition (`podcast_investment_links`) | angewendet |
 | `20261108_guest_acquisition.sql` | Gästeakquise: Spalten an Experten, Ideen, `podcast_expert_ideas` (Anfrage) und `podcast_expert_contacts` (Timeline), `podcast_todos.acq_request_id`, Einstellungen, Leitfaden „Gästeakquise – Standardprozess“ v1.0 | angewendet |
 | `20261109_user_preferences.sql` | Persönliche Einstellungen je Supabase-Auth-Nutzer (`podcast_user_preferences`, Dashboard-Layout); RLS: nur eigene Zeile und nur Mitglieder, kein `anon` | angewendet |
+| `20261109_briefings.sql` | Interview-Briefings: `podcast_briefings`, `podcast_briefing_versions` (unveränderlich per Trigger), `podcast_briefing_notes`, privater Bucket `briefings` (PDF, 25 MB); nur Mitglieder, kein `anon`; Realtime | angewendet |
 | `20261108_skills.sql` | Skills: `podcast_skills`, `podcast_skill_versions`, `podcast_skill_optimizations`, Status-Abgleich mit To-dos (Trigger), Bucket `skills` | angewendet |
 | `20261104_post_published_by.sql` | Posts: `published_by`; `published_at` wird nur noch beim Wechsel auf „Veröffentlicht“ gesetzt | angewendet |
 
