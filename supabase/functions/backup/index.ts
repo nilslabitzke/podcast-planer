@@ -14,7 +14,7 @@ async function listTables(): Promise<string[]> {
   return Object.keys(spec.definitions || {}).sort();
 }
 
-// Files in private buckets are mirrored into backups/<bucket>/<path>: receipts and skill files.
+// Files in private buckets are mirrored into backups/<bucket>/<path>: receipts, skill files and briefing PDFs.
 // Files are immutable (new upload = new path), so already copied files are skipped.
 async function mirrorFiles(data: Record<string, unknown>, bucket: string, sources: [string, string][]) {
   const paths = new Set<string>();
@@ -52,6 +52,7 @@ Deno.serve(async () => {
     if (!up.ok) throw new Error('upload: ' + await up.text());
     const receipts = await mirrorFiles(data, 'receipts', [['podcast_fin_bookings', 'receipt_path'], ['podcast_fin_recurring', 'receipt_path']]);
     const skillFiles = await mirrorFiles(data, 'skills', [['podcast_skills', 'file_path'], ['podcast_skill_versions', 'file_path']]);
+    const briefingFiles = await mirrorFiles(data, 'briefings', [['podcast_briefing_versions', 'pdf_path']]);
 
     const ls = await fetch(`${URL_}/storage/v1/object/list/${BUCKET}`, {
       method: 'POST',
@@ -68,7 +69,7 @@ Deno.serve(async () => {
       });
     }
     const counts = Object.fromEntries(Object.entries(data).map(([k, v]) => [k, (v as unknown[]).length]));
-    return new Response(JSON.stringify({ ok: true, file: name, counts, receipts, skillFiles, pruned: old.length }), { headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ ok: true, file: name, counts, receipts, skillFiles, briefingFiles, pruned: old.length }), { headers: { 'Content-Type': 'application/json' } });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
   }
