@@ -698,6 +698,124 @@
     .inv-st-bought { color: var(--green); background: var(--green-soft); }
     .inv-bought .inv-price, .inv-bought .strat-title { opacity: .7; }
     .inv-link-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; padding: 4px 0; overflow-wrap: anywhere; }
+    /* Interview-Briefings */
+    .bf-slot-h { display: flex; align-items: center; gap: 6px; font-size: 15px; margin: 0 0 10px; }
+    .bf-slot-h .ico { width: 16px; height: 16px; }
+    .bf-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); font-size: 13.5px; }
+    .bf-card-main { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1 1 260px; }
+    .bf-doc-ico { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text); }
+    .bf-doc-ico .ico { width: 20px; height: 20px; margin: 0; }
+    .bf-card-text { display: grid; gap: 2px; min-width: 0; }
+    .bf-card-text b { font-size: 14.5px; overflow-wrap: anywhere; }
+    .bf-card-text .muted { font-size: 12.5px; }
+    .bf-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .bf-empty .bf-card-text { flex: 1 1 260px; }
+    .bf-locked { justify-content: space-between; color: var(--muted); }
+    .bf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .bf-import { width: 640px; }
+    .bf-imp-intro { font-size: 13px; margin: -4px 0 12px; }
+    .bf-imp-modes { margin-bottom: 10px; }
+    .bf-imp-box { margin-bottom: 8px; }
+    .bf-imp-file { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px dashed var(--border); border-radius: var(--radius-sm); font-size: 13.5px; overflow-wrap: anywhere; }
+    .bf-imp-box textarea { width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+    .bf-imp-stats { font-size: 12.5px; margin-bottom: 10px; }
+    .bf-imp-heads { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .bf-imp-heads span { padding: 2px 8px; border-radius: 99px; background: var(--surface2); font-size: 11.5px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bf-imp-form { background: none; border: 0; padding: 0; }
+    html.bf-lock, html.bf-lock body { overflow: hidden; }
+    .bf-reader-bg { display: none; position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.55); padding: 20px; }
+    .bf-reader-bg.open { display: flex; align-items: stretch; justify-content: center; }
+    #me-modal-bg { z-index: 400; }
+    .bf-reader { width: min(1180px, 100%); display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
+    .bf-r-head { padding: 18px 24px 0; border-bottom: 1px solid var(--border); flex: none; }
+    .bf-r-titlebar { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .bf-r-titles { display: grid; gap: 3px; min-width: 0; }
+    .bf-r-kicker { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--accent-text); }
+    .bf-r-titles h2 { margin: 0; font-size: 21px; letter-spacing: -.3px; line-height: 1.25; overflow-wrap: anywhere; }
+    .bf-r-meta { font-size: 12.5px; }
+    .bf-r-x { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 1px solid var(--border); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 15px; }
+    .bf-r-toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 14px 0 12px; }
+    .bf-r-ver select { width: auto; max-width: 340px; min-height: 32px; padding: 4px 8px; font-size: 13px; }
+    .bf-settings { margin-bottom: 12px; }
+    .bf-r-tabs { margin-bottom: -1px; }
+    .bf-r-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 24px 40px; scroll-behavior: auto; }
+    .bf-r-docwrap { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 36px; }
+    .bf-r-docwrap.no-toc { grid-template-columns: minmax(0, 1fr); }
+    .bf-r-docwrap.no-toc .bf-toc { display: none; }
+    .bf-toc { position: sticky; top: 0; align-self: start; max-height: calc(100vh - 220px); overflow-y: auto; padding: 24px 0; display: grid; gap: 1px; }
+    .bf-toc-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 6px; }
+    .bf-toc-item { display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 6px; padding: 5px 8px; font: inherit; font-size: 13px; line-height: 1.35; color: var(--muted); cursor: pointer; }
+    .bf-toc-item:hover { background: var(--surface2); color: var(--text); }
+    .bf-toc-l1 { font-weight: 600; color: var(--text); }
+    .bf-toc-l3 { padding-left: 18px; font-size: 12.5px; }
+    .bf-toc-l4 { padding-left: 28px; font-size: 12px; }
+    .bf-toc-m { display: none; }
+    .bf-r-main { min-width: 0; }
+    .bf-banner { margin: 18px auto 0; max-width: 720px; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--yellow-soft); font-size: 13px; }
+    .bf-doc { max-width: 720px; margin: 0 auto; padding-top: 22px; font-size: 16px; line-height: 1.7; color: var(--text); overflow-wrap: break-word; }
+    .bf-doc > :first-child { margin-top: 8px; }
+    .bf-doc h1, .bf-doc h2, .bf-doc h3, .bf-doc h4 { line-height: 1.3; letter-spacing: -.2px; scroll-margin-top: 16px; }
+    .bf-doc h1 { font-size: 28px; font-weight: 700; margin: 8px 0 18px; letter-spacing: -.5px; }
+    .bf-doc h2 { font-size: 21px; font-weight: 650; margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .bf-doc h3 { font-size: 17px; font-weight: 650; margin: 28px 0 8px; }
+    .bf-doc h4 { font-size: 15px; font-weight: 650; margin: 22px 0 6px; color: var(--muted); }
+    .bf-doc p { margin: 0 0 14px; }
+    .bf-doc ul, .bf-doc ol { margin: 0 0 16px; padding-left: 24px; }
+    .bf-doc li { margin: 4px 0; }
+    .bf-doc li > ul, .bf-doc li > ol { margin: 4px 0; }
+    .bf-doc strong { font-weight: 650; }
+    .bf-doc a.bf-ext { color: var(--accent-text); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent-text) 40%, transparent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+    .bf-doc a.bf-ext:hover { text-decoration-color: currentColor; }
+    .bf-doc a.bf-ext::after { content: ' ↗'; font-size: .8em; }
+    .bf-deadlink { color: var(--muted); }
+    .bf-doc blockquote { margin: 0 0 16px; padding: 10px 16px; border-left: 3px solid var(--accent); background: var(--surface2); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; color: var(--text); }
+    .bf-doc blockquote p:last-child { margin: 0; }
+    .bf-doc hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
+    .bf-doc code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; padding: 1px 5px; border-radius: 5px; background: var(--surface2); }
+    .bf-doc pre { padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface2); overflow-x: auto; font-size: 13px; line-height: 1.5; }
+    .bf-doc pre code { padding: 0; background: none; }
+    .bf-table-wrap { margin: 4px 0 20px; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+    .bf-doc table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+    .bf-doc th, .bf-doc td { padding: 9px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+    .bf-doc th { background: var(--surface2); font-weight: 650; font-size: 13px; white-space: nowrap; }
+    .bf-doc tr:last-child td { border-bottom: 0; }
+    .bf-doc [align=right] { text-align: right; } .bf-doc [align=center] { text-align: center; }
+    .bf-actions a.btn, .bf-r-toolbar a.btn { text-decoration: none; }
+    .bf-doc tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface2) 45%, transparent); }
+    .bf-doc input[type=checkbox] { margin-right: 6px; }
+    .bf-plain { white-space: pre-wrap; font-size: 13px; }
+    .bf-r-notes { max-width: 760px; margin: 0 auto; padding-top: 22px; }
+    .bf-notes { display: grid; gap: 12px; }
+    .bf-notes-h { font-weight: 650; font-size: 15px; display: block; margin-bottom: 6px; }
+    .bf-note-new textarea, .bf-note textarea { width: 100%; }
+    .bf-note { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+    .bf-note-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 12px; margin-bottom: 6px; }
+    .bf-note-btns { margin-left: auto; display: flex; gap: 12px; }
+    .bf-danger { color: var(--red) !important; }
+    .bf-note-text { white-space: pre-wrap; font-size: 14.5px; line-height: 1.55; overflow-wrap: anywhere; }
+    .bf-r-pdf { padding-top: 16px; height: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .bf-r-pdf[hidden] { display: none; }
+    .bf-pdf-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; }
+    .bf-pdf-frame { width: 100%; flex: 1; min-height: 60vh; border: 1px solid var(--border); border-radius: var(--radius-sm); background: #fff; }
+    @media (max-width: 900px) {
+      .bf-reader-bg { padding: 0; }
+      .bf-reader { border-radius: 0; border: 0; }
+      .bf-r-head { padding: 14px 16px 0; }
+      .bf-r-body { padding: 0 16px 32px; }
+      .bf-r-docwrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+      .bf-toc { display: none; }
+      .bf-toc-m { display: block; margin-top: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; }
+      .bf-toc-m summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+      .bf-toc-m-list { display: grid; margin-top: 6px; }
+      .bf-doc { font-size: 15.5px; }
+      .bf-doc h1 { font-size: 24px; }
+      .bf-doc h2 { font-size: 19px; }
+      .bf-r-titles h2 { font-size: 18px; }
+      .bf-r-ver { flex: 1 1 100%; min-width: 0; }
+      .bf-r-ver select { width: 100%; max-width: 100%; }
+      .bf-r-tabs { display: flex; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+      .bf-r-tabs .seg-btn { flex: none; }
+    }
     /* Personal dashboard (widgets) */
     .dash-head-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .dw-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
@@ -1782,6 +1900,10 @@
       <textarea id="idea-questions" rows="8" placeholder="Fragen eintragen oder einfügen..."></textarea>
     </div>
     <div class="form-group">
+      <label>Interview-Briefing</label>
+      <div id="idea-briefing"></div>
+    </div>
+    <div class="form-group">
       <label>Status</label>
       <select id="idea-status">
         <option value="idea">💡 Idee</option>
@@ -2215,6 +2337,45 @@
   </div>
 </div>
 
+<input type="file" id="bf-file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden onchange="bfFileChosen(this)">
+<div class="modal-bg" id="bf-import-bg" onclick="if(event.target===this)closeBfImport()">
+  <div class="modal bf-import" role="dialog" aria-modal="true" aria-labelledby="bf-imp-title">
+    <h2 id="bf-imp-title">Interview-Briefing importieren</h2>
+    <p class="muted bf-imp-intro" id="bf-imp-intro"></p>
+    <div class="seg bf-imp-modes" id="bf-imp-modes" role="group" aria-label="Quelle">
+      <button type="button" class="seg-btn" data-mode="file" onclick="bfSetImportMode('file')">Markdown-Datei (.md)</button>
+      <button type="button" class="seg-btn" data-mode="paste" onclick="bfSetImportMode('paste')">Text einfügen</button>
+    </div>
+    <div id="bf-imp-filebox" class="bf-imp-box"><div class="bf-imp-file"><span id="bf-imp-file"></span><button type="button" class="btn btn-sm" onclick="bfChooseOtherFile()">Datei wählen …</button></div></div>
+    <div id="bf-imp-pastebox" class="bf-imp-box" hidden><label for="bf-imp-text" class="bf-sr">Markdown-Text</label>
+      <textarea id="bf-imp-text" rows="9" placeholder="Briefing aus Claude kopieren und hier einfügen (Markdown wird übernommen) …" oninput="bfFillImport()"></textarea></div>
+    <div id="bf-imp-stats" class="bf-imp-stats"></div>
+    <div class="sk-form bf-imp-form">
+      <label class="sk-form-wide">Titel <input type="text" id="bf-imp-name" maxlength="300" placeholder="Titel des Briefings"></label>
+      <label class="sk-form-wide">Änderungsnotiz <input type="text" id="bf-imp-note" maxlength="300" placeholder="z. B. Neue Studien ergänzt"></label>
+      <label>Original in Claude <span class="muted">(optional)</span><input type="url" id="bf-imp-url" placeholder="https://claude.ai/…"></label>
+      <label>PDF-Anhang <span class="muted">(optional)</span><input type="file" id="bf-imp-pdf" accept="application/pdf,.pdf"></label>
+    </div>
+    <div class="modal-actions"><button type="button" class="btn btn-ghost" onclick="closeBfImport()">Abbrechen</button><button type="button" class="btn btn-primary" id="bf-imp-save" onclick="bfSaveImport(this)">Briefing speichern</button></div>
+  </div>
+</div>
+<div class="bf-reader-bg" id="bf-reader-bg" role="dialog" aria-modal="true" aria-labelledby="bf-r-title" onclick="if(event.target===this)closeBriefing()">
+  <div class="bf-reader">
+    <div class="bf-r-head" id="bf-r-head"></div>
+    <div class="bf-r-body" id="bf-r-body">
+      <div class="bf-r-docwrap" id="bf-r-docwrap">
+        <nav class="bf-toc" id="bf-r-toc" aria-label="Inhaltsverzeichnis"></nav>
+        <div class="bf-r-main">
+          <div class="bf-toc-m" id="bf-r-toc-m"></div>
+          <div class="bf-banner" id="bf-r-banner" hidden></div>
+          <article class="bf-doc" id="bf-r-doc"></article>
+        </div>
+      </div>
+      <div class="bf-r-notes" id="bf-r-notes" hidden></div>
+      <div class="bf-r-pdf" id="bf-r-pdf" hidden></div>
+    </div>
+  </div>
+</div>
 <div class="modal-bg" id="guide-view-bg" onclick="if(event.target===this)closeAcqGuide()">
   <div class="modal" style="width:600px">
     <h2 id="guide-view-title">Leitfaden</h2>
@@ -2405,6 +2566,7 @@ let pendingIdeaForEpisode = null;
 let ideaExpertsForEpisode = [];
 let pendingAcqRequests = [];
 let episodeAcqRequestIds = [];
+let episodeBriefingIdeaId = null; // idea whose briefing is linked to the episode being created
 
 // With a confirmed request the episode gets exactly that guest (name, contact, profile link);
 // only a new episode is created, existing episodes are never overwritten.
@@ -2451,6 +2613,7 @@ const ICON_PATHS = {
   trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
   archive: '<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
   phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
 };
 function icon(name) { return `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name] || ''}</svg>`; }
 
@@ -2616,6 +2779,7 @@ async function afterLogin() {
   }
   authMember = true;
   dashResetPrefs();
+  bfResetState();
   try {
     const rows = await apiFetch('app_users?select=name&email=eq.' + encodeURIComponent(session.email));
     currentUserName = (rows[0] && rows[0].name) || '';
@@ -2632,6 +2796,7 @@ async function logout(silent) {
   currentUserName = '';
   authMember = false;
   dashResetPrefs();
+  bfResetState();
   updateAuthUi();
   if (token) authRequest('logout', {}, token).catch(() => {});
   if (silent) return;
@@ -2908,7 +3073,7 @@ window.addEventListener('online', () => { retryFailedSaves(); reloadAllData(); }
 
 // ── REALTIME ────────────────────────────────────────────────────
 const RT_TOPIC = 'realtime:podcast-sync';
-const RT_TABLES = ['podcast_skills', 'podcast_skill_versions', 'podcast_skill_optimizations', 'podcast_investment_links', 'podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
+const RT_TABLES = ['podcast_briefings', 'podcast_briefing_versions', 'podcast_briefing_notes', 'podcast_skills', 'podcast_skill_versions', 'podcast_skill_optimizations', 'podcast_investment_links', 'podcast_investments', 'podcast_investment_categories', 'podcast_setup_items', 'podcast_episodes', 'podcast_todos', 'podcast_ideas', 'podcast_task_projects', 'podcast_guides',
   'podcast_experts', 'podcast_expert_contacts', 'podcast_expert_ideas', 'podcast_expert_episodes', 'podcast_settings', 'podcast_posts', 'podcast_events',
   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months',
@@ -2959,6 +3124,7 @@ function realtimeUpdateToken() {
   rtSend('access_token', { access_token: (session && session.access_token) || SUPABASE_KEY });
 }
 function onRemoteChange(table) {
+  if (table.startsWith('podcast_briefing')) { clearTimeout(rtDebounce.briefings); rtDebounce.briefings = setTimeout(onBriefingsRemote, 400); return; }
   if (table.startsWith('podcast_revenue') || table === 'podcast_strategy_goals' || table === 'podcast_metric_values') table = 'podcast_revenue';
   if (table.startsWith('podcast_fin_')) table = 'podcast_fin';
   if (table.startsWith('podcast_skill')) table = 'podcast_skills';
@@ -3827,6 +3993,7 @@ function openDetail(id) {
       </div>
     </div>
     ${episodeInfoHtml(ep)}
+    ${episodeBriefingHtml(ep)}
     ${renderEpisodePosts(ep)}
     ${sectionsHtml}
     <div class="card" style="margin-top:8px">
@@ -4628,11 +4795,14 @@ async function exportAllData() {
                   'podcast_revenue_entries', 'podcast_revenue_corrections', 'podcast_revenue_months', 'podcast_revenue_goals',
                   'podcast_fin_categories', 'podcast_fin_recurring', 'podcast_fin_bookings', 'podcast_fin_months', 'podcast_fin_booking_log',
                   'podcast_strategy_goals', 'podcast_metric_values',
-                  'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements'];
+                  'podcast_prompts', 'podcast_expenses', 'podcast_income', 'podcast_settlements',
+                  'podcast_briefings', 'podcast_briefing_versions', 'podcast_briefing_notes'];
   try {
     const data = {};
     for (const t of tables) data[t] = await apiFetch(t + '?select=*');
-    const blob = new Blob([JSON.stringify({ created_at: new Date().toISOString(), source: 'app-export', data }, null, 2)], { type: 'application/json' });
+    const notes = ['PDF-Anhänge der Interview-Briefings (Bucket „briefings“), Belege und Skill-Dateien sind binär und nicht in dieser JSON-Datei enthalten – sie werden vom täglichen Server-Backup in den Bucket „backups“ gespiegelt.'];
+    if (!session) notes.push('Ohne Anmeldung exportiert: Interview-Briefings, Versionen und Interviewnotizen sind vertraulich und daher leer. Für ein vollständiges Backup bitte angemeldet exportieren.');
+    const blob = new Blob([JSON.stringify({ created_at: new Date().toISOString(), source: 'app-export', notes, data }, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -4720,6 +4890,7 @@ async function saveEpisode() {
       const acqReqs = pendingAcqRequests; pendingAcqRequests = [];
       ideaExpertsForEpisode = acqReqs.length ? acqReqs.map(acqExpert).filter(Boolean) : ideaLinkedExperts(idea.id);
       if (acqReqs.length) { ep.guest = acqReqs.map(r => acqName(r)).join(', '); episodeAcqRequestIds = acqReqs.map(r => r.id); }
+      episodeBriefingIdeaId = idea.id;
       pendingIdeaForEpisode = null;
     }
     episodes.push(ep);
@@ -4738,13 +4909,15 @@ async function saveEpisode() {
       for (const x of linked) await linkExpert('episode', ep.id, x.id);
       const reqIds = episodeAcqRequestIds; episodeAcqRequestIds = [];
       for (const id of reqIds) { const r = acqReq(id); if (r) await acqPatchRequest(r, { episode_id: ep.id }).catch(() => {}); }
+      const bfIdea = episodeBriefingIdeaId; episodeBriefingIdeaId = null;
+      if (bfIdea) await bfLinkIdeaToEpisode(bfIdea, ep.id);
     }
     else {
       if (shiftDays) { shiftEpisodePosts(ep.id, shiftDays); afterPostChange(ep.id); }
       showToast('Gespeichert ✓' + (shiftDays ? ' · offene Posts mit verschoben' : ''));
     }
   } catch (e) {
-    if (isNew) { ideaExpertsForEpisode = []; episodeAcqRequestIds = []; episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
+    if (isNew) { ideaExpertsForEpisode = []; episodeAcqRequestIds = []; episodeBriefingIdeaId = null; episodes = episodes.filter(x => x !== ep); failedSaves.delete(ep.id); renderSyncState(); renderPlaner(); }
   }
 }
 
@@ -4978,6 +5151,7 @@ function openIdeaModal(id) {
   document.getElementById('idea-status').value = idea ? idea.status : 'idea';
   document.getElementById('idea-priority').value = idea ? idea.priority : 'medium';
   refreshIdeaEmailField();
+  renderIdeaBriefing();
   document.getElementById('idea-delete-btn').style.display = idea ? 'inline-block' : 'none';
   document.getElementById('idea-to-planer-btn').style.display = (idea && idea.status === 'confirmed') ? 'inline-block' : 'none';
   document.getElementById('idea-modal-bg').classList.add('open');
@@ -10461,6 +10635,7 @@ function renderExpertDetail() {
     ${fu && fu.due && fu.due <= new Date() ? `<div class="remote-banner">⏰ <span><b>Nachfassen fällig</b> – ${esc(fu.reason)}. Neuen Kontakt erfassen oder Status ändern.</span></div>` : ''}
 
     ${expertRequestsHtml(x)}
+    ${expertBriefingsHtml(x)}
     <div class="card x-card">
       <h2>Kontaktchronik</h2>
       <div class="contact-form">
@@ -10890,6 +11065,607 @@ function alertsHtml(f) {
       <div class="alert-main"><div class="alert-title">${esc(a.title)}</div>${a.text ? `<div class="alert-text">${esc(a.text)}</div>` : ''}</div>
       <button class="btn btn-sm" onclick="${a.action}">${a.cta}</button>
     </div>`).join('')}</div></div>`;
+}
+
+// ── INTERVIEW-BRIEFINGS ──────────────────────────────────────────
+// Documents created externally with our Claude skill and stored here as Markdown (no AI in the app).
+// One briefing row belongs to an idea and/or an episode: on takeover into the planner the same row gets the
+// episode_id – never a copy. Versions are immutable (DB trigger), notes are separate rows, a PDF per version
+// lives in the private bucket "briefings". Confidential: members only (RLS without anon), so nothing loads
+// without a sign-in. Markdown is parsed with marked and cleaned with DOMPurify; raw HTML is never executed.
+const BF_TABLE = 'podcast_briefings', BFV_TABLE = 'podcast_briefing_versions', BFN_TABLE = 'podcast_briefing_notes';
+const BF_FILE_MAX = 3 * 1024 * 1024, BF_TEXT_MAX = 2000000, BF_PDF_MAX = 25 * 1024 * 1024;
+const BF_LIBS = [
+  ['https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js', 'sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi'],
+  ['https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js', 'sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a'],
+];
+let briefings = [], bfVersions = [], bfNotes = [];
+let bfState = 'idle', bfError = '';   // idle | loading | ready | error
+const bfContent = {};                  // versionId -> markdown
+let bfImport = null;                   // open import dialog
+let bfReader = null;                   // open reading view
+let bfBusy = 0, bfRemotePending = false;
+let bfLibsPromise = null;
+
+function bfActor() { return dashMe(); }
+function bfWho(k) { return k ? (TODO_NAMES[k] || k) : '–'; }
+function bfDate(ts) { return ts ? formatDate(new Date(ts)) : ''; }
+function bfFor(kind, id) { return briefings.find(b => (kind === 'idea' ? b.idea_id : b.episode_id) === id) || null; }
+function bfVersionsOf(bid) { return bfVersions.filter(v => v.briefing_id === bid).sort((a, b) => a.version_number - b.version_number); }
+function bfCurrent(b) { return bfVersions.find(v => v.id === b.current_version_id) || bfVersionsOf(b.id).pop() || null; }
+function bfNotesOf(bid) { return bfNotes.filter(n => n.briefing_id === bid); }
+function bfNextNumber(bid) { return (bfVersionsOf(bid).pop() || { version_number: 0 }).version_number + 1; }
+
+async function loadBriefings() {
+  if (!session) { briefings = []; bfVersions = []; bfNotes = []; bfState = 'idle'; return false; }
+  if (bfState !== 'ready') bfState = 'loading';
+  try {
+    const [b, v, n] = await Promise.all([
+      apiFetch(BF_TABLE + '?select=*&order=updated_at.desc'),
+      apiFetch(BFV_TABLE + '?select=id,briefing_id,version_number,change_note,source,file_name,pdf_path,pdf_name,created_by,created_at&order=version_number.asc'),
+      apiFetch(BFN_TABLE + '?select=*&order=created_at.desc'),
+    ]);
+    briefings = b; bfVersions = v; bfNotes = n; bfState = 'ready'; bfError = '';
+    return true;
+  } catch (e) { if (bfState !== 'ready') { bfState = 'error'; bfError = e.message; } return false; }
+}
+function ensureBriefings() {
+  if (!session || bfState === 'loading' || bfState === 'ready') return;
+  loadBriefings().then(refreshBriefingViews);
+}
+function bfResetState() { briefings = []; bfVersions = []; bfNotes = []; bfState = 'idle'; if (bfReader) closeBriefing(); }
+function bfRetry() { bfState = 'idle'; ensureBriefings(); refreshBriefingViews(); }
+async function onBriefingsRemote() {
+  if (!session) return;
+  if (bfBusy) { bfRemotePending = true; return; }
+  await loadBriefings();
+  refreshBriefingViews();
+}
+function refreshBriefingViews() {
+  if (document.getElementById('idea-modal-bg').classList.contains('open')) renderIdeaBriefing();
+  const epBox = document.getElementById('ep-briefing-body');
+  if (epBox) swapHtmlKeepFocus(epBox, briefingCardHtml('episode', epBox.dataset.ep));
+  const xBox = document.getElementById('x-briefings');
+  if (xBox) {
+    const has = briefings.some(b => b.expert_id === xBox.dataset.expert);
+    const card = xBox.closest('.x-card');
+    if (card) card.hidden = !has;
+    swapHtmlKeepFocus(xBox, expertBriefingsInner(xBox.dataset.expert));
+  }
+  if (bfReader) renderBriefingReader();
+}
+
+// ── Compact card (idea dialog and episode detail) ──
+function briefingCardHtml(kind, id) {
+  if (!session) return `<div class="bf-card bf-locked"><span>🔒 Interview-Briefings sind vertraulich und nur nach Anmeldung sichtbar.</span><button type="button" class="btn btn-sm" onclick="openLogin()">Anmelden</button></div>`;
+  if (bfState === 'idle' || bfState === 'loading') return '<div class="bf-card"><span class="muted">Lade Briefing …</span></div>';
+  if (bfState === 'error') return `<div class="bf-card"><span class="muted">Briefings konnten nicht geladen werden (${esc(bfError)}).</span><button type="button" class="btn btn-sm" onclick="bfRetry()">Erneut versuchen</button></div>`;
+  const k = jsArg(kind), i = jsArg(id);
+  const b = bfFor(kind, id);
+  if (!b) {
+    // An episode taken over from an idea without sign-in (or before this feature) can adopt the idea's briefing.
+    const ep = kind === 'episode' ? episodes.find(e => e.id === id) : null;
+    const orphan = ep ? briefings.find(x => !x.episode_id && x.idea_id && (ideas.find(t => t.id === x.idea_id) || {}).title === ep.title) : null;
+    return `<div class="bf-card bf-empty"><div class="bf-card-text"><b>Noch kein Interview-Briefing</b><span class="muted">Mit dem Claude-Skill erstellen, als Markdown exportieren und hier importieren – oder den Text direkt einfügen.</span></div>
+      <div class="bf-actions"><button type="button" class="btn btn-sm btn-primary" onclick="bfPickFile(${k},${i})">Briefing importieren</button><button type="button" class="btn btn-sm" onclick="bfOpenImport(${k},${i},null,'paste')">Text einfügen</button>
+      ${orphan ? `<button type="button" class="btn btn-sm btn-ghost" onclick="bfAdoptForEpisode(${jsArg(orphan.id)},${i})">Briefing der Idee übernehmen</button>` : ''}</div></div>`;
+  }
+  const v = bfCurrent(b), n = bfNotesOf(b.id).length, url = bfCleanUrl(b.claude_url || '');
+  return `<div class="bf-card"><div class="bf-card-main"><span class="bf-doc-ico" aria-hidden="true">${icon('doc')}</span><div class="bf-card-text"><b>${esc(b.title)}</b>
+      <span class="muted">${v ? 'v' + v.version_number : 'ohne Inhalt'} · erstellt von ${esc(bfWho(b.created_by))} · aktualisiert ${bfDate(b.updated_at)}${n ? ` · ${n} Notiz${n === 1 ? '' : 'en'}` : ''}${v && v.pdf_path ? ' · PDF' : ''}${kind === 'idea' && b.episode_id ? ' · mit Folge verknüpft' : ''}</span></div></div>
+    <div class="bf-actions"><button type="button" class="btn btn-sm btn-primary" onclick="openBriefing(${jsArg(b.id)})">Briefing lesen</button>
+      <button type="button" class="btn btn-sm" onclick="bfOpenImport(${k},${i},${jsArg(b.id)},'file')">Aktualisieren</button>
+      ${url ? `<a class="btn btn-sm btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">In Claude öffnen ↗</a>` : ''}</div></div>`;
+}
+function renderIdeaBriefing() {
+  const box = document.getElementById('idea-briefing');
+  if (!box) return;
+  if (!editingIdeaId) { box.innerHTML = '<div class="bf-card"><span class="muted">Ein Briefing lässt sich nach dem ersten Speichern der Idee importieren.</span></div>'; return; }
+  ensureBriefings();
+  swapHtmlKeepFocus(box, briefingCardHtml('idea', editingIdeaId));
+}
+function episodeBriefingHtml(ep) {
+  ensureBriefings();
+  return `<div class="card bf-slot"><h2 class="bf-slot-h">${icon('doc')}Interview-Briefing</h2><div id="ep-briefing-body" data-ep="${esc(ep.id)}">${briefingCardHtml('episode', ep.id)}</div></div>`;
+}
+function expertBriefingsInner(expertId) {
+  const list = briefings.filter(b => b.expert_id === expertId);
+  if (!list.length) return '<div class="muted" style="font-size:13px">Keine verknüpften Briefings.</div>';
+  return list.map(b => {
+    const ep = b.episode_id && episodes.find(e => e.id === b.episode_id), idea = b.idea_id && ideas.find(i => i.id === b.idea_id);
+    const v = bfCurrent(b);
+    return `<div class="person-item" onclick="openBriefing(${jsArg(b.id)})"><span>📄 ${esc(b.title)}</span><span class="muted">${esc(ep ? ep.title : idea ? idea.title : '')} · v${v ? v.version_number : '–'}</span></div>`;
+  }).join('');
+}
+function expertBriefingsHtml(x) {
+  if (!session) return '';
+  ensureBriefings();
+  const has = bfState === 'ready' && briefings.some(b => b.expert_id === x.id);
+  return `<div class="card x-card"${has ? '' : ' hidden'}><h2>Interview-Briefings</h2><div id="x-briefings" data-expert="${esc(x.id)}">${has ? expertBriefingsInner(x.id) : ''}</div></div>`;
+}
+async function bfAdoptForEpisode(bid, epId) {
+  const b = briefings.find(x => x.id === bid);
+  if (!b || !confirm(`Das Briefing „${b.title}“ mit dieser Folge verknüpfen? Es bleibt dasselbe Dokument (keine Kopie).`)) return;
+  try {
+    const rows = await apiFetch(`${BF_TABLE}?id=eq.${encodeURIComponent(bid)}&episode_id=is.null`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify({ episode_id: epId, updated_at: new Date().toISOString(), updated_by: bfActor() }) });
+    if (!rows.length) showToast('Das Briefing ist inzwischen mit einer anderen Folge verknüpft.', 'error');
+    else showToast('Briefing verknüpft');
+  } catch (e) { showToast('Nicht verknüpft: ' + e.message, 'error'); }
+  await loadBriefings(); refreshBriefingViews();
+}
+// Planner takeover: the idea's briefing row gets the new episode_id (same row, no copy).
+async function bfLinkIdeaToEpisode(ideaId, epId) {
+  if (!session || !ideaId) return;
+  try {
+    const rows = await apiFetch(`${BF_TABLE}?idea_id=eq.${encodeURIComponent(ideaId)}&episode_id=is.null`, { method: 'PATCH', prefer: 'return=representation',
+      body: JSON.stringify({ episode_id: epId, updated_at: new Date().toISOString(), updated_by: bfActor() }) });
+    if (rows.length) { showToast('Interview-Briefing mit der neuen Folge verknüpft'); await loadBriefings(); refreshBriefingViews(); }
+  } catch (e) { showToast('Briefing konnte nicht mit der Folge verknüpft werden: ' + e.message, 'error'); }
+}
+
+// ── Import (file or pasted text); an existing briefing gets a new version, nothing is overwritten ──
+function bfCleanUrl(v) {
+  const s = String(v || '').trim();
+  if (!s) return '';
+  try { const u = new URL(s); return u.protocol === 'https:' && !u.username && !u.password && !/\s/.test(s) ? u.href : ''; } catch { return ''; }
+}
+function bfNormalizeText(t) { return String(t || '').replace(/^﻿/, '').replace(/\r\n?/g, '\n'); }
+function bfTitleFrom(md, fallback) {
+  const m = /^#\s+(.+?)\s*#*\s*$/m.exec(md) || /^##\s+(.+?)\s*#*\s*$/m.exec(md);
+  return (m ? m[1].replace(/[*_`]/g, '').trim() : fallback || '').slice(0, 300);
+}
+function bfStats(md) {
+  const heads = (md.match(/^#{1,3}\s+.+$/gm) || []).map(h => h.replace(/^#+\s+/, '').replace(/[*_`]/g, ''));
+  const tables = (md.match(/^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/gm) || []).length;
+  const links = (md.match(/\]\(https?:\/\/[^)]+\)|https?:\/\/\S+/g) || []).length;
+  return { heads, tables, links, chars: md.length };
+}
+function bfPickFile(kind, id, bid = null) {
+  if (!session) { showToast('Briefings sind nur nach Anmeldung verfügbar.', 'error'); openLogin(); return; }
+  bfImport = { kind, id, bid, mode: 'file', text: '', fileName: '' };
+  const input = document.getElementById('bf-file');
+  input.value = '';
+  input.click();
+}
+async function bfFileChosen(input) {
+  const f = input.files[0];
+  input.value = '';
+  if (!f || !bfImport) return;
+  const text = await bfReadMarkdownFile(f);
+  if (text === null) return;
+  bfImport.text = text; bfImport.fileName = f.name; bfImport.mode = 'file';
+  if (document.getElementById('bf-import-bg').classList.contains('open')) {
+    const name = document.getElementById('bf-imp-name');
+    if (!bfImport.bid) name.value = '';
+    bfFillImport();
+  } else bfOpenImport(bfImport.kind, bfImport.id, bfImport.bid, 'file', true);
+}
+async function bfReadMarkdownFile(f) {
+  if (!/\.(md|markdown|txt)$/i.test(f.name)) { showToast('Bitte eine Markdown-Datei (.md) wählen.', 'error'); return null; }
+  if (f.size > BF_FILE_MAX) { showToast('Datei zu groß (max. 3 MB).', 'error'); return null; }
+  try {
+    const text = bfNormalizeText(new TextDecoder('utf-8', { fatal: true }).decode(await f.arrayBuffer()));
+    if (text.includes('\u0000')) throw new Error('binär');
+    if (!text.trim()) { showToast('Die Datei ist leer.', 'error'); return null; }
+    return text;
+  } catch { showToast('Die Datei ist keine gültige UTF-8-Textdatei. Bitte in Claude erneut als Markdown exportieren.', 'error'); return null; }
+}
+function bfOpenImport(kind, id, bid, mode, keepText = false) {
+  if (!session) { showToast('Briefings sind nur nach Anmeldung verfügbar.', 'error'); openLogin(); return; }
+  if (!keepText || !bfImport) bfImport = { kind, id, bid, mode, text: '', fileName: '' };
+  Object.assign(bfImport, { kind, id, bid, mode });
+  const b = bid ? briefings.find(x => x.id === bid) : null;
+  const cur = b ? bfCurrent(b) : null;
+  document.getElementById('bf-imp-title').textContent = b ? 'Neue Version des bestehenden Briefings speichern?' : 'Interview-Briefing importieren';
+  document.getElementById('bf-imp-intro').textContent = b
+    ? `Aktuell: v${cur ? cur.version_number : '–'} vom ${cur ? bfDate(cur.created_at) : '–'}. Die neue Version wird als v${bfNextNumber(b.id)} gespeichert und als aktuell markiert – alle bisherigen Versionen bleiben erhalten und lesbar.`
+    : 'Das Briefing wird vollständig hier gespeichert und bleibt lesbar, auch wenn der Claude-Link später nicht mehr funktioniert.';
+  document.getElementById('bf-imp-name').value = b ? b.title : '';
+  document.getElementById('bf-imp-note').value = b ? '' : 'Erstes Briefing';
+  document.getElementById('bf-imp-url').value = b ? b.claude_url || '' : '';
+  document.getElementById('bf-imp-text').value = '';
+  document.getElementById('bf-imp-pdf').value = '';
+  const save = document.getElementById('bf-imp-save');
+  save.textContent = b ? `Als v${bfNextNumber(b.id)} speichern` : 'Briefing speichern';
+  save.disabled = false;
+  bfFillImport();
+  document.getElementById('bf-import-bg').classList.add('open');
+  setTimeout(() => (bfImport && bfImport.mode === 'paste' ? document.getElementById('bf-imp-text') : document.getElementById('bf-imp-name')).focus({ preventScroll: true }), 50);
+}
+function bfSetImportMode(mode) { bfImport.mode = mode; bfFillImport(); if (mode === 'paste') document.getElementById('bf-imp-text').focus({ preventScroll: true }); }
+function bfChooseOtherFile() { document.getElementById('bf-file').value = ''; document.getElementById('bf-file').click(); }
+function bfFillImport() {
+  const d = bfImport, paste = d.mode === 'paste';
+  document.querySelectorAll('#bf-imp-modes .seg-btn').forEach(b => { b.classList.toggle('active', b.dataset.mode === d.mode); b.setAttribute('aria-pressed', b.dataset.mode === d.mode); });
+  document.getElementById('bf-imp-filebox').hidden = paste;
+  document.getElementById('bf-imp-pastebox').hidden = !paste;
+  const text = paste ? bfNormalizeText(document.getElementById('bf-imp-text').value) : d.text;
+  const name = document.getElementById('bf-imp-name');
+  if (!name.value.trim() && text) name.value = bfTitleFrom(text, d.fileName.replace(/\.(md|markdown|txt)$/i, ''));
+  document.getElementById('bf-imp-file').innerHTML = d.text ? `📄 <b>${esc(d.fileName)}</b>` : '<span class="muted">Noch keine Datei gewählt</span>';
+  const st = text ? bfStats(text) : null;
+  document.getElementById('bf-imp-stats').innerHTML = st ? `<div class="muted">${st.chars.toLocaleString('de-DE')} Zeichen · ${st.heads.length} Überschriften · ${st.tables} Tabelle${st.tables === 1 ? '' : 'n'} · ${st.links} Link${st.links === 1 ? '' : 's'}</div>
+    ${st.heads.length ? `<div class="bf-imp-heads">${st.heads.slice(0, 10).map(h => `<span>${esc(h)}</span>`).join('')}${st.heads.length > 10 ? `<span>+${st.heads.length - 10} weitere</span>` : ''}</div>` : ''}` : '';
+}
+function closeBfImport() { document.getElementById('bf-import-bg').classList.remove('open'); bfImport = null; }
+async function bfCheckPdf(f) {
+  if (!f) return true;
+  if (!/\.pdf$/i.test(f.name) || (f.type && f.type !== 'application/pdf')) { showToast('Als Anhang ist nur eine PDF-Datei erlaubt.', 'error'); return false; }
+  if (f.size > BF_PDF_MAX) { showToast('PDF zu groß (max. 25 MB).', 'error'); return false; }
+  const head = new TextDecoder('latin1').decode(await f.slice(0, 5).arrayBuffer());
+  if (head !== '%PDF-') { showToast('Die Datei ist keine gültige PDF-Datei.', 'error'); return false; }
+  return true;
+}
+async function bfUploadPdf(bid, vid, f) {
+  const token = await getAccessToken();
+  const safe = f.name.normalize('NFD').replace(/[^\w.\-]+/g, '_').replace(/\.pdf$/i, '').slice(-60) + '.pdf';
+  const path = `${bid}/${vid}/${Date.now()}-${safe}`;
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/briefings/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/pdf', 'x-upsert': 'false' }, body: f });
+  if (!r.ok) throw new Error('PDF-Upload fehlgeschlagen: ' + apiErrorText(r.status, await r.text()));
+  return { pdf_path: path, pdf_name: f.name.slice(0, 200) };
+}
+function bfGuessExpert(kind, id) {
+  if (kind !== 'idea' || !expertsLoaded) return null;
+  const reqs = acqRequests(id);
+  const r = reqs.find(x => x.contact_status === 'confirmed') || reqs.find(x => x.role === 'wish') || reqs[0];
+  return r ? r.expert_id : null;
+}
+async function bfSaveImport(btn) {
+  const d = bfImport;
+  if (!d) return;
+  const text = d.mode === 'paste' ? bfNormalizeText(document.getElementById('bf-imp-text').value) : d.text;
+  const title = document.getElementById('bf-imp-name').value.trim();
+  const note = document.getElementById('bf-imp-note').value.trim();
+  const rawUrl = document.getElementById('bf-imp-url').value.trim(), url = bfCleanUrl(rawUrl);
+  const pdf = document.getElementById('bf-imp-pdf').files[0] || null;
+  if (!text.trim()) { showToast(d.mode === 'paste' ? 'Bitte den Markdown-Text einfügen.' : 'Bitte eine Markdown-Datei wählen.', 'error'); return; }
+  if (text.length > BF_TEXT_MAX) { showToast('Der Text ist zu lang (max. 2 Mio. Zeichen).', 'error'); return; }
+  if (!title) { showToast('Bitte einen Titel eingeben.', 'error'); return; }
+  if (rawUrl && !url) { showToast('Der Claude-Link muss eine vollständige https-Adresse sein.', 'error'); return; }
+  if (!await bfCheckPdf(pdf)) return;
+  const who = bfActor(), now = new Date().toISOString();
+  btn.disabled = true; bfBusy++;
+  let bid = d.bid, created = false, num = 0;
+  const vid = newId();
+  try {
+    if (!bid) {
+      bid = newId();
+      await apiFetch(BF_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ id: bid, [d.kind === 'idea' ? 'idea_id' : 'episode_id']: d.id,
+        expert_id: bfGuessExpert(d.kind, d.id), title, claude_url: url || null, created_by: who, updated_by: who }) });
+      created = true;
+    }
+    const files = pdf ? await bfUploadPdf(bid, vid, pdf) : {};
+    num = created ? 1 : bfNextNumber(bid);
+    const insert = n => apiFetch(BFV_TABLE, { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ id: vid, briefing_id: bid, version_number: n, markdown_content: text,
+      change_note: note || null, source: d.mode === 'paste' ? 'paste' : 'file', file_name: d.mode === 'paste' ? null : d.fileName.slice(0, 200), created_by: who, ...files }) });
+    try { await insert(num); }
+    catch (e) { // another device saved a version at the same moment: take the next free number
+      if (e.status !== 409) throw e;
+      const rows = await apiFetch(`${BFV_TABLE}?select=version_number&briefing_id=eq.${bid}&order=version_number.desc&limit=1`);
+      num = (rows[0] ? rows[0].version_number : 0) + 1;
+      await insert(num);
+    }
+    await apiFetch(`${BF_TABLE}?id=eq.${bid}`, { method: 'PATCH', prefer: 'return=minimal', body: JSON.stringify({ current_version_id: vid, title, claude_url: url || null, updated_at: now, updated_by: who }) });
+  } catch (e) {
+    if (created) await apiFetch(`${BF_TABLE}?id=eq.${bid}`, { method: 'DELETE' }).catch(() => {});
+    btn.disabled = false; bfBusy--;
+    showToast((e.status === 409 && created ? 'Hier gibt es inzwischen schon ein Briefing (evtl. gerade auf einem anderen Gerät angelegt). ' : 'Nicht gespeichert: ') + e.message, 'error');
+    if (e.status === 409) { await loadBriefings(); refreshBriefingViews(); }
+    return;
+  }
+  bfContent[vid] = text;
+  closeBfImport();
+  await loadBriefings();
+  bfBusy--;
+  refreshBriefingViews();
+  flashSaved();
+  showToast(created ? 'Briefing gespeichert' : `Version v${num} gespeichert`);
+  openBriefing(bid);
+  if (bfRemotePending) { bfRemotePending = false; onBriefingsRemote(); }
+}
+
+// ── Markdown → safe HTML ──
+function bfLoadLibs() {
+  if (window.marked && window.DOMPurify) return Promise.resolve();
+  if (bfLibsPromise) return bfLibsPromise;
+  bfLibsPromise = Promise.all(BF_LIBS.map(([src, integrity]) => new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.integrity = integrity; s.crossOrigin = 'anonymous'; s.referrerPolicy = 'no-referrer';
+    s.onload = res; s.onerror = () => rej(new Error('Die Markdown-Darstellung konnte nicht geladen werden'));
+    document.head.appendChild(s);
+  }))).catch(e => { bfLibsPromise = null; throw e; });
+  return bfLibsPromise;
+}
+const BF_TAGS = ['p', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'b', 'i', 'del', 's', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li',
+  'table', 'thead', 'tbody', 'tr', 'th', 'td', 'a', 'sup', 'sub', 'span', 'input'];
+const BF_REF_RE = /(\bdoi:\s?10\.\d{4,9}\/[^\s,;)\]]+|\bPMID:?\s?\d{5,9})/i;
+function bfRenderMarkdown(md) {
+  const renderer = new marked.Renderer();
+  renderer.html = h => esc(typeof h === 'string' ? h : (h && (h.text || h.raw)) || ''); // raw HTML is shown as text, never executed
+  const raw = marked.parse(md, { gfm: true, breaks: false, renderer, async: false });
+  const frag = DOMPurify.sanitize(raw, { ALLOWED_TAGS: BF_TAGS, ALLOWED_ATTR: ['href', 'title', 'align', 'start', 'colspan', 'rowspan', 'type', 'checked', 'disabled'], ALLOW_DATA_ATTR: false, RETURN_DOM_FRAGMENT: true });
+  frag.querySelectorAll('input').forEach(i => { if (i.type !== 'checkbox') i.remove(); else i.disabled = true; });
+  // DOI / PMID references written as plain text become links.
+  const walker = document.createTreeWalker(frag, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement && n.parentElement.closest('a, code, pre') ? NodeFilter.FILTER_REJECT : BF_REF_RE.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP });
+  const texts = [];
+  while (walker.nextNode()) texts.push(walker.currentNode);
+  texts.forEach(node => {
+    const out = document.createDocumentFragment();
+    node.nodeValue.split(new RegExp(BF_REF_RE.source, 'gi')).forEach((p, i) => {
+      if (i % 2 === 0) { if (p) out.appendChild(document.createTextNode(p)); return; }
+      const a = document.createElement('a');
+      a.textContent = p;
+      a.href = /^doi/i.test(p) ? 'https://doi.org/' + p.replace(/^doi:\s?/i, '').replace(/\.$/, '') : 'https://pubmed.ncbi.nlm.nih.gov/' + p.replace(/\D/g, '') + '/';
+      out.appendChild(a);
+    });
+    node.replaceWith(out);
+  });
+  frag.querySelectorAll('a').forEach(a => {
+    const href = a.getAttribute('href') || '';
+    const url = /^(https?:|mailto:)/i.test(href) ? safeUrl(href) : '';
+    if (!url) { const span = document.createElement('span'); span.className = 'bf-deadlink'; span.textContent = a.textContent; a.replaceWith(span); return; }
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.className = 'bf-ext';
+    if (!a.title) a.title = url;
+  });
+  frag.querySelectorAll('table').forEach(t => { const w = document.createElement('div'); w.className = 'bf-table-wrap'; t.replaceWith(w); w.appendChild(t); });
+  const toc = [];
+  frag.querySelectorAll('h1, h2, h3, h4').forEach((h, i) => { h.id = 'bf-h-' + i; toc.push({ id: h.id, level: +h.tagName[1], text: h.textContent.trim() }); });
+  return { frag, toc };
+}
+
+// ── Reading view ──
+function openBriefing(bid, versionId = null) {
+  const b = briefings.find(x => x.id === bid);
+  if (!b) { showToast('Das Briefing wurde nicht gefunden.', 'error'); return; }
+  const v = versionId ? bfVersions.find(x => x.id === versionId) : bfCurrent(b);
+  bfReader = { bid, vid: v ? v.id : null, tab: 'doc', noteDraft: '', editId: null, editText: '', settings: false, renderedVid: null, pdfFor: null, lastFocus: document.activeElement };
+  document.getElementById('bf-r-doc').innerHTML = '';
+  document.getElementById('bf-r-toc').innerHTML = '';
+  document.getElementById('bf-r-toc-m').innerHTML = '';
+  document.getElementById('bf-r-pdf').innerHTML = '';
+  document.documentElement.classList.add('bf-lock');
+  document.getElementById('bf-reader-bg').classList.add('open');
+  renderBriefingReader();
+  document.getElementById('bf-r-body').scrollTop = 0;
+  const x = document.getElementById('bf-r-close');
+  if (x) x.focus({ preventScroll: true });
+}
+function closeBriefing() {
+  if (!bfReader) return;
+  const back = bfReader.lastFocus;
+  bfReader = null;
+  document.getElementById('bf-reader-bg').classList.remove('open');
+  document.documentElement.classList.remove('bf-lock');
+  document.getElementById('bf-r-pdf').innerHTML = '';
+  if (back && back.isConnected) back.focus({ preventScroll: true });
+}
+function bfSetTab(tab) { bfReader.tab = tab; renderBriefingReader(); document.getElementById('bf-r-body').scrollTop = 0; }
+function bfSelectVersion(vid) { bfReader.vid = vid; bfReader.tab = 'doc'; renderBriefingReader(); document.getElementById('bf-r-body').scrollTop = 0; }
+function renderBriefingReader() {
+  const r = bfReader;
+  if (!r) return;
+  const b = briefings.find(x => x.id === r.bid);
+  if (!b) { closeBriefing(); showToast('Das Briefing ist nicht mehr verfügbar.', 'error'); return; }
+  const versions = bfVersionsOf(b.id), cur = bfCurrent(b);
+  if (!r.vid || !versions.some(v => v.id === r.vid)) r.vid = cur ? cur.id : null;
+  const v = versions.find(x => x.id === r.vid);
+  const url = bfCleanUrl(b.claude_url || ''), notes = bfNotesOf(b.id);
+  const ep = b.episode_id && episodes.find(e => e.id === b.episode_id), idea = b.idea_id && ideas.find(i => i.id === b.idea_id);
+  const x = b.expert_id && experts.find(e => e.id === b.expert_id);
+  if (r.tab === 'pdf' && !(v && v.pdf_path)) r.tab = 'doc';
+  swapHtmlKeepFocus(document.getElementById('bf-r-head'), `
+    <div class="bf-r-titlebar"><div class="bf-r-titles"><span class="bf-r-kicker">Interview-Briefing${x ? ' · ' + esc(expertDisplayName(x)) : ''}</span><h2 id="bf-r-title">${esc(b.title)}</h2>
+      <span class="muted bf-r-meta">${ep ? '🎙 ' + esc(ep.title) : idea ? '💡 ' + esc(idea.title) : ''}${ep && idea ? ' · aus der Idee übernommen' : ''}</span></div>
+      <button type="button" class="bf-r-x" id="bf-r-close" data-focus-key="bf-close" aria-label="Briefing schließen" onclick="closeBriefing()">✕</button></div>
+    <div class="bf-r-toolbar">
+      <label class="bf-r-ver"><span class="bf-sr">Version</span><select data-focus-key="bf-ver" aria-label="Version" onchange="bfSelectVersion(this.value)">${versions.slice().reverse().map(x => `<option value="${x.id}"${x.id === r.vid ? ' selected' : ''}>v${x.version_number}${cur && x.id === cur.id ? ' (aktuell)' : ''} · ${bfDate(x.created_at)} · ${esc(bfWho(x.created_by))}${x.change_note ? ' – ' + esc(x.change_note.slice(0, 50)) : ''}</option>`).join('')}</select></label>
+      <button type="button" class="btn btn-sm" data-focus-key="bf-dl" onclick="bfDownloadMd()"${v ? '' : ' disabled'}>Markdown herunterladen</button>
+      <button type="button" class="btn btn-sm" data-focus-key="bf-copy" onclick="bfCopyText()"${v ? '' : ' disabled'}>Text kopieren</button>
+      ${url ? `<a class="btn btn-sm btn-ghost" href="${esc(url)}" target="_blank" rel="noopener noreferrer">In Claude öffnen ↗</a>` : ''}
+      <button type="button" class="btn btn-sm btn-ghost" data-focus-key="bf-newver" onclick="bfOpenImport(${jsArg(b.episode_id ? 'episode' : 'idea')}, ${jsArg(b.episode_id || b.idea_id)}, ${jsArg(b.id)}, 'file')">Neue Version</button>
+      <button type="button" class="btn btn-sm btn-ghost" data-focus-key="bf-settings" aria-expanded="${r.settings}" onclick="bfReader.settings=!bfReader.settings;renderBriefingReader()">Angaben &amp; PDF</button>
+    </div>
+    ${r.settings ? bfSettingsHtml(b, v) : ''}
+    <div class="seg bf-r-tabs" role="tablist">
+      <button type="button" role="tab" class="seg-btn${r.tab === 'doc' ? ' active' : ''}" aria-selected="${r.tab === 'doc'}" data-focus-key="bf-tab-doc" onclick="bfSetTab('doc')">Dokument</button>
+      <button type="button" role="tab" class="seg-btn${r.tab === 'notes' ? ' active' : ''}" aria-selected="${r.tab === 'notes'}" data-focus-key="bf-tab-notes" onclick="bfSetTab('notes')">Unsere Interviewnotizen${notes.length ? ` (${notes.length})` : ''}</button>
+      ${v && v.pdf_path ? `<button type="button" role="tab" class="seg-btn${r.tab === 'pdf' ? ' active' : ''}" aria-selected="${r.tab === 'pdf'}" data-focus-key="bf-tab-pdf" onclick="bfSetTab('pdf')">PDF</button>` : ''}
+    </div>`);
+  document.getElementById('bf-r-docwrap').hidden = r.tab !== 'doc';
+  document.getElementById('bf-r-notes').hidden = r.tab !== 'notes';
+  document.getElementById('bf-r-pdf').hidden = r.tab !== 'pdf';
+  if (r.tab === 'doc') bfRenderDoc(v, cur);
+  if (r.tab === 'notes') swapHtmlKeepFocus(document.getElementById('bf-r-notes'), bfNotesHtml(notes));
+  if (r.tab === 'pdf') bfShowPdf(v);
+}
+async function bfRenderDoc(v, cur) {
+  const r = bfReader, banner = document.getElementById('bf-r-banner');
+  banner.innerHTML = v && cur && v.id !== cur.id ? `Du liest <b>v${v.version_number}</b> vom ${bfDate(v.created_at)} – aktuell ist v${cur.version_number}. <button type="button" class="link-btn" onclick="bfSelectVersion(${jsArg(cur.id)})">Zur aktuellen Version</button>` : '';
+  banner.hidden = !banner.innerHTML;
+  const docEl = document.getElementById('bf-r-doc');
+  if (!v) { docEl.innerHTML = '<p class="muted">Dieses Briefing hat noch keinen Inhalt.</p>'; document.getElementById('bf-r-toc').innerHTML = ''; r.renderedVid = null; return; }
+  if (r.renderedVid === v.id || r.loadingVid === v.id) return; // keep the reading position on re-renders (notes, realtime)
+  r.loadingVid = v.id;
+  docEl.innerHTML = loadingState('Lade Briefing …');
+  try {
+    if (!(v.id in bfContent)) {
+      const rows = await apiFetch(`${BFV_TABLE}?select=markdown_content&id=eq.${v.id}`);
+      if (!rows.length) throw new Error('Version nicht gefunden');
+      bfContent[v.id] = rows[0].markdown_content;
+    }
+    let toc = [];
+    try {
+      await bfLoadLibs();
+      const out = bfRenderMarkdown(bfContent[v.id]);
+      if (!bfReader || bfReader.vid !== v.id) return;
+      toc = out.toc;
+      docEl.replaceChildren(out.frag);
+    } catch (e) {
+      if (!bfReader || bfReader.vid !== v.id) return;
+      docEl.innerHTML = `<div class="acq-warn">${esc(e.message)} – das Briefing wird als Text angezeigt.</div><pre class="bf-plain">${esc(bfContent[v.id])}</pre>`;
+    }
+    bfReader.renderedVid = v.id;
+    const tocHtml = toc.length > 1 ? toc.map(t => `<button type="button" class="bf-toc-item bf-toc-l${Math.min(t.level, 4)}" onclick="bfJump('${t.id}')">${esc(t.text)}</button>`).join('') : '';
+    document.getElementById('bf-r-toc').innerHTML = tocHtml ? `<div class="bf-toc-title">Inhalt</div>${tocHtml}` : '';
+    document.getElementById('bf-r-toc-m').innerHTML = tocHtml ? `<details><summary>Inhaltsverzeichnis (${toc.length})</summary><div class="bf-toc-m-list">${tocHtml}</div></details>` : '';
+    document.getElementById('bf-r-docwrap').classList.toggle('no-toc', !tocHtml);
+  } catch (e) {
+    if (bfReader && bfReader.vid === v.id) docEl.innerHTML = `<div class="acq-warn">Briefing konnte nicht geladen werden: ${esc(e.message)}</div>`;
+  } finally { if (bfReader && bfReader.loadingVid === v.id) bfReader.loadingVid = null; }
+}
+function bfJump(id) {
+  const el = document.getElementById(id), body = document.getElementById('bf-r-body');
+  if (!el || !body) return;
+  body.scrollTo({ top: el.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop - 12, behavior: 'smooth' });
+  const m = document.querySelector('#bf-r-toc-m details');
+  if (m) m.open = false;
+}
+function bfViewed() { const r = bfReader, b = r && briefings.find(x => x.id === r.bid), v = r && bfVersions.find(x => x.id === r.vid); return { b, v, md: v ? bfContent[v.id] : null }; }
+function bfDownloadMd() {
+  const { b, v, md } = bfViewed();
+  if (!md) { showToast('Der Inhalt wird noch geladen.', 'error'); return; }
+  const slug = norm(b.title).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'briefing';
+  const url = URL.createObjectURL(new Blob([md], { type: 'text/markdown;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = `${slug}-v${v.version_number}.md`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function bfCopyText() { const { md } = bfViewed(); if (md) copyText(md); else showToast('Der Inhalt wird noch geladen.', 'error'); }
+
+// ── Details: title, Claude link, expert, PDF for the shown version ──
+function bfSettingsHtml(b, v) {
+  return `<div class="sk-form bf-settings">
+    <label class="sk-form-wide">Titel <input type="text" id="bf-s-title" maxlength="300" value="${esc(b.title)}"></label>
+    <label>Original in Claude <input type="url" id="bf-s-url" placeholder="https://claude.ai/…" value="${esc(b.claude_url || '')}"><span class="acq-hint">Nur Referenz – der Inhalt ist vollständig hier gespeichert.</span></label>
+    <label>Experte <select id="bf-s-expert"><option value="">– keiner –</option>${experts.map(x => `<option value="${esc(x.id)}"${x.id === b.expert_id ? ' selected' : ''}>${esc(expertDisplayName(x))}</option>`).join('')}</select></label>
+    ${v ? `<label class="sk-form-wide">PDF-Anhang zu v${v.version_number} ${v.pdf_path ? `<span class="muted">· ${esc(v.pdf_name || 'PDF')} ist hinterlegt</span>` : `<input type="file" id="bf-s-pdf" accept="application/pdf,.pdf"><span class="acq-hint">Privat gespeichert, nur für angemeldete Mitglieder, max. 25 MB.</span>`}</label>` : ''}
+    <div class="sk-form-actions sk-form-wide"><button type="button" class="btn btn-sm btn-ghost" onclick="bfReader.settings=false;renderBriefingReader()">Schließen</button><button type="button" class="btn btn-sm btn-primary" onclick="bfSaveSettings(this)">Speichern</button></div>
+  </div>`;
+}
+async function bfSaveSettings(btn) {
+  const { b, v } = bfViewed();
+  const title = document.getElementById('bf-s-title').value.trim(), rawUrl = document.getElementById('bf-s-url').value.trim(), url = bfCleanUrl(rawUrl);
+  const expert = document.getElementById('bf-s-expert').value || null;
+  const pdfIn = document.getElementById('bf-s-pdf'), pdf = pdfIn && pdfIn.files[0];
+  if (!title) { showToast('Bitte einen Titel eingeben.', 'error'); return; }
+  if (rawUrl && !url) { showToast('Der Claude-Link muss eine vollständige https-Adresse sein.', 'error'); return; }
+  if (!await bfCheckPdf(pdf)) return;
+  btn.disabled = true; bfBusy++;
+  let ok = false;
+  try {
+    const rows = await apiFetch(`${BF_TABLE}?id=eq.${b.id}&updated_at=eq.${encodeURIComponent(b.updated_at)}`, { method: 'PATCH', prefer: 'return=representation',
+      body: JSON.stringify({ title, claude_url: url || null, expert_id: expert, updated_at: new Date().toISOString(), updated_by: bfActor() }) });
+    if (!rows.length) throw Object.assign(new Error('Das Briefing wurde inzwischen auf einem anderen Gerät geändert – bitte die Angaben prüfen und erneut speichern.'), { conflict: true });
+    if (pdf && v && !v.pdf_path) {
+      const files = await bfUploadPdf(b.id, v.id, pdf);
+      const pr = await apiFetch(`${BFV_TABLE}?id=eq.${v.id}&pdf_path=is.null`, { method: 'PATCH', prefer: 'return=representation', body: JSON.stringify(files) });
+      if (!pr.length) showToast('Zu dieser Version wurde inzwischen schon ein PDF hinterlegt.', 'error');
+    }
+    ok = true;
+  } catch (e) { showToast(e.conflict ? e.message : 'Nicht gespeichert: ' + e.message, 'error'); btn.disabled = false; }
+  await loadBriefings();
+  bfBusy--;
+  if (ok && bfReader) { bfReader.settings = false; flashSaved(); showToast('Angaben gespeichert'); }
+  if (ok || !bfReader || !bfReader.settings) refreshBriefingViews();
+}
+
+// ── PDF attachment (private bucket, short-lived signed URL) ──
+async function bfSignedUrl(path, download) {
+  const token = await getAccessToken();
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/briefings/${path}`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 600 }) });
+  if (!r.ok) throw new Error(apiErrorText(r.status, await r.text()));
+  const { signedURL } = await r.json();
+  return SUPABASE_URL + '/storage/v1' + signedURL + (download ? '&download=' + encodeURIComponent(download) : '');
+}
+async function bfShowPdf(v) {
+  const box = document.getElementById('bf-r-pdf');
+  if (!v || !v.pdf_path) { box.innerHTML = '<p class="muted">Kein PDF zu dieser Version.</p>'; return; }
+  if (bfReader.pdfFor === v.id) return;
+  bfReader.pdfFor = v.id;
+  box.innerHTML = loadingState('Lade PDF …');
+  try {
+    const url = await bfSignedUrl(v.pdf_path);
+    if (!bfReader || bfReader.pdfFor !== v.id) return;
+    box.innerHTML = `<div class="bf-pdf-bar"><span class="muted">${esc(v.pdf_name || 'PDF')} · v${v.version_number}</span><button type="button" class="btn btn-sm" onclick="bfDownloadPdf()">PDF herunterladen</button></div>
+      <iframe class="bf-pdf-frame" title="PDF-Anhang" src="${esc(url)}"></iframe>`;
+  } catch (e) { if (bfReader) bfReader.pdfFor = null; box.innerHTML = `<div class="acq-warn">PDF konnte nicht geladen werden: ${esc(e.message)}</div>`; }
+}
+async function bfDownloadPdf() {
+  const { v } = bfViewed();
+  if (!v || !v.pdf_path) return;
+  const win = window.open('', '_blank');
+  try { const url = await bfSignedUrl(v.pdf_path, v.pdf_name || 'briefing.pdf'); if (win) win.location = url; else location.href = url; }
+  catch (e) { if (win) win.close(); showToast('PDF konnte nicht geladen werden: ' + e.message, 'error'); }
+}
+
+// ── Shared interview notes (separate rows; the briefing text is never touched) ──
+function bfNotesHtml(notes) {
+  const r = bfReader;
+  return `<div class="bf-notes">
+    <div class="bf-note-new"><label for="bf-note-new" class="bf-notes-h">Unsere Interviewnotizen</label>
+      <textarea id="bf-note-new" rows="3" data-focus-key="bf-note-new" placeholder="z. B. wichtige Nachfrage, interessante Studie, kritische Aussage hinterfragen, Reel-Moment, Idee für den Einstieg …" oninput="bfReader.noteDraft=this.value">${esc(r.noteDraft)}</textarea>
+      <div class="sk-form-actions"><button type="button" class="btn btn-sm btn-primary" data-focus-key="bf-note-add" onclick="bfAddNote(this)">Notiz speichern</button></div></div>
+    ${notes.length ? notes.map(n => r.editId === n.id ? `<div class="bf-note editing"><textarea rows="4" data-focus-key="bf-note-edit-${n.id}" aria-label="Notiz bearbeiten" oninput="bfReader.editText=this.value">${esc(r.editText)}</textarea>
+        <div class="sk-form-actions"><button type="button" class="btn btn-sm btn-ghost" onclick="bfReader.editId=null;renderBriefingReader()">Abbrechen</button><button type="button" class="btn btn-sm btn-primary" onclick="bfSaveNote(${jsArg(n.id)},this)">Speichern</button></div></div>`
+      : `<div class="bf-note"><div class="bf-note-meta">${n.author ? whoBadge(n.author) : '<span class="who who-none">?</span>'}<span class="muted">${bfDate(n.created_at)}${Math.abs(new Date(n.updated_at) - new Date(n.created_at)) > 60000 ? ` · bearbeitet ${bfDate(n.updated_at)}${n.updated_by && n.updated_by !== n.author ? ' von ' + esc(bfWho(n.updated_by)) : ''}` : ''}</span>
+          <span class="bf-note-btns"><button type="button" class="link-btn" data-focus-key="bf-note-e-${n.id}" onclick="bfEditNote(${jsArg(n.id)})">Bearbeiten</button><button type="button" class="link-btn bf-danger" onclick="bfDeleteNote(${jsArg(n.id)})">Entfernen</button></span></div>
+        <div class="bf-note-text">${esc(n.content)}</div></div>`).join('') : '<p class="muted">Noch keine Notizen. Notizen ändern den Briefingtext nicht und sind für Nils und Leo sichtbar.</p>'}
+  </div>`;
+}
+function bfAddNote(btn) {
+  const text = (bfReader.noteDraft || '').trim();
+  if (!text) { showToast('Bitte eine Notiz eingeben.', 'error'); return; }
+  const bid = bfReader.bid;
+  withActor(async () => {
+    btn.disabled = true; bfBusy++;
+    try {
+      const rows = await apiFetch(BFN_TABLE, { method: 'POST', prefer: 'return=representation', body: JSON.stringify({ briefing_id: bid, content: text, author: currentActor() }) });
+      bfNotes.unshift(rows[0]);
+      if (bfReader) bfReader.noteDraft = '';
+      flashSaved();
+    } catch (e) { showToast('Notiz nicht gespeichert: ' + e.message, 'error'); }
+    btn.disabled = false; bfBusy--;
+    refreshBriefingViews();
+  });
+}
+function bfEditNote(id) {
+  const n = bfNotes.find(x => x.id === id);
+  if (!n) return;
+  bfReader.editId = id; bfReader.editText = n.content;
+  renderBriefingReader();
+  const el = document.querySelector(`[data-focus-key="bf-note-edit-${id}"]`);
+  if (el) el.focus({ preventScroll: true });
+}
+async function bfSaveNote(id, btn) {
+  const n = bfNotes.find(x => x.id === id), text = (bfReader.editText || '').trim();
+  if (!n) return;
+  if (!text) { showToast('Eine leere Notiz bitte über „Entfernen“ löschen.', 'error'); return; }
+  btn.disabled = true; bfBusy++;
+  try {
+    const rows = await apiFetch(`${BFN_TABLE}?id=eq.${id}&updated_at=eq.${encodeURIComponent(n.updated_at)}`, { method: 'PATCH', prefer: 'return=representation',
+      body: JSON.stringify({ content: text, updated_at: new Date().toISOString(), updated_by: currentActor() || null }) });
+    if (!rows.length) {
+      showToast('Die Notiz wurde inzwischen auf einem anderen Gerät geändert oder entfernt – dein Text bleibt im Feld, bitte prüfen.', 'error');
+      btn.disabled = false; bfBusy--;
+      await loadBriefings(); refreshBriefingViews();
+      return;
+    }
+    bfNotes = bfNotes.map(x => x.id === id ? rows[0] : x);
+    bfReader.editId = null;
+    flashSaved();
+  } catch (e) { showToast('Notiz nicht gespeichert: ' + e.message, 'error'); btn.disabled = false; }
+  bfBusy--;
+  refreshBriefingViews();
+}
+async function bfDeleteNote(id) {
+  const n = bfNotes.find(x => x.id === id);
+  if (!n || !confirm('Diese Notiz entfernen?')) return;
+  bfBusy++;
+  try { await apiFetch(`${BFN_TABLE}?id=eq.${id}`, { method: 'DELETE' }); bfNotes = bfNotes.filter(x => x.id !== id); }
+  catch (e) { showToast('Notiz nicht entfernt: ' + e.message, 'error'); }
+  bfBusy--;
+  refreshBriefingViews();
 }
 
 // ── PERSONAL DASHBOARD ───────────────────────────────────────────
@@ -11665,6 +12441,12 @@ function updateThemeUi() {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('bf-import-bg').classList.contains('open')) { closeBfImport(); e.stopPropagation(); return; }
+  if (bfReader && !document.getElementById('me-modal-bg').classList.contains('open')) { closeBriefing(); e.stopPropagation(); }
+}, true);
 
 // ── INIT ─────────────────────────────────────────────────────────
 async function initAuth() {
